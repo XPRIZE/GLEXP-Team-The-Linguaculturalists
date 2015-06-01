@@ -32,7 +32,7 @@ Even though Phoenicia is designed to be a single-player, offline game, the socia
 ## Contributing
 
 You should be able to clone Phoenicia's Git repository and open it in Android Studio. It is being developed on Ubuntu 15.04 and Android Studio 
-1.1. [Dependencies](##dependencies) are included in the Git branch.
+1.1. [Dependencies](#dependencies) are included in the Git branch.
 
 *Phoenicia is a new project, with very little working at the moment. You are welcome to try the code out, and contribute to it, but expect it to change significantly and rapidly*
 
@@ -44,7 +44,7 @@ Phoenicia will be able to include "Locale Packs" which provide unique artwork, s
 
 #### License
 
-Phoenicia is provided under the GPLv3 open source license. It makes use of some [dependencies](##dependencies) that are provided under other compatible open source license.
+Phoenicia is provided under the GPLv3 open source license. It makes use of some [dependencies](#dependencies) that are provided under other compatible open source license.
 
 #### X-Prize
 
