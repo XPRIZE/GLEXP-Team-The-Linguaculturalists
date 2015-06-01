@@ -40,7 +40,6 @@ public class PhoeniciaGame {
     private AssetManager assetManager;
     private VertexBufferObjectManager vboManager;
     public Scene scene;
-    public HUD hud;
     public AssetBitmapTexture terrainTexture;
     public ITiledTextureRegion terrainTiles;
 
@@ -56,8 +55,8 @@ public class PhoeniciaGame {
         this.assetManager = assetManager;
         this.vboManager = vbo;
         scene = new Scene();
-        scene.setBackground(new Background(new Color(0, 255, 0)));
-        hud = new HUD();
+        scene.setBackground(new Background(new Color(0, 0, 0)));
+
     }
 
     public void load() throws IOException {
@@ -73,27 +72,15 @@ public class PhoeniciaGame {
         }
     }
 
-    private int isoX(int x, int y) { return ((x * 32) - (-y * 32)); }
-    private int isoY(int x, int y) { return ((x * 16) + (-y * 16)); }
-
     public void setWorldMap(WorldMap map) {
         for (TMXLayer tmxLayer : this.mTMXTiledMap.getTMXLayers()){
             scene.attachChild(tmxLayer);
         }
+        placedSprites = new Sprite[this.mTMXTiledMap.getTileColumns()][this.mTMXTiledMap.getTileRows()];
     }
-    public void setWorldMap2(WorldMap map) {
-        this.map = map;
-        this.placedSprites = new Sprite[this.map.width][this.map.height];
-        int[][] tiles = this.map.data;
-        for (int i=0; i < this.map.height; i++) {
-            for (int j=0; j < this.map.width ; j++) {
-                ITextureRegion tileRegion = terrainTiles.getTextureRegion(tiles[j][i]);
-                // Map tiles are background, so offset them down by half the size of the tile (64px)
-                Sprite tile = new Sprite(isoX(this.map.width-1-j, i), isoY(this.map.width-1-j, i)-(this.map.tileWidth/2), tileRegion, vboManager);
-                scene.attachChild(tile);
-            }
-        }
 
+    public HUD getBlockPlacementHUD() {
+        final HUD hud = new HUD();
         ITextureRegion blockRegion = terrainTiles.getTextureRegion(145);
         ButtonSprite block = new ButtonSprite(64, 48, blockRegion, vboManager);
         block.setOnClickListener(new ButtonSprite.OnClickListener() {
@@ -138,37 +125,42 @@ public class PhoeniciaGame {
         });
         hud.registerTouchArea(bushBlock);
         hud.attachChild(bushBlock);
-
+        return hud;
     }
 
     public void placeBlock(int x, int y) {
         if (placeBlock < 0) {
+            System.out.println("No active block to place");
             return;
         }
         final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
         final TMXTile tmxTile = tmxLayer.getTMXTileAt(x, y);
+        if (tmxTile == null) {
+            System.out.println("Can't place blocks outside of map");
+            return;
+        }
         int tileX = (int)tmxTile.getTileX();// tiles are 64px wide, assume the touch is targeting the middle
         int tileY = (int)tmxTile.getTileY();// tiles are 64px wide, assume the touch is targeting the middle
-        if (tileY < 0 || tileY >= this.map.height) { return; }
-        if (tileX < 0 || tileX >= this.map.width) { return; }
+        int tileZ = tmxTile.getTileZ();
 
-        int tileZ = 100 + ((-tileX * 10) + (tileY) + 1);
-        if (placedSprites[tileX][tileY] != null) {
-            scene.detachChild(placedSprites[tileX][tileY]);
-            placedSprites[tileX][tileY] = null;
+        if (placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] != null) {
+            scene.detachChild(placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()]);
+            placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = null;
         }
 
         System.out.println("  px-x: "+x);
         System.out.println("  px-y: "+y);
-        System.out.println("tile-x: "+tileX);
-        System.out.println("tile-y: "+tileY);
+        System.out.println("tile-x: "+tmxTile.getTileColumn());
+        System.out.println("tile-y: "+tmxTile.getTileRow());
         System.out.println("tile-z: "+tileZ);
 
         ITextureRegion blockRegion = terrainTiles.getTextureRegion(placeBlock);
-        Sprite block = new Sprite(isoX(tileX, tileY), isoY(tileX, tileY), blockRegion, vboManager);
+        Sprite block = new Sprite(tileX, tileY, blockRegion, vboManager);
         block.setZIndex(tileZ);
-        placedSprites[tileX][tileY] = block;
+        placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = block;
         scene.attachChild(block);
+
+        scene.sortChildren();
     }
 
 }

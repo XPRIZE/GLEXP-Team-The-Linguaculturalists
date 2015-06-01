@@ -111,7 +111,7 @@ public class GameActivity extends BaseGameActivity {
         WorldMap map = new WorldMap();
         game.setWorldMap(map);
         main_camera.setCenter(320-32, -64);
-        main_camera.setHUD(game.hud);
+        main_camera.setHUD(game.getBlockPlacementHUD());
 
         onPopulateSceneCallback.onPopulateSceneFinished();
     }
