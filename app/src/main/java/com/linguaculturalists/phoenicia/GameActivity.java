@@ -7,6 +7,8 @@ import com.linguaculturalists.phoenicia.util.SystemUiHider;
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.camera.SmoothCamera;
 import org.andengine.engine.camera.ZoomCamera;
+import org.andengine.engine.handler.timer.ITimerCallback;
+import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
@@ -35,9 +37,7 @@ public class GameActivity extends BaseGameActivity {
 
     private ZoomCamera main_camera = new ZoomCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
     private PhoeniciaGame game;
-
-    private float mPinchZoomStartedCameraZoomFactor;
-    private PinchZoomDetector mPinchZoomDetector;
+    private SplashScene splash;
 
     @Override
     public EngineOptions onCreateEngineOptions() {
@@ -48,70 +48,38 @@ public class GameActivity extends BaseGameActivity {
 
     @Override
     public void onCreateResources(OnCreateResourcesCallback onCreateResourcesCallback) throws IOException {
-
-        game = new PhoeniciaGame(getTextureManager(), getAssets(), getVertexBufferObjectManager());
-        game.load();
+        splash = new SplashScene(getTextureManager(), getAssets(), getVertexBufferObjectManager(), main_camera);
         onCreateResourcesCallback.onCreateResourcesFinished();
     }
 
     @Override
     public void onCreateScene(OnCreateSceneCallback onCreateSceneCallback) throws IOException {
-        mEngine.setTouchController(new MultiTouchController());
-        this.mPinchZoomDetector = new PinchZoomDetector(new PinchZoomDetector.IPinchZoomDetectorListener() {
-            @Override
-            public void onPinchZoomStarted(final PinchZoomDetector pPinchZoomDetector, final TouchEvent pTouchEvent) {
-                mPinchZoomStartedCameraZoomFactor = main_camera.getZoomFactor();
-            }
 
-            @Override
-            public void onPinchZoom(final PinchZoomDetector pPinchZoomDetector, final TouchEvent pTouchEvent, final float pZoomFactor) {
-                main_camera.setZoomFactor(mPinchZoomStartedCameraZoomFactor * pZoomFactor);
-            }
-
-            @Override
-            public void onPinchZoomFinished(final PinchZoomDetector pPinchZoomDetector, final TouchEvent pTouchEvent, final float pZoomFactor) {
-                main_camera.setZoomFactor(mPinchZoomStartedCameraZoomFactor * pZoomFactor);
-            }
-        });
-
-        game.scene.setOnSceneTouchListener(new IOnSceneTouchListener() {
-            @Override
-            public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {
-                mPinchZoomDetector.onTouchEvent(pSceneTouchEvent);
-
-                switch(pSceneTouchEvent.getAction()) {
-                    case TouchEvent.ACTION_DOWN:
-                        game.placeBlock((int)pSceneTouchEvent.getX(), (int)pSceneTouchEvent.getY());
-                        break;
-                    case TouchEvent.ACTION_UP:
-                        //MainActivity.this.mSmoothCamera.setZoomFactor(1.0f);
-                        break;
-                    case TouchEvent.ACTION_MOVE:
-                        MotionEvent motion = pSceneTouchEvent.getMotionEvent();
-                        if(motion.getHistorySize() > 0){
-                            for(int i = 1, n = motion.getHistorySize(); i < n; i++){
-                                int calcX = (int) motion.getHistoricalX(i) - (int) motion.getHistoricalX(i-1);
-                                int calcY = (int) motion.getHistoricalY(i) - (int) motion.getHistoricalY(i-1);
-                                //System.out.println("diffX: "+calcX+", diffY: "+calcY);
-
-                                main_camera.setCenter(main_camera.getCenterX() - calcX, main_camera.getCenterY() + calcY);
-                            }
-                        }
-                        break;
-                }
-                return true;
-            }
-        });
-        onCreateSceneCallback.onCreateSceneFinished(game.scene);
+        onCreateSceneCallback.onCreateSceneFinished(splash);
     }
 
     @Override
     public void onPopulateScene(Scene scene, OnPopulateSceneCallback onPopulateSceneCallback) throws IOException {
 
-        WorldMap map = new WorldMap();
-        game.setWorldMap(map);
-        main_camera.setCenter(320-32, -64);
-        main_camera.setHUD(game.getBlockPlacementHUD());
+        game = new PhoeniciaGame(getTextureManager(), getAssets(), getVertexBufferObjectManager(), main_camera);
+        mEngine.registerUpdateHandler(new TimerHandler(3f, new ITimerCallback()
+        {
+            public void onTimePassed(final TimerHandler pTimerHandler)
+            {
+                mEngine.unregisterUpdateHandler(pTimerHandler);
+                try {
+                    mEngine.setTouchController(new MultiTouchController());
+                    game.load();
+                    splash.detachSelf();
+                    mEngine.setScene(game.scene);
+                    game.start(main_camera);
+                } catch (final IOException e) {
+                    System.err.println("Failed to load game!");
+                    e.printStackTrace(System.err);
+                }
+            }
+        }));
+
 
         onPopulateSceneCallback.onPopulateSceneFinished();
     }

@@ -1,13 +1,19 @@
 package com.linguaculturalists.phoenicia;
 
 import android.content.res.AssetManager;
+import android.view.MotionEvent;
 
+import org.andengine.engine.camera.Camera;
+import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.engine.camera.hud.HUD;
+import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.tmx.TMXLayer;
+import org.andengine.input.touch.TouchEvent;
+import org.andengine.input.touch.detector.PinchZoomDetector;
 import org.andengine.opengl.texture.TextureManager;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.TextureAtlas;
@@ -40,23 +46,70 @@ public class PhoeniciaGame {
     private AssetManager assetManager;
     private VertexBufferObjectManager vboManager;
     public Scene scene;
+
+    private float mPinchZoomStartedCameraZoomFactor;
+    private PinchZoomDetector mPinchZoomDetector;
+
     public AssetBitmapTexture terrainTexture;
     public ITiledTextureRegion terrainTiles;
 
     public Sprite[][] placedSprites;
 
-    public WorldMap map;
     private TMXTiledMap mTMXTiledMap;
 
     public int placeBlock = -1;
 
-    public PhoeniciaGame(TextureManager textureManager, AssetManager assetManager, VertexBufferObjectManager vbo) {
+    public PhoeniciaGame(TextureManager textureManager, AssetManager assetManager, VertexBufferObjectManager vbo, final ZoomCamera camera) {
         this.textureManager = textureManager;
         this.assetManager = assetManager;
         this.vboManager = vbo;
         scene = new Scene();
         scene.setBackground(new Background(new Color(0, 0, 0)));
 
+        mPinchZoomDetector = new PinchZoomDetector(new PinchZoomDetector.IPinchZoomDetectorListener() {
+            @Override
+            public void onPinchZoomStarted(final PinchZoomDetector pPinchZoomDetector, final TouchEvent pTouchEvent) {
+                mPinchZoomStartedCameraZoomFactor = camera.getZoomFactor();
+            }
+
+            @Override
+            public void onPinchZoom(final PinchZoomDetector pPinchZoomDetector, final TouchEvent pTouchEvent, final float pZoomFactor) {
+                camera.setZoomFactor(mPinchZoomStartedCameraZoomFactor * pZoomFactor);
+            }
+
+            @Override
+            public void onPinchZoomFinished(final PinchZoomDetector pPinchZoomDetector, final TouchEvent pTouchEvent, final float pZoomFactor) {
+                camera.setZoomFactor(mPinchZoomStartedCameraZoomFactor * pZoomFactor);
+            }
+        });
+        scene.setOnSceneTouchListener(new IOnSceneTouchListener() {
+            @Override
+            public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {
+                mPinchZoomDetector.onTouchEvent(pSceneTouchEvent);
+
+                switch(pSceneTouchEvent.getAction()) {
+                    case TouchEvent.ACTION_DOWN:
+                        placeBlock((int) pSceneTouchEvent.getX(), (int) pSceneTouchEvent.getY());
+                        break;
+                    case TouchEvent.ACTION_UP:
+                        //MainActivity.this.mSmoothCamera.setZoomFactor(1.0f);
+                        break;
+                    case TouchEvent.ACTION_MOVE:
+                        MotionEvent motion = pSceneTouchEvent.getMotionEvent();
+                        if(motion.getHistorySize() > 0){
+                            for(int i = 1, n = motion.getHistorySize(); i < n; i++){
+                                int calcX = (int) motion.getHistoricalX(i) - (int) motion.getHistoricalX(i-1);
+                                int calcY = (int) motion.getHistoricalY(i) - (int) motion.getHistoricalY(i-1);
+                                //System.out.println("diffX: "+calcX+", diffY: "+calcY);
+
+                                camera.setCenter(camera.getCenterX() - calcX, camera.getCenterY() + calcY);
+                            }
+                        }
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     public void load() throws IOException {
@@ -67,18 +120,20 @@ public class PhoeniciaGame {
         try {
             final TMXLoader tmxLoader = new TMXLoader(assetManager, textureManager, TextureOptions.BILINEAR_PREMULTIPLYALPHA, vboManager);
             this.mTMXTiledMap = tmxLoader.loadFromAsset("textures/map.tmx");
+            for (TMXLayer tmxLayer : this.mTMXTiledMap.getTMXLayers()){
+                scene.attachChild(tmxLayer);
+            }
+            placedSprites = new Sprite[this.mTMXTiledMap.getTileColumns()][this.mTMXTiledMap.getTileRows()];
         } catch (final TMXLoadException e) {
             Debug.e(e);
         }
     }
 
-    public void setWorldMap(WorldMap map) {
-        for (TMXLayer tmxLayer : this.mTMXTiledMap.getTMXLayers()){
-            scene.attachChild(tmxLayer);
-        }
-        placedSprites = new Sprite[this.mTMXTiledMap.getTileColumns()][this.mTMXTiledMap.getTileRows()];
+    public void start(Camera camera) {
+        TMXLayer baseLayer = this.mTMXTiledMap.getTMXLayers().get(0);
+        camera.setCenter(400, -400);
+        camera.setHUD(this.getBlockPlacementHUD());
     }
-
     public HUD getBlockPlacementHUD() {
         final HUD hud = new HUD();
         ITextureRegion blockRegion = terrainTiles.getTextureRegion(145);
