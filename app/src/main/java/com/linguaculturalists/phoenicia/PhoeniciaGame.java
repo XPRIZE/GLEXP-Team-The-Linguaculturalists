@@ -3,6 +3,9 @@ package com.linguaculturalists.phoenicia;
 import android.content.res.AssetManager;
 import android.view.MotionEvent;
 
+import org.andengine.audio.sound.Sound;
+import org.andengine.audio.sound.SoundFactory;
+import org.andengine.audio.sound.SoundManager;
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.engine.camera.hud.HUD;
@@ -41,10 +44,11 @@ import java.util.List;
  * Created by mhall on 3/22/15.
  */
 public class PhoeniciaGame {
-
+    private GameActivity activity;
     private TextureManager textureManager;
     private AssetManager assetManager;
     private VertexBufferObjectManager vboManager;
+    private SoundManager soundManager;
     public Scene scene;
 
     private float mPinchZoomStartedCameraZoomFactor;
@@ -59,10 +63,14 @@ public class PhoeniciaGame {
 
     public int placeBlock = -1;
 
-    public PhoeniciaGame(TextureManager textureManager, AssetManager assetManager, VertexBufferObjectManager vbo, final ZoomCamera camera) {
-        this.textureManager = textureManager;
-        this.assetManager = assetManager;
-        this.vboManager = vbo;
+    private Sound blockSound;
+
+    public PhoeniciaGame(GameActivity activity, final ZoomCamera camera) {
+        this.activity = activity;
+        this.textureManager = activity.getTextureManager();
+        this.assetManager = activity.getAssets();
+        this.vboManager = activity.getVertexBufferObjectManager();
+        this.soundManager = activity.getSoundManager();
         scene = new Scene();
         scene.setBackground(new Background(new Color(0, 0, 0)));
 
@@ -105,9 +113,9 @@ public class PhoeniciaGame {
                                 camera.setCenter(camera.getCenterX() - calcX, camera.getCenterY() + calcY);
                             }
                         }
-                        break;
+                        return true;
                 }
-                return true;
+                return false;
             }
         });
     }
@@ -126,6 +134,13 @@ public class PhoeniciaGame {
             placedSprites = new Sprite[this.mTMXTiledMap.getTileColumns()][this.mTMXTiledMap.getTileRows()];
         } catch (final TMXLoadException e) {
             Debug.e(e);
+        }
+
+        try {
+            blockSound = SoundFactory.createSoundFromAsset(this.soundManager, this.activity, "sounds/a.ogg");
+        } catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 
@@ -200,6 +215,7 @@ public class PhoeniciaGame {
 
         if (placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] != null) {
             scene.detachChild(placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()]);
+            scene.unregisterTouchArea(placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()]);
             placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = null;
         }
 
@@ -210,12 +226,24 @@ public class PhoeniciaGame {
         System.out.println("tile-z: "+tileZ);
 
         ITextureRegion blockRegion = terrainTiles.getTextureRegion(placeBlock);
-        Sprite block = new Sprite(tileX, tileY, blockRegion, vboManager);
+        ButtonSprite block = new ButtonSprite(tileX, tileY, blockRegion, vboManager);
+        block.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
+                System.out.println("Clicked block: "+placeBlock);
+                playBlockSound(placeBlock);
+            }
+        });
         block.setZIndex(tileZ);
         placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = block;
+        scene.registerTouchArea(block);
         scene.attachChild(block);
 
         scene.sortChildren();
     }
 
+    void playBlockSound(int blockId) {
+        System.out.println("Playing sound: "+blockId);
+        this.blockSound.play();
+    }
 }

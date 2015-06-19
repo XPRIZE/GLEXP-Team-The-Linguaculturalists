@@ -4,6 +4,7 @@ import android.view.MotionEvent;
 
 import com.linguaculturalists.phoenicia.util.SystemUiHider;
 
+import org.andengine.engine.Engine;
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.camera.SmoothCamera;
 import org.andengine.engine.camera.ZoomCamera;
@@ -43,6 +44,7 @@ public class GameActivity extends BaseGameActivity {
     public EngineOptions onCreateEngineOptions() {
         EngineOptions engineOptions = new EngineOptions(true, ScreenOrientation.LANDSCAPE_FIXED,
                 new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), main_camera);
+        engineOptions.getAudioOptions().setNeedsSound(true);
         return engineOptions;
     }
 
@@ -61,7 +63,7 @@ public class GameActivity extends BaseGameActivity {
     @Override
     public void onPopulateScene(Scene scene, OnPopulateSceneCallback onPopulateSceneCallback) throws IOException {
 
-        game = new PhoeniciaGame(getTextureManager(), getAssets(), getVertexBufferObjectManager(), main_camera);
+        game = new PhoeniciaGame(this, main_camera);
         mEngine.registerUpdateHandler(new TimerHandler(3f, new ITimerCallback()
         {
             public void onTimePassed(final TimerHandler pTimerHandler)
