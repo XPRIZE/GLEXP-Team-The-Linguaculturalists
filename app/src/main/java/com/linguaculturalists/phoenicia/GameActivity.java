@@ -64,7 +64,7 @@ public class GameActivity extends BaseGameActivity {
     public void onPopulateScene(Scene scene, OnPopulateSceneCallback onPopulateSceneCallback) throws IOException {
 
         game = new PhoeniciaGame(this, main_camera);
-        mEngine.registerUpdateHandler(new TimerHandler(3f, new ITimerCallback()
+        mEngine.registerUpdateHandler(new TimerHandler(1f, new ITimerCallback()
         {
             public void onTimePassed(final TimerHandler pTimerHandler)
             {

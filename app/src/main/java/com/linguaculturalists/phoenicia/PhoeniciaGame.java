@@ -40,11 +40,12 @@ import org.andengine.util.debug.Debug;
 import java.io.IOException;
 import java.util.List;
 
+import com.linguaculturalists.phoenicia.ui.BlockPlacementHUD;
 /**
  * Created by mhall on 3/22/15.
  */
 public class PhoeniciaGame {
-    private GameActivity activity;
+    public GameActivity activity;
     private TextureManager textureManager;
     private AssetManager assetManager;
     private VertexBufferObjectManager vboManager;
@@ -61,9 +62,7 @@ public class PhoeniciaGame {
 
     private TMXTiledMap mTMXTiledMap;
 
-    public int placeBlock = -1;
-
-    private Sound blockSound;
+    private Sound[] blockSounds;
 
     public PhoeniciaGame(GameActivity activity, final ZoomCamera camera) {
         this.activity = activity;
@@ -137,7 +136,12 @@ public class PhoeniciaGame {
         }
 
         try {
-            blockSound = SoundFactory.createSoundFromAsset(this.soundManager, this.activity, "sounds/a.ogg");
+            blockSounds = new Sound[26];
+            char letters[] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+            for (int i = 0; i < 26; i++) {
+                System.out.println("Loading sound file "+i+": sounds/"+letters[i]+".ogg");
+                blockSounds[i] = SoundFactory.createSoundFromAsset(this.soundManager, this.activity, "sounds/"+letters[i]+".ogg");
+            }
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -150,55 +154,12 @@ public class PhoeniciaGame {
         camera.setHUD(this.getBlockPlacementHUD());
     }
     public HUD getBlockPlacementHUD() {
-        final HUD hud = new HUD();
-        ITextureRegion blockRegion = terrainTiles.getTextureRegion(145);
-        ButtonSprite block = new ButtonSprite(64, 48, blockRegion, vboManager);
-        block.setOnClickListener(new ButtonSprite.OnClickListener() {
-            @Override
-            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                if (placeBlock == 145) {
-                    placeBlock = -1;
-                } else {
-                    placeBlock = 145;
-                }
-            }
-        });
-        hud.registerTouchArea(block);
-        hud.attachChild(block);
-
-        ITextureRegion greyBlockRegion = terrainTiles.getTextureRegion(144);
-        ButtonSprite greyBlock = new ButtonSprite(64*3, 48, greyBlockRegion, vboManager);
-        greyBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
-            @Override
-            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                if (placeBlock == 144) {
-                    placeBlock = -1;
-                } else {
-                    placeBlock = 144;
-                }
-            }
-        });
-        hud.registerTouchArea(greyBlock);
-        hud.attachChild(greyBlock);
-
-        ITextureRegion bushBlockRegion = terrainTiles.getTextureRegion(126);
-        ButtonSprite bushBlock = new ButtonSprite(64*5, 48, bushBlockRegion, vboManager);
-        bushBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
-            @Override
-            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                if (placeBlock == 126) {
-                    placeBlock = -1;
-                } else {
-                    placeBlock = 126;
-                }
-            }
-        });
-        hud.registerTouchArea(bushBlock);
-        hud.attachChild(bushBlock);
-        return hud;
+        BlockPlacementHUD.init(this);
+        return BlockPlacementHUD.getInstance();
     }
 
     public void placeBlock(int x, int y) {
+        final int placeBlock = BlockPlacementHUD.getPlaceBlock();
         if (placeBlock < 0) {
             System.out.println("No active block to place");
             return;
@@ -244,6 +205,22 @@ public class PhoeniciaGame {
 
     void playBlockSound(int blockId) {
         System.out.println("Playing sound: "+blockId);
-        this.blockSound.play();
+        int soundId = 0;//a
+        switch (blockId) {
+            case 144:
+                soundId=12;//m
+                break;
+            case 145:
+                soundId=1;//b
+                break;
+            case 126:
+                soundId=15;//p
+                break;
+        }
+        if (this.blockSounds[soundId] != null) {
+            this.blockSounds[soundId].play();
+        } else {
+            System.out.println("No blockSounds["+soundId+"]!");
+        }
     }
 }
