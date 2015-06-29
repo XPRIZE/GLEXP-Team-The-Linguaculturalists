@@ -38,9 +38,15 @@ import org.andengine.extension.tmx.util.exception.TMXLoadException;
 import org.andengine.util.debug.Debug;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.linguaculturalists.phoenicia.models.PlacedBlock;
 import com.linguaculturalists.phoenicia.ui.BlockPlacementHUD;
+import com.orm.androrm.DatabaseAdapter;
+import com.orm.androrm.Filter;
+import com.orm.androrm.Model;
+
 /**
  * Created by mhall on 3/22/15.
  */
@@ -51,6 +57,7 @@ public class PhoeniciaGame {
     private VertexBufferObjectManager vboManager;
     private SoundManager soundManager;
     public Scene scene;
+    public Camera camera;
 
     private float mPinchZoomStartedCameraZoomFactor;
     private PinchZoomDetector mPinchZoomDetector;
@@ -70,6 +77,7 @@ public class PhoeniciaGame {
         this.assetManager = activity.getAssets();
         this.vboManager = activity.getVertexBufferObjectManager();
         this.soundManager = activity.getSoundManager();
+        this.camera = camera;
         scene = new Scene();
         scene.setBackground(new Background(new Color(0, 0, 0)));
 
@@ -96,7 +104,7 @@ public class PhoeniciaGame {
 
                 switch(pSceneTouchEvent.getAction()) {
                     case TouchEvent.ACTION_DOWN:
-                        placeBlock((int) pSceneTouchEvent.getX(), (int) pSceneTouchEvent.getY());
+                        addBlock((int) pSceneTouchEvent.getX(), (int) pSceneTouchEvent.getY());
                         break;
                     case TouchEvent.ACTION_UP:
                         //MainActivity.this.mSmoothCamera.setZoomFactor(1.0f);
@@ -117,6 +125,7 @@ public class PhoeniciaGame {
                 return false;
             }
         });
+
     }
 
     public void load() throws IOException {
@@ -146,10 +155,44 @@ public class PhoeniciaGame {
         {
             e.printStackTrace();
         }
+
+        this.syncDB();
+
+        System.out.println("Loading saved blocks");
+        List<PlacedBlock> savedBlocks = PlacedBlock.objects(this.activity.getApplicationContext()).all().toList();
+        for (int i = 0; i < savedBlocks.size(); i++) {
+            PlacedBlock block = savedBlocks.get(i);
+            System.out.println("Restoring tile "+block.tileId.get()+" at "+block.isoX.get()+"x"+block.isoY.get());
+            this.setBlockAtIso(block.isoX.get(), block.isoY.get(), block.tileId.get());
+        }
+    }
+    private void syncDB() {
+        List<Class<? extends Model>> models = new ArrayList<Class<? extends Model>>();
+        models.add(PlacedBlock.class);
+
+        DatabaseAdapter.setDatabaseName("game_db");
+        DatabaseAdapter adapter = new DatabaseAdapter(this.activity.getApplicationContext());
+        adapter.setModels(models);
     }
 
+    public void reset() {
+        // Detach sprites
+        for (int c = 0; c < placedSprites.length; c++) {
+            for (int r = 0; r < placedSprites[c].length; r++) {
+                if (placedSprites[c][r] != null) {
+                    scene.detachChild(placedSprites[c][r]);
+                    scene.unregisterTouchArea(placedSprites[c][r]);
+                    placedSprites[c][r] = null;
+                }
+            }
+        }
+        // Delete DB records
+        List<PlacedBlock> savedBlocks = PlacedBlock.objects(this.activity.getApplicationContext()).all().toList();
+        for (int i = 0; i < savedBlocks.size(); i++) {
+            savedBlocks.get(i).delete(this.activity.getApplicationContext());
+        }
+    }
     public void start(Camera camera) {
-        TMXLayer baseLayer = this.mTMXTiledMap.getTMXLayers().get(0);
         camera.setCenter(400, -400);
         camera.setHUD(this.getBlockPlacementHUD());
     }
@@ -158,17 +201,57 @@ public class PhoeniciaGame {
         return BlockPlacementHUD.getInstance();
     }
 
-    public void placeBlock(int x, int y) {
-        final int placeBlock = BlockPlacementHUD.getPlaceBlock();
+    public void addBlock(int x, int y) {
+        TMXTile blockTile = this.placeBlock(x, y, BlockPlacementHUD.getPlaceBlock());
+        if (blockTile != null) {
+            PlacedBlock newBlock = new PlacedBlock();
+            newBlock.isoX.set(blockTile.getTileColumn());
+            newBlock.isoY.set(blockTile.getTileRow());
+            newBlock.tileId.set(BlockPlacementHUD.getPlaceBlock());
+            System.out.println("Saving block "+newBlock.tileId.get()+" at "+newBlock.isoX.get()+"x"+newBlock.isoY.get());
+            if (newBlock.save(this.activity.getApplicationContext())) {
+                System.out.println("Save successful");
+            }
+        }
+    }
+    public TMXTile setBlockAtIso(int tileColumn, int tileRow, final int placeBlock) {
+        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
+        final TMXTile tmxTile = tmxLayer.getTMXTile(tileColumn, tileRow);
+        if (tmxTile == null) {
+            System.out.println("Can't place blocks outside of map");
+            return null;
+        }
+        int tileX = (int)tmxTile.getTileX();// tiles are 64px wide, assume the touch is targeting the middle
+        int tileY = (int)tmxTile.getTileY();// tiles are 64px wide, assume the touch is targeting the middle
+        int tileZ = tmxTile.getTileZ();
+
+        ITextureRegion blockRegion = terrainTiles.getTextureRegion(placeBlock);
+        ButtonSprite block = new ButtonSprite(tileX, tileY, blockRegion, vboManager);
+        block.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
+                System.out.println("Clicked block: "+placeBlock);
+                playBlockSound(placeBlock);
+            }
+        });
+        block.setZIndex(tileZ);
+        placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = block;
+        scene.registerTouchArea(block);
+        scene.attachChild(block);
+
+        scene.sortChildren();
+        return tmxTile;
+    }
+    public TMXTile placeBlock(int x, int y, final int placeBlock) {
         if (placeBlock < 0) {
             System.out.println("No active block to place");
-            return;
+            return null;
         }
         final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
         final TMXTile tmxTile = tmxLayer.getTMXTileAt(x, y);
         if (tmxTile == null) {
             System.out.println("Can't place blocks outside of map");
-            return;
+            return null;
         }
         int tileX = (int)tmxTile.getTileX();// tiles are 64px wide, assume the touch is targeting the middle
         int tileY = (int)tmxTile.getTileY();// tiles are 64px wide, assume the touch is targeting the middle
@@ -201,22 +284,18 @@ public class PhoeniciaGame {
         scene.attachChild(block);
 
         scene.sortChildren();
+        return tmxTile;
     }
 
     void playBlockSound(int blockId) {
+
         System.out.println("Playing sound: "+blockId);
-        int soundId = 0;//a
-        switch (blockId) {
-            case 144:
-                soundId=12;//m
-                break;
-            case 145:
-                soundId=1;//b
-                break;
-            case 126:
-                soundId=15;//p
-                break;
+        int soundId = blockId-130;//Letters start at tile 130
+        if (soundId < 0 || soundId > 25) {
+            System.out.println("Sound out of range: "+soundId);
+            return;
         }
+
         if (this.blockSounds[soundId] != null) {
             this.blockSounds[soundId].play();
         } else {

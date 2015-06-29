@@ -1,0 +1,63 @@
+/**
+ * 	Copyright (c) 2012 Philipp Giese
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+package com.orm.androrm.migration;
+
+import android.content.Context;
+
+import com.orm.androrm.DatabaseBuilder;
+import com.orm.androrm.Filter;
+import com.orm.androrm.Model;
+
+public abstract class AndrormMigration<T extends Model> implements Migratable<T> {
+
+	protected String mAction;	
+	protected String mValue;
+	
+	public AndrormMigration(String value, String action) {
+		mValue = value;
+		mAction = action;
+	}
+	
+	private Filter getFilter(Class<T> model) {
+		Filter filter = new Filter();
+		
+		filter.is("mModel", DatabaseBuilder.getTableName(model))
+			  .is("mAction", mAction)
+			  .is("mValue", getValue(model));
+		
+		return filter;
+	}
+	
+	protected boolean isApplied(Class<T> model, Context context) {
+		Filter filter = getFilter(model);
+		
+		return !Migration.objects(context).filter(filter).isEmpty();
+	}
+	
+	public String getAction() {
+		return mAction;
+	}
+	
+	public abstract String getValue(Class<T> model);
+	
+}

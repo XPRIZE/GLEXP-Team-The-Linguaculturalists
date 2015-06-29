@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Phoenicia.iml" filepath="$PROJECT_DIR$/Phoenicia.iml" />
+      <module fileurl="file://$PROJECT_DIR$/androrm/androrm.iml" filepath="$PROJECT_DIR$/androrm/androrm.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
