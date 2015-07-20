@@ -74,6 +74,7 @@ public class GameActivity extends BaseGameActivity {
                     game.load();
                     splash.detachSelf();
                     mEngine.setScene(game.scene);
+                    mEngine.registerUpdateHandler(game);
                     game.start(main_camera);
                 } catch (final IOException e) {
                     System.err.println("Failed to load game!");

@@ -39,7 +39,7 @@ public class BlockPlacementHUD extends HUD {
         clearBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                game.reset();
+                game.restart();
             }
         });
         this.registerTouchArea(clearBlock);

@@ -2,29 +2,31 @@ package com.linguaculturalists.phoenicia.models;
 
 import android.content.Context;
 
-import org.andengine.entity.sprite.ButtonSprite;
-import org.andengine.opengl.texture.region.ITextureRegion;
-import org.andengine.opengl.vbo.VertexBufferObjectManager;
-
 import com.orm.androrm.Model;
 import com.orm.androrm.QuerySet;
+import com.orm.androrm.field.CharField;
+import com.orm.androrm.field.ForeignKeyField;
 import com.orm.androrm.field.IntegerField;
 /**
  * Created by mhall on 6/19/15.
  */
 public class PlacedBlock extends Model {
 
+    public ForeignKeyField<GameSession> game;
     public IntegerField isoX;
     public IntegerField isoY;
-    public IntegerField tileId;
+    public IntegerField sprite_tile;
+    public CharField item_name;
+    public IntegerField progress;
 
     public PlacedBlock() {
         super();
-
+        game = new ForeignKeyField<>(GameSession.class);
         isoX = new IntegerField();
         isoY = new IntegerField();
-        tileId = new IntegerField();
-
+        sprite_tile = new IntegerField();
+        item_name = new CharField(32);
+        progress = new IntegerField();
     }
 
     public static final QuerySet<PlacedBlock> objects(Context context) {
