@@ -22,6 +22,7 @@ import org.andengine.input.touch.detector.PinchZoomDetector;
 import org.andengine.ui.IGameInterface;
 import org.andengine.ui.activity.BaseGameActivity;
 import org.andengine.util.adt.color.Color;
+import org.andengine.util.debug.Debug;
 
 import java.io.IOException;
 
@@ -77,8 +78,7 @@ public class GameActivity extends BaseGameActivity {
                     mEngine.registerUpdateHandler(game);
                     game.start(main_camera);
                 } catch (final IOException e) {
-                    System.err.println("Failed to load game!");
-                    e.printStackTrace(System.err);
+                    Debug.e("Failed to load game!", e);
                 }
             }
         }));

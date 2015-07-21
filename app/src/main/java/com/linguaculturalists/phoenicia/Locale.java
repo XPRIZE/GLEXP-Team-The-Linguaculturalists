@@ -1,5 +1,11 @@
 package com.linguaculturalists.phoenicia;
 
+import com.linguaculturalists.phoenicia.locale.Letter;
+import com.linguaculturalists.phoenicia.locale.Level;
+import com.linguaculturalists.phoenicia.locale.Word;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,30 +14,9 @@ import java.util.Map;
  */
 public class Locale {
 
-    public class Letter {
-        public String name;
-        public int time;
-        public int tile;
-        public int sprite;
-        public String sound;
-        public String phoneme;
-        public char[] chars;
-    }
-    public class Word {
-        public String name;
-        public int time;
-        public int tile;
-        public int sprite;
-        public String sound;
-        public char[] chars;
-    }
-    public class Level{
-        public String name;
-        public List<Letter> letters;
-        public List<Word> words;
-        public List<Letter> help_letters;
-        public List<Word> help_words;
-    }
+    public String name;
+    public String display_name;
+    public String lang;
 
     public String map_src;
 
@@ -46,4 +31,14 @@ public class Locale {
     public List<Level> levels;
     public Map<String, Level> level_map;
 
+    public Locale() {
+        this.letters = new ArrayList<Letter>();
+        this.letter_map = new HashMap<String, Letter>();
+
+        this.words = new ArrayList<Word>();
+        this.word_map = new HashMap<String, Word>();
+
+        this.levels = new ArrayList<Level>();
+        this.level_map = new HashMap<String, Level>();
+    }
 }

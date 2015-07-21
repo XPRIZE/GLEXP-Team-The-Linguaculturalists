@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest name="en_us_rural" lang="en_us" display_name="US English, Rural Setting">
+<locale name="en_us_rural" lang="en_us" display_name="US English, Rural Setting">
     <map src="textures/map.tmx" />
     <letters texture="textures/terrain.png">
         <letter name="a" time=10 tile=130 sprite=130 sound="sounds/a.ogg" phoneme="sounds/a.ogg">a</letter>
@@ -58,4 +58,4 @@
             </help>
         </level>
     </levels>
-</manifest>
+</locale>
