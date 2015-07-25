@@ -2,21 +2,20 @@
 <locale name="en_us_rural" lang="en_us" display_name="US English, Rural Setting">
     <map src="textures/map.tmx" />
     <letters texture="textures/terrain.png">
-        <letter name="a" time=10 tile=130 sprite=130 sound="sounds/a.ogg" phoneme="sounds/a.ogg">a</letter>
-        <letter name="b" time=30 tile=131 sprite=131 sound="sounds/b.ogg" phoneme="sounds/b.ogg">b</letter>
-        <letter name="c" time=30 tile=132 sprite=132 sound="sounds/c.ogg" phoneme="sounds/c.ogg">c</letter>
-        <letter name="d" time=30 tile=133 sprite=133 sound="sounds/d.ogg" phoneme="sounds/d.ogg">d</letter>
-        <letter name="e" time=30 tile=134 sprite=134 sound="sounds/e.ogg" phoneme="sounds/e.ogg">e</letter>
-        <letter name="f" time=30 tile=135 sprite=135 sound="sounds/f.ogg" phoneme="sounds/f.ogg">f</letter>
-        <letter name="g" time=30 tile=136 sprite=136 sound="sounds/g.ogg" phoneme="sounds/g.ogg">g</letter>
-        <letter name="h" time=30 tile=137 sprite=137 sound="sounds/h.ogg" phoneme="sounds/h.ogg">h</letter>
-        <letter name="t" time=30 tile=148 sprite=148 sound="sounds/t.ogg" phoneme="sounds/t.ogg">t</letter>
-        </letter>
+        <letter name="a" time="10" tile="130" sprite="130" sound="sounds/a.ogg" phoneme="sounds/a.ogg">a</letter>
+        <letter name="b" time="30" tile="131" sprite="131" sound="sounds/b.ogg" phoneme="sounds/b.ogg">b</letter>
+        <letter name="c" time="30" tile="132" sprite="132" sound="sounds/c.ogg" phoneme="sounds/c.ogg">c</letter>
+        <letter name="d" time="30" tile="133" sprite="133" sound="sounds/d.ogg" phoneme="sounds/d.ogg">d</letter>
+        <letter name="e" time="30" tile="134" sprite="134" sound="sounds/e.ogg" phoneme="sounds/e.ogg">e</letter>
+        <letter name="f" time="30" tile="135" sprite="135" sound="sounds/f.ogg" phoneme="sounds/f.ogg">f</letter>
+        <letter name="g" time="30" tile="136" sprite="136" sound="sounds/g.ogg" phoneme="sounds/g.ogg">g</letter>
+        <letter name="h" time="30" tile="137" sprite="137" sound="sounds/h.ogg" phoneme="sounds/h.ogg">h</letter>
+        <letter name="t" time="30" tile="148" sprite="148" sound="sounds/t.ogg" phoneme="sounds/t.ogg">t</letter>
     </letters>
     <words texture="textures/terrain.png">
-        <word name="cat" time=60 tile=150 sprite=140 sound="sounds/cat.ogg">cat</word>
-        <word name="hat" time=75 tile=151 sprite=141 sound="sounds/hat.ogg">hat</word>
-        <word name="bat" time=90 tile=152 sprite=142 sound="sounds/bat.ogg">bat</word>
+        <word name="cat" time="60" tile="150" sprite="140" sound="sounds/cat.ogg">cat</word>
+        <word name="hat" time="75" tile="151" sprite="141" sound="sounds/hat.ogg">hat</word>
+        <word name="bat" time="90" tile="152" sprite="142" sound="sounds/bat.ogg">bat</word>
     </words>
     <levels>
         <level name="1">

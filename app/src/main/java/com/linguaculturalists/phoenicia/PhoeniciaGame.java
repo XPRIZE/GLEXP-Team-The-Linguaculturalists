@@ -40,6 +40,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.PlacedBlock;
@@ -56,6 +57,7 @@ import javax.xml.parsers.SAXParserFactory;
  * Created by mhall on 3/22/15.
  */
 public class PhoeniciaGame implements IUpdateHandler {
+    public Locale locale;
     public GameActivity activity;
     private TextureManager textureManager;
     private AssetManager assetManager;
@@ -75,6 +77,8 @@ public class PhoeniciaGame implements IUpdateHandler {
     private TMXTiledMap mTMXTiledMap;
 
     private Sound[] blockSounds;
+
+    private final String tst_startLevel = "3";
 
     public PhoeniciaGame(GameActivity activity, final ZoomCamera camera) {
         this.activity = activity;
@@ -137,35 +141,36 @@ public class PhoeniciaGame implements IUpdateHandler {
         final String locale_pack_manifest = "locales/en_us_rural/manifest.xml";
         LocaleLoader localeLoader = new LocaleLoader();
         try {
-            Locale locale = localeLoader.load(assetManager.open(locale_pack_manifest));
+            this.locale = localeLoader.load(assetManager.open(locale_pack_manifest));
             Debug.d("Locale map: "+locale.map_src);
         } catch (final IOException e) {
             Debug.e("Error loading Locale from "+locale_pack_manifest, e);
         }
 
 
-        terrainTexture = new AssetBitmapTexture(textureManager, assetManager, "textures/terrain.png");
+        terrainTexture = new AssetBitmapTexture(textureManager, assetManager, this.locale.map_src);
         terrainTexture.load();
         terrainTiles = TextureRegionFactory.extractTiledFromTexture(terrainTexture, 0, 0, 640, 1024, 10, 16);
 
-        String map_file = "textures/map.tmx";
         try {
             final TMXLoader tmxLoader = new TMXLoader(assetManager, textureManager, TextureOptions.BILINEAR_PREMULTIPLYALPHA, vboManager);
-            this.mTMXTiledMap = tmxLoader.loadFromAsset(map_file);
+            this.mTMXTiledMap = tmxLoader.loadFromAsset(this.locale.map_src);
             for (TMXLayer tmxLayer : this.mTMXTiledMap.getTMXLayers()){
                 scene.attachChild(tmxLayer);
             }
             placedSprites = new Sprite[this.mTMXTiledMap.getTileColumns()][this.mTMXTiledMap.getTileRows()];
         } catch (final TMXLoadException e) {
-            Debug.e("Error loading map at "+map_file, e);
+            Debug.e("Error loading map at "+this.locale.map_src, e);
         }
 
         try {
-            blockSounds = new Sound[26];
-            char letters[] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
-            for (int i = 0; i < 26; i++) {
-                Debug.d("Loading sound file "+i+": sounds/"+letters[i]+".ogg");
-                blockSounds[i] = SoundFactory.createSoundFromAsset(this.soundManager, this.activity, "sounds/"+letters[i]+".ogg");
+            Debug.d("Loading level "+this.tst_startLevel+" letters");
+            List<Letter> blockLetters = locale.level_map.get(this.tst_startLevel).letters;
+            blockSounds = new Sound[blockLetters.size()];
+            for (int i = 0; i < blockLetters.size(); i++) {
+                Letter letter = blockLetters.get(i);
+                Debug.d("Loading sound file "+i+": "+letter.sound);
+                blockSounds[i] = SoundFactory.createSoundFromAsset(this.soundManager, this.activity, letter.sound);
             }
         } catch (IOException e)
         {
@@ -173,7 +178,7 @@ public class PhoeniciaGame implements IUpdateHandler {
         }
 
         this.syncDB();
-
+        this.restart();
         Debug.d("Loading saved blocks");
         List<PlacedBlock> savedBlocks = PlacedBlock.objects(this.activity.getApplicationContext()).all().toList();
         for (int i = 0; i < savedBlocks.size(); i++) {

@@ -5,6 +5,7 @@ import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
 
+import org.andengine.util.debug.Debug;
 import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -56,19 +57,20 @@ public class LocaleParser extends DefaultHandler {
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        Debug.v("Parser start: "+localName);
         if (localName.equals(LocaleParser.TAG_LOCALE)) {
             this.inLocale = true;
             this.parseLocale(attributes);
         } else if (this.inLocale && localName.equals(LocaleParser.TAG_MAP)) {
             this.parseMap(attributes);
-        } else if (this.inLocale && localName.equals(LocaleParser.TAG_LETTERS)) {
+        } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
             if (!this.inLevelDefinition) {
                 this.inLettersList = true;
             }
         } else if (this.inLocale && this.inLettersList && localName.equals(LocaleParser.TAG_LETTER)) {
             this.inLetterDefinition = true;
             this.parseLetterDefinition(attributes);
-        } else if (this.inLocale && localName.equals(LocaleParser.TAG_WORDS)) {
+        } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_WORDS)) {
             if (!this.inLevelDefinition) {
                 this.inWordsList = true;
             }
@@ -99,10 +101,12 @@ public class LocaleParser extends DefaultHandler {
     }
 
     private void parseMap(Attributes attributes) throws SAXException {
+        Debug.v("Parsing locale map");
         this.locale.map_src = attributes.getValue("src");
     }
 
     private void parseLetterDefinition(Attributes attributes) throws SAXException {
+        Debug.v("Parsing locale letter");
         this.currentLetter = new Letter();
         this.currentLetter.name = attributes.getValue("name");
         this.currentLetter.sound = attributes.getValue("sound");
@@ -113,6 +117,7 @@ public class LocaleParser extends DefaultHandler {
     }
 
     private void parseWordDefinition(Attributes attributes) throws SAXException {
+        Debug.v("Parsing locale word");
         this.currentWord = new Word();
         this.currentWord.name = attributes.getValue("name");
         this.currentWord.sound = attributes.getValue("sound");
@@ -122,6 +127,7 @@ public class LocaleParser extends DefaultHandler {
     }
 
     private void parseLevel(Attributes attributes) throws SAXException {
+        Debug.v("Parsing locale level");
         this.currentLevel = new Level();
         this.currentLevel.name = attributes.getValue("name");
         this.currentLevel.letters = new ArrayList<Letter>();
@@ -132,9 +138,10 @@ public class LocaleParser extends DefaultHandler {
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
+        Debug.v("Parser end: "+localName);
         if (localName.equals(LocaleParser.TAG_LOCALE)) {
             this.inLocale = false;
-        } else if (this.inLocale && localName.equals(LocaleParser.TAG_LETTERS)) {
+        } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
             if (!this.inLevelDefinition) {
                 this.inLettersList = false;
             }
@@ -143,7 +150,7 @@ public class LocaleParser extends DefaultHandler {
             this.locale.letter_map.put(this.currentLetter.name, this.currentLetter);
             this.currentLetter = null;
             this.inLetterDefinition = false;
-        } else if (this.inLocale && localName.equals(LocaleParser.TAG_WORDS)) {
+        } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_WORDS)) {
             if (!this.inLevelDefinition) {
                 this.inWordsList = false;
             }
@@ -172,20 +179,37 @@ public class LocaleParser extends DefaultHandler {
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
+        String text = new String(ch, start, length);
         if (this.inLocale && this.inLettersList && this.inLetterDefinition) {
-            this.currentLetter.chars = ch;
+            Debug.v("Adding Letter chars: "+text);
+            this.currentLetter.chars = text.toCharArray();
         } else if (this.inLocale && this.inWordsList && this.inLetterDefinition) {
-                this.currentWord.chars = ch;
+            Debug.v("Adding Word chars: "+text);
+            this.currentWord.chars = text.toCharArray();
         } else if (this.inLocale && this.inLevelDefinition && this.inLevelLetters) {
-            String[] letters =  StringUtils.split(String.copyValueOf(ch), ",");
-            this.currentLevel.letters.add(this.locale.letter_map.get(String.copyValueOf(ch)));
+            Debug.v("Adding Letter "+text+" to Level "+this.currentLevel.name);
+            String[] letters =  StringUtils.split(text, ",");
+            for (int i = 0; i < letters.length; i++) {
+                this.currentLevel.letters.add(this.locale.letter_map.get(letters[i]));
+            }
         } else if (this.inLocale && this.inLevelDefinition && this.inLevelWords) {
-            String[] words =  StringUtils.split(String.copyValueOf(ch), ",");
-            this.currentLevel.words.add(this.locale.word_map.get(String.copyValueOf(ch)));
+            Debug.v("Adding Word "+text+" to Level "+this.currentLevel.name);
+            String[] words =  StringUtils.split(text, ",");
+            for (int i = 0; i < words.length; i++) {
+                this.currentLevel.words.add(this.locale.word_map.get(words[i]));
+            }
         } else if (this.inLocale && this.inLevelDefinition && this.inLevelHelp && this.inLevelHelpLetters) {
-            this.currentLevel.help_letters.add(this.locale.letter_map.get(String.copyValueOf(ch)));
+            Debug.v("Adding help Letter "+text+" to Level "+this.currentLevel.name);
+            String[] letters =  StringUtils.split(text, ",");
+            for (int i = 0; i < letters.length; i++) {
+                this.currentLevel.help_letters.add(this.locale.letter_map.get(letters[i]));
+            }
         } else if (this.inLocale && this.inLevelDefinition && this.inLevelHelp && this.inLevelHelpWords) {
-            this.currentLevel.help_words.add(this.locale.word_map.get(String.copyValueOf(ch)));
+            Debug.v("Adding help Word "+text+" to Level "+this.currentLevel.name);
+            String[] words =  StringUtils.split(text, ",");
+            for (int i = 0; i < words.length; i++) {
+                this.currentLevel.help_words.add(this.locale.word_map.get(words[i]));
+            }
         }
     }
 
