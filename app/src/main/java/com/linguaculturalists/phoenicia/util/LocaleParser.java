@@ -66,6 +66,7 @@ public class LocaleParser extends DefaultHandler {
         } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
             if (!this.inLevelDefinition) {
                 this.inLettersList = true;
+                this.locale.letter_src = attributes.getValue("texture");
             }
         } else if (this.inLocale && this.inLettersList && localName.equals(LocaleParser.TAG_LETTER)) {
             this.inLetterDefinition = true;
@@ -74,6 +75,7 @@ public class LocaleParser extends DefaultHandler {
             if (!this.inLevelDefinition) {
                 this.inWordsList = true;
             }
+            this.locale.word_src = attributes.getValue("texture");
         } else if (this.inLocale && this.inWordsList && localName.equals(LocaleParser.TAG_WORD)) {
             this.inWordDefinition = true;
             this.parseWordDefinition(attributes);
@@ -84,6 +86,8 @@ public class LocaleParser extends DefaultHandler {
             this.parseLevel(attributes);
         } else if (this.inLocale && this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
             this.inLevelLetters = true;
+        } else if (this.inLocale && this.inLevelDefinition && localName.equals(LocaleParser.TAG_HELP)) {
+            this.inLevelHelp = true;
         } else if (this.inLocale && this.inLevelDefinition && localName.equals(LocaleParser.TAG_WORDS)) {
             this.inLevelWords = true;
         } else if (this.inLocale && this.inLevelDefinition && this.inLevelHelp && localName.equals(LocaleParser.TAG_LETTERS)) {
@@ -186,28 +190,28 @@ public class LocaleParser extends DefaultHandler {
         } else if (this.inLocale && this.inWordsList && this.inLetterDefinition) {
             Debug.v("Adding Word chars: "+text);
             this.currentWord.chars = text.toCharArray();
-        } else if (this.inLocale && this.inLevelDefinition && this.inLevelLetters) {
-            Debug.v("Adding Letter "+text+" to Level "+this.currentLevel.name);
+        } else if (this.inLocale && this.inLevelDefinition && !this.inLevelHelp && this.inLevelLetters) {
             String[] letters =  StringUtils.split(text, ",");
             for (int i = 0; i < letters.length; i++) {
+                Debug.v("Adding Letter "+letters[i]+" to Level "+this.currentLevel.name);
                 this.currentLevel.letters.add(this.locale.letter_map.get(letters[i]));
             }
-        } else if (this.inLocale && this.inLevelDefinition && this.inLevelWords) {
-            Debug.v("Adding Word "+text+" to Level "+this.currentLevel.name);
+        } else if (this.inLocale && this.inLevelDefinition && !this.inLevelHelp && this.inLevelWords) {
             String[] words =  StringUtils.split(text, ",");
             for (int i = 0; i < words.length; i++) {
+                Debug.v("Adding Word "+words[i]+" to Level "+this.currentLevel.name);
                 this.currentLevel.words.add(this.locale.word_map.get(words[i]));
             }
         } else if (this.inLocale && this.inLevelDefinition && this.inLevelHelp && this.inLevelHelpLetters) {
-            Debug.v("Adding help Letter "+text+" to Level "+this.currentLevel.name);
             String[] letters =  StringUtils.split(text, ",");
             for (int i = 0; i < letters.length; i++) {
+                Debug.v("Adding help Letter "+letters[i]+" to Level "+this.currentLevel.name);
                 this.currentLevel.help_letters.add(this.locale.letter_map.get(letters[i]));
             }
         } else if (this.inLocale && this.inLevelDefinition && this.inLevelHelp && this.inLevelHelpWords) {
-            Debug.v("Adding help Word "+text+" to Level "+this.currentLevel.name);
             String[] words =  StringUtils.split(text, ",");
             for (int i = 0; i < words.length; i++) {
+                Debug.v("Adding help Word "+words[i]+" to Level "+this.currentLevel.name);
                 this.currentLevel.help_words.add(this.locale.word_map.get(words[i]));
             }
         }

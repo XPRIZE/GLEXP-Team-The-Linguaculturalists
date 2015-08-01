@@ -25,6 +25,8 @@ package com.orm.androrm.field;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * This class can be used for any fields containing 
  * strings, that will then be serialized into the
@@ -68,6 +70,10 @@ public class CharField extends DataField<String> {
 	public void set(Cursor c, String fieldName) {
 		set(c.getString(c.getColumnIndexOrThrow(fieldName)));
 	}
+
+    public void set(char[] chars) {
+        this.set(String.copyValueOf(chars));
+    }
 
 	@Override
 	public void reset() {
