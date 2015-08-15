@@ -1,6 +1,7 @@
 package com.linguaculturalists.phoenicia;
 
 import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.view.MotionEvent;
 
 import org.andengine.audio.sound.Sound;
@@ -18,8 +19,12 @@ import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.tmx.TMXLayer;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.PinchZoomDetector;
+import org.andengine.opengl.font.Font;
+import org.andengine.opengl.font.FontFactory;
+import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.TextureManager;
 import org.andengine.opengl.texture.TextureOptions;
+import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
@@ -31,12 +36,8 @@ import org.andengine.extension.tmx.TMXTile;
 import org.andengine.extension.tmx.TMXTiledMap;
 import org.andengine.extension.tmx.util.exception.TMXLoadException;
 import org.andengine.util.debug.Debug;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,13 +48,10 @@ import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.PlacedBlock;
 import com.linguaculturalists.phoenicia.ui.BlockPlacementHUD;
+import com.linguaculturalists.phoenicia.ui.HUDManager;
 import com.linguaculturalists.phoenicia.util.LocaleLoader;
-import com.linguaculturalists.phoenicia.util.LocaleParser;
 import com.orm.androrm.DatabaseAdapter;
 import com.orm.androrm.Model;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 /**
  * Created by mhall on 3/22/15.
@@ -71,6 +69,9 @@ public class PhoeniciaGame implements IUpdateHandler {
     private float mPinchZoomStartedCameraZoomFactor;
     private PinchZoomDetector mPinchZoomDetector;
 
+    public ITexture fontTexture;
+    public Font defaultFont;
+
     public AssetBitmapTexture terrainTexture;
     public ITiledTextureRegion terrainTiles;
 
@@ -80,9 +81,13 @@ public class PhoeniciaGame implements IUpdateHandler {
 
     private Map<String, Sound> blockSounds;
 
+    private HUDManager hudManager;
+
     private final String tst_startLevel = "3";
 
     public PhoeniciaGame(GameActivity activity, final ZoomCamera camera) {
+        FontFactory.setAssetBasePath("fonts/");
+
         this.activity = activity;
         this.textureManager = activity.getTextureManager();
         this.assetManager = activity.getAssets();
@@ -138,10 +143,10 @@ public class PhoeniciaGame implements IUpdateHandler {
                 return false;
             }
         });
-
     }
 
     public void load() throws IOException {
+        // Load locale pack
         final String locale_pack_manifest = "locales/en_us_rural/manifest.xml";
         LocaleLoader localeLoader = new LocaleLoader();
         try {
@@ -151,7 +156,11 @@ public class PhoeniciaGame implements IUpdateHandler {
             Debug.e("Error loading Locale from "+locale_pack_manifest, e);
         }
 
+        // Load font assets
+        this.defaultFont = FontFactory.create(this.activity.getFontManager(), this.activity.getTextureManager(), 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 32, Color.RED_ARGB_PACKED_INT);
+        this.defaultFont.load();
 
+        // Load map assets
         this.terrainTexture = new AssetBitmapTexture(this.textureManager, this.assetManager, this.locale.letter_src);
         terrainTexture.load();
         this.terrainTiles = TextureRegionFactory.extractTiledFromTexture(this.terrainTexture, 0, 0, 640, 1024, 10, 16);
@@ -167,6 +176,7 @@ public class PhoeniciaGame implements IUpdateHandler {
             Debug.e("Error loading map at "+this.locale.map_src, e);
         }
 
+        // Load Level data
         try {
             Debug.d("Loading level "+this.tst_startLevel+" letters");
             List<Letter> blockLetters = locale.level_map.get(this.tst_startLevel).letters;
@@ -181,6 +191,7 @@ public class PhoeniciaGame implements IUpdateHandler {
             e.printStackTrace();
         }
 
+        // Load game state
         this.syncDB();
         this.restart();
         Debug.d("Loading saved blocks");
@@ -220,7 +231,9 @@ public class PhoeniciaGame implements IUpdateHandler {
     }
     public void start(Camera camera) {
         camera.setCenter(400, -400);
-        camera.setHUD(this.getBlockPlacementHUD());
+        this.hudManager = new HUDManager(this, locale.level_map.get(tst_startLevel));
+        camera.setHUD(this.hudManager);
+        this.hudManager.show(HUDManager.BlockPlacement);
     }
 
     public void reset() {
@@ -231,12 +244,11 @@ public class PhoeniciaGame implements IUpdateHandler {
     }
 
     public HUD getBlockPlacementHUD() {
-        BlockPlacementHUD.init(this, locale.level_map.get(tst_startLevel));
-        return BlockPlacementHUD.getInstance();
+        return new HUDManager(this, locale.level_map.get(tst_startLevel));
     }
 
     public void addBlock(int x, int y) {
-        TMXTile blockTile = this.placeBlock(x, y, BlockPlacementHUD.getPlaceBlock());
+        TMXTile blockTile = this.placeBlock(x+64, y, BlockPlacementHUD.getPlaceBlock());
         if (blockTile != null) {
             PlacedBlock newBlock = new PlacedBlock();
             newBlock.isoX.set(blockTile.getTileColumn());

@@ -1,12 +1,22 @@
 package com.linguaculturalists.phoenicia.ui;
 
+import android.graphics.Typeface;
+
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
 
 import org.andengine.engine.camera.hud.HUD;
+import org.andengine.entity.scene.CameraScene;
+import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.ButtonSprite;
+import org.andengine.entity.text.Text;
+import org.andengine.entity.text.TextOptions;
+import org.andengine.opengl.font.Font;
+import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.util.adt.align.HorizontalAlign;
+import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
 
 import java.util.List;
@@ -14,11 +24,16 @@ import java.util.List;
 /**
  * Created by mhall on 6/19/15.
  */
-public class BlockPlacementHUD extends HUD {
+public class BlockPlacementHUD extends CameraScene {
     private static Letter placeBlock = null;
     private static BlockPlacementHUD instance;
 
     private BlockPlacementHUD(final PhoeniciaGame game, final Level level) {
+        super(game.camera);
+        this.setBackgroundEnabled(false);
+
+        final Font inventoryCountFont = FontFactory.create(game.activity.getFontManager(), game.activity.getTextureManager(), 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 16, Color.WHITE_ARGB_PACKED_INT);
+        inventoryCountFont.load();
         final List<Letter> letters = level.letters;
         final int tile_start = 130;
         for (int i = 0; i < letters.size(); i++) {
@@ -39,6 +54,9 @@ public class BlockPlacementHUD extends HUD {
             });
             this.registerTouchArea(block);
             this.attachChild(block);
+
+            final Text inventoryCount = new Text(64 * ((i * 2)+1)+24, 20, inventoryCountFont, ""+(i+1), game.activity.getVertexBufferObjectManager());
+            this.attachChild(inventoryCount);
         }
         Debug.d("Finished loading HUD letters");
 
@@ -52,6 +70,7 @@ public class BlockPlacementHUD extends HUD {
         });
         this.registerTouchArea(clearBlock);
         this.attachChild(clearBlock);
+
         Debug.d("Finished instantiating BlockPlacementHUD");
     }
 

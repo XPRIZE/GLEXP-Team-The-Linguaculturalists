@@ -13,9 +13,9 @@
         <letter name="t" time="30" tile="148" sprite="148" sound="sounds/t.ogg" phoneme="sounds/t.ogg">t</letter>
     </letters>
     <words texture="textures/terrain.png">
-        <word name="cat" time="60" tile="140" sprite="140" sound="sounds/cat.ogg">cat</word>
-        <word name="hat" time="75" tile="141" sprite="141" sound="sounds/hat.ogg">hat</word>
-        <word name="bat" time="90" tile="142" sprite="142" sound="sounds/bat.ogg">bat</word>
+        <word name="cat" time="60" tile="150" sprite="140" sound="sounds/cat.ogg">cat</word>
+        <word name="hat" time="75" tile="151" sprite="141" sound="sounds/hat.ogg">hat</word>
+        <word name="bat" time="90" tile="152" sprite="142" sound="sounds/bat.ogg">bat</word>
     </words>
     <levels>
         <level name="1">
