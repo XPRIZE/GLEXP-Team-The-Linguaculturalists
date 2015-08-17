@@ -24,7 +24,6 @@ import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.TextureManager;
 import org.andengine.opengl.texture.TextureOptions;
-import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
@@ -46,6 +45,7 @@ import java.util.Map;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.Inventory;
+import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.models.PlacedBlock;
 import com.linguaculturalists.phoenicia.ui.BlockPlacementHUD;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
@@ -82,6 +82,7 @@ public class PhoeniciaGame implements IUpdateHandler {
     private Map<String, Sound> blockSounds;
 
     private HUDManager hudManager;
+    public Inventory inventory;
 
     private final String tst_startLevel = "3";
 
@@ -94,6 +95,8 @@ public class PhoeniciaGame implements IUpdateHandler {
         this.vboManager = activity.getVertexBufferObjectManager();
         this.soundManager = activity.getSoundManager();
         this.camera = camera;
+        Inventory.init(this);
+        this.inventory = Inventory.getInstance();
         scene = new Scene();
         scene.setBackground(new Background(new Color(0, 0, 0)));
 
@@ -206,7 +209,7 @@ public class PhoeniciaGame implements IUpdateHandler {
         List<Class<? extends Model>> models = new ArrayList<Class<? extends Model>>();
         models.add(GameSession.class);
         models.add(PlacedBlock.class);
-        models.add(Inventory.class);
+        models.add(InventoryItem.class);
 
         DatabaseAdapter.setDatabaseName("game_db");
         DatabaseAdapter adapter = new DatabaseAdapter(this.activity.getApplicationContext());
@@ -225,6 +228,7 @@ public class PhoeniciaGame implements IUpdateHandler {
             }
         }
         // Delete DB records
+        Inventory.getInstance().clear();
         DatabaseAdapter adapter = new DatabaseAdapter(this.activity.getApplicationContext());
         adapter.drop();
         this.syncDB();
@@ -317,6 +321,8 @@ public class PhoeniciaGame implements IUpdateHandler {
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
                 Debug.d("Clicked block: "+placeBlock.chars);
                 playBlockSound(placeBlock.sound);
+                Inventory.getInstance().add(placeBlock.name);
+                //BlockPlacementHUD.getInstance().onInventoryUpdated(items);
             }
         });
         block.setZIndex(tileZ);
