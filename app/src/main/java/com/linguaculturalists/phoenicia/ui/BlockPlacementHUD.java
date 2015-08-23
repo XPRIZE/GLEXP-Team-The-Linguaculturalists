@@ -3,12 +3,15 @@ package com.linguaculturalists.phoenicia.ui;
 import android.graphics.Typeface;
 
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
+import com.linguaculturalists.phoenicia.components.Scrollable;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
 
 import org.andengine.engine.camera.hud.HUD;
+import org.andengine.entity.clip.ClipEntity;
+import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.CameraScene;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.ButtonSprite;
@@ -42,19 +45,35 @@ public class BlockPlacementHUD extends CameraScene implements Inventory.Inventor
         Inventory.getInstance().addUpdateListener(this);
         this.game = game;
 
-        final Font inventoryCountFont = FontFactory.create(game.activity.getFontManager(), game.activity.getTextureManager(), 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 16, Color.WHITE_ARGB_PACKED_INT);
+        Rectangle whiteRect = new Rectangle(game.activity.CAMERA_WIDTH/2, 64, 400, 96, game.activity.getVertexBufferObjectManager());
+        whiteRect .setColor(Color.WHITE);
+        this.attachChild(whiteRect);
+
+        Scrollable blockPanel = new Scrollable(game.activity.CAMERA_WIDTH/2, 64, 400, 96, Scrollable.SCROLL_HORIZONTAL);
+        Rectangle redRect = new Rectangle(game.activity.CAMERA_WIDTH/2, 64, 512, 128, game.activity.getVertexBufferObjectManager());
+        redRect.setColor(Color.RED);
+        //blockPanel.attachChild(redRect);
+
+
+        this.registerTouchArea(blockPanel);
+        this.registerTouchArea(blockPanel.contents);
+        this.attachChild(blockPanel);
+
+        final Font inventoryCountFont = FontFactory.create(game.activity.getFontManager(), game.activity.getTextureManager(), 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 16, Color.RED_ARGB_PACKED_INT);
         inventoryCountFont.load();
         final List<Letter> letters = level.letters;
         final int tile_start = 130;
+        final int startX = (int)(blockPanel.getWidth()/2);
         for (int i = 0; i < letters.size(); i++) {
             final Letter currentLetter = letters.get(i);
             Debug.d("Adding HUD letter: "+currentLetter.name+" (tile: "+currentLetter.tile+")");
             final int tile_id = currentLetter.tile;
             ITextureRegion blockRegion = game.terrainTiles.getTextureRegion(tile_id);
-            ButtonSprite block = new ButtonSprite(64 * ((i * 2)+1), 48, blockRegion, game.activity.getVertexBufferObjectManager());
+            ButtonSprite block = new ButtonSprite((64 * ((i * 2)+1))-startX, 48, blockRegion, game.activity.getVertexBufferObjectManager());
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {
+                    Debug.d("Activated block: "+currentLetter.name);
                     if (placeBlock == currentLetter) {
                         placeBlock = null;
                     } else {
@@ -63,10 +82,10 @@ public class BlockPlacementHUD extends CameraScene implements Inventory.Inventor
                 }
             });
             this.registerTouchArea(block);
-            this.attachChild(block);
+            blockPanel.attachChild(block);
 
-            final Text inventoryCount = new Text(64 * ((i * 2)+1)+24, 20, inventoryCountFont, ""+game.inventory.getCount(currentLetter.name), 4, game.activity.getVertexBufferObjectManager());
-            this.attachChild(inventoryCount);
+            final Text inventoryCount = new Text((64 * ((i * 2)+1))-startX+24, 20, inventoryCountFont, ""+game.inventory.getCount(currentLetter.name), 4, game.activity.getVertexBufferObjectManager());
+            blockPanel.attachChild(inventoryCount);
             this.inventoryCounts.put(currentLetter.name, inventoryCount);
         }
         Debug.d("Finished loading HUD letters");
