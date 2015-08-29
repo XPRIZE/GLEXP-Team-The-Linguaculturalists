@@ -62,6 +62,11 @@ public class GameActivity extends BaseGameActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        game.onBackPressed();
+    }
+
+    @Override
     public void onPopulateScene(Scene scene, OnPopulateSceneCallback onPopulateSceneCallback) throws IOException {
 
         game = new PhoeniciaGame(this, main_camera);

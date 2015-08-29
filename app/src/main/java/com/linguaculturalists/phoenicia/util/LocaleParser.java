@@ -187,7 +187,7 @@ public class LocaleParser extends DefaultHandler {
         if (this.inLocale && this.inLettersList && this.inLetterDefinition) {
             Debug.v("Adding Letter chars: "+text);
             this.currentLetter.chars = text.toCharArray();
-        } else if (this.inLocale && this.inWordsList && this.inLetterDefinition) {
+        } else if (this.inLocale && this.inWordsList && this.inWordDefinition) {
             Debug.v("Adding Word chars: "+text);
             this.currentWord.chars = text.toCharArray();
         } else if (this.inLocale && this.inLevelDefinition && !this.inLevelHelp && this.inLevelLetters) {

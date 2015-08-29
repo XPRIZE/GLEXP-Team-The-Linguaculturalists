@@ -43,11 +43,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.linguaculturalists.phoenicia.locale.Letter;
+import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.models.PlacedBlock;
-import com.linguaculturalists.phoenicia.ui.BlockPlacementHUD;
+import com.linguaculturalists.phoenicia.ui.LetterPlacementHUD;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
 import com.linguaculturalists.phoenicia.util.LocaleLoader;
 import com.orm.androrm.DatabaseAdapter;
@@ -76,12 +77,14 @@ public class PhoeniciaGame implements IUpdateHandler {
     public ITiledTextureRegion terrainTiles;
 
     public Sprite[][] placedSprites;
+    private Letter placeLetter;
+    private Word placeWord;
 
     private TMXTiledMap mTMXTiledMap;
 
     private Map<String, Sound> blockSounds;
 
-    private HUDManager hudManager;
+    public HUDManager hudManager;
     public Inventory inventory;
 
     private final String tst_startLevel = "3";
@@ -146,6 +149,9 @@ public class PhoeniciaGame implements IUpdateHandler {
                 return false;
             }
         });
+
+        this.hudManager = new HUDManager(this);
+
     }
 
     public void load() throws IOException {
@@ -181,13 +187,21 @@ public class PhoeniciaGame implements IUpdateHandler {
 
         // Load Level data
         try {
+            SoundFactory.setAssetBasePath("locales/en_us_rural/");
+            blockSounds = new HashMap<String, Sound>();
             Debug.d("Loading level "+this.tst_startLevel+" letters");
             List<Letter> blockLetters = locale.level_map.get(this.tst_startLevel).letters;
-            blockSounds = new HashMap<String, Sound>();
             for (int i = 0; i < blockLetters.size(); i++) {
                 Letter letter = blockLetters.get(i);
                 Debug.d("Loading sound file "+i+": "+letter.sound);
                 blockSounds.put(letter.sound, SoundFactory.createSoundFromAsset(this.soundManager, this.activity, letter.sound));
+            }
+            Debug.d("Loading level "+this.tst_startLevel+" words");
+            List<Word> blockWords = locale.level_map.get(this.tst_startLevel).words;
+            for (int i = 0; i < blockWords.size(); i++) {
+                Word word = blockWords.get(i);
+                Debug.d("Loading sound file "+i+": "+word.sound);
+                blockSounds.put(word.sound, SoundFactory.createSoundFromAsset(this.soundManager, this.activity, word.sound));
             }
         } catch (IOException e)
         {
@@ -204,7 +218,9 @@ public class PhoeniciaGame implements IUpdateHandler {
             Debug.d("Restoring tile "+block.sprite_tile.get()+" at "+block.isoX.get()+"x"+block.isoY.get());
             //this.setBlockAtIso(block.isoX.get(), block.isoY.get(), block.getLetter(locale));
         }
+
     }
+
     private void syncDB() {
         List<Class<? extends Model>> models = new ArrayList<Class<? extends Model>>();
         models.add(GameSession.class);
@@ -235,9 +251,8 @@ public class PhoeniciaGame implements IUpdateHandler {
     }
     public void start(Camera camera) {
         camera.setCenter(400, -400);
-        this.hudManager = new HUDManager(this, locale.level_map.get(tst_startLevel));
         camera.setHUD(this.hudManager);
-        this.hudManager.show(HUDManager.BlockPlacement);
+        this.hudManager.showLetterPlacement(locale.level_map.get(tst_startLevel));
     }
 
     public void reset() {
@@ -247,18 +262,44 @@ public class PhoeniciaGame implements IUpdateHandler {
         // TODO: update build queues
     }
 
-    public HUD getBlockPlacementHUD() {
-        return new HUDManager(this, locale.level_map.get(tst_startLevel));
+    public HUD getHUD() {
+        return this.hudManager;
+    }
+
+    public void onBackPressed() {
+        Debug.d("Back button pressed");
+        this.hudManager.pop();
+    }
+
+    public boolean setPlaceBlock(Letter activateLetter) {
+        this.placeLetter = activateLetter;
+        this.placeWord = null;
+        return true;
+    }
+    public boolean setPlaceBlock(Word activateWord) {
+        this.placeWord = activateWord;
+        this.placeLetter = null;
+        return true;
     }
 
     public void addBlock(int x, int y) {
-        TMXTile blockTile = this.placeBlock(x+64, y, BlockPlacementHUD.getPlaceBlock());
+        TMXTile blockTile = null;
+        if (this.placeLetter != null) {
+            blockTile = this.placeBlock(x + 64, y, this.placeLetter);
+        } else if (this.placeWord != null) {
+            blockTile = this.placeBlock(x + 64, y, this.placeWord);
+        }
         if (blockTile != null) {
             PlacedBlock newBlock = new PlacedBlock();
             newBlock.isoX.set(blockTile.getTileColumn());
             newBlock.isoY.set(blockTile.getTileRow());
-            newBlock.sprite_tile.set(BlockPlacementHUD.getPlaceBlock().tile);
-            newBlock.item_name.set(BlockPlacementHUD.getPlaceBlock().chars);
+            if (this.placeLetter != null) {
+                newBlock.sprite_tile.set(this.placeLetter.tile);
+                newBlock.item_name.set(this.placeLetter.chars);
+            } else if (this.placeWord != null) {
+                newBlock.sprite_tile.set(this.placeWord.tile);
+                newBlock.item_name.set(this.placeWord.chars);
+            }
             Debug.d("Saving block "+newBlock.sprite_tile.get()+" at "+newBlock.isoX.get()+"x"+newBlock.isoY.get());
             if (newBlock.save(this.activity.getApplicationContext())) {
                 Debug.d("Save successful");
@@ -334,7 +375,48 @@ public class PhoeniciaGame implements IUpdateHandler {
         return tmxTile;
     }
 
-    void playBlockSound(String soundFile) {
+    public TMXTile placeBlock(int x, int y, final Word placeBlock) {
+        if (placeBlock == null) {
+            Debug.d("No active block to place");
+            return null;
+        }
+        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
+        final TMXTile tmxTile = tmxLayer.getTMXTileAt(x, y);
+        if (tmxTile == null) {
+            Debug.d("Can't place blocks outside of map");
+            return null;
+        }
+        int tileX = (int)tmxTile.getTileX() - 32;// tiles are 64px wide, assume the touch is targeting the middle
+        int tileY = (int)tmxTile.getTileY() - 32;// tiles are 64px wide, assume the touch is targeting the middle
+        int tileZ = tmxTile.getTileZ();
+
+        if (placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] != null) {
+            scene.detachChild(placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()]);
+            scene.unregisterTouchArea(placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()]);
+            placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = null;
+        }
+
+        ITextureRegion blockRegion = terrainTiles.getTextureRegion(placeBlock.tile);
+        ButtonSprite block = new ButtonSprite(tileX, tileY, blockRegion, vboManager);
+        block.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
+                Debug.d("Clicked block: "+placeBlock.chars);
+                //playBlockSound(placeBlock.sound);
+                //Inventory.getInstance().add(placeBlock.name);
+                hudManager.showWordBuilder(placeBlock);
+            }
+        });
+        block.setZIndex(tileZ);
+        placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = block;
+        scene.registerTouchArea(block);
+        scene.attachChild(block);
+
+        scene.sortChildren();
+        return tmxTile;
+    }
+
+    public void playBlockSound(String soundFile) {
 
         Debug.d("Playing sound: "+soundFile);
 
