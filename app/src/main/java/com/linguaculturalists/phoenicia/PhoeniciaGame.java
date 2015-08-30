@@ -250,7 +250,7 @@ public class PhoeniciaGame implements IUpdateHandler {
         this.syncDB();
     }
     public void start(Camera camera) {
-        camera.setCenter(400, -400);
+        camera.setCenter(50, -500);
         camera.setHUD(this.hudManager);
         this.hudManager.showLetterPlacement(locale.level_map.get(tst_startLevel));
     }
@@ -272,14 +272,26 @@ public class PhoeniciaGame implements IUpdateHandler {
     }
 
     public boolean setPlaceBlock(Letter activateLetter) {
-        this.placeLetter = activateLetter;
-        this.placeWord = null;
-        return true;
+        if (this.placeLetter != null && this.placeLetter.name == activateLetter.name) {
+            this.placeLetter = null;
+            this.placeWord = null;
+            return false;
+        } else {
+            this.placeLetter = activateLetter;
+            this.placeWord = null;
+            return true;
+        }
     }
     public boolean setPlaceBlock(Word activateWord) {
-        this.placeWord = activateWord;
-        this.placeLetter = null;
-        return true;
+        if (this.placeWord != null && this.placeWord.name == activateWord.name) {
+            this.placeWord = null;
+            this.placeLetter = null;
+            return false;
+        } else {
+            this.placeWord = activateWord;
+            this.placeLetter = null;
+            return true;
+        }
     }
 
     public void addBlock(int x, int y) {
@@ -404,7 +416,7 @@ public class PhoeniciaGame implements IUpdateHandler {
                 Debug.d("Clicked block: "+placeBlock.chars);
                 //playBlockSound(placeBlock.sound);
                 //Inventory.getInstance().add(placeBlock.name);
-                hudManager.showWordBuilder(placeBlock);
+                hudManager.showWordBuilder(locale.level_map.get(tst_startLevel), placeBlock);
             }
         });
         block.setZIndex(tileZ);

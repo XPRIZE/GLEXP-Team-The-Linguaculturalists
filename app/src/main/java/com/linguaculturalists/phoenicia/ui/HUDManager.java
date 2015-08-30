@@ -34,8 +34,8 @@ public class HUDManager extends HUD {
         this.push(new WordPlacementHUD(this.game, level));
     }
 
-    public void showWordBuilder(Word word) {
-        WordBuilderHUD hud = new WordBuilderHUD(this.game, word);
+    public void showWordBuilder(final Level level, final Word word) {
+        WordBuilderHUD hud = new WordBuilderHUD(this.game, level, word);
         this.push(hud);
     }
 
