@@ -8,6 +8,8 @@ import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.scene.Scene;
 import org.andengine.util.debug.Debug;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
@@ -44,6 +46,9 @@ public class HUDManager extends HUD {
         try {
             Scene previousHUD = this.hudStack.pop();
             if (previousHUD != null) {
+                if (this.currentHUD instanceof Closeable) {
+                    try { ((Closeable)this.currentHUD).close(); } catch (IOException e) { Debug.e("Failed to close HUD"); }
+                }
                 this.currentHUD = previousHUD;
                 this.setChildScene(previousHUD);
             }

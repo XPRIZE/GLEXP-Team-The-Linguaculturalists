@@ -46,6 +46,7 @@ public class Inventory {
             this.listeners.get(i).onInventoryUpdated(items);
         }
     }
+
     public int add(final String inventory_id) {
         Debug.d("Adding item: " + inventory_id);
         final Filter filter = new Filter();
@@ -76,11 +77,8 @@ public class Inventory {
             InventoryItem item = InventoryItem.objects(this.game.activity).filter(filter).toList().get(0);
             if (item != null) {
                 final int count = item.quantity.get() - 1;
-                if (count == 0) {
-                    item.delete(this.game.activity);
-                } else {
-                    item.quantity.set(count);
-                }
+                item.quantity.set(count);
+                item.save(this.game.activity);
                 this.inventoryUpdated(item);
                 return count;
             }
@@ -93,10 +91,11 @@ public class Inventory {
     public int getCount(String inventory_id) {
         final Filter filter = new Filter();
         filter.is("item_name", inventory_id);
-        InventoryItem item = InventoryItem.objects(this.game.activity).filter(filter).get(0);
-        if (item != null) {
-            return item.quantity.get();
+        List<InventoryItem> items = InventoryItem.objects(this.game.activity).filter(filter).toList();
+        if (items.size() > 0) {
+            return items.get(0).quantity.get();
         } else {
+            Debug.d("No record of inventory item: "+inventory_id);
             return 0;
         }
     }
