@@ -14,6 +14,7 @@ import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.Background;
+import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.tmx.TMXLayer;
@@ -24,6 +25,7 @@ import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.TextureManager;
 import org.andengine.opengl.texture.TextureOptions;
+import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
@@ -42,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.GameSession;
@@ -73,8 +76,14 @@ public class PhoeniciaGame implements IUpdateHandler {
     public ITexture fontTexture;
     public Font defaultFont;
 
-    public AssetBitmapTexture terrainTexture;
-    public ITiledTextureRegion terrainTiles;
+    //public AssetBitmapTexture terrainTexture;
+    //public ITiledTextureRegion terrainTiles;
+
+    public AssetBitmapTexture lettersTexture;
+    public ITiledTextureRegion letterTiles;
+
+    public AssetBitmapTexture wordsTexture;
+    public ITiledTextureRegion wordTiles;
 
     public Sprite[][] placedSprites;
     private Letter placeLetter;
@@ -122,26 +131,33 @@ public class PhoeniciaGame implements IUpdateHandler {
             }
         });
         scene.setOnSceneTouchListener(new IOnSceneTouchListener() {
+            private boolean pressed = false;
             @Override
             public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {
                 mPinchZoomDetector.onTouchEvent(pSceneTouchEvent);
 
                 switch(pSceneTouchEvent.getAction()) {
                     case TouchEvent.ACTION_DOWN:
-                        addBlock((int) pSceneTouchEvent.getX(), (int) pSceneTouchEvent.getY());
+                        this.pressed = true;
                         break;
                     case TouchEvent.ACTION_UP:
-                        //MainActivity.this.mSmoothCamera.setZoomFactor(1.0f);
+                        if (this.pressed) {
+                            addBlock((int) pSceneTouchEvent.getX(), (int) pSceneTouchEvent.getY());
+                            this.pressed = false;
+                            return true;
+                        }
                         break;
                     case TouchEvent.ACTION_MOVE:
+                        this.pressed = false;
                         MotionEvent motion = pSceneTouchEvent.getMotionEvent();
                         if(motion.getHistorySize() > 0){
                             for(int i = 1, n = motion.getHistorySize(); i < n; i++){
                                 int calcX = (int) motion.getHistoricalX(i) - (int) motion.getHistoricalX(i-1);
                                 int calcY = (int) motion.getHistoricalY(i) - (int) motion.getHistoricalY(i-1);
                                 //Debug.d("diffX: "+calcX+", diffY: "+calcY);
+                                final float zoom = camera.getZoomFactor();
 
-                                camera.setCenter(camera.getCenterX() - calcX, camera.getCenterY() + calcY);
+                                camera.setCenter(camera.getCenterX() - (calcX/zoom), camera.getCenterY() + (calcY/zoom));
                             }
                         }
                         return true;
@@ -170,10 +186,6 @@ public class PhoeniciaGame implements IUpdateHandler {
         this.defaultFont.load();
 
         // Load map assets
-        this.terrainTexture = new AssetBitmapTexture(this.textureManager, this.assetManager, this.locale.letter_src);
-        terrainTexture.load();
-        this.terrainTiles = TextureRegionFactory.extractTiledFromTexture(this.terrainTexture, 0, 0, 640, 1024, 10, 16);
-
         try {
             final TMXLoader tmxLoader = new TMXLoader(assetManager, textureManager, TextureOptions.BILINEAR_PREMULTIPLYALPHA, vboManager);
             this.mTMXTiledMap = tmxLoader.loadFromAsset(this.locale.map_src);
@@ -184,6 +196,17 @@ public class PhoeniciaGame implements IUpdateHandler {
         } catch (final TMXLoadException e) {
             Debug.e("Error loading map at "+this.locale.map_src, e);
         }
+
+        // Load letter assets
+        Debug.d("Loading letters texture from "+this.locale.letter_src);
+        this.lettersTexture = new AssetBitmapTexture(this.textureManager, this.assetManager, this.locale.letter_src);
+        this.lettersTexture.load();
+        this.letterTiles = TextureRegionFactory.extractTiledFromTexture(this.lettersTexture, 0, 0, 64*8, this.locale.letters.size()*64, 8, this.locale.letters.size());
+
+        // Load word assets
+        this.wordsTexture = new AssetBitmapTexture(this.textureManager, this.assetManager, this.locale.word_src);
+        wordsTexture.load();
+        this.wordTiles = TextureRegionFactory.extractTiledFromTexture(this.wordsTexture, 0, 0, 640, 1024, 10, 16);
 
         // Load Level data
         try {
@@ -329,16 +352,16 @@ public class PhoeniciaGame implements IUpdateHandler {
         int tileY = (int)tmxTile.getTileY() - 32 ;// tiles are 64px wide, assume the touch is targeting the middle
         int tileZ = tmxTile.getTileZ();
 
-        ITextureRegion blockRegion = terrainTiles.getTextureRegion(placeBlock.tile);
-        ButtonSprite block = new ButtonSprite(tileX, tileY, blockRegion, vboManager);
-        block.setOnClickListener(new ButtonSprite.OnClickListener() {
+        PlacedBlockSprite block = new PlacedBlockSprite(tileX, tileY, placeBlock.tile, letterTiles, vboManager);
+        block.setOnClickListener(new PlacedBlockSprite.OnClickListener() {
             @Override
-            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
+            public void onClick(PlacedBlockSprite buttonSprite, float v, float v2) {
                 Debug.d("Clicked block: "+placeBlock.chars);
                 playBlockSound(placeBlock.sound);
             }
         });
         block.setZIndex(tileZ);
+        block.animate();
         placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = block;
         scene.registerTouchArea(block);
         scene.attachChild(block);
@@ -367,11 +390,10 @@ public class PhoeniciaGame implements IUpdateHandler {
             placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = null;
         }
 
-        ITextureRegion blockRegion = terrainTiles.getTextureRegion(placeBlock.tile);
-        ButtonSprite block = new ButtonSprite(tileX, tileY, blockRegion, vboManager);
-        block.setOnClickListener(new ButtonSprite.OnClickListener() {
+        PlacedBlockSprite block = new PlacedBlockSprite(tileX, tileY, placeBlock.tile, this.letterTiles, vboManager);
+        block.setOnClickListener(new PlacedBlockSprite.OnClickListener() {
             @Override
-            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
+            public void onClick(PlacedBlockSprite buttonSprite, float v, float v2) {
                 Debug.d("Clicked block: "+placeBlock.chars);
                 playBlockSound(placeBlock.sound);
                 Inventory.getInstance().add(placeBlock.name);
@@ -379,6 +401,7 @@ public class PhoeniciaGame implements IUpdateHandler {
             }
         });
         block.setZIndex(tileZ);
+        block.animate();
         placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = block;
         scene.registerTouchArea(block);
         scene.attachChild(block);
@@ -408,7 +431,7 @@ public class PhoeniciaGame implements IUpdateHandler {
             placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = null;
         }
 
-        ITextureRegion blockRegion = terrainTiles.getTextureRegion(placeBlock.tile);
+        ITextureRegion blockRegion = this.wordTiles.getTextureRegion(placeBlock.tile);
         ButtonSprite block = new ButtonSprite(tileX, tileY, blockRegion, vboManager);
         block.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
