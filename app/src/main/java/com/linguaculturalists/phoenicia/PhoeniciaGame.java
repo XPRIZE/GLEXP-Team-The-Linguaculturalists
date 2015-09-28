@@ -40,13 +40,16 @@ import org.andengine.util.debug.Debug;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Word;
+import com.linguaculturalists.phoenicia.models.BuildQueue;
 import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
@@ -96,6 +99,9 @@ public class PhoeniciaGame implements IUpdateHandler {
     public HUDManager hudManager;
     public Inventory inventory;
 
+    private Map<PlacedBlock, BuildQueue> builders;
+    private float updateTime;
+
     private final String tst_startLevel = "3";
 
     public PhoeniciaGame(GameActivity activity, final ZoomCamera camera) {
@@ -113,6 +119,8 @@ public class PhoeniciaGame implements IUpdateHandler {
         scene.setBackground(new Background(new Color(0, 0, 0)));
 
         this.blockSounds = new HashMap<String, Sound>();
+        this.builders = new HashMap<PlacedBlock, BuildQueue>();
+        this.updateTime = 0;
 
         mPinchZoomDetector = new PinchZoomDetector(new PinchZoomDetector.IPinchZoomDetectorListener() {
             @Override
@@ -233,15 +241,34 @@ public class PhoeniciaGame implements IUpdateHandler {
 
         // Load game state
         this.syncDB();
-        this.restart();
+        //this.restart();
         Debug.d("Loading saved blocks");
         List<PlacedBlock> savedBlocks = PlacedBlock.objects(this.activity.getApplicationContext()).all().toList();
         for (int i = 0; i < savedBlocks.size(); i++) {
             PlacedBlock block = savedBlocks.get(i);
-            Debug.d("Restoring tile "+block.sprite_tile.get()+" at "+block.isoX.get()+"x"+block.isoY.get());
-            //this.setBlockAtIso(block.isoX.get(), block.isoY.get(), block.getLetter(locale));
+            Debug.d("Restoring tile "+block.item_name.get()+" at "+block.isoX.get()+"x"+block.isoY.get());
+            if (block.sprite_type.get() == PlacedBlock.TYPE_LETTER) {
+                this.setBlockAtIso(block.isoX.get(), block.isoY.get(), block.getLetter(locale));
+            } else if (block.sprite_type.get() == PlacedBlock.TYPE_WORD) {
+                this.setBlockAtIso(block.isoX.get(), block.isoY.get(), block.getWord(locale));
+            }
         }
 
+        Debug.d("Loading build queues");
+        List<BuildQueue> buildObjects = BuildQueue.objects(this.activity.getApplicationContext()).all().toList();
+        for (int i = 0; i < buildObjects.size(); i++) {
+            BuildQueue builder = buildObjects.get(i);
+            PlacedBlock tile = builder.tile.get(this.activity.getApplicationContext());
+            Debug.d("Restoring builder "+builder.item_name.get());
+            if (tile == null) {
+                Debug.w("Builder "+builder.item_name.get()+" has no tile");
+                builder.delete(this.activity.getApplicationContext());
+                continue;
+            }
+            this.builders.put(tile, builder);
+            Debug.d("Setting builder "+builder.item_name.get()+" to tile "+tile.item_name.get());
+            builder.setUpdateHandler(tile);
+        }
     }
 
     private void syncDB() {
@@ -249,9 +276,10 @@ public class PhoeniciaGame implements IUpdateHandler {
         models.add(GameSession.class);
         models.add(PlacedBlock.class);
         models.add(InventoryItem.class);
+        models.add(BuildQueue.class);
 
         DatabaseAdapter.setDatabaseName("game_db");
-        DatabaseAdapter adapter = new DatabaseAdapter(this.activity.getApplicationContext());
+        DatabaseAdapter adapter = DatabaseAdapter.getInstance(this.activity.getApplicationContext());
         adapter.setModels(models);
     }
 
@@ -268,21 +296,31 @@ public class PhoeniciaGame implements IUpdateHandler {
         }
         // Delete DB records
         Inventory.getInstance().clear();
-        DatabaseAdapter adapter = new DatabaseAdapter(this.activity.getApplicationContext());
+        DatabaseAdapter adapter = DatabaseAdapter.getInstance(this.activity.getApplicationContext());
         adapter.drop();
         this.syncDB();
     }
     public void start(Camera camera) {
         camera.setCenter(50, -500);
         camera.setHUD(this.hudManager);
-        this.hudManager.showLetterPlacement(locale.level_map.get(tst_startLevel));
+        this.hudManager.showDefault(locale.level_map.get(tst_startLevel));
     }
 
     public void reset() {
         // IUpdateHandler.reset
     }
     public void onUpdate(float v) {
-        // TODO: update build queues
+        // update build queues
+        this.updateTime += v;
+        if (this.updateTime > 1) {
+            this.updateTime = 0;
+            for (BuildQueue builder : this.builders.values()) {
+                if (builder.status.get() == BuildQueue.BUILDING) {
+                    builder.update();
+                    builder.save(this.activity.getApplicationContext());
+                }
+            }
+        }
     }
 
     public HUD getHUD() {
@@ -320,24 +358,32 @@ public class PhoeniciaGame implements IUpdateHandler {
     public void addBlock(int x, int y) {
         TMXTile blockTile = null;
         if (this.placeLetter != null) {
-            blockTile = this.placeBlock(x + 64, y, this.placeLetter);
+            blockTile = this.placeBlock(x, y, this.placeLetter);
         } else if (this.placeWord != null) {
-            blockTile = this.placeBlock(x + 64, y, this.placeWord);
+            blockTile = this.placeBlock(x, y, this.placeWord);
         }
         if (blockTile != null) {
             PlacedBlock newBlock = new PlacedBlock();
             newBlock.isoX.set(blockTile.getTileColumn());
             newBlock.isoY.set(blockTile.getTileRow());
             if (this.placeLetter != null) {
-                newBlock.sprite_tile.set(this.placeLetter.tile);
+                newBlock.sprite_type.set(PlacedBlock.TYPE_LETTER);
                 newBlock.item_name.set(this.placeLetter.chars);
             } else if (this.placeWord != null) {
-                newBlock.sprite_tile.set(this.placeWord.tile);
+                newBlock.sprite_type.set(PlacedBlock.TYPE_WORD);
                 newBlock.item_name.set(this.placeWord.chars);
             }
-            Debug.d("Saving block "+newBlock.sprite_tile.get()+" at "+newBlock.isoX.get()+"x"+newBlock.isoY.get());
+            Debug.d("Saving block "+newBlock.item_name.get()+" at "+newBlock.isoX.get()+"x"+newBlock.isoY.get());
             if (newBlock.save(this.activity.getApplicationContext())) {
                 Debug.d("Save successful");
+            }
+
+            if (newBlock.sprite_type.get() == PlacedBlock.TYPE_LETTER) {
+                BuildQueue builder = new BuildQueue(newBlock, newBlock.item_name.get(), 100); // TODO: don't use magic number
+                builder.setUpdateHandler(newBlock);
+                builder.start();
+                builder.save(this.activity.getApplicationContext());
+                this.builders.put(newBlock, builder);
             }
         }
     }
@@ -348,8 +394,8 @@ public class PhoeniciaGame implements IUpdateHandler {
             Debug.d("Can't place blocks outside of map");
             return null;
         }
-        int tileX = (int)tmxTile.getTileX() - 32;// tiles are 64px wide, assume the touch is targeting the middle
-        int tileY = (int)tmxTile.getTileY() - 32 ;// tiles are 64px wide, assume the touch is targeting the middle
+        int tileX = (int)tmxTile.getTileX() - 32;// tiles are 64px wide and anchors in the center
+        int tileY = (int)tmxTile.getTileY() - 32 ;// tiles are 64px wide and anchors in the center
         int tileZ = tmxTile.getTileZ();
 
         PlacedBlockSprite block = new PlacedBlockSprite(tileX, tileY, placeBlock.tile, letterTiles, vboManager);
@@ -358,10 +404,39 @@ public class PhoeniciaGame implements IUpdateHandler {
             public void onClick(PlacedBlockSprite buttonSprite, float v, float v2) {
                 Debug.d("Clicked block: "+placeBlock.chars);
                 playBlockSound(placeBlock.sound);
+                Inventory.getInstance().add(placeBlock.name);
             }
         });
         block.setZIndex(tileZ);
         block.animate();
+        placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = block;
+        scene.registerTouchArea(block);
+        scene.attachChild(block);
+
+        scene.sortChildren();
+        return tmxTile;
+    }
+
+    public TMXTile setBlockAtIso(int tileColumn, int tileRow, final Word placeBlock) {
+        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
+        final TMXTile tmxTile = tmxLayer.getTMXTile(tileColumn, tileRow);
+        if (tmxTile == null) {
+            Debug.d("Can't place blocks outside of map");
+            return null;
+        }
+        int tileX = (int)tmxTile.getTileX() - 32;// tiles are 64px wide and anchors in the center
+        int tileY = (int)tmxTile.getTileY() - 32 ;// tiles are 64px wide and anchors in the center
+        int tileZ = tmxTile.getTileZ();
+
+        ButtonSprite block = new ButtonSprite(tileX, tileY, wordTiles.getTextureRegion(placeBlock.tile), vboManager);
+        block.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
+                Debug.d("Clicked block: "+placeBlock.chars);
+                hudManager.showWordBuilder(locale.level_map.get(tst_startLevel), placeBlock);
+            }
+        });
+        block.setZIndex(tileZ);
         placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = block;
         scene.registerTouchArea(block);
         scene.attachChild(block);

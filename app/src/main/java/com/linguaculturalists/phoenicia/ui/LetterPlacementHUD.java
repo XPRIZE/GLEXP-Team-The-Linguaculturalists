@@ -90,17 +90,6 @@ public class LetterPlacementHUD extends CameraScene implements Inventory.Invento
         }
         Debug.d("Finished loading HUD letters");
 
-        ITextureRegion wordRegion = game.wordTiles.getTextureRegion(157);
-        ButtonSprite wordBlock = new ButtonSprite(64, 64, wordRegion, game.activity.getVertexBufferObjectManager());
-        wordBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
-            @Override
-            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                game.hudManager.showWordPlacement(level);
-            }
-        });
-        this.registerTouchArea(wordBlock);
-        this.attachChild(wordBlock);
-
         Debug.d("Finished instantiating BlockPlacementHUD");
     }
 
@@ -130,7 +119,7 @@ public class LetterPlacementHUD extends CameraScene implements Inventory.Invento
                 countText.setText(items[i].quantity.get().toString());
                 //countText.setText("9");
             } else {
-                Debug.e("No HUD item for "+items[i].item_name.get());
+                Debug.e("[LetterPlacementHUD] No HUD item for "+items[i].item_name.get());
             }
         }
     }

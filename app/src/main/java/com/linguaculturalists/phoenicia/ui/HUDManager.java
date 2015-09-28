@@ -27,6 +27,10 @@ public class HUDManager extends HUD {
         this.hudStack = new Stack<Scene>();
     }
 
+    public void showDefault(final Level level) {
+        this.push(new DefaultHUD(this.game, level));
+    }
+
     public void showLetterPlacement(final Level level) {
         LetterPlacementHUD.init(this.game, level);
         this.push(LetterPlacementHUD.getInstance());

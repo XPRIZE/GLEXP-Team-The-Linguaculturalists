@@ -33,4 +33,9 @@ public class GameSession extends Model {
         this.sessions_played = new IntegerField();
         this.days_played = new IntegerField();
     }
+
+    @Override
+    protected void migrate(Context context) {
+        return;
+    }
 }

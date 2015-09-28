@@ -47,6 +47,24 @@ public class Inventory {
         }
     }
 
+    public InventoryItem get(String inventory_id) {
+        final Filter filter = new Filter();
+        filter.is("item_name", inventory_id);
+        InventoryItem item;
+        try {
+            item = InventoryItem.objects(this.game.activity).filter(filter).toList().get(0);
+            if (item != null) {
+                return item;
+            }
+        } catch (IndexOutOfBoundsException e) {
+            Debug.d("No record for "+inventory_id+", creating a new one");
+        }
+        item = new InventoryItem();
+        item.item_name.set(inventory_id);
+        item.quantity.set(0);
+        return item;
+    }
+
     public int add(final String inventory_id) {
         Debug.d("Adding item: " + inventory_id);
         final Filter filter = new Filter();
@@ -118,4 +136,5 @@ public class Inventory {
     public interface InventoryUpdateListener {
         public void onInventoryUpdated(final InventoryItem[] item);
     }
+
 }

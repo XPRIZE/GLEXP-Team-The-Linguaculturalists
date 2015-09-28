@@ -27,4 +27,9 @@ public class InventoryItem extends Model {
         this.item_name = new CharField(32);
         this.quantity = new IntegerField();
     }
+
+    @Override
+    protected void migrate(Context context) {
+        return;
+    }
 }

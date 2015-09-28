@@ -40,6 +40,7 @@ public class WordBuilderHUD extends CameraScene implements Inventory.InventoryUp
     private int charBlocksX[];
     private int charBlocksY[];
     private Sprite charSprites[];
+    private Map<String, Integer> usedCounts;
     private Map<String, Text> inventoryCounts;
 
     private int cursorAt;
@@ -61,6 +62,7 @@ public class WordBuilderHUD extends CameraScene implements Inventory.InventoryUp
         this.charBlocksY = new int[word.chars.length];
         this.charSprites = new Sprite[word.chars.length];
         this.inventoryCounts = new HashMap<String, Text>();
+        this.usedCounts = new HashMap<String, Integer>();
 
         this.cursorAt = 0;
 
@@ -91,6 +93,7 @@ public class WordBuilderHUD extends CameraScene implements Inventory.InventoryUp
             Rectangle innerRect = new Rectangle(startX+(64*i), whiteRect.getHeight()/2+50, 55, 95, game.activity.getVertexBufferObjectManager());
             innerRect.setColor(Color.WHITE);
             whiteRect.attachChild(innerRect);
+
         }
 
         final Font inventoryCountFont = FontFactory.create(game.activity.getFontManager(), game.activity.getTextureManager(), 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 16, Color.RED_ARGB_PACKED_INT);
@@ -106,10 +109,13 @@ public class WordBuilderHUD extends CameraScene implements Inventory.InventoryUp
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {
                     Debug.d("Activated block: " + currentLetter.name);
-                    if (Inventory.getInstance().getCount(currentLetter.name) > 0) {
+                    if (Inventory.getInstance().getCount(currentLetter.name) > usedCounts.get(currentLetter.name)) {
                         try {
-                            Inventory.getInstance().subtract(currentLetter.name);
+                            usedCounts.put(currentLetter.name, usedCounts.get(currentLetter.name)+1);
                             putChar(currentLetter);
+                            final Text countText = inventoryCounts.get(currentLetter.name);
+                            final int newCount =(Inventory.getInstance().getCount(currentLetter.name)-usedCounts.get(currentLetter.name));
+                            countText.setText("" + newCount);
                         } catch (Exception e) {
                             Debug.e("Failed to update inventory");
                         }
@@ -124,6 +130,7 @@ public class WordBuilderHUD extends CameraScene implements Inventory.InventoryUp
             final Text inventoryCount = new Text(startX+(64*i)+24, whiteRect.getHeight()/2-80, inventoryCountFont, ""+this.game.inventory.getCount(currentLetter.name), 4, game.activity.getVertexBufferObjectManager());
             whiteRect.attachChild(inventoryCount);
             this.inventoryCounts.put(currentLetter.name, inventoryCount);
+            this.usedCounts.put(currentLetter.name, 0);
         }
 
     }
@@ -134,7 +141,6 @@ public class WordBuilderHUD extends CameraScene implements Inventory.InventoryUp
         }
     }
     public void close() {
-        this.clear();
         Inventory.getInstance().removeUpdateListener(this);
     }
 
@@ -159,11 +165,19 @@ public class WordBuilderHUD extends CameraScene implements Inventory.InventoryUp
                     if (String.valueOf(that.spelling).equals(String.valueOf(that.buildWord.chars))) {
                         try {Thread.sleep(700);} catch (InterruptedException e) {}
                         Debug.d("You spelled it!");
-                        Inventory.getInstance().add(that.buildWord.name);
                         that.game.playBlockSound(that.buildWord.sound);
                         try {Thread.sleep(500);} catch (InterruptedException e) {}
-                        that.eraseSpelling();
-                        that.game.hudManager.pop();
+                        try {
+                            for (int i = 0; i < that.spelling.length; i++) {
+                                final String letter = new String(spelling, i, 1);
+                                usedCounts.put(letter, usedCounts.get(letter)-1);
+                                Inventory.getInstance().subtract(letter);
+                            }
+                            that.game.hudManager.pop();
+                            Inventory.getInstance().add(that.buildWord.name);
+                        } catch (Exception e) {
+
+                        }
                     } else {
                         try {Thread.sleep(500);} catch (InterruptedException e) {}
                         that.clear();
@@ -174,20 +188,27 @@ public class WordBuilderHUD extends CameraScene implements Inventory.InventoryUp
         }
     }
 
-    public void clear() {
+    public synchronized void clear() {
         Debug.d("Clearing");
-        cursorAt = 0;
-        for (int i = 0; i < buildWord.chars.length; i++) {
-            if (charSprites[i] != null) {
-                whiteRect.detachChild(charSprites[i]);
-                charSprites[i] = null;
-            }
-            if (spelling[i] != ' ') {
-                game.inventory.add(new String(spelling, i, 1));
-            }
-            spelling[i] = ' ';
+        this.game.activity.runOnUpdateThread(new Runnable() {
+            @Override
+            public void run() {
+                cursorAt = 0;
+                for (int i = 0; i < buildWord.chars.length; i++) {
+                    if (charSprites[i] != null) {
+                        whiteRect.detachChild(charSprites[i]);
+                        charSprites[i] = null;
+                    }
+                    if (spelling[i] != ' ') {
+                        usedCounts.put(new String(spelling, i, 1), 0);
+                        InventoryItem[] items = {Inventory.getInstance().get(new String(spelling, i, 1))};
+                        onInventoryUpdated(items);
+                    }
+                    spelling[i] = ' ';
 
-        }
+                }
+            }
+        });
     }
 
     public void onInventoryUpdated(final InventoryItem[] items) {
@@ -197,10 +218,11 @@ public class WordBuilderHUD extends CameraScene implements Inventory.InventoryUp
             if (this.inventoryCounts.containsKey(items[i].item_name.get())) {
                 Debug.d("New HUD count: "+items[i].quantity.get().toString());
                 final Text countText = this.inventoryCounts.get(items[i].item_name.get());
-                countText.setText(items[i].quantity.get().toString());
+                final int newCount =(items[i].quantity.get()-this.usedCounts.get(items[i].item_name.get()));
+                countText.setText(""+newCount);
                 //countText.setText("9");
             } else {
-                Debug.e("No HUD item for "+items[i].item_name.get());
+                Debug.e("[WordBuilderHUD] No HUD item for "+items[i].item_name.get());
             }
         }
     }

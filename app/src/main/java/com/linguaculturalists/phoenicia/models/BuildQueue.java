@@ -2,11 +2,14 @@ package com.linguaculturalists.phoenicia.models;
 
 import android.content.Context;
 
+import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.orm.androrm.Model;
 import com.orm.androrm.QuerySet;
 import com.orm.androrm.field.CharField;
 import com.orm.androrm.field.ForeignKeyField;
 import com.orm.androrm.field.IntegerField;
+
+import org.andengine.util.debug.Debug;
 
 /**
  * Created by mhall on 7/17/15.
@@ -37,8 +40,24 @@ public class BuildQueue extends Model {
         this.time = new IntegerField();
         this.progress = new IntegerField();
         this.status = new IntegerField();
+        this.progress.set(0);
+        this.status.set(NONE);
+    }
 
-        this.updateHandler = new BuildStatusUpdateHandler() { };
+    public BuildQueue(PlacedBlock block, String item_name, int time) {
+        this(block, item_name, time, null);
+    }
+    public BuildQueue(PlacedBlock block, String item_name, int time, BuildStatusUpdateHandler updateHandler) {
+        this();
+        this.tile.set(block);
+        this.item_name.set(item_name);
+        this.time.set(time);
+
+        if (updateHandler != null) {
+            this.updateHandler = updateHandler;
+        } else {
+            this.updateHandler = new AbstractBuildStatusUpdateHandler() { };
+        }
     }
 
 
@@ -83,7 +102,13 @@ public class BuildQueue extends Model {
     }
 
     // Callbacks to handle changes in the build queue item
-    private abstract class BuildStatusUpdateHandler {
+    public interface BuildStatusUpdateHandler {
+        public void onScheduled(BuildQueue buildItem);
+        public void onStarted(BuildQueue buildItem);
+        public void onCompleted(BuildQueue buildItem);
+        public void onProgressChanged(BuildQueue builtItem);
+    }
+    public abstract class AbstractBuildStatusUpdateHandler implements BuildStatusUpdateHandler {
         public void onScheduled(BuildQueue buildItem) { return; }
         public void onStarted(BuildQueue buildItem) { return; }
         public void onCompleted(BuildQueue buildItem) { return; }
@@ -92,5 +117,10 @@ public class BuildQueue extends Model {
 
     public void setUpdateHandler(BuildStatusUpdateHandler handler) {
         this.updateHandler = handler;
+    }
+
+    @Override
+    protected void migrate(Context context) {
+        return;
     }
 }
