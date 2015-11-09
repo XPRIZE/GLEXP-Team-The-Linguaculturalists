@@ -44,11 +44,12 @@ public class BuildQueue extends Model {
         this.status.set(NONE);
     }
 
-    public BuildQueue(PlacedBlock block, String item_name, int time) {
-        this(block, item_name, time, null);
+    public BuildQueue(GameSession session, PlacedBlock block, String item_name, int time) {
+        this(session, block, item_name, time, null);
     }
-    public BuildQueue(PlacedBlock block, String item_name, int time, BuildStatusUpdateHandler updateHandler) {
+    public BuildQueue(GameSession session, PlacedBlock block, String item_name, int time, BuildStatusUpdateHandler updateHandler) {
         this();
+        this.game.set(session);
         this.tile.set(block);
         this.item_name.set(item_name);
         this.time.set(time);

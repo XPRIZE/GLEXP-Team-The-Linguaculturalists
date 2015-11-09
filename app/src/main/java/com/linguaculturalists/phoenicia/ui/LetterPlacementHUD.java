@@ -29,13 +29,12 @@ import java.util.Map;
  * Created by mhall on 6/19/15.
  */
 public class LetterPlacementHUD extends CameraScene implements Inventory.InventoryUpdateListener {
-    private static Letter placeBlock = null;
-    private static LetterPlacementHUD instance;
+    private Letter placeBlock = null;
     private Map<String, Text> inventoryCounts;
     private PhoeniciaGame game;
 
 
-    private LetterPlacementHUD(final PhoeniciaGame game, final Level level) {
+    public LetterPlacementHUD(final PhoeniciaGame game, final Level level) {
         super(game.camera);
         this.setBackgroundEnabled(false);
         this.inventoryCounts = new HashMap<String, Text>();
@@ -90,23 +89,7 @@ public class LetterPlacementHUD extends CameraScene implements Inventory.Invento
         }
         Debug.d("Finished loading HUD letters");
 
-        Debug.d("Finished instantiating BlockPlacementHUD");
-    }
-
-    public static void init(PhoeniciaGame game, Level level) {
-        Debug.d("Initializing BlockPlacementHUD");
-        instance = new LetterPlacementHUD(game, level);
-    }
-
-    public static LetterPlacementHUD getInstance() {
-        return instance;
-    }
-
-    public static void setPlaceBlock(Letter letter) {
-        instance.placeBlock = letter;
-    }
-    public static Letter getPlaceBlock() {
-        return instance.placeBlock;
+        Debug.d("Finished instantiating LetterPlacementHUD");
     }
 
     public void onInventoryUpdated(final InventoryItem[] items) {

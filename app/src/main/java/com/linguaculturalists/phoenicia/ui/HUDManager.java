@@ -31,11 +31,20 @@ public class HUDManager extends HUD {
         this.push(new DefaultHUD(this.game, level));
     }
 
-    public void showLetterPlacement(final Level level) {
-        LetterPlacementHUD.init(this.game, level);
-        this.push(LetterPlacementHUD.getInstance());
+    public void showLevelIntro(final Level level) {
+        this.push(new LevelIntroHUD(this.game, level));
     }
 
+    public void showLetterPlacement() {
+        this.showLetterPlacement(this.game.locale.level_map.get(this.game.current_level));
+    }
+    public void showLetterPlacement(final Level level) {
+        this.push(new LetterPlacementHUD(this.game, level));
+    }
+
+    public void showWordPlacement() {
+        this.showWordPlacement(this.game.locale.level_map.get(this.game.current_level));
+    }
     public void showWordPlacement(final Level level) {
         this.push(new WordPlacementHUD(this.game, level));
     }

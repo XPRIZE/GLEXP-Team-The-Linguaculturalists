@@ -34,6 +34,7 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
     private boolean touch_was_scroll = false;
     private boolean is_scrolling = false;
     private boolean isInHUD = false;
+    private boolean clip = true;
 
     public Scrollable(float x, float y, float w, float h) {
         this(x, y, w, h, SCROLL_BOTH);
@@ -49,16 +50,20 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
 
     }
 
+    public void setClip(boolean clip) {
+        this.clip = clip;
+    }
+
     @Override
     public boolean onAreaTouched(final TouchEvent pTouchEvent, final float touchX, final float touchY) {
         boolean handled = this.scrollDetector.onManagedTouchEvent(pTouchEvent);
-        Debug.d("scrollDetector: "+handled);
+        //Debug.d("scrollDetector: "+handled);
         if (this.touch_was_scroll || this.is_scrolling) {
-            Debug.d("Touch was scroll ");
+            //Debug.d("Touch was scroll ");
             this.touch_was_scroll = false;
             return true;
         } else  {
-            Debug.d("Touch was not scroll ");
+            //Debug.d("Touch was not scroll ");
             this.touch_was_scroll = false;
             return false;
         }
@@ -71,7 +76,7 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
 
     @Override
     public void onScroll(ScrollDetector scrollDetector, int pointerId, float dx, float dy) {
-        Debug.d("Scrollable.onScroll(scrollDetector, "+pointerId+", "+dx+", "+dy+")");
+        //Debug.d("Scrollable.onScroll(scrollDetector, "+pointerId+", "+dx+", "+dy+")");
         this.touch_was_scroll = true;
 
         float newX = this.contents.getX();
@@ -85,7 +90,7 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
         // Stop at bounds
         float left = newX+(this.contents.getWidth()/2);
         float bottom = newY+(this.contents.getHeight()/2);
-        Debug.d("Checking bounds for "+left+", "+bottom);
+        //Debug.d("Checking bounds for "+left+", "+bottom);
         if (newX-(this.contents.getWidth()/2) < this.getX()-(this.getWidth()/2) || newX+(this.contents.getWidth()/2) > this.getX()+(this.getWidth()/2)) {
             //newX = this.contents.getX();
         }
@@ -93,12 +98,17 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
             //newY = this.contents.getY();
         }
         this.contents.setPosition(newX, newY);
-        Debug.d("this.contents.setPosition("+newX+", "+newY+")");
+        //Debug.d("this.contents.setPosition("+newX+", "+newY+")");
     }
 
     @Override
     public void onScrollFinished(ScrollDetector scrollDetector, int i, float v, float v2) {
         this.is_scrolling = false;
+    }
+
+    @Override
+    public void detachChildren() {
+        this.contents.detachChildren();
     }
 
     @Override
@@ -175,6 +185,10 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
 
     @Override
     protected void onManagedDraw(GLState pGLState, Camera pCamera) {
+
+        if (!this.clip) {
+            super.onManagedDraw(pGLState, pCamera);
+        }
 
         final boolean wasScissorTestEnabled = pGLState.enableScissorTest();
 

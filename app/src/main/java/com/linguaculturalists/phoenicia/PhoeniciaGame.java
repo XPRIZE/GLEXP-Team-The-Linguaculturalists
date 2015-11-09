@@ -41,6 +41,7 @@ import org.andengine.util.debug.Debug;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,7 @@ import java.util.Set;
 
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.locale.Letter;
+import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.BuildQueue;
 import com.linguaculturalists.phoenicia.models.GameSession;
@@ -58,12 +60,13 @@ import com.linguaculturalists.phoenicia.ui.LetterPlacementHUD;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
 import com.linguaculturalists.phoenicia.util.LocaleLoader;
 import com.orm.androrm.DatabaseAdapter;
+import com.orm.androrm.Filter;
 import com.orm.androrm.Model;
 
 /**
  * Created by mhall on 3/22/15.
  */
-public class PhoeniciaGame implements IUpdateHandler {
+public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateListener {
     public Locale locale;
     public GameActivity activity;
     private TextureManager textureManager;
@@ -99,10 +102,13 @@ public class PhoeniciaGame implements IUpdateHandler {
     public HUDManager hudManager;
     public Inventory inventory;
 
+    public GameSession session;
+    public Filter sessionFilter;
     private Map<PlacedBlock, BuildQueue> builders;
     private float updateTime;
 
-    private final String tst_startLevel = "3";
+    public String current_level = "";
+    private List<LevelChangeListener> levelListeners;
 
     public PhoeniciaGame(GameActivity activity, final ZoomCamera camera) {
         FontFactory.setAssetBasePath("fonts/");
@@ -114,6 +120,10 @@ public class PhoeniciaGame implements IUpdateHandler {
         this.soundManager = activity.getSoundManager();
         this.camera = camera;
         Inventory.init(this);
+        Inventory.getInstance().addUpdateListener(this);
+
+        this.levelListeners = new ArrayList<LevelChangeListener>();
+
         this.inventory = Inventory.getInstance();
         scene = new Scene();
         scene.setBackground(new Background(new Color(0, 0, 0)));
@@ -179,6 +189,9 @@ public class PhoeniciaGame implements IUpdateHandler {
     }
 
     public void load() throws IOException {
+        this.syncDB();
+        //this.restart();
+
         // Load locale pack
         final String locale_pack_manifest = "locales/en_us_rural/manifest.xml";
         LocaleLoader localeLoader = new LocaleLoader();
@@ -188,6 +201,17 @@ public class PhoeniciaGame implements IUpdateHandler {
         } catch (final IOException e) {
             Debug.e("Error loading Locale from "+locale_pack_manifest, e);
         }
+
+        // Load game session
+        try {
+            this.session = GameSession.objects(activity).all().toList().get(0);
+            this.current_level = this.session.current_level.get();
+        } catch (IndexOutOfBoundsException e) {
+            this.session = GameSession.start(this.locale);
+        }
+        this.session.save(activity);
+        this.sessionFilter = new Filter();
+        sessionFilter.is("game", this.session);
 
         // Load font assets
         this.defaultFont = FontFactory.create(this.activity.getFontManager(), this.activity.getTextureManager(), 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 32, Color.RED_ARGB_PACKED_INT);
@@ -220,15 +244,15 @@ public class PhoeniciaGame implements IUpdateHandler {
         try {
             SoundFactory.setAssetBasePath("locales/en_us_rural/");
             blockSounds = new HashMap<String, Sound>();
-            Debug.d("Loading level "+this.tst_startLevel+" letters");
-            List<Letter> blockLetters = locale.level_map.get(this.tst_startLevel).letters;
+            Debug.d("Loading level "+this.current_level+" letters");
+            List<Letter> blockLetters = locale.level_map.get(this.session.current_level.get()).letters;
             for (int i = 0; i < blockLetters.size(); i++) {
                 Letter letter = blockLetters.get(i);
                 Debug.d("Loading sound file "+i+": "+letter.sound);
                 blockSounds.put(letter.sound, SoundFactory.createSoundFromAsset(this.soundManager, this.activity, letter.sound));
             }
-            Debug.d("Loading level "+this.tst_startLevel+" words");
-            List<Word> blockWords = locale.level_map.get(this.tst_startLevel).words;
+            Debug.d("Loading level "+this.current_level+" words");
+            List<Word> blockWords = locale.level_map.get(this.session.current_level.get()).words;
             for (int i = 0; i < blockWords.size(); i++) {
                 Word word = blockWords.get(i);
                 Debug.d("Loading sound file "+i+": "+word.sound);
@@ -240,10 +264,8 @@ public class PhoeniciaGame implements IUpdateHandler {
         }
 
         // Load game state
-        this.syncDB();
-        //this.restart();
         Debug.d("Loading saved blocks");
-        List<PlacedBlock> savedBlocks = PlacedBlock.objects(this.activity.getApplicationContext()).all().toList();
+        List<PlacedBlock> savedBlocks = PlacedBlock.objects(this.activity.getApplicationContext()).filter(sessionFilter).toList();
         for (int i = 0; i < savedBlocks.size(); i++) {
             PlacedBlock block = savedBlocks.get(i);
             Debug.d("Restoring tile "+block.item_name.get()+" at "+block.isoX.get()+"x"+block.isoY.get());
@@ -255,7 +277,7 @@ public class PhoeniciaGame implements IUpdateHandler {
         }
 
         Debug.d("Loading build queues");
-        List<BuildQueue> buildObjects = BuildQueue.objects(this.activity.getApplicationContext()).all().toList();
+        List<BuildQueue> buildObjects = BuildQueue.objects(this.activity.getApplicationContext()).filter(sessionFilter).toList();
         for (int i = 0; i < buildObjects.size(); i++) {
             BuildQueue builder = buildObjects.get(i);
             PlacedBlock tile = builder.tile.get(this.activity.getApplicationContext());
@@ -299,11 +321,20 @@ public class PhoeniciaGame implements IUpdateHandler {
         DatabaseAdapter adapter = DatabaseAdapter.getInstance(this.activity.getApplicationContext());
         adapter.drop();
         this.syncDB();
+        this.session = GameSession.start(this.locale);
+        this.session.save(activity);
+        this.current_level = this.session.current_level.get();
+        this.changeLevel(this.locale.level_map.get(this.current_level));
+        this.sessionFilter = new Filter();
+        this.sessionFilter.is("game", this.session);
     }
     public void start(Camera camera) {
         camera.setCenter(50, -500);
         camera.setHUD(this.hudManager);
-        this.hudManager.showDefault(locale.level_map.get(tst_startLevel));
+        this.hudManager.showDefault(locale.level_map.get(this.current_level));
+        if (this.current_level != this.session.current_level.get()) {
+            this.changeLevel(this.locale.level_map.get(this.session.current_level.get()));
+        }
     }
 
     public void reset() {
@@ -364,6 +395,7 @@ public class PhoeniciaGame implements IUpdateHandler {
         }
         if (blockTile != null) {
             PlacedBlock newBlock = new PlacedBlock();
+            newBlock.game.set(this.session);
             newBlock.isoX.set(blockTile.getTileColumn());
             newBlock.isoY.set(blockTile.getTileRow());
             if (this.placeLetter != null) {
@@ -379,7 +411,7 @@ public class PhoeniciaGame implements IUpdateHandler {
             }
 
             if (newBlock.sprite_type.get() == PlacedBlock.TYPE_LETTER) {
-                BuildQueue builder = new BuildQueue(newBlock, newBlock.item_name.get(), 100); // TODO: don't use magic number
+                BuildQueue builder = new BuildQueue(this.session, newBlock, newBlock.item_name.get(), 100); // TODO: don't use magic number
                 builder.setUpdateHandler(newBlock);
                 builder.start();
                 builder.save(this.activity.getApplicationContext());
@@ -433,7 +465,7 @@ public class PhoeniciaGame implements IUpdateHandler {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
                 Debug.d("Clicked block: "+placeBlock.chars);
-                hudManager.showWordBuilder(locale.level_map.get(tst_startLevel), placeBlock);
+                hudManager.showWordBuilder(locale.level_map.get(current_level), placeBlock);
             }
         });
         block.setZIndex(tileZ);
@@ -514,7 +546,7 @@ public class PhoeniciaGame implements IUpdateHandler {
                 Debug.d("Clicked block: "+placeBlock.chars);
                 //playBlockSound(placeBlock.sound);
                 //Inventory.getInstance().add(placeBlock.name);
-                hudManager.showWordBuilder(locale.level_map.get(tst_startLevel), placeBlock);
+                hudManager.showWordBuilder(locale.level_map.get(current_level), placeBlock);
             }
         });
         block.setZIndex(tileZ);
@@ -535,5 +567,38 @@ public class PhoeniciaGame implements IUpdateHandler {
         } else {
             Debug.d("No blockSounds: "+soundFile+"");
         }
+    }
+
+    @Override
+    public void onInventoryUpdated(InventoryItem[] item) {
+        final Level current = this.locale.level_map.get(current_level);
+        if (current.check(activity)) {
+            final Level next = this.locale.levels.get(this.locale.levels.indexOf(current)+1);
+            this.changeLevel(next);
+        }
+    }
+
+    public void changeLevel(Level next) {
+        this.current_level = next.name;
+        this.session.current_level.set(current_level);
+        this.session.save(activity);
+
+        Debug.d("Level changed to: " + current_level);
+        for (int i = 0; i < this.levelListeners.size(); i++) {
+            Debug.d("Calling update listener: "+this.levelListeners.get(i).getClass());
+            this.levelListeners.get(i).onLevelChanged(next);
+        }
+        this.hudManager.showLevelIntro(this.locale.level_map.get(current_level));
+        return;
+    }
+
+    public void addLevelListener(LevelChangeListener listener) {
+        this.levelListeners.add(listener);
+    }
+    public void removeLevelListener(LevelChangeListener listener) {
+        this.levelListeners.remove(listener);
+    }
+    public interface LevelChangeListener {
+        public void onLevelChanged(Level newLevel);
     }
 }

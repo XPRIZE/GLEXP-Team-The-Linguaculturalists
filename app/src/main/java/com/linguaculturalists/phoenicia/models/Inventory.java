@@ -35,7 +35,7 @@ public class Inventory {
     }
 
     public void clear() {
-        List<InventoryItem> itemsList = InventoryItem.objects(this.game.activity).all().toList();
+        List<InventoryItem> itemsList = InventoryItem.objects(this.game.activity).filter(this.game.sessionFilter).toList();
         InventoryItem[] items = new InventoryItem[itemsList.size()];
         items = itemsList.toArray(items);
         for (int i = 0; i < items.length; i++) {
@@ -52,7 +52,7 @@ public class Inventory {
         filter.is("item_name", inventory_id);
         InventoryItem item;
         try {
-            item = InventoryItem.objects(this.game.activity).filter(filter).toList().get(0);
+            item = InventoryItem.objects(this.game.activity).filter(this.game.sessionFilter).filter(filter).toList().get(0);
             if (item != null) {
                 return item;
             }
@@ -62,6 +62,7 @@ public class Inventory {
         item = new InventoryItem();
         item.item_name.set(inventory_id);
         item.quantity.set(0);
+        item.history.set(0);
         return item;
     }
 
@@ -71,16 +72,19 @@ public class Inventory {
         filter.is("item_name", inventory_id);
         InventoryItem item;
         try {
-            item = InventoryItem.objects(this.game.activity).filter(filter).toList().get(0);
+            item = InventoryItem.objects(this.game.activity).filter(this.game.sessionFilter).filter(filter).toList().get(0);
             if (item != null) {
                 Debug.d("Found record for " + inventory_id + ", updating to " + (item.quantity.get() + 1));
                 item.quantity.set(item.quantity.get() + 1);
+                item.history.set(item.history.get() + 1);
             }
         } catch (IndexOutOfBoundsException e) {
             Debug.d("No record for "+inventory_id+", creating a new one");
             item = new InventoryItem();
+            item.game.set(this.game.session);
             item.item_name.set(inventory_id);
             item.quantity.set(1);
+            item.history.set(1);
         }
         item.save(this.game.activity);
         this.inventoryUpdated(item);
@@ -92,7 +96,7 @@ public class Inventory {
         final Filter filter = new Filter();
         filter.is("item_name", inventory_id);
         try {
-            InventoryItem item = InventoryItem.objects(this.game.activity).filter(filter).toList().get(0);
+            InventoryItem item = InventoryItem.objects(this.game.activity).filter(this.game.sessionFilter).filter(filter).toList().get(0);
             if (item != null) {
                 final int count = item.quantity.get() - 1;
                 item.quantity.set(count);
@@ -109,9 +113,21 @@ public class Inventory {
     public int getCount(String inventory_id) {
         final Filter filter = new Filter();
         filter.is("item_name", inventory_id);
-        List<InventoryItem> items = InventoryItem.objects(this.game.activity).filter(filter).toList();
+        List<InventoryItem> items = InventoryItem.objects(this.game.activity).filter(this.game.sessionFilter).filter(filter).toList();
         if (items.size() > 0) {
             return items.get(0).quantity.get();
+        } else {
+            Debug.d("No record of inventory item: "+inventory_id);
+            return 0;
+        }
+    }
+
+    public int getHistory(String inventory_id) {
+        final Filter filter = new Filter();
+        filter.is("item_name", inventory_id);
+        List<InventoryItem> items = InventoryItem.objects(this.game.activity).filter(this.game.sessionFilter).filter(filter).toList();
+        if (items.size() > 0) {
+            return items.get(0).history.get();
         } else {
             Debug.d("No record of inventory item: "+inventory_id);
             return 0;

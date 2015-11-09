@@ -176,7 +176,8 @@ public class WordBuilderHUD extends CameraScene implements Inventory.InventoryUp
                             that.game.hudManager.pop();
                             Inventory.getInstance().add(that.buildWord.name);
                         } catch (Exception e) {
-
+                            Debug.e("Error subtracting letter: "+e.getMessage());
+                            e.printStackTrace();
                         }
                     } else {
                         try {Thread.sleep(500);} catch (InterruptedException e) {}
