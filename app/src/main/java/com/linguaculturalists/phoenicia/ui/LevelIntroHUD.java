@@ -54,9 +54,9 @@ public class LevelIntroHUD extends CameraScene implements IOnSceneTouchListener,
         whiteRect.setColor(Color.WHITE);
         this.attachChild(whiteRect);
 
-        textPanel = new Scrollable(whiteRect.getWidth()/2, whiteRect.getHeight()/2, 400, 400, Scrollable.SCROLL_VERTICAL);
-        whiteRect.attachChild(textPanel);
-        textPanel.setClip(false);
+        textPanel = new Scrollable(game.activity.CAMERA_WIDTH / 2, game.activity.CAMERA_HEIGHT / 2, 400, 400, Scrollable.SCROLL_VERTICAL);
+        this.attachChild(textPanel);
+        //textPanel.setClip(true);
 
         introPageFont = FontFactory.create(game.activity.getFontManager(), game.activity.getTextureManager(), 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 16, Color.BLUE_ARGB_PACKED_INT);
         introPageFont.load();
@@ -77,14 +77,14 @@ public class LevelIntroHUD extends CameraScene implements IOnSceneTouchListener,
         this.current_page = page_index;
         final String nextPage = level.intro.get(page_index).text;
         final TextOptions introTextOptions = new TextOptions(AutoWrap.WORDS, 400, HorizontalAlign.CENTER);
-        final Text introPageText = new Text(textPanel.getWidth()/2, textPanel.getHeight() - 20, introPageFont, nextPage, introTextOptions, game.activity.getVertexBufferObjectManager());
+        final Text introPageText = new Text(-textPanel.getWidth()/2, textPanel.getHeight()/2, introPageFont, nextPage, introTextOptions, game.activity.getVertexBufferObjectManager());
         textPanel.detachChildren();
         textPanel.attachChild(introPageText);
 
     }
     public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {
         if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
-            if (this.current_page + 1 < this.level.intro.size()) {
+            if (this.level.intro.size() > this.current_page + 1) {
                 this.showPage(this.current_page + 1);
             } else {
                 this.game.hudManager.pop();

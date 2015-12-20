@@ -4,6 +4,7 @@ import android.graphics.PointF;
 import android.opengl.GLES20;
 
 import org.andengine.engine.camera.Camera;
+import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.Entity;
 import org.andengine.entity.IEntity;
@@ -35,6 +36,8 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
     private boolean is_scrolling = false;
     private boolean isInHUD = false;
     private boolean clip = true;
+
+    private boolean print_debug = true;
 
     public Scrollable(float x, float y, float w, float h) {
         this(x, y, w, h, SCROLL_BOTH);
@@ -135,19 +138,19 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
 			/* In order to apply clipping, we need to determine the the axis aligned bounds in OpenGL coordinates. */
 
 			/* Determine clipping coordinates of each corner in surface coordinates. */
-        final float[] lowerLeftSurfaceCoordinates = pCamera.getSurfaceCoordinatesFromSceneCoordinates(this.convertLocalCoordinatesToSceneCoordinates(0, 0));
+        final float[] lowerLeftSurfaceCoordinates = pCamera.getSurfaceCoordinatesFromSceneCoordinates(this.convertLocalCoordinatesToSceneCoordinates(0, 0, new float[2]));
         final int lowerLeftX = (int)Math.round(lowerLeftSurfaceCoordinates[Constants.VERTEX_INDEX_X]);
         final int lowerLeftY = surfaceHeight - (int)Math.round(lowerLeftSurfaceCoordinates[Constants.VERTEX_INDEX_Y]);
 
-        final float[] upperLeftSurfaceCoordinates = pCamera.getSurfaceCoordinatesFromSceneCoordinates(this.convertLocalCoordinatesToSceneCoordinates(0, this.mHeight));
+        final float[] upperLeftSurfaceCoordinates = pCamera.getSurfaceCoordinatesFromSceneCoordinates(this.convertLocalCoordinatesToSceneCoordinates(0, this.mHeight, new float[2]));
         final int upperLeftX = (int)Math.round(upperLeftSurfaceCoordinates[Constants.VERTEX_INDEX_X]);
         final int upperLeftY = surfaceHeight - (int)Math.round(upperLeftSurfaceCoordinates[Constants.VERTEX_INDEX_Y]);
 
-        final float[] upperRightSurfaceCoordinates = pCamera.getSurfaceCoordinatesFromSceneCoordinates(this.convertLocalCoordinatesToSceneCoordinates(this.mWidth, this.mHeight));
+        final float[] upperRightSurfaceCoordinates = pCamera.getSurfaceCoordinatesFromSceneCoordinates(this.convertLocalCoordinatesToSceneCoordinates(this.mWidth, this.mHeight, new float[2]));
         final int upperRightX = (int)Math.round(upperRightSurfaceCoordinates[Constants.VERTEX_INDEX_X]);
         final int upperRightY = surfaceHeight - (int)Math.round(upperRightSurfaceCoordinates[Constants.VERTEX_INDEX_Y]);
 
-        final float[] lowerRightSurfaceCoordinates = pCamera.getSurfaceCoordinatesFromSceneCoordinates(this.convertLocalCoordinatesToSceneCoordinates(this.mWidth, 0));
+        final float[] lowerRightSurfaceCoordinates = pCamera.getSurfaceCoordinatesFromSceneCoordinates(this.convertLocalCoordinatesToSceneCoordinates(this.mWidth, 0, new float[2]));
         final int lowerRightX = (int)Math.round(lowerRightSurfaceCoordinates[Constants.VERTEX_INDEX_X]);
         final int lowerRightY = surfaceHeight - (int)Math.round(lowerRightSurfaceCoordinates[Constants.VERTEX_INDEX_Y]);
 
@@ -168,13 +171,28 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
     }
 
     private void clipForHUD(GLState pGLState, Camera pCamera) {
-        final float screenRatioX = 1.53333f;
-        final float screenRatioY = 1.53333f;//pCamera.getWidth()/pCamera.getHeight();
-        final float left = (this.getX() - (this.getWidth()/2)) * screenRatioX;
-        final float bottom = (this.getY() - (this.getHeight()/2)) * screenRatioY;
-        final float width = this.getWidth() * screenRatioX;
-        final float height = this.getHeight() * screenRatioY;
-        //Debug.d("clipForHUD: GLES20.glScissor("+left+", "+bottom+", "+width+", "+height+")");
+        float[] coordinates = this.getParent().convertLocalCoordinatesToSceneCoordinates(this.mX, this.mY, new float[2]);
+        float[] size = this.getParent().convertLocalCoordinatesToSceneCoordinates(this.mWidth, this.mHeight, new float[2]);
+        final float zoom = ((ZoomCamera)pCamera).getZoomFactor();
+        final float screenRatioX = pCamera.getSurfaceWidth()/pCamera.getWidth();
+        final float screenRatioY = pCamera.getSurfaceHeight()/pCamera.getHeight();
+        final float left = (this.mX - (this.mWidth/2)) * screenRatioX / zoom;
+        final float bottom = (this.mY - (this.mHeight/2)) * screenRatioY / zoom;
+        final float width = this.mWidth * screenRatioX / zoom;
+        final float height = this.mHeight * screenRatioY / zoom;
+        if (print_debug) {
+            Debug.d("Scrollable X: " + this.mX);
+            Debug.d("Scrollable Y: " + this.mY);
+            Debug.d("Scrollable W: " + this.mWidth);
+            Debug.d("Scrollable H: " + this.mHeight);
+            Debug.d("Scrollable x,y: "+coordinates[Constants.VERTEX_INDEX_X]+","+coordinates[Constants.VERTEX_INDEX_Y]);
+            Debug.d("Scrollable w,h: " + size[Constants.VERTEX_INDEX_X]+","+size[Constants.VERTEX_INDEX_Y]);
+            Debug.d("clipForHUD: GLES20.glScissor("+left+", "+bottom+", "+width+", "+height+")");
+            Debug.d("Scrollable camera zoom: " + zoom);
+            Debug.d("Scrollable screenRatioX: " + pCamera.getSurfaceWidth()/pCamera.getWidth());
+            Debug.d("Scrollable screenRatioY: " + pCamera.getSurfaceHeight()/pCamera.getHeight());
+            print_debug = false;
+        }
         GLES20.glScissor((int)left, (int)bottom, (int)width, (int)height);
         //        Math.round(((clipX + point.x)) * screenRatioX),
         //        Math.round((cameraH - ((clipY + point.y) + clipH)) * screenRatioY),

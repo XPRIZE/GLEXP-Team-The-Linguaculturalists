@@ -34,10 +34,10 @@ import java.io.IOException;
  */
 public class GameActivity extends BaseGameActivity {
 
-    public static final int CAMERA_WIDTH = 800;
-    public static final int CAMERA_HEIGHT = 480;
+    public static final int CAMERA_WIDTH = 1280;
+    public static final int CAMERA_HEIGHT = 800;
 
-    private ZoomCamera main_camera = new ZoomCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
+    public ZoomCamera main_camera = new ZoomCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
     private PhoeniciaGame game;
     private SplashScene splash;
 
@@ -81,7 +81,7 @@ public class GameActivity extends BaseGameActivity {
                     splash.detachSelf();
                     mEngine.setScene(game.scene);
                     mEngine.registerUpdateHandler(game);
-                    game.start(main_camera);
+                    game.start();
                 } catch (final IOException e) {
                     Debug.e("Failed to load game!", e);
                 }

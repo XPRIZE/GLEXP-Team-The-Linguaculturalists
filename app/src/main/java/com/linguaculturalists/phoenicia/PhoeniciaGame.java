@@ -14,7 +14,6 @@ import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.Background;
-import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.tmx.TMXLayer;
@@ -25,7 +24,6 @@ import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.TextureManager;
 import org.andengine.opengl.texture.TextureOptions;
-import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
@@ -40,12 +38,9 @@ import org.andengine.util.debug.Debug;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.locale.Letter;
@@ -56,7 +51,6 @@ import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.models.PlacedBlock;
-import com.linguaculturalists.phoenicia.ui.LetterPlacementHUD;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
 import com.linguaculturalists.phoenicia.util.LocaleLoader;
 import com.orm.androrm.DatabaseAdapter;
@@ -82,14 +76,22 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public ITexture fontTexture;
     public Font defaultFont;
 
-    //public AssetBitmapTexture terrainTexture;
-    //public ITiledTextureRegion terrainTiles;
+    public AssetBitmapTexture shellTexture;
+    public ITiledTextureRegion shellTiles;
 
-    public AssetBitmapTexture lettersTexture;
-    public ITiledTextureRegion letterTiles;
+    // To be deprecated
+    //public AssetBitmapTexture lettersTexture;
+    //public ITiledTextureRegion letterTiles;
 
-    public AssetBitmapTexture wordsTexture;
-    public ITiledTextureRegion wordTiles;
+    public Map<Letter, AssetBitmapTexture> letterTextures;
+    public Map<Letter, ITiledTextureRegion> letterTiles;
+
+    // To be deprecated
+    //public AssetBitmapTexture wordsTexture;
+    //public ITiledTextureRegion wordTiles;
+
+    public Map<Word, AssetBitmapTexture> wordTextures;
+    public Map<Word, ITiledTextureRegion> wordTiles;
 
     public Sprite[][] placedSprites;
     private Letter placeLetter;
@@ -131,6 +133,12 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.blockSounds = new HashMap<String, Sound>();
         this.builders = new HashMap<PlacedBlock, BuildQueue>();
         this.updateTime = 0;
+
+        this.letterTextures = new HashMap<Letter, AssetBitmapTexture>();
+        this.letterTiles = new HashMap<Letter, ITiledTextureRegion>();
+
+        this.wordTextures = new HashMap<Word, AssetBitmapTexture>();
+        this.wordTiles = new HashMap<Word, ITiledTextureRegion>();
 
         mPinchZoomDetector = new PinchZoomDetector(new PinchZoomDetector.IPinchZoomDetectorListener() {
             @Override
@@ -229,30 +237,54 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             Debug.e("Error loading map at "+this.locale.map_src, e);
         }
 
-        // Load letter assets
-        Debug.d("Loading letters texture from "+this.locale.letter_src);
-        this.lettersTexture = new AssetBitmapTexture(this.textureManager, this.assetManager, this.locale.letter_src);
-        this.lettersTexture.load();
-        this.letterTiles = TextureRegionFactory.extractTiledFromTexture(this.lettersTexture, 0, 0, 64*8, this.locale.letters.size()*64, 8, this.locale.letters.size());
+        try {
+            shellTexture = new AssetBitmapTexture(this.textureManager, this.assetManager, this.locale.shell_src);
+            shellTexture.load();
+            shellTiles = TextureRegionFactory.extractTiledFromTexture(shellTexture, 0, 0, 64 * 8, 64 * 8, 8, 8);
 
-        // Load word assets
-        this.wordsTexture = new AssetBitmapTexture(this.textureManager, this.assetManager, this.locale.word_src);
-        wordsTexture.load();
-        this.wordTiles = TextureRegionFactory.extractTiledFromTexture(this.wordsTexture, 0, 0, 640, 1024, 10, 16);
+        } catch (final IOException e) {
+            e.printStackTrace();
+            throw e;
+        }
+        List<Letter> blockLetters = locale.letters;
+        List<Word> blockWords = locale.words;
+        try {
+            // Load letter assets
+            for (int i = 0; i < blockLetters.size(); i++) {
+                Letter letter = blockLetters.get(i);
+                Debug.d("Loading letter texture from " + letter.texture_src);
+                final AssetBitmapTexture letterTexture = new AssetBitmapTexture(this.textureManager, this.assetManager, letter.texture_src);
+                letterTexture.load();
+                this.letterTextures.put(letter, letterTexture);
+                this.letterTiles.put(letter, TextureRegionFactory.extractTiledFromTexture(letterTexture, 0, 0, 64 * 4, 64 * 5, 4, 5));
+            }
 
-        // Load Level data
+            // Load word assets
+            for (int i = 0; i < blockWords.size(); i++) {
+                Word word = blockWords.get(i);
+                Debug.d("Loading word texture from " + word.texture_src);
+                final AssetBitmapTexture wordTexture = new AssetBitmapTexture(this.textureManager, this.assetManager, word.texture_src);
+                wordTexture.load();
+                this.wordTextures.put(word, wordTexture);
+                this.wordTiles.put(word, TextureRegionFactory.extractTiledFromTexture(wordTexture, 0, 0, 64 * 4, 64 * 5, 4, 5));
+            }
+        } catch (final IOException e)
+        {
+            e.printStackTrace();
+            throw e;
+        }
+
+        // Load sound data
         try {
             SoundFactory.setAssetBasePath("locales/en_us_rural/");
             blockSounds = new HashMap<String, Sound>();
             Debug.d("Loading level "+this.current_level+" letters");
-            List<Letter> blockLetters = locale.level_map.get(this.session.current_level.get()).letters;
             for (int i = 0; i < blockLetters.size(); i++) {
                 Letter letter = blockLetters.get(i);
                 Debug.d("Loading sound file "+i+": "+letter.sound);
                 blockSounds.put(letter.sound, SoundFactory.createSoundFromAsset(this.soundManager, this.activity, letter.sound));
             }
             Debug.d("Loading level "+this.current_level+" words");
-            List<Word> blockWords = locale.level_map.get(this.session.current_level.get()).words;
             for (int i = 0; i < blockWords.size(); i++) {
                 Word word = blockWords.get(i);
                 Debug.d("Loading sound file "+i+": "+word.sound);
@@ -306,6 +338,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     }
 
     public void restart() {
+        // Stop build queues
+        this.builders.clear();
+
         // Detach sprites
         for (int c = 0; c < placedSprites.length; c++) {
             for (int r = 0; r < placedSprites[c].length; r++) {
@@ -328,9 +363,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.sessionFilter = new Filter();
         this.sessionFilter.is("game", this.session);
     }
-    public void start(Camera camera) {
-        camera.setCenter(50, -500);
-        camera.setHUD(this.hudManager);
+    public void start() {
+        this.camera.setCenter(50, -500);
+        this.camera.setHUD(this.hudManager);
         this.hudManager.showDefault(locale.level_map.get(this.current_level));
         if (this.current_level != this.session.current_level.get()) {
             this.changeLevel(this.locale.level_map.get(this.session.current_level.get()));
@@ -430,7 +465,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         int tileY = (int)tmxTile.getTileY() - 32 ;// tiles are 64px wide and anchors in the center
         int tileZ = tmxTile.getTileZ();
 
-        PlacedBlockSprite block = new PlacedBlockSprite(tileX, tileY, placeBlock.tile, letterTiles, vboManager);
+        PlacedBlockSprite block = new PlacedBlockSprite(tileX, tileY, 4, letterTiles.get(placeBlock), vboManager);
         block.setOnClickListener(new PlacedBlockSprite.OnClickListener() {
             @Override
             public void onClick(PlacedBlockSprite buttonSprite, float v, float v2) {
@@ -460,7 +495,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         int tileY = (int)tmxTile.getTileY() - 32 ;// tiles are 64px wide and anchors in the center
         int tileZ = tmxTile.getTileZ();
 
-        ButtonSprite block = new ButtonSprite(tileX, tileY, wordTiles.getTextureRegion(placeBlock.tile), vboManager);
+        ButtonSprite block = new ButtonSprite(tileX, tileY, wordTiles.get(placeBlock).getTextureRegion(4), vboManager);
         block.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -497,7 +532,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = null;
         }
 
-        PlacedBlockSprite block = new PlacedBlockSprite(tileX, tileY, placeBlock.tile, this.letterTiles, vboManager);
+        PlacedBlockSprite block = new PlacedBlockSprite(tileX, tileY, 4, this.letterTiles.get(placeBlock), vboManager);
         block.setOnClickListener(new PlacedBlockSprite.OnClickListener() {
             @Override
             public void onClick(PlacedBlockSprite buttonSprite, float v, float v2) {
@@ -538,7 +573,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = null;
         }
 
-        ITextureRegion blockRegion = this.wordTiles.getTextureRegion(placeBlock.tile);
+        ITextureRegion blockRegion = this.wordTiles.get(placeBlock).getTextureRegion(4);
         ButtonSprite block = new ButtonSprite(tileX, tileY, blockRegion, vboManager);
         block.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
@@ -572,7 +607,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     @Override
     public void onInventoryUpdated(InventoryItem[] item) {
         final Level current = this.locale.level_map.get(current_level);
-        if (current.check(activity)) {
+        if (current.check(activity) && this.locale.levels.size() > this.locale.levels.indexOf(current)+1) {
             final Level next = this.locale.levels.get(this.locale.levels.indexOf(current)+1);
             this.changeLevel(next);
         }

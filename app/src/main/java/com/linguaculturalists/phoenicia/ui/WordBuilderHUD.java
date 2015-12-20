@@ -21,6 +21,7 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
 
@@ -70,7 +71,7 @@ public class WordBuilderHUD extends CameraScene implements Inventory.InventoryUp
         whiteRect.setColor(Color.WHITE);
         this.attachChild(whiteRect);
 
-        ITextureRegion wordSpriteRegion = game.wordTiles.getTextureRegion(this.buildWord.sprite);
+        ITextureRegion wordSpriteRegion = game.wordTiles.get(word).getTextureRegion(0);
         ButtonSprite wordSprite = new ButtonSprite((whiteRect.getWidth()/2), (game.activity.CAMERA_HEIGHT/2)+100, wordSpriteRegion, game.activity.getVertexBufferObjectManager());
         wordSprite.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
@@ -103,7 +104,10 @@ public class WordBuilderHUD extends CameraScene implements Inventory.InventoryUp
             final Letter currentLetter = level.letters.get(i);
             Debug.d("Adding Builder letter: "+currentLetter.name+" (tile: "+currentLetter.tile+")");
             final int tile_id = currentLetter.sprite;
-            final ITextureRegion blockRegion = game.letterTiles.getTextureRegion(tile_id);
+            final ITextureRegion blockRegion = new TiledTextureRegion(game.letterTextures.get(currentLetter),
+                    game.letterTiles.get(currentLetter).getTextureRegion(0),
+                    game.letterTiles.get(currentLetter).getTextureRegion(1),
+                    game.letterTiles.get(currentLetter).getTextureRegion(2));
             final ButtonSprite block = new ButtonSprite(startX+(64*i), whiteRect.getHeight()/2-50, blockRegion, game.activity.getVertexBufferObjectManager());
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
@@ -150,7 +154,7 @@ public class WordBuilderHUD extends CameraScene implements Inventory.InventoryUp
             return;
         }
         final int startX = 200 - (this.buildWord.chars.length * 35) + 35; // TODO: replace magic numbers
-        final ITextureRegion blockRegion = game.letterTiles.getTextureRegion(letter.sprite);
+        final ITextureRegion blockRegion = game.letterTiles.get(letter).getTextureRegion(0);
         final Sprite character = new Sprite(this.charBlocksX[cursorAt], this.charBlocksY[cursorAt], blockRegion, game.activity.getVertexBufferObjectManager());
         this.whiteRect.attachChild(character);
         this.charSprites[this.cursorAt] = character;

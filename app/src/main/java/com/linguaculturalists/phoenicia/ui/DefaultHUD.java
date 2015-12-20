@@ -32,7 +32,7 @@ public class DefaultHUD extends CameraScene implements PhoeniciaGame.LevelChange
         levelDisplay = new Text(32, game.camera.getHeight()-24, levelFont, "Level: "+game.current_level, 10, game.activity.getVertexBufferObjectManager());
         this.attachChild(levelDisplay);
 
-        ITextureRegion letterRegion = game.wordTiles.getTextureRegion(114);
+        ITextureRegion letterRegion = game.shellTiles.getTextureRegion(0);
         ButtonSprite letterBlock = new ButtonSprite(GameActivity.CAMERA_WIDTH-(64*3), 64, letterRegion, game.activity.getVertexBufferObjectManager());
         letterBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
@@ -43,7 +43,7 @@ public class DefaultHUD extends CameraScene implements PhoeniciaGame.LevelChange
         this.registerTouchArea(letterBlock);
         this.attachChild(letterBlock);
 
-        ITextureRegion wordRegion = game.wordTiles.getTextureRegion(157);
+        ITextureRegion wordRegion = game.shellTiles.getTextureRegion(1);
         ButtonSprite wordBlock = new ButtonSprite(GameActivity.CAMERA_WIDTH-64, 64, wordRegion, game.activity.getVertexBufferObjectManager());
         wordBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
@@ -54,7 +54,7 @@ public class DefaultHUD extends CameraScene implements PhoeniciaGame.LevelChange
         this.registerTouchArea(wordBlock);
         this.attachChild(wordBlock);
 
-        ITextureRegion clearRegion = game.wordTiles.getTextureRegion(159);
+        ITextureRegion clearRegion = game.shellTiles.getTextureRegion(2);
         ButtonSprite clearBlock = new ButtonSprite(GameActivity.CAMERA_WIDTH-32, GameActivity.CAMERA_HEIGHT-48, clearRegion, game.activity.getVertexBufferObjectManager());
         clearBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override

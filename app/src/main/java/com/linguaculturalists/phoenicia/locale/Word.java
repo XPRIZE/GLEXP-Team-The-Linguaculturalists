@@ -10,4 +10,5 @@ public class Word {
     public int sprite;
     public String sound;
     public char[] chars;
+    public String texture_src;
 }

@@ -19,8 +19,7 @@ public class Locale {
     public String lang;
 
     public String map_src;
-    public String letter_src;
-    public String word_src;
+    public String shell_src;
 
     public String letters_texture;
     public List<Letter> letters;

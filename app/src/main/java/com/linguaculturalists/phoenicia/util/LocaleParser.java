@@ -24,6 +24,7 @@ public class LocaleParser extends DefaultHandler {
 
     private static final String TAG_LOCALE = "locale";
     private static final String TAG_MAP = "map";
+    private static final String TAG_SHELL = "shell";
     private static final String TAG_LETTERS = "letters";
     private static final String TAG_LETTER = "letter";
     private static final String TAG_WORDS = "words";
@@ -80,10 +81,11 @@ public class LocaleParser extends DefaultHandler {
             this.parseLocale(attributes);
         } else if (this.inLocale && localName.equals(LocaleParser.TAG_MAP)) {
             this.parseMap(attributes);
+        } else if (this.inLocale && localName.equals(LocaleParser.TAG_SHELL)) {
+            this.parseShell(attributes);
         } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
             if (!this.inLevelDefinition) {
                 this.inLettersList = true;
-                this.locale.letter_src = attributes.getValue("texture");
             }
         } else if (this.inLocale && this.inLettersList && localName.equals(LocaleParser.TAG_LETTER)) {
             this.inLetterDefinition = true;
@@ -92,7 +94,6 @@ public class LocaleParser extends DefaultHandler {
             if (!this.inLevelDefinition) {
                 this.inWordsList = true;
             }
-            this.locale.word_src = attributes.getValue("texture");
         } else if (this.inLocale && this.inWordsList && localName.equals(LocaleParser.TAG_WORD)) {
             this.inWordDefinition = true;
             this.parseWordDefinition(attributes);
@@ -141,15 +142,19 @@ public class LocaleParser extends DefaultHandler {
         this.locale.map_src = attributes.getValue("src");
     }
 
+    private void parseShell(Attributes attributes) throws SAXException {
+        Debug.v("Parsing locale shell");
+        this.locale.shell_src = attributes.getValue("src");
+    }
+
     private void parseLetterDefinition(Attributes attributes) throws SAXException {
         Debug.v("Parsing locale letter");
         this.currentLetter = new Letter();
         this.currentLetter.name = attributes.getValue("name");
         this.currentLetter.sound = attributes.getValue("sound");
         this.currentLetter.phoneme = attributes.getValue("phoneme");
-        this.currentLetter.sprite = Integer.parseInt(attributes.getValue("sprite"));
-        this.currentLetter.tile = Integer.parseInt(attributes.getValue("tile"));
         this.currentLetter.time = Integer.parseInt(attributes.getValue("time"));
+        this.currentLetter.texture_src = attributes.getValue("texture");
     }
 
     private void parseWordDefinition(Attributes attributes) throws SAXException {
@@ -157,9 +162,8 @@ public class LocaleParser extends DefaultHandler {
         this.currentWord = new Word();
         this.currentWord.name = attributes.getValue("name");
         this.currentWord.sound = attributes.getValue("sound");
-        this.currentWord.sprite = Integer.parseInt(attributes.getValue("sprite"));
-        this.currentWord.tile = Integer.parseInt(attributes.getValue("tile"));
         this.currentWord.time = Integer.parseInt(attributes.getValue("time"));
+        this.currentWord.texture_src = attributes.getValue("texture");
     }
 
     private void parseLevel(Attributes attributes) throws SAXException {

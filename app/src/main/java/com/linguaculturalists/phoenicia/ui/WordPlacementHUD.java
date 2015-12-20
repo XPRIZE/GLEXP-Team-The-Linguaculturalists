@@ -17,6 +17,7 @@ import org.andengine.entity.text.Text;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
 
@@ -63,7 +64,10 @@ public class WordPlacementHUD extends CameraScene implements Inventory.Inventory
             final Word currentWord = words.get(i);
             Debug.d("Adding HUD word: " + currentWord.name + " (tile: " + currentWord.tile + ")");
             final int tile_id = currentWord.sprite;
-            ITextureRegion blockRegion = game.wordTiles.getTextureRegion(tile_id);
+            ITextureRegion blockRegion = new TiledTextureRegion(game.wordTextures.get(currentWord),
+                    game.wordTiles.get(currentWord).getTextureRegion(0),
+                    game.wordTiles.get(currentWord).getTextureRegion(1),
+                    game.wordTiles.get(currentWord).getTextureRegion(2));
             ButtonSprite block = new ButtonSprite((64 * ((i * 2)+1))-startX, 48, blockRegion, game.activity.getVertexBufferObjectManager());
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
