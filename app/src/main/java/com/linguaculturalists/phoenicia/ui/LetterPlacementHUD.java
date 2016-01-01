@@ -3,16 +3,23 @@ package com.linguaculturalists.phoenicia.ui;
 import android.graphics.Typeface;
 
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
+import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.components.Scrollable;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
+import com.linguaculturalists.phoenicia.models.BuildQueue;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
+import com.linguaculturalists.phoenicia.models.LetterTile;
 
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.CameraScene;
+import org.andengine.entity.scene.IOnSceneTouchListener;
+import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.text.Text;
+import org.andengine.extension.tmx.TMXTile;
+import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.region.ITextureRegion;
@@ -28,11 +35,12 @@ import java.util.Map;
 /**
  * Created by mhall on 6/19/15.
  */
-public class LetterPlacementHUD extends CameraScene implements Inventory.InventoryUpdateListener {
+public class LetterPlacementHUD extends CameraScene implements Inventory.InventoryUpdateListener, IOnSceneTouchListener {
     private Letter placeBlock = null;
     private Map<String, Text> inventoryCounts;
     private PhoeniciaGame game;
-
+    private boolean scenePressed = false;
+    private Letter activeLetter;
 
     public LetterPlacementHUD(final PhoeniciaGame game, final Level level) {
         super(game.camera);
@@ -72,11 +80,12 @@ public class LetterPlacementHUD extends CameraScene implements Inventory.Invento
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                    Debug.d("Activated block: " + currentLetter.name);
-                    if (game.setPlaceBlock(currentLetter)) {
-                        // TODO: Switch to active tile
+                    if (activeLetter != currentLetter) {
+                        Debug.d("Activated block: " + currentLetter.name);
+                        activeLetter = currentLetter;
                     } else {
-                        // TODO: handle failure
+                        Debug.d("Deactivated block: " + activeLetter.name);
+                        activeLetter = null;
                     }
                 }
             });
@@ -90,6 +99,8 @@ public class LetterPlacementHUD extends CameraScene implements Inventory.Invento
         Debug.d("Finished loading HUD letters");
 
         Debug.d("Finished instantiating LetterPlacementHUD");
+
+        //this.setOnSceneTouchListener(this);
     }
 
     public void onInventoryUpdated(final InventoryItem[] items) {
@@ -106,4 +117,61 @@ public class LetterPlacementHUD extends CameraScene implements Inventory.Invento
             }
         }
     }
+
+    @Override
+    public boolean onSceneTouchEvent(Scene scene, TouchEvent touchEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
+        Debug.d("LetterPlacementHud touched at "+pSceneTouchEvent.getX()+"x"+pSceneTouchEvent.getY());
+
+        final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
+        if (handled) return true;
+
+        final float[] gameSceneCoordinates = this.getCamera().getCameraSceneCoordinatesFromSceneCoordinates(pSceneTouchEvent.getX(), pSceneTouchEvent.getY());
+        Debug.d("gameSceneCoordinates as "+gameSceneCoordinates[0]+"x"+gameSceneCoordinates[1]);
+        switch (pSceneTouchEvent.getAction()) {
+            case TouchEvent.ACTION_DOWN:
+                Debug.d("LetterPlacementHud scene touch ACTION_DOWN");
+                this.scenePressed = true;
+                return handled;
+            case TouchEvent.ACTION_UP:
+                Debug.d("LetterPlacementHud scene touch ACTION_UP");
+                if (this.scenePressed) {
+                    TMXTile mapTile = game.getTileAt(pSceneTouchEvent.getX(), pSceneTouchEvent.getY());
+                    Debug.d("LetterPlacementHud scene touch tile: "+mapTile);
+                    Debug.d("LetterPlacementHud scene touch active: "+this.activeLetter);
+                    if (mapTile != null && this.activeLetter != null) {
+                        this.addLetterTile(activeLetter, mapTile);
+                        return true;
+                    }
+                    this.scenePressed = false;
+                }
+            default:
+                Debug.d("LetterPlacementHud scene touch "+pSceneTouchEvent.getAction());
+                this.scenePressed = false;
+
+        }
+        return handled;
+    }
+
+    private void addLetterTile(Letter letter, TMXTile onTile) {
+        Debug.d("Placing letter "+letter.name+" at "+onTile.getTileColumn()+"x"+onTile.getTileRow());
+        final LetterTile letterTile = new LetterTile(this.game, letter);
+
+        letterTile.isoX.set(onTile.getTileColumn());
+        letterTile.isoY.set(onTile.getTileRow());
+        game.createLetterSprite(letterTile);
+
+        BuildQueue builder = new BuildQueue(game.session, letterTile, letterTile.item_name.get(), letter.time);
+        builder.start();
+        builder.save(game.activity.getApplicationContext());
+        game.addBuilder(builder);
+
+        letterTile.setBuilder(builder);
+        letterTile.save(game.activity.getApplicationContext());
+    }
+
 }

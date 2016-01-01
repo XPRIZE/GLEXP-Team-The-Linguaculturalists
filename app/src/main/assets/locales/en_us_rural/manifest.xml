@@ -5,7 +5,7 @@
     <letters>
         <letter name="a" time="30" texture="locales/en_us_rural/textures/letters/a.png" sound="sounds/a.ogg" phoneme="sounds/a.ogg">a</letter>
         <letter name="b" time="30" texture="locales/en_us_rural/textures/letters/b.png" sound="sounds/b.ogg" phoneme="sounds/b.ogg">b</letter>
-        <letter name="c" time="30" texture="locales/en_us_rural/textures/letters/c.png" sound="sounds/c.ogg" phoneme="sounds/c.ogg">c</letter>
+        <letter name="c" time="60" texture="locales/en_us_rural/textures/letters/c.png" sound="sounds/c.ogg" phoneme="sounds/c.ogg">c</letter>
         <letter name="d" time="30" texture="locales/en_us_rural/textures/letters/d.png" sound="sounds/d.ogg" phoneme="sounds/d.ogg">d</letter>
         <letter name="e" time="30" texture="locales/en_us_rural/textures/letters/e.png" sound="sounds/e.ogg" phoneme="sounds/e.ogg">e</letter>
         <letter name="f" time="30" texture="locales/en_us_rural/textures/letters/f.png" sound="sounds/f.ogg" phoneme="sounds/f.ogg">f</letter>
@@ -22,7 +22,7 @@
         <letter name="q" time="30" texture="locales/en_us_rural/textures/letters/q.png" sound="sounds/q.ogg" phoneme="sounds/q.ogg">q</letter>
         <letter name="r" time="30" texture="locales/en_us_rural/textures/letters/r.png" sound="sounds/r.ogg" phoneme="sounds/r.ogg">r</letter>
         <letter name="s" time="30" texture="locales/en_us_rural/textures/letters/s.png" sound="sounds/s.ogg" phoneme="sounds/s.ogg">s</letter>
-        <letter name="t" time="30" texture="locales/en_us_rural/textures/letters/t.png" sound="sounds/t.ogg" phoneme="sounds/t.ogg">t</letter>
+        <letter name="t" time="45" texture="locales/en_us_rural/textures/letters/t.png" sound="sounds/t.ogg" phoneme="sounds/t.ogg">t</letter>
         <letter name="u" time="30" texture="locales/en_us_rural/textures/letters/u.png" sound="sounds/u.ogg" phoneme="sounds/u.ogg">u</letter>
         <letter name="v" time="30" texture="locales/en_us_rural/textures/letters/v.png" sound="sounds/v.ogg" phoneme="sounds/v.ogg">v</letter>
         <letter name="w" time="30" texture="locales/en_us_rural/textures/letters/w.png" sound="sounds/w.ogg" phoneme="sounds/w.ogg">w</letter>

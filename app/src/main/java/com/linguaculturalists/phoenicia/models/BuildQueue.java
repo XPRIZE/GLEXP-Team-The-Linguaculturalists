@@ -22,7 +22,7 @@ public class BuildQueue extends Model {
     private BuildStatusUpdateHandler updateHandler;
 
     public ForeignKeyField<GameSession> game;
-    public ForeignKeyField<PlacedBlock> tile;
+    public ForeignKeyField<LetterTile> tile;
     public CharField item_name;
     public IntegerField time;
     public IntegerField progress;
@@ -35,22 +35,24 @@ public class BuildQueue extends Model {
     public BuildQueue() {
         super();
         this.game = new ForeignKeyField<>(GameSession.class);
-        this.tile = new ForeignKeyField<>(PlacedBlock.class);
+        this.tile = new ForeignKeyField<>(LetterTile.class);
         this.item_name = new CharField(32);
         this.time = new IntegerField();
         this.progress = new IntegerField();
         this.status = new IntegerField();
         this.progress.set(0);
         this.status.set(NONE);
+
+        this.setUpdateHandler(new AbstractBuildStatusUpdateHandler() { });
     }
 
-    public BuildQueue(GameSession session, PlacedBlock block, String item_name, int time) {
-        this(session, block, item_name, time, null);
+    public BuildQueue(GameSession session, LetterTile tile, String item_name, int time) {
+        this(session, tile, item_name, time, null);
     }
-    public BuildQueue(GameSession session, PlacedBlock block, String item_name, int time, BuildStatusUpdateHandler updateHandler) {
+    public BuildQueue(GameSession session, LetterTile tile, String item_name, int time, BuildStatusUpdateHandler updateHandler) {
         this();
         this.game.set(session);
-        this.tile.set(block);
+        this.tile.set(tile);
         this.item_name.set(item_name);
         this.time.set(time);
 
@@ -124,4 +126,5 @@ public class BuildQueue extends Model {
     protected void migrate(Context context) {
         return;
     }
+
 }

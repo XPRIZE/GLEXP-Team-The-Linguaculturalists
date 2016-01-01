@@ -3,6 +3,7 @@ package com.linguaculturalists.phoenicia.models;
 import android.content.Context;
 
 import com.linguaculturalists.phoenicia.Locale;
+import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.orm.androrm.Model;
@@ -27,7 +28,10 @@ public class PlacedBlock extends Model implements BuildQueue.BuildStatusUpdateHa
     public IntegerField isoY;
     public IntegerField sprite_type;
     public CharField item_name;
+    public IntegerField time;
     public IntegerField progress;
+    public PlacedBlockSprite sprite;
+    private boolean completed;
 
     public PlacedBlock() {
         super();
@@ -37,6 +41,7 @@ public class PlacedBlock extends Model implements BuildQueue.BuildStatusUpdateHa
         sprite_type = new IntegerField();
         item_name = new CharField(32);
         progress = new IntegerField();
+        time = new IntegerField();
     }
 
     public static final QuerySet<PlacedBlock> objects(Context context) {
@@ -51,10 +56,27 @@ public class PlacedBlock extends Model implements BuildQueue.BuildStatusUpdateHa
         return locale.word_map.get(this.item_name.get());
     }
 
-    public void onScheduled(BuildQueue buildItem) { Debug.d("PlacedBlock.onScheduled"); return; }
-    public void onStarted(BuildQueue buildItem) { Debug.d("PlacedBlock.onStarted"); return; }
-    public void onCompleted(BuildQueue buildItem) { Debug.d("PlacedBlock.onCompleted"); return; }
-    public void onProgressChanged(BuildQueue builtItem) { return; }
+    public void onScheduled(BuildQueue buildItem) { Debug.d("PlacedBlock.onScheduled"); this.completed=false; return; }
+    public void onStarted(BuildQueue buildItem) { Debug.d("PlacedBlock.onStarted"); this.completed=false; return; }
+    public void onCompleted(BuildQueue buildItem) { Debug.d("PlacedBlock.onCompleted"); this.completed=true; return; }
+    public void onProgressChanged(BuildQueue builtItem) {
+        this.progress.set(builtItem.progress.get());
+        this.time.set(builtItem.time.get());
+        if (sprite != null) {
+            sprite.setProgress(builtItem.progress.get(), builtItem.time.get());
+        }
+        return;
+    }
+
+    public boolean isCompleted() {
+        return this.completed;
+    }
+
+    public void reset() {
+        this.completed = false;
+        this.progress.set(0);
+        sprite.setProgress(this.progress.get(), this.time.get());
+    }
 
     @Override
     protected void migrate(Context context) {
@@ -62,6 +84,9 @@ public class PlacedBlock extends Model implements BuildQueue.BuildStatusUpdateHa
 
         // Add sprite type
         migrator.addField("sprite_type", new IntegerField());
+
+        // Add build time type
+        migrator.addField("time", new IntegerField());
 
         // roll out all migrations
         migrator.migrate(context);

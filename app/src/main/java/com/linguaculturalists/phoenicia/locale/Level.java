@@ -21,6 +21,7 @@ public class Level {
     public boolean check(Context context) {
         Debug.d("Checking if player passes level " + name);
         for (int i = 0; i < requirements.size(); i++) {
+            Debug.d("Checking "+requirements.get(i));
             if (!requirements.get(i).check(context)) {
                 // abort on the first requirement failure
                 return false;

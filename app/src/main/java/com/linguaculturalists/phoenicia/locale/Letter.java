@@ -13,4 +13,8 @@ public class Letter {
     public char[] chars;
     public String texture_src;
 
+    @Override
+    public int hashCode() {
+        return this.name.hashCode();
+    }
 }

@@ -15,6 +15,6 @@ public class GameStartupTest extends PhoeniciaGameTest {
     }
 
     public void testGameStart() {
-        assertEquals("HUDManager not set on game start", game.hudManager, activity.main_camera.getHUD());
+        assertEquals("HUDManager not set on phoeniciaGame start", game.hudManager, activity.main_camera.getHUD());
     }
 }
