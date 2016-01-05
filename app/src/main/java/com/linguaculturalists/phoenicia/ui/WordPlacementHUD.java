@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * Created by mhall on 8/26/15.
  */
-public class WordPlacementHUD extends CameraScene implements Inventory.InventoryUpdateListener {
+public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.InventoryUpdateListener {
     private static Word placeWord = null;
     private Map<String, Text> inventoryCounts;
     private PhoeniciaGame game;

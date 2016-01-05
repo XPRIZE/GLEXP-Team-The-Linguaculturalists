@@ -154,6 +154,8 @@ public class LocaleParser extends DefaultHandler {
         this.currentLetter.sound = attributes.getValue("sound");
         this.currentLetter.phoneme = attributes.getValue("phoneme");
         this.currentLetter.time = Integer.parseInt(attributes.getValue("time"));
+        this.currentLetter.buy = Integer.parseInt(attributes.getValue("buy"));
+        this.currentLetter.sell = Integer.parseInt(attributes.getValue("sell"));
         this.currentLetter.texture_src = attributes.getValue("texture");
     }
 
@@ -163,6 +165,7 @@ public class LocaleParser extends DefaultHandler {
         this.currentWord.name = attributes.getValue("name");
         this.currentWord.sound = attributes.getValue("sound");
         this.currentWord.time = Integer.parseInt(attributes.getValue("time"));
+        this.currentWord.sell = Integer.parseInt(attributes.getValue("sell"));
         this.currentWord.texture_src = attributes.getValue("texture");
     }
 

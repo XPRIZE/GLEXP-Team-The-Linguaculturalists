@@ -32,24 +32,17 @@ public class PlacedBlockSprite extends AnimatedSprite {
         this.mProgress = pProgress;
         int completed = (pProgress*100) / pTime;
         int newStartTile = 0;
-        Debug.d("PlacedBlockSprite progress = "+pProgress);
-        Debug.d("PlacedBlockSprite time = "+pTime);
-        Debug.d("PlacedBlockSprite completion = "+completed+"%");
         if (completed < 33) {
-            Debug.d("PlacedBlockSprite animations set 1");
             newStartTile = mTileId;
         } else if (completed < 66) {
-            Debug.d("PlacedBlockSprite animations set 2");
             newStartTile = mTileId+4;
         } else if (completed < 100) {
-            Debug.d("PlacedBlockSprite animations set 3");
             newStartTile = mTileId+8;
         } else {
-            Debug.d("PlacedBlockSprite animations set 4");
             newStartTile = mTileId+12;
             this.complete = true;
         }
-        Debug.d("PlacedBlockSprite start tile index: "+newStartTile);
+
         if (newStartTile != this.startTile) {
             this.startTile = newStartTile;
             this.animate(this.mFrameDurations, startTile, startTile+mFrameDurations.length-1, true);

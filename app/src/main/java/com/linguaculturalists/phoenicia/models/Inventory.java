@@ -8,6 +8,8 @@ import com.orm.androrm.Filter;
 
 import org.andengine.util.debug.Debug;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,6 +34,16 @@ public class Inventory {
     
     public static Inventory getInstance() {
         return instance;
+    }
+
+    public List<InventoryItem> items() {
+        List<InventoryItem> items = InventoryItem.objects(this.game.activity.getApplicationContext()).filter(this.game.sessionFilter).orderBy("-quantity").toList();
+        for (InventoryItem item : items) {
+            if (item.quantity.get() <= 0) {
+                items.remove(item);
+            }
+        }
+        return items;
     }
 
     public void clear() {

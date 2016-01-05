@@ -4,5 +4,7 @@
 /.idea/libraries
 .DS_Store
 /build
+/androrm/build
 /assets
 /screenshots
+/deps

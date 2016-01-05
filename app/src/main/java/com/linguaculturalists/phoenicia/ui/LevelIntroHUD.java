@@ -35,7 +35,7 @@ import java.util.Map;
 /**
  * Created by mhall on 8/26/15.
  */
-public class LevelIntroHUD extends CameraScene implements IOnSceneTouchListener, Closeable {
+public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener {
     private PhoeniciaGame game;
     private Scrollable textPanel;
     private Level level;

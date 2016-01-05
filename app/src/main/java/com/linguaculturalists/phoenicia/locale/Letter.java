@@ -12,6 +12,9 @@ public class Letter {
     public String phoneme;
     public char[] chars;
     public String texture_src;
+    public int points;
+    public int buy;
+    public int sell;
 
     @Override
     public int hashCode() {

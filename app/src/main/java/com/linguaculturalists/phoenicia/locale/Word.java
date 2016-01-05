@@ -11,4 +11,8 @@ public class Word {
     public String sound;
     public char[] chars;
     public String texture_src;
+
+    public int points;
+    public int buy;
+    public int sell;
 }

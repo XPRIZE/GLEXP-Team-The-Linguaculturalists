@@ -25,6 +25,9 @@ public class GameSession extends Model {
     public IntegerField sessions_played;
     public IntegerField days_played;
     public CharField current_level;
+    public IntegerField points;
+    public IntegerField account_balance;
+    public IntegerField gross_income;
 
     public static final QuerySet<GameSession> objects(Context context) {
         return objects(context, GameSession.class);
@@ -39,6 +42,9 @@ public class GameSession extends Model {
         this.sessions_played = new IntegerField();
         this.days_played = new IntegerField();
         this.current_level = new CharField();
+        this.points = new IntegerField();
+        this.account_balance = new IntegerField();
+        this.gross_income = new IntegerField();
     }
 
     static public GameSession start(Locale locale) {
@@ -50,6 +56,9 @@ public class GameSession extends Model {
         session.sessions_played.set(0);
         session.days_played.set(0);
         session.current_level.set(locale.levels.get(0).name);
+        session.points.set(0);
+        session.account_balance.set(0);
+        session.gross_income.set(0);
         return session;
     }
 
@@ -68,6 +77,11 @@ public class GameSession extends Model {
 
         // Add level field
         migrator.addField("current_level", new IntegerField());
+
+        // Add points field
+        migrator.addField("points", new IntegerField());
+        migrator.addField("account_balance", new IntegerField());
+        migrator.addField("gross_income", new IntegerField());
 
         // roll out all migrations
         migrator.migrate(context);

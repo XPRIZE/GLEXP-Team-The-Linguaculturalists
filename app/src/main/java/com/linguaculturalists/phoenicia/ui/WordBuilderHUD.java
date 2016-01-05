@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * Created by mhall on 8/26/15.
  */
-public class WordBuilderHUD extends CameraScene implements Inventory.InventoryUpdateListener, IOnSceneTouchListener, Closeable {
+public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryUpdateListener, IOnSceneTouchListener {
 
     private PhoeniciaGame game;
     private Word buildWord;

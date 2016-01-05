@@ -12,6 +12,9 @@ import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.models.LetterTile;
 
+import org.andengine.entity.IEntity;
+import org.andengine.entity.modifier.IEntityModifier;
+import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.CameraScene;
 import org.andengine.entity.scene.IOnSceneTouchListener;
@@ -27,6 +30,12 @@ import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
+import org.andengine.util.modifier.IModifier;
+import org.andengine.util.modifier.ease.EaseBackIn;
+import org.andengine.util.modifier.ease.EaseBackOut;
+import org.andengine.util.modifier.ease.EaseBounceIn;
+import org.andengine.util.modifier.ease.EaseBounceOut;
+import org.andengine.util.modifier.ease.EaseQuadOut;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,12 +44,15 @@ import java.util.Map;
 /**
  * Created by mhall on 6/19/15.
  */
-public class LetterPlacementHUD extends CameraScene implements Inventory.InventoryUpdateListener, IOnSceneTouchListener {
+public class LetterPlacementHUD extends PhoeniciaHUD implements Inventory.InventoryUpdateListener {
     private Letter placeBlock = null;
     private Map<String, Text> inventoryCounts;
     private PhoeniciaGame game;
     private boolean scenePressed = false;
     private Letter activeLetter;
+
+    private Rectangle whiteRect;
+    private Scrollable blockPanel;
 
     public LetterPlacementHUD(final PhoeniciaGame game, final Level level) {
         super(game.camera);
@@ -49,15 +61,11 @@ public class LetterPlacementHUD extends CameraScene implements Inventory.Invento
         Inventory.getInstance().addUpdateListener(this);
         this.game = game;
 
-        Rectangle whiteRect = new Rectangle(game.activity.CAMERA_WIDTH/2, 64, 400, 96, game.activity.getVertexBufferObjectManager());
+        this.whiteRect = new Rectangle(game.activity.CAMERA_WIDTH/2, 64, 400, 96, game.activity.getVertexBufferObjectManager());
         whiteRect .setColor(Color.WHITE);
         this.attachChild(whiteRect);
 
-        Scrollable blockPanel = new Scrollable(game.activity.CAMERA_WIDTH/2, 64, 400, 96, Scrollable.SCROLL_HORIZONTAL);
-        Rectangle redRect = new Rectangle(game.activity.CAMERA_WIDTH/2, 64, 512, 128, game.activity.getVertexBufferObjectManager());
-        redRect.setColor(Color.RED);
-        //blockPanel.attachChild(redRect);
-
+        this.blockPanel = new Scrollable(game.activity.CAMERA_WIDTH/2, 64, 400, 96, Scrollable.SCROLL_HORIZONTAL);
 
         this.registerTouchArea(blockPanel);
         this.registerTouchArea(blockPanel.contents);
@@ -65,6 +73,8 @@ public class LetterPlacementHUD extends CameraScene implements Inventory.Invento
 
         final Font inventoryCountFont = FontFactory.create(game.activity.getFontManager(), game.activity.getTextureManager(), 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 16, Color.RED_ARGB_PACKED_INT);
         inventoryCountFont.load();
+
+        Debug.d("Loading letters for level: "+this.game.current_level);
         final List<Letter> letters = level.letters;
         final int tile_start = 130;
         final int startX = (int)(blockPanel.getWidth()/2);
@@ -103,6 +113,17 @@ public class LetterPlacementHUD extends CameraScene implements Inventory.Invento
         //this.setOnSceneTouchListener(this);
     }
 
+    @Override
+    public void show() {
+        whiteRect.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
+        blockPanel.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
     public void onInventoryUpdated(final InventoryItem[] items) {
         Debug.d("Updating BlockPlacementHUD inventory");
         for (int i = 0; i < items.length; i++) {
@@ -118,7 +139,7 @@ public class LetterPlacementHUD extends CameraScene implements Inventory.Invento
         }
     }
 
-    @Override
+    //@Override
     public boolean onSceneTouchEvent(Scene scene, TouchEvent touchEvent) {
         return false;
     }

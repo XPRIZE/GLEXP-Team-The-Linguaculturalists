@@ -47,6 +47,7 @@ import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
+import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.BuildQueue;
 import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.Inventory;
@@ -54,6 +55,7 @@ import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.models.LetterTile;
 import com.linguaculturalists.phoenicia.models.PlacedBlock;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
+import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.LocaleLoader;
 import com.orm.androrm.DatabaseAdapter;
 import com.orm.androrm.Filter;
@@ -62,7 +64,7 @@ import com.orm.androrm.Model;
 /**
  * Created by mhall on 3/22/15.
  */
-public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateListener {
+public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateListener, Bank.BankUpdateListener {
     public Locale locale;
     public GameActivity activity;
     public TextureManager textureManager;
@@ -105,6 +107,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
     public HUDManager hudManager;
     public Inventory inventory;
+    public Bank bank;
 
     public GameSession session;
     public Filter sessionFilter;
@@ -123,12 +126,19 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.vboManager = activity.getVertexBufferObjectManager();
         this.soundManager = activity.getSoundManager();
         this.camera = camera;
+
+        GameFonts.init(this.activity.getFontManager(), this.activity.getTextureManager());
+
         Inventory.init(this);
-        Inventory.getInstance().addUpdateListener(this);
+        this.inventory = Inventory.getInstance();
+        this.inventory.addUpdateListener(this);
+
+        Bank.init(this);
+        this.bank = Bank.getInstance();
+        this.bank.addUpdateListener(this);
 
         this.levelListeners = new ArrayList<LevelChangeListener>();
 
-        this.inventory = Inventory.getInstance();
         scene = new Scene();
         scene.setBackground(new Background(new Color(0, 0, 0)));
 
@@ -366,6 +376,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         }
         // Delete DB records
         Inventory.getInstance().clear();
+        Bank.getInstance().clear();
         DatabaseAdapter adapter = DatabaseAdapter.getInstance(this.activity.getApplicationContext());
         adapter.drop();
         this.syncDB();
@@ -390,6 +401,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     }
     public void onUpdate(float v) {
         // update build queues
+        this.hudManager.update(v);
+
         this.updateTime += v;
         if (this.updateTime > 1) {
             this.updateTime = 0;
@@ -397,7 +410,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 if (builder.status.get() == BuildQueue.BUILDING) {
                     builder.update();
                     builder.save(this.activity.getApplicationContext());
-                    Debug.d("Builder "+builder.item_name.get()+" saved");
+                    //Debug.d("Builder "+builder.item_name.get()+" saved");
                 }
             }
         }
@@ -678,6 +691,11 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             final Level next = this.locale.levels.get(this.locale.levels.indexOf(current)+1);
             this.changeLevel(next);
         }
+    }
+
+    @Override
+    public void onBankAccountUpdated(int new_balance) {
+        // TODO: do something
     }
 
     public void changeLevel(Level next) {

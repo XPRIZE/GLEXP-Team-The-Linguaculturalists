@@ -5,6 +5,9 @@ import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
 
 import org.andengine.engine.camera.hud.HUD;
+import org.andengine.engine.handler.IUpdateHandler;
+import org.andengine.engine.handler.timer.ITimerCallback;
+import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.scene.Scene;
 import org.andengine.util.debug.Debug;
 
@@ -18,13 +21,15 @@ import java.util.Stack;
  */
 public class HUDManager extends HUD {
 
-    public Scene currentHUD;
-    public Stack<Scene> hudStack;
+    public PhoeniciaHUD currentHUD;
+    public Stack<PhoeniciaHUD> hudStack;
     private PhoeniciaGame game;
+    private PhoeniciaHUD nextHUD;
+    private float transitionWait = 0;
 
     public HUDManager(final PhoeniciaGame game) {
         this.game = game;
-        this.hudStack = new Stack<Scene>();
+        this.hudStack = new Stack<PhoeniciaHUD>();
     }
 
     public void showDefault(final Level level) {
@@ -35,11 +40,17 @@ public class HUDManager extends HUD {
         this.push(new LevelIntroHUD(this.game, level));
     }
 
+    public void showInventory() {
+        InventoryHUD inventoryHUD = new InventoryHUD(this.game);
+        this.push(inventoryHUD);
+    }
+
     public void showLetterPlacement() {
         this.showLetterPlacement(this.game.locale.level_map.get(this.game.current_level));
     }
     public void showLetterPlacement(final Level level) {
-        this.push(new LetterPlacementHUD(this.game, level));
+        LetterPlacementHUD letterPlacementHUD = new LetterPlacementHUD(this.game, level);
+        this.push(letterPlacementHUD);
     }
 
     public void showWordPlacement() {
@@ -57,13 +68,13 @@ public class HUDManager extends HUD {
     public void pop() {
         Debug.d("Popping one off the HUD stack");
         try {
-            Scene previousHUD = this.hudStack.pop();
+            PhoeniciaHUD previousHUD = this.hudStack.pop();
             if (previousHUD != null) {
-                if (this.currentHUD instanceof Closeable) {
-                    try { ((Closeable)this.currentHUD).close(); } catch (IOException e) { Debug.e("Failed to close HUD"); }
-                }
-                this.currentHUD = previousHUD;
+                this.currentHUD.hide();
+                this.currentHUD.close();
                 this.setChildScene(previousHUD);
+                previousHUD.show();
+                this.currentHUD = previousHUD;
             }
         } catch (EmptyStackException e) {
             Debug.d("Nothing to pop off the stack");
@@ -71,9 +82,29 @@ public class HUDManager extends HUD {
         }
     }
 
-    public void push(Scene s) {
-        this.hudStack.push(this.currentHUD);
-        this.setChildScene(s);
-        this.currentHUD = s;
+    public void push(PhoeniciaHUD newHUD) {
+        if (this.currentHUD != null) {
+            this.hudStack.push(this.currentHUD);
+            this.currentHUD.hide();
+        }
+        newHUD.open();
+        this.setChildScene(newHUD);
+        newHUD.show();
+        this.currentHUD = newHUD;
+    }
+
+    public void update (float pSecondsElapsed) {
+        if (this.nextHUD != null) {
+            this.transitionWait += pSecondsElapsed;
+            if (transitionWait >= 1f) {
+                Debug.d("HUDManager completing transition");
+                this.setChildScene(this.nextHUD);
+                this.nextHUD.show();
+                this.currentHUD.close();
+                this.currentHUD = this.nextHUD;
+                this.nextHUD = null;
+                this.transitionWait = 0;
+            }
+        }
     }
 }
