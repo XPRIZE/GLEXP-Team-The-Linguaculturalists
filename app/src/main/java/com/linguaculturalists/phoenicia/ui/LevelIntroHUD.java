@@ -22,6 +22,7 @@ import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
+import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
@@ -42,6 +43,8 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
     private int current_page;
     private Font introPageFont;
 
+    private boolean isPressed = false;
+
     public LevelIntroHUD(final PhoeniciaGame game, final Level level) {
         super(game.camera);
         this.setBackgroundEnabled(false);
@@ -56,9 +59,9 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
 
         textPanel = new Scrollable(game.activity.CAMERA_WIDTH / 2, game.activity.CAMERA_HEIGHT / 2, 400, 400, Scrollable.SCROLL_VERTICAL);
         this.attachChild(textPanel);
-        //textPanel.setClip(true);
+        //textPanel.setClip(false);
 
-        introPageFont = FontFactory.create(game.activity.getFontManager(), game.activity.getTextureManager(), 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 16, Color.BLUE_ARGB_PACKED_INT);
+        introPageFont = FontFactory.create(game.activity.getFontManager(), game.activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 36, Color.BLUE_ARGB_PACKED_INT);
         introPageFont.load();
         this.showPage(0);
 
@@ -67,29 +70,34 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
         this.registerTouchArea(textPanel.contents);
         //this.attachChild(textPanel);
 
-        final Font introFont = FontFactory.create(game.activity.getFontManager(), game.activity.getTextureManager(), 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 16, Color.RED_ARGB_PACKED_INT);
-        introFont.load();
-
         Debug.d("Finished instantiating LevelIntroHUD");
     }
 
     private void showPage(int page_index) {
+        Debug.d("Showing page: "+page_index);
         this.current_page = page_index;
         final String nextPage = level.intro.get(page_index).text;
         final TextOptions introTextOptions = new TextOptions(AutoWrap.WORDS, 400, HorizontalAlign.CENTER);
-        final Text introPageText = new Text(-textPanel.getWidth()/2, textPanel.getHeight()/2, introPageFont, nextPage, introTextOptions, game.activity.getVertexBufferObjectManager());
+        final Text introPageText = new Text(textPanel.getWidth()/2, textPanel.getHeight()/2, introPageFont, nextPage, introTextOptions, game.activity.getVertexBufferObjectManager());
+
         textPanel.detachChildren();
         textPanel.attachChild(introPageText);
 
     }
     public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {
-        if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
-            if (this.level.intro.size() > this.current_page + 1) {
+        if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
+            this.isPressed = true;
+            return true;
+        } else if (this.isPressed && pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
+            Debug.d("Intro page size: "+this.level.intro.size());
+            Debug.d("Current page: "+this.current_page);
+            if (this.current_page+1 < this.level.intro.size()) {
                 this.showPage(this.current_page + 1);
             } else {
                 this.game.hudManager.pop();
             }
         }
+        this.isPressed = false;
         return true;
     }
 

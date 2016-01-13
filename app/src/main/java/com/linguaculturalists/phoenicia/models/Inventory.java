@@ -37,12 +37,14 @@ public class Inventory {
     }
 
     public List<InventoryItem> items() {
-        List<InventoryItem> items = InventoryItem.objects(this.game.activity.getApplicationContext()).filter(this.game.sessionFilter).orderBy("-quantity").toList();
-        for (InventoryItem item : items) {
-            if (item.quantity.get() <= 0) {
-                items.remove(item);
-            }
-        }
+        Filter positiveQuantity = new Filter();
+        positiveQuantity.is("quantity", ">", 0);
+        List<InventoryItem> items = InventoryItem.objects(this.game.activity.getApplicationContext()).filter(this.game.sessionFilter).filter(positiveQuantity).orderBy("-quantity").toList();
+//        for (InventoryItem item : items) {
+//            if (item.quantity.get() <= 0) {
+//                items.remove(item);
+//            }
+//        }
         return items;
     }
 

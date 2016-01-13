@@ -24,6 +24,7 @@ public class PlacedBlockSprite extends AnimatedSprite {
         super(pX, pY, pTiledTextureRegion, pVertexBufferObjectManager);
         this.mTileId = pTileId;
         this.startTile = pTileId;
+        this.setCurrentTileIndex(pTileId);
         this.mProgress = 0;
         this.complete = false;
     }

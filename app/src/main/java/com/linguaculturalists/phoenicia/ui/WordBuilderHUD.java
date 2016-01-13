@@ -8,7 +8,6 @@ import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
-import com.linguaculturalists.phoenicia.models.PlacedBlock;
 
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.CameraScene;

@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
-import com.linguaculturalists.phoenicia.locale.Letter;
+import com.linguaculturalists.phoenicia.locale.Word;
 import com.orm.androrm.Model;
 import com.orm.androrm.QuerySet;
 import com.orm.androrm.field.CharField;
@@ -20,44 +20,41 @@ import org.andengine.util.debug.Debug;
 /**
  * Created by mhall on 12/23/15.
  */
-public class LetterTile extends Model implements Builder.BuildStatusUpdateHandler, IOnAreaTouchListener, PlacedBlockSprite.OnClickListener {
-
-    public static final int TYPE_LETTER = 0;
-    public static final int TYPE_WORD = 1;
+public class WordTile extends Model implements Builder.BuildStatusUpdateHandler, IOnAreaTouchListener, PlacedBlockSprite.OnClickListener {
 
     public ForeignKeyField<GameSession> game;
-    public ForeignKeyField<LetterBuilder> builder;
+    public ForeignKeyField<WordBuilder> builder;
     public IntegerField isoX;
     public IntegerField isoY;
     public CharField item_name;
 
     public PhoeniciaGame phoeniciaGame;
-    public Letter letter;
+    public Word word;
     public PlacedBlockSprite sprite;
 
     private boolean isTouchDown = false;
-    private LetterTileListener eventListener;
+    private WordTileListener eventListener;
     private boolean isCompleted = false;
 
-    public LetterTile() {
+    public WordTile() {
         super();
         this.game = new ForeignKeyField<GameSession>(GameSession.class);
-        this.builder = new ForeignKeyField<LetterBuilder>(LetterBuilder.class);
+        this.builder = new ForeignKeyField<WordBuilder>(WordBuilder.class);
         this.isoX = new IntegerField();
         this.isoY = new IntegerField();
         this.item_name = new CharField(32);
     }
 
-    public LetterTile(PhoeniciaGame game, Letter letter) {
+    public WordTile(PhoeniciaGame game, Word word) {
         this();
         this.phoeniciaGame = game;
-        this.letter = letter;
+        this.word = word;
         this.game.set(game.session);
-        this.item_name.set(letter.name);
+        this.item_name.set(word.name);
     }
 
-    public static final QuerySet<LetterTile> objects(Context context) {
-        return objects(context, LetterTile.class);
+    public static final QuerySet<WordTile> objects(Context context) {
+        return objects(context, WordTile.class);
     }
 
     public PlacedBlockSprite getSprite() {
@@ -69,8 +66,8 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
         this.sprite = sprite;
     }
 
-    public LetterBuilder getBuilder(Context context) {
-        LetterBuilder builder = this.builder.get(context);
+    public WordBuilder getBuilder(Context context) {
+        WordBuilder builder = this.builder.get(context);
         if (builder != null) {
             builder.setUpdateHandler(this);
             this.onProgressChanged(builder);
@@ -79,28 +76,28 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
         return builder;
     }
 
-    public void setBuilder(LetterBuilder builder) {
+    public void setBuilder(WordBuilder builder) {
         builder.setUpdateHandler(this);
         this.builder.set(builder);
         this.onProgressChanged(builder);
     }
 
-    public void onScheduled(Builder buildItem) { Debug.d("Builder.onScheduled"); this.isCompleted = false; return; }
-    public void onStarted(Builder buildItem) { Debug.d("Builder.onStarted"); this.isCompleted = false; return; }
+    public void onScheduled(Builder buildItem) { Debug.d("WordTile.onScheduled"); this.isCompleted = false; return; }
+    public void onStarted(Builder buildItem) { Debug.d("WordTile.onStarted"); this.isCompleted = false; return; }
     public void onCompleted(Builder buildItem) {
-        Debug.d("Builder.onCompleted");
+        Debug.d("WordTile.onCompleted");
         this.isCompleted = true;
         if (this.eventListener != null) {
-            this.eventListener.onLetterTileBuildCompleted(this);
+            this.eventListener.onWordTileBuildCompleted(this);
         }
         return;
     }
 
     public void onProgressChanged(Builder builtItem) {
         if (sprite != null) {
-            sprite.setProgress(builtItem.progress.get(), letter.time);
+            sprite.setProgress(builtItem.progress.get(), word.time);
         }
-        if (builtItem.progress.get() >= letter.time) {
+        if (builtItem.progress.get() >= word.time) {
             builtItem.complete();
         }
         return;
@@ -109,25 +106,23 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
 
     public void reset(Context context) {
         if (this.sprite != null) {
-            this.sprite.setProgress(0, letter.time);
+            this.sprite.setProgress(0, word.time);
         }
-        LetterBuilder builder = this.getBuilder(context);
+        WordBuilder builder = this.getBuilder(context);
         if (builder != null) {
-            Debug.d("Resetting LetterTile builder");
+            Debug.d("Resetting WordTile builder");
             builder.progress.set(0);
             builder.start();
             builder.save(context);
             this.phoeniciaGame.addBuilder(builder);
         } else {
-            Debug.e("Could not reset LetterTile builder, because it was missing");
+            Debug.e("Could not reset WordTile builder, because it was missing");
         }
     }
 
     @Override
     protected void migrate(Context context) {
-        Migrator<LetterTile> migrator = new Migrator<LetterTile>(LetterTile.class);
-
-        migrator.addField("builder", new ForeignKeyField<LetterBuilder>(LetterBuilder.class));
+        Migrator<WordTile> migrator = new Migrator<WordTile>(WordTile.class);
 
         // roll out all migrations
         migrator.migrate(context);
@@ -140,7 +135,7 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
         } else if (isTouchDown && pSceneTouchEvent.isActionUp()) {
 
             if (this.eventListener != null) {
-                this.eventListener.onLetterTileClicked(this);
+                this.eventListener.onWordTileClicked(this);
             }
             this.isTouchDown = false;
             return true;
@@ -152,30 +147,28 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
     }
 
     public void onClick(PlacedBlockSprite buttonSprite, float v, float v2) {
-        Debug.d("Clicked block: "+String.valueOf(this.letter.chars));
-        LetterBuilder builder = this.getBuilder(phoeniciaGame.activity.getApplicationContext());
+        Debug.d("Clicked block: "+String.valueOf(this.word.chars));
+        WordBuilder builder = this.getBuilder(phoeniciaGame.activity.getApplicationContext());
         if (builder != null) {
             if (builder.status.get() == LetterBuilder.COMPLETE) {
                 Debug.d("Clicked block was completed");
-                phoeniciaGame.playBlockSound(this.letter.phoneme);
-                Inventory.getInstance().add(this.letter.name);
-                this.reset(phoeniciaGame.activity.getApplicationContext());
+                phoeniciaGame.hudManager.showWordBuilder(phoeniciaGame.locale.level_map.get(phoeniciaGame.current_level), this.word);
             } else {
                 Debug.d("Clicked block was NOT completed");
-                phoeniciaGame.playBlockSound(this.letter.sound);
+                phoeniciaGame.playBlockSound(this.word.sound);
             }
         } else {
             Debug.e("Clicked block has no builder");
         }
     }
 
-    public void setListener(final LetterTileListener listener) {
+    public void setListener(final WordTileListener listener) {
         this.eventListener = listener;
     }
 
-    public interface LetterTileListener {
-        public void onLetterTileClicked(final LetterTile letterTile);
-        public void onLetterTileBuildCompleted(final LetterTile letterTile);
+    public interface WordTileListener {
+        public void onWordTileClicked(final WordTile wordTile);
+        public void onWordTileBuildCompleted(final WordTile wordTile);
     }
 }
 

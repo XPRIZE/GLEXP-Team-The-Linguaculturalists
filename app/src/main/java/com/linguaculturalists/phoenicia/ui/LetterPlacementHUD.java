@@ -3,21 +3,16 @@ package com.linguaculturalists.phoenicia.ui;
 import android.graphics.Typeface;
 
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
-import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.components.Scrollable;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
-import com.linguaculturalists.phoenicia.models.BuildQueue;
+import com.linguaculturalists.phoenicia.models.LetterBuilder;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.models.LetterTile;
 
-import org.andengine.entity.IEntity;
-import org.andengine.entity.modifier.IEntityModifier;
 import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.primitive.Rectangle;
-import org.andengine.entity.scene.CameraScene;
-import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.text.Text;
@@ -25,17 +20,11 @@ import org.andengine.extension.tmx.TMXTile;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
-import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
-import org.andengine.util.modifier.IModifier;
-import org.andengine.util.modifier.ease.EaseBackIn;
 import org.andengine.util.modifier.ease.EaseBackOut;
-import org.andengine.util.modifier.ease.EaseBounceIn;
-import org.andengine.util.modifier.ease.EaseBounceOut;
-import org.andengine.util.modifier.ease.EaseQuadOut;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,11 +50,12 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Inventory.Invent
         Inventory.getInstance().addUpdateListener(this);
         this.game = game;
 
-        this.whiteRect = new Rectangle(game.activity.CAMERA_WIDTH/2, 64, 400, 96, game.activity.getVertexBufferObjectManager());
+        this.whiteRect = new Rectangle(game.activity.CAMERA_WIDTH/2, 64, 600, 96, game.activity.getVertexBufferObjectManager());
         whiteRect .setColor(Color.WHITE);
         this.attachChild(whiteRect);
 
-        this.blockPanel = new Scrollable(game.activity.CAMERA_WIDTH/2, 64, 400, 96, Scrollable.SCROLL_HORIZONTAL);
+        this.blockPanel = new Scrollable(game.activity.CAMERA_WIDTH/2, 64, 600, 96, Scrollable.SCROLL_HORIZONTAL);
+        //this.blockPanel.setClip(false);
 
         this.registerTouchArea(blockPanel);
         this.registerTouchArea(blockPanel.contents);
@@ -86,7 +76,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Inventory.Invent
                     game.letterTiles.get(currentLetter).getTextureRegion(0),
                     game.letterTiles.get(currentLetter).getTextureRegion(1),
                     game.letterTiles.get(currentLetter).getTextureRegion(2));
-            final ButtonSprite block = new ButtonSprite((64 * ((i * 2)+1))-startX, 48, blockRegion, game.activity.getVertexBufferObjectManager());
+            final ButtonSprite block = new ButtonSprite((64 * ((i * 2)+1)), 48, blockRegion, game.activity.getVertexBufferObjectManager());
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -102,7 +92,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Inventory.Invent
             this.registerTouchArea(block);
             blockPanel.attachChild(block);
 
-            final Text inventoryCount = new Text((64 * ((i * 2)+1))-startX+24, 20, inventoryCountFont, ""+game.inventory.getCount(currentLetter.name), 4, game.activity.getVertexBufferObjectManager());
+            final Text inventoryCount = new Text((64 * ((i * 2)+1))+24, 20, inventoryCountFont, ""+game.inventory.getCount(currentLetter.name), 4, game.activity.getVertexBufferObjectManager());
             blockPanel.attachChild(inventoryCount);
             this.inventoryCounts.put(currentLetter.name, inventoryCount);
         }
@@ -151,8 +141,6 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Inventory.Invent
         final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
         if (handled) return true;
 
-        final float[] gameSceneCoordinates = this.getCamera().getCameraSceneCoordinatesFromSceneCoordinates(pSceneTouchEvent.getX(), pSceneTouchEvent.getY());
-        Debug.d("gameSceneCoordinates as "+gameSceneCoordinates[0]+"x"+gameSceneCoordinates[1]);
         switch (pSceneTouchEvent.getAction()) {
             case TouchEvent.ACTION_DOWN:
                 Debug.d("LetterPlacementHud scene touch ACTION_DOWN");
@@ -178,21 +166,32 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Inventory.Invent
         return handled;
     }
 
-    private void addLetterTile(Letter letter, TMXTile onTile) {
+    private void addLetterTile(final Letter letter, final TMXTile onTile) {
         Debug.d("Placing letter "+letter.name+" at "+onTile.getTileColumn()+"x"+onTile.getTileRow());
         final LetterTile letterTile = new LetterTile(this.game, letter);
 
         letterTile.isoX.set(onTile.getTileColumn());
         letterTile.isoY.set(onTile.getTileRow());
-        game.createLetterSprite(letterTile);
 
-        BuildQueue builder = new BuildQueue(game.session, letterTile, letterTile.item_name.get(), letter.time);
-        builder.start();
-        builder.save(game.activity.getApplicationContext());
-        game.addBuilder(builder);
+        game.createLetterSprite(letterTile, new PhoeniciaGame.CreateLetterSpriteCallback() {
+            @Override
+            public void onLetterSpriteCreated(LetterTile tile) {
+                LetterBuilder builder = new LetterBuilder(game.session, letterTile, letterTile.item_name.get(), letter.time);
+                builder.start();
+                builder.save(game.activity.getApplicationContext());
+                game.addBuilder(builder);
 
-        letterTile.setBuilder(builder);
-        letterTile.save(game.activity.getApplicationContext());
+                letterTile.setBuilder(builder);
+                letterTile.save(game.activity.getApplicationContext());
+
+            }
+
+            @Override
+            public void onLetterSpriteCreationFailed(LetterTile tile) {
+                Debug.d("Failed to create letter sprite");
+            }
+        });
+
     }
 
 }

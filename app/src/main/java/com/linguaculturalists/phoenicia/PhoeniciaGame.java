@@ -48,13 +48,16 @@ import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.Bank;
-import com.linguaculturalists.phoenicia.models.BuildQueue;
+import com.linguaculturalists.phoenicia.models.Builder;
+import com.linguaculturalists.phoenicia.models.LetterBuilder;
 import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.models.LetterTile;
-import com.linguaculturalists.phoenicia.models.PlacedBlock;
+import com.linguaculturalists.phoenicia.models.WordBuilder;
+import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
+import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.LocaleLoader;
 import com.orm.androrm.DatabaseAdapter;
@@ -111,7 +114,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
     public GameSession session;
     public Filter sessionFilter;
-    private Set<BuildQueue> builders;
+    private Set<Builder> builders;
     private float updateTime;
 
     public String current_level = "";
@@ -143,7 +146,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         scene.setBackground(new Background(new Color(0, 0, 0)));
 
         this.blockSounds = new HashMap<String, Sound>();
-        this.builders = new HashSet<BuildQueue>();
+        this.builders = new HashSet<Builder>();
         this.updateTime = 0;
 
         this.letterTextures = new HashMap<Letter, AssetBitmapTexture>();
@@ -306,6 +309,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             e.printStackTrace();
         }
 
+/*
         // Load phoeniciaGame state
         Debug.d("Loading saved blocks");
         List<PlacedBlock> savedBlocks = PlacedBlock.objects(this.activity.getApplicationContext()).filter(sessionFilter).toList();
@@ -318,6 +322,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 this.setBlockAtIso(block.isoX.get(), block.isoY.get(), block.getWord(locale));
             }
         }
+*/
 
         Debug.d("Loading letter tiles");
         List<LetterTile> letterTiles = LetterTile.objects(this.activity.getApplicationContext()).filter(sessionFilter).toList();
@@ -326,10 +331,10 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             Debug.d("Restoring tile "+letterTile.item_name.get());
             letterTile.letter = this.locale.letter_map.get(letterTile.item_name.get());
             letterTile.phoeniciaGame = this;
-            BuildQueue builder = letterTile.getBuilder(this.activity.getApplicationContext());
+            LetterBuilder builder = letterTile.getBuilder(this.activity.getApplicationContext());
             if (builder == null) {
                 Debug.d("Adding new builder for tile "+letterTile.item_name.get());
-                builder = new BuildQueue(this.session, letterTile, letterTile.item_name.get(), letterTile.letter.time);
+                builder = new LetterBuilder(this.session, letterTile, letterTile.item_name.get(), letterTile.letter.time);
                 builder.save(this.activity.getApplicationContext());
                 letterTile.setBuilder(builder);
                 letterTile.save(this.activity.getApplicationContext());
@@ -343,15 +348,40 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             this.createLetterSprite(letterTile);
         }
 
+        Debug.d("Loading word tiles");
+        List<WordTile> wordTiles = WordTile.objects(this.activity.getApplicationContext()).filter(sessionFilter).toList();
+        for (int i = 0; i < wordTiles.size(); i++) {
+            WordTile wordTile = wordTiles.get(i);
+            Debug.d("Restoring tile "+wordTile.item_name.get());
+            wordTile.word = this.locale.word_map.get(wordTile.item_name.get());
+            wordTile.phoeniciaGame = this;
+            WordBuilder builder = wordTile.getBuilder(this.activity.getApplicationContext());
+            if (builder == null) {
+                Debug.d("Adding new builder for tile "+wordTile.item_name.get());
+                builder = new WordBuilder(this.session, wordTile, wordTile.item_name.get(), wordTile.word.time);
+                builder.save(this.activity.getApplicationContext());
+                wordTile.setBuilder(builder);
+                wordTile.save(this.activity.getApplicationContext());
+                builder.start();
+            } else {
+                builder.time.set(wordTile.word.time);
+                builder.save(this.activity.getApplicationContext());
+                Debug.d("Found builder with "+builder.progress.get()+"/"+builder.time.get()+" and status "+builder.status.get());
+            }
+            this.addBuilder(builder);
+            this.createWordSprite(wordTile);
+        }
+
     }
 
     private void syncDB() {
         List<Class<? extends Model>> models = new ArrayList<Class<? extends Model>>();
         models.add(GameSession.class);
-        models.add(LetterTile.class);
-        models.add(PlacedBlock.class);
         models.add(InventoryItem.class);
-        models.add(BuildQueue.class);
+        models.add(LetterTile.class);
+        models.add(WordTile.class);
+        models.add(LetterBuilder.class);
+        models.add(WordBuilder.class);
 
         DatabaseAdapter.setDatabaseName("game_db");
         DatabaseAdapter adapter = DatabaseAdapter.getInstance(this.activity.getApplicationContext());
@@ -406,8 +436,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.updateTime += v;
         if (this.updateTime > 1) {
             this.updateTime = 0;
-            for (BuildQueue builder : this.builders) {
-                if (builder.status.get() == BuildQueue.BUILDING) {
+            for (Builder builder : this.builders) {
+                if (builder.status.get() == Builder.BUILDING) {
                     builder.update();
                     builder.save(this.activity.getApplicationContext());
                     //Debug.d("Builder "+builder.item_name.get()+" saved");
@@ -416,7 +446,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         }
     }
 
-    public void addBuilder(BuildQueue builder) {
+    public void addBuilder(Builder builder) {
         this.builders.remove(builder);
         this.builders.add(builder);
     }
@@ -430,156 +460,146 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.hudManager.pop();
     }
 
-    public boolean setPlaceBlock(Letter activateLetter) {
-        if (this.placeLetter != null && this.placeLetter.name == activateLetter.name) {
-            this.placeLetter = null;
-            this.placeWord = null;
-            return false;
-        } else {
-            this.placeLetter = activateLetter;
-            this.placeWord = null;
-            return true;
-        }
+    public void createLetterSprite(LetterTile tile) {
+        this.createLetterSprite(tile, null);
     }
-    public boolean setPlaceBlock(Word activateWord) {
-        if (this.placeWord != null && this.placeWord.name == activateWord.name) {
-            this.placeWord = null;
-            this.placeLetter = null;
-            return false;
-        } else {
-            this.placeWord = activateWord;
-            this.placeLetter = null;
-            return true;
-        }
-    }
-
-    public void addBlock(int x, int y) {
-        Debug.d("Don't use PhoeniciaGame.addBlock anymore");
-        return;
-
-/*
+    public void createLetterSprite(final LetterTile tile, final CreateLetterSpriteCallback callback) {
         final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
-        final TMXTile tmxTile = tmxLayer.getTMXTileAt(x, y);
+        final TMXTile tmxTile = tmxLayer.getTMXTile(tile.isoX.get(), tile.isoY.get());
         if (tmxTile == null) {
             Debug.d("Can't place blocks outside of map");
             return;
         }
-        PlacedBlockSprite blockTile = null;
-        if (this.placeLetter != null) {
-            blockTile = this.placeBlock(tmxTile, this.placeLetter);
-        } else if (this.placeWord != null) {
-            blockTile = this.placeBlock(x, y, this.placeWord);
-        }
-        if (blockTile != null) {
-            PlacedBlock newBlock = new PlacedBlock();
-            newBlock.phoeniciaGame.set(this.session);
-            newBlock.isoX.set(tmxTile.getTileColumn());
-            newBlock.isoY.set(tmxTile.getTileRow());
-            newBlock.sprite = blockTile;
-            if (this.placeLetter != null) {
-                newBlock.sprite_type.set(PlacedBlock.TYPE_LETTER);
-                newBlock.item_name.set(this.placeLetter.chars);
-            } else if (this.placeWord != null) {
-                newBlock.sprite_type.set(PlacedBlock.TYPE_WORD);
-                newBlock.item_name.set(this.placeWord.chars);
-            }
-            Debug.d("Saving block "+newBlock.item_name.get()+" at "+newBlock.isoX.get()+"x"+newBlock.isoY.get());
-            if (newBlock.save(this.activity.getApplicationContext())) {
-                Debug.d("Save successful");
-            }
 
-            if (newBlock.sprite_type.get() == PlacedBlock.TYPE_LETTER) {
-                BuildQueue builder = new BuildQueue(this.session, null, "", this.placeLetter.time); // TODO: don't use magic number
-                builder.setUpdateHandler(newBlock);
-                builder.start();
-                builder.save(this.activity.getApplicationContext());
-                this.builders.add(builder);
-            }
-        }
-*/
-    }
-
-    public void createLetterSprite(LetterTile tile) {
-        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
-        final TMXTile tmxTile = tmxLayer.getTMXTile(tile.isoX.get(), tile.isoY.get());
         int tileX = (int)tmxTile.getTileX() + 32;// tiles are 64px wide and anchors in the center
-        int tileY = (int)tmxTile.getTileY() + 32 ;// tiles are 64px wide and anchors in the center
+        int tileY = (int)tmxTile.getTileY() + 32;// tiles are 64px wide and anchors in the center
         int tileZ = tmxTile.getTileZ();
+
+        if (placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] != null) {
+            Debug.d("Can't place blocks over existing blocks");
+            return;
+        }
 
         Debug.d("Creating LetterSprite for "+tile.letter.name+" at "+tile+"x"+tileY);
         final PlacedBlockSprite sprite = new PlacedBlockSprite(tileX, tileY, 4, letterTiles.get(tile.letter), vboManager);
-        sprite.setOnClickListener(tile);
         sprite.setZIndex(tileZ);
 
-        BuildQueue builder = tile.getBuilder(this.activity.getApplicationContext());
-        if (builder != null) {
-            sprite.setProgress(builder.progress.get(), tile.letter.time);
-        }
-        sprite.animate();
-        tile.setSprite(sprite);
+        final LetterBuilder builder = tile.getBuilder(this.activity.getApplicationContext());
 
-        placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = sprite;
-
-        scene.registerTouchArea(sprite);
         scene.attachChild(sprite);
         scene.sortChildren();
+
+        if (callback != null) {
+            this.hudManager.push(new SpriteMoveHUD(this, tmxTile, sprite, new SpriteMoveHUD.SpriteMoveHandler() {
+                @Override
+                public void onSpriteMoveCanceled(PlacedBlockSprite sprite) {
+                    scene.detachChild(sprite);
+                    callback.onLetterSpriteCreationFailed(tile);
+                }
+
+                @Override
+                public void onSpriteMoveFinished(PlacedBlockSprite sprite, TMXTile newlocation) {
+                    tile.isoX.set(newlocation.getTileColumn());
+                    tile.isoY.set(newlocation.getTileRow());
+                    placedSprites[newlocation.getTileColumn()][newlocation.getTileRow()] = sprite;
+
+                    if (builder != null) {
+                        sprite.setProgress(builder.progress.get(), tile.letter.time);
+                    }
+                    tile.setSprite(sprite);
+                    sprite.setOnClickListener(tile);
+                    sprite.animate();
+                    scene.registerTouchArea(sprite);
+                    callback.onLetterSpriteCreated(tile);
+                }
+            }));
+        } else {
+            placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = sprite;
+
+            if (builder != null) {
+                sprite.setProgress(builder.progress.get(), tile.letter.time);
+            }
+            tile.setSprite(sprite);
+            sprite.setOnClickListener(tile);
+            sprite.animate();
+            scene.registerTouchArea(sprite);
+        }
     }
-    /*public TMXTile setBlockAtIso(int tileColumn, int tileRow, final Letter placeBlock) {
+
+    public interface CreateLetterSpriteCallback {
+        public void onLetterSpriteCreated(LetterTile tile);
+        public void onLetterSpriteCreationFailed(LetterTile tile);
+    }
+
+    public void createWordSprite(WordTile tile) {
+        this.createWordSprite(tile, null);
+    }
+    public void createWordSprite(final WordTile tile, final CreateWordSpriteCallback callback) {
         final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
-        final TMXTile tmxTile = tmxLayer.getTMXTile(tileColumn, tileRow);
+        final TMXTile tmxTile = tmxLayer.getTMXTile(tile.isoX.get(), tile.isoY.get());
         if (tmxTile == null) {
             Debug.d("Can't place blocks outside of map");
-            return null;
+            return;
         }
-        int tileX = (int)tmxTile.getTileX() - 32;// tiles are 64px wide and anchors in the center
-        int tileY = (int)tmxTile.getTileY() - 32 ;// tiles are 64px wide and anchors in the center
+
+        int tileX = (int)tmxTile.getTileX() + 32;// tiles are 64px wide and anchors in the center
+        int tileY = (int)tmxTile.getTileY() + 32;// tiles are 64px wide and anchors in the center
         int tileZ = tmxTile.getTileZ();
 
-        final PlacedBlockSprite block = new PlacedBlockSprite(tileX, tileY, 4, letterTiles.get(placeBlock), vboManager);
-        block.setOnClickListener(new PlacedBlockSprite.OnClickListener() {
-            @Override
-            public void onClick(PlacedBlockSprite buttonSprite, float v, float v2) {
-                Debug.d("Clicked block: "+placeBlock.chars);
-                playBlockSound(placeBlock.phoneme);
-                Inventory.getInstance().add(placeBlock.name);
-            }
-        });
-        block.setZIndex(tileZ);
-        block.animate();
-        placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = block;
-        scene.registerTouchArea(block);
-        scene.attachChild(block);
-
-        scene.sortChildren();
-        return tmxTile;
-    }*/
-
-    public TMXTile setBlockAtIso(int tileColumn, int tileRow, final Word placeBlock) {
-        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
-        final TMXTile tmxTile = tmxLayer.getTMXTile(tileColumn, tileRow);
-        if (tmxTile == null) {
-            Debug.d("Can't place blocks outside of map");
-            return null;
+        if (placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] != null) {
+            Debug.d("Can't place blocks over existing blocks");
+            return;
         }
-        int tileX = (int)tmxTile.getTileX() - 32;// tiles are 64px wide and anchors in the center
-        int tileY = (int)tmxTile.getTileY() - 32 ;// tiles are 64px wide and anchors in the center
-        int tileZ = tmxTile.getTileZ();
 
-        ButtonSprite block = new ButtonSprite(tileX, tileY, wordTiles.get(placeBlock).getTextureRegion(4), vboManager);
-        block.setOnClickListener(new ButtonSprite.OnClickListener() {
-            @Override
-            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                Debug.d("Clicked block: "+placeBlock.chars);
-                hudManager.showWordBuilder(locale.level_map.get(current_level), placeBlock);
-            }
-        });
-        block.setZIndex(tileZ);
-        placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = block;
-        scene.registerTouchArea(block);
-        scene.attachChild(block);
+        Debug.d("Creating WordSprite for "+tile.word.name+" at "+tile+"x"+tileY);
+        final PlacedBlockSprite sprite = new PlacedBlockSprite(tileX, tileY, 4, wordTiles.get(tile.word), vboManager);
+        sprite.setZIndex(tileZ);
 
+        final WordBuilder builder = tile.getBuilder(this.activity.getApplicationContext());
+
+        scene.attachChild(sprite);
         scene.sortChildren();
-        return tmxTile;
+
+        if (callback != null) {
+            this.hudManager.push(new SpriteMoveHUD(this, tmxTile, sprite, new SpriteMoveHUD.SpriteMoveHandler() {
+                @Override
+                public void onSpriteMoveCanceled(PlacedBlockSprite sprite) {
+                    scene.detachChild(sprite);
+                    callback.onWordSpriteCreationFailed(tile);
+                }
+
+                @Override
+                public void onSpriteMoveFinished(PlacedBlockSprite sprite, TMXTile newlocation) {
+                    tile.isoX.set(newlocation.getTileColumn());
+                    tile.isoY.set(newlocation.getTileRow());
+                    placedSprites[newlocation.getTileColumn()][newlocation.getTileRow()] = sprite;
+
+                    if (builder != null) {
+                        sprite.setProgress(builder.progress.get(), tile.word.time);
+                    }
+                    tile.setSprite(sprite);
+                    sprite.setOnClickListener(tile);
+                    sprite.animate();
+                    scene.registerTouchArea(sprite);
+                    callback.onWordSpriteCreated(tile);
+                }
+            }));
+        } else {
+            placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = sprite;
+
+            if (builder != null) {
+                sprite.setProgress(builder.progress.get(), tile.word.time);
+            }
+            tile.setSprite(sprite);
+            sprite.setOnClickListener(tile);
+            sprite.animate();
+            scene.registerTouchArea(sprite);
+        }
+    }
+
+    public interface CreateWordSpriteCallback {
+        public void onWordSpriteCreated(WordTile tile);
+        public void onWordSpriteCreationFailed(WordTile tile);
     }
 
     public TMXTile getTileAt(float x, float y) {
@@ -602,75 +622,6 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     }
     public Sprite getSpriteAt(int isoX, int isoY) {
         return placedSprites[isoX][isoY];
-    }
-
-/*    public PlacedBlockSprite placeBlock(final TMXTile tmxTile, final Letter placeLetter) {
-        if (placeLetter == null) {
-            Debug.d("No active letter to place");
-            return null;
-        }
-        if (tmxTile == null) {
-            Debug.d("Can't place blocks outside of map");
-            return null;
-        }
-        int tileX = (int)tmxTile.getTileX() + 32;// map tiles are offset by 32px (half tile)
-        int tileY = (int)tmxTile.getTileY() + 32;// map tiles are offset by 32px (half tile)
-        int tileZ = tmxTile.getTileZ();
-
-        if (placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] != null) {
-            Debug.d("Sprite already exists at this location");
-            return null;
-        }
-
-        final PlacedBlockSprite block = new PlacedBlockSprite(tileX, tileY, 4, this.letterTiles.get(placeLetter), vboManager);
-        block.setZIndex(tileZ);
-        block.animate();
-        placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = block;
-        scene.registerTouchArea(block);
-        scene.attachChild(block);
-
-        scene.sortChildren();
-        return block;
-    }*/
-
-    public PlacedBlockSprite placeBlock(int x, int y, final Word placeBlock) {
-        if (placeBlock == null) {
-            Debug.d("No active block to place");
-            return null;
-        }
-        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
-        final TMXTile tmxTile = tmxLayer.getTMXTileAt(x, y);
-        if (tmxTile == null) {
-            Debug.d("Can't place blocks outside of map");
-            return null;
-        }
-        int tileX = (int)tmxTile.getTileX() - 32;// tiles are 64px wide, assume the touch is targeting the middle
-        int tileY = (int)tmxTile.getTileY() - 32;// tiles are 64px wide, assume the touch is targeting the middle
-        int tileZ = tmxTile.getTileZ();
-
-        if (placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] != null) {
-            scene.detachChild(placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()]);
-            scene.unregisterTouchArea(placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()]);
-            placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = null;
-        }
-
-        final PlacedBlockSprite block = new PlacedBlockSprite(tileX, tileY, 4, this.wordTiles.get(placeBlock), vboManager);
-        block.setOnClickListener(new PlacedBlockSprite.OnClickListener() {
-            @Override
-            public void onClick(PlacedBlockSprite buttonSprite, float v, float v2) {
-                Debug.d("Clicked block: "+placeBlock.chars);
-                //playBlockSound(placeBlock.sound);
-                //Inventory.getInstance().add(placeBlock.name);
-                hudManager.showWordBuilder(locale.level_map.get(current_level), placeBlock);
-            }
-        });
-        block.setZIndex(tileZ);
-        placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = block;
-        scene.registerTouchArea(block);
-        scene.attachChild(block);
-
-        scene.sortChildren();
-        return block;
     }
 
     public void playBlockSound(String soundFile) {

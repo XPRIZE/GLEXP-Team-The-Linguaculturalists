@@ -41,10 +41,16 @@ public class InventoryHUD extends PhoeniciaHUD implements IOnSceneTouchListener 
         int startX = (int) (whiteRect.getWidth() / 2) - (columns * 32) + 32;
         int startY = (int) whiteRect.getHeight() / 2 - 50;
 
+        int offsetX = 0;
+        int offsetY = startY;
+
         List<InventoryItem> items = Inventory.getInstance().items();
         for (int i = 0; i < items.size(); i++) {
-            if (i >= columns) {
-                startY -= 50;
+            if (offsetX >= columns) {
+                offsetY -= 50;
+                offsetX = 0;
+            } else {
+                offsetX++;
             }
             final InventoryItem item = items.get(i);
             final Letter currentLetter = game.locale.letter_map.get(item.item_name.get());
@@ -58,7 +64,7 @@ public class InventoryHUD extends PhoeniciaHUD implements IOnSceneTouchListener 
                     game.letterTiles.get(currentLetter).getTextureRegion(0),
                     game.letterTiles.get(currentLetter).getTextureRegion(1),
                     game.letterTiles.get(currentLetter).getTextureRegion(2));
-            final LetterSprite block = new LetterSprite(startX + (96 * i), startY, currentLetter, Inventory.getInstance().getCount(currentLetter.name), blockRegion, game.activity.getVertexBufferObjectManager());
+            final LetterSprite block = new LetterSprite(startX + (96 * offsetX), offsetY, currentLetter, Inventory.getInstance().getCount(currentLetter.name), blockRegion, game.activity.getVertexBufferObjectManager());
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {

@@ -1,6 +1,5 @@
 package com.linguaculturalists.phoenicia.components;
 
-import android.graphics.PointF;
 import android.opengl.GLES20;
 
 import org.andengine.engine.camera.Camera;
@@ -8,11 +7,8 @@ import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.Entity;
 import org.andengine.entity.IEntity;
-import org.andengine.entity.clip.ClipEntity;
-import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.CameraScene;
 import org.andengine.entity.scene.ITouchArea;
-import org.andengine.entity.scene.Scene;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ScrollDetector;
 import org.andengine.input.touch.detector.SurfaceScrollDetector;
@@ -39,6 +35,8 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
 
     private boolean print_debug = true;
 
+    public final ChildRect childRect = new ChildRect();
+
     public Scrollable(float x, float y, float w, float h) {
         this(x, y, w, h, SCROLL_BOTH);
     }
@@ -48,13 +46,59 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
         this.scroll_lock = scroll_lock;
         this.scrollDetector = new SurfaceScrollDetector(this);
 
-        this.contents = new Entity(x, y, w, h);
+        this.contents = new Entity(w/2, h/2, w, h);
+        this.childRect.set(0, y, w, h);
+
         super.attachChild(this.contents);
 
     }
 
     public void setClip(boolean clip) {
         this.clip = clip;
+    }
+
+    public class ChildRect {
+        public float left;
+        public float right;
+        public float top;
+        public float bottom;
+
+        public ChildRect() {
+
+        }
+        public void set(float x, float y, float w, float h) {
+            this.left = x;
+            this.right = x + w;
+            this.bottom = y;
+            this.top = y + h;
+        }
+
+        public float getWidth() {
+            return this.right - this.left;
+        }
+
+        public float getHeight() {
+            return this.top - this.bottom;
+        }
+    }
+
+    private void recalculateContentBounds() {
+        for(int i = 0; i < this.contents.getChildCount(); i++) {
+            IEntity child = this.contents.getChildByIndex(i);
+            Debug.d("Recalculating with child: "+child);
+            final float childLeft = child.getX();
+            final float childRight = child.getX()+child.getWidth();
+            final float childBottom = child.getY();
+            final float childTop = child.getY()+child.getHeight();
+            if (childLeft   < this.childRect.left)   { Debug.d("New left: "+childLeft); this.childRect.left = childLeft; }
+            if (childRight  > this.childRect.right)  { Debug.d("New right: "+childRight); this.childRect.right = childRight; }
+            if (childTop    > this.childRect.top)    { Debug.d("New top: "+childTop); this.childRect.top = childTop; }
+            if (childBottom < this.childRect.bottom) { Debug.d("New bottom: "+childBottom); this.childRect.bottom = childBottom; }
+        }
+        Debug.d("Scrollable childRect: x("+this.childRect.left+","+this.childRect.right+") y("+this.childRect.top+","+this.childRect.bottom+")");
+    }
+    private void returnToBounds() {
+
     }
 
     @Override
@@ -91,13 +135,13 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
             newY = newY - dy;
         }
         // Stop at bounds
-        float left = newX+(this.contents.getWidth()/2);
-        float bottom = newY+(this.contents.getHeight()/2);
+        Debug.d("Scrollable newX="+newX);
+        Debug.d("Scrollable newY="+newY);
         //Debug.d("Checking bounds for "+left+", "+bottom);
-        if (newX-(this.contents.getWidth()/2) < this.getX()-(this.getWidth()/2) || newX+(this.contents.getWidth()/2) > this.getX()+(this.getWidth()/2)) {
+        if (newX > 0 || newX+this.childRect.getWidth() < this.getWidth()) {
             //newX = this.contents.getX();
         }
-        if (newY-(this.contents.getHeight()/2) < this.getY()-(this.getHeight()/2) || newY+(this.contents.getHeight()/2) > this.getY()+(this.getHeight()/2)) {
+        if (newY < this.getHeight() || newY + this.childRect.getHeight() > 0) {
             //newY = this.contents.getY();
         }
         this.contents.setPosition(newX, newY);
@@ -112,13 +156,21 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
     @Override
     public void detachChildren() {
         this.contents.detachChildren();
+        this.recalculateContentBounds();
     }
 
     @Override
     public void attachChild(IEntity child) {
         Debug.d("Scrollable.attachChild("+child+")");
         this.contents.attachChild(child);
+        this.recalculateContentBounds();
+    }
 
+    @Override
+    public boolean detachChild(IEntity pEntity) {
+        final boolean ret = this.contents.detachChild(pEntity);
+        this.recalculateContentBounds();
+        return ret;
     }
 
     public void onAttached() {

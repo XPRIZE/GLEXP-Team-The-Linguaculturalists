@@ -32,7 +32,7 @@ public class GameFonts {
 
     public static Font inventoryCount() {
         if (inventoryCountFont == null) {
-            BitmapTextureAtlas texture = new BitmapTextureAtlas(textureManager, 256, 256, TextureOptions.BILINEAR);
+            BitmapTextureAtlas texture = new BitmapTextureAtlas(textureManager, 1024, 1024, TextureOptions.BILINEAR);
             inventoryCountFont = FontFactory.createStroke(fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 32, true, Color.YELLOW_ARGB_PACKED_INT, 1, Color.RED_ARGB_PACKED_INT);
             inventoryCountFont.load();
         }
@@ -41,7 +41,7 @@ public class GameFonts {
 
     public static Font getDefaultHUDDisplay() {
         if (defaultHUDDisplayFont == null) {
-            BitmapTextureAtlas texture = new BitmapTextureAtlas(textureManager, 256, 256, TextureOptions.BILINEAR);
+            BitmapTextureAtlas texture = new BitmapTextureAtlas(textureManager, 1024, 1024, TextureOptions.BILINEAR);
             defaultHUDDisplayFont = FontFactory.createStroke(fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 32, true, Color.GREEN_ARGB_PACKED_INT, 1, Color.WHITE_ARGB_PACKED_INT);
             defaultHUDDisplayFont.load();
         }
