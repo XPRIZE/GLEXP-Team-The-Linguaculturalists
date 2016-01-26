@@ -8,17 +8,20 @@ import com.orm.androrm.field.ForeignKeyField;
 import com.orm.androrm.field.IntegerField;
 
 /**
- * Created by mhall on 7/17/15.
+ * Builder for creating new Word items.
  */
 public class WordBuilder extends Builder {
 
-    public ForeignKeyField<GameSession> game;
-    public ForeignKeyField<WordTile> tile;
+    public ForeignKeyField<GameSession> game; /**< reference to the GameSession this item is a part of */
+    public ForeignKeyField<WordTile> tile; /**< reference to the WordTile the builder is attached to */
 
     public static final QuerySet<WordBuilder> objects(Context context) {
         return objects(context, WordBuilder.class);
     }
 
+    /**
+     * Create empty WordBuilder.
+     */
     public WordBuilder() {
         super();
         this.game = new ForeignKeyField<>(GameSession.class);
@@ -33,9 +36,25 @@ public class WordBuilder extends Builder {
         this.setUpdateHandler(new AbstractBuildStatusUpdateHandler() { });
     }
 
+    /**
+     * Create a new WordBuilder for the specified GameSession and WordTile
+     * @param session GameSession the builder is a part of
+     * @param tile WordTile the builder is building for
+     * @param item_name InventoryItem for what the builder is creating
+     * @param time time (in seconds) the build will take to finish
+     */
     public WordBuilder(GameSession session, WordTile tile, String item_name, int time) {
         this(session, tile, item_name, time, null);
     }
+
+    /**
+     * Create a new WordBuilder for the specified GameSession and WordTile
+     * @param session GameSession the builder is a part of
+     * @param tile WordTile the builder is building for
+     * @param item_name InventoryItem for what the builder is creating
+     * @param time time (in seconds) the build will take to finish
+     * @param updateHandler callback to notify when the build status changes
+     */
     public WordBuilder(GameSession session, WordTile tile, String item_name, int time, BuildStatusUpdateHandler updateHandler) {
         this();
         this.game.set(session);

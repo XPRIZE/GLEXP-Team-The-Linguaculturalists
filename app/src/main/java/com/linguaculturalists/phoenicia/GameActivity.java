@@ -27,10 +27,7 @@ import org.andengine.util.debug.Debug;
 import java.io.IOException;
 
 /**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- *
- * @see SystemUiHider
+ * The Android Activity for PhoeniciaGame.
  */
 public class GameActivity extends BaseGameActivity {
 

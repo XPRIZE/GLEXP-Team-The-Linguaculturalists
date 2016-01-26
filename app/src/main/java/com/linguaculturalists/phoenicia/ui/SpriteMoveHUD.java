@@ -3,6 +3,7 @@ package com.linguaculturalists.phoenicia.ui;
 import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
+import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.modifier.AlphaModifier;
@@ -19,7 +20,7 @@ import org.andengine.util.debug.Debug;
 import org.andengine.util.modifier.ease.EaseBackOut;
 
 /**
- * Created by mhall on 1/10/16.
+ * HUD that allows the player to re-position a sprite on the map.
  */
 public class SpriteMoveHUD extends PhoeniciaHUD {
     private PhoeniciaGame game;
@@ -42,14 +43,14 @@ public class SpriteMoveHUD extends PhoeniciaHUD {
         final IEntityModifier fadeModifier = new LoopEntityModifier(new AlphaModifier(1,0.4f,0.6f));
         this.sprite.registerEntityModifier(fadeModifier);
 
-        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH/2, 64, 200, 96, game.activity.getVertexBufferObjectManager());
+        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH/2, 64, 200, 96, PhoeniciaContext.vboManager);
         whiteRect .setColor(Color.WHITE);
         this.attachChild(whiteRect);
 
         final SpriteMoveHUD hud = this;
 
         ITextureRegion confirmRegion = game.shellTiles.getTextureRegion(6);
-        ButtonSprite confirmBlock = new ButtonSprite((whiteRect.getWidth()/2)-64, 48, confirmRegion, game.activity.getVertexBufferObjectManager());
+        ButtonSprite confirmBlock = new ButtonSprite((whiteRect.getWidth()/2)-64, 48, confirmRegion, PhoeniciaContext.vboManager);
         confirmBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -66,7 +67,7 @@ public class SpriteMoveHUD extends PhoeniciaHUD {
         whiteRect.attachChild(confirmBlock);
 
         ITextureRegion cancelRegion = game.shellTiles.getTextureRegion(7);
-        ButtonSprite cancelBlock = new ButtonSprite((whiteRect.getWidth()/2)+64, 48, cancelRegion, game.activity.getVertexBufferObjectManager());
+        ButtonSprite cancelBlock = new ButtonSprite((whiteRect.getWidth()/2)+64, 48, cancelRegion, PhoeniciaContext.vboManager);
         cancelBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -84,11 +85,18 @@ public class SpriteMoveHUD extends PhoeniciaHUD {
 
     }
 
+    /**
+     * Animate the opacity of the sprite being moved
+     */
     @Override
     public void show() {
         whiteRect.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
     }
 
+    /**
+     * If this HUD is being closed without the user explicitly accepting or canceling the move,
+     * cancel it now
+     */
     @Override
     public void close() {
         if (this.handler != null) {
@@ -96,8 +104,21 @@ public class SpriteMoveHUD extends PhoeniciaHUD {
         }
     }
 
+    /**
+     * Callback handler for listening to whether the user moves the sprite or now
+     */
     public interface SpriteMoveHandler {
+        /**
+         * The player has decided not to move the sprite
+         * @param sprite sprite being moved
+         */
         public void onSpriteMoveCanceled(PlacedBlockSprite sprite);
+
+        /**
+         * The player confirmed the placement of the sprite
+         * @param sprite sprite being moved
+         * @param newLocation the new map tile location for the sprite
+         */
         public void onSpriteMoveFinished(PlacedBlockSprite sprite, TMXTile newLocation);
     }
 

@@ -7,17 +7,22 @@ import org.andengine.util.debug.Debug;
 import java.util.List;
 
 /**
-* Created by mhall on 7/21/15.
+* Model for storing a definition of a game level.
 */
 public class Level {
-    public String name;
-    public List<Letter> letters;
-    public List<Word> words;
-    public List<Letter> help_letters;
-    public List<Word> help_words;
-    public List<IntroPage> intro;
-    public List<Requirement> requirements;
+    public String name; /**< reference name for this level */
+    public List<Letter> letters; /**< list of \link Letter Letters \endlink available in this level */
+    public List<Word> words; /**< list of \link Word Words \endlink available in this level */
+    public List<Letter> help_letters; /**< list of \link Letter Letters \endlink to give extra help with on this level */
+    public List<Word> help_words; /**< list of \link Word Words \endlink to give extra help with on this level */
+    public List<IntroPage> intro; /**< list of \link IntroPage IntroPages \endlink to be displayed at the start of this level */
+    public List<Requirement> requirements; /**< list of \link Requirement Requirements \endlink that must be fulfilled to move on to the next level */
 
+    /**
+     * See if all #requirements for this level have been fulfilled
+     * @param context ApplicationContext needed for database access
+     * @return true if all requirements pass, otherwise false
+     */
     public boolean check(Context context) {
         Debug.d("Checking if player passes level " + name);
         for (int i = 0; i < requirements.size(); i++) {

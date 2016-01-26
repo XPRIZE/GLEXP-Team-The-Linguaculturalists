@@ -2,12 +2,14 @@ package com.linguaculturalists.phoenicia.ui;
 
 import android.graphics.Typeface;
 
+import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
+import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.CameraScene;
@@ -30,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by mhall on 8/26/15.
+ * HUD for constructing a new Word out of \link Letter Letters \endlink in the player's Inventory..
  */
 public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryUpdateListener, IOnSceneTouchListener {
 
@@ -66,12 +68,12 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
 
         this.cursorAt = 0;
 
-        this.whiteRect = new Rectangle(game.activity.CAMERA_WIDTH / 2, game.activity.CAMERA_HEIGHT / 2, 400, 400, game.activity.getVertexBufferObjectManager());
+        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 400, PhoeniciaContext.vboManager);
         whiteRect.setColor(Color.WHITE);
         this.attachChild(whiteRect);
 
         ITextureRegion wordSpriteRegion = game.wordTiles.get(word).getTextureRegion(0);
-        ButtonSprite wordSprite = new ButtonSprite((whiteRect.getWidth()/2), (game.activity.CAMERA_HEIGHT/2)+100, wordSpriteRegion, game.activity.getVertexBufferObjectManager());
+        ButtonSprite wordSprite = new ButtonSprite((whiteRect.getWidth()/2), (GameActivity.CAMERA_HEIGHT/2)+100, wordSpriteRegion, PhoeniciaContext.vboManager);
         wordSprite.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -86,17 +88,17 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
         for (int i = 0; i < word.chars.length; i++) {
             this.charBlocksX[i] = startX+(64*i);
             this.charBlocksY[i] = (int)whiteRect.getHeight()/2+50;
-            Rectangle borderRect = new Rectangle(startX+(64*i), whiteRect.getHeight()/2+50, 60, 100, game.activity.getVertexBufferObjectManager());
+            Rectangle borderRect = new Rectangle(startX+(64*i), whiteRect.getHeight()/2+50, 60, 100, PhoeniciaContext.vboManager);
             borderRect.setColor(Color.RED);
             whiteRect.attachChild(borderRect);
 
-            Rectangle innerRect = new Rectangle(startX+(64*i), whiteRect.getHeight()/2+50, 55, 95, game.activity.getVertexBufferObjectManager());
+            Rectangle innerRect = new Rectangle(startX+(64*i), whiteRect.getHeight()/2+50, 55, 95, PhoeniciaContext.vboManager);
             innerRect.setColor(Color.WHITE);
             whiteRect.attachChild(innerRect);
 
         }
 
-        final Font inventoryCountFont = FontFactory.create(game.activity.getFontManager(), game.activity.getTextureManager(), 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 16, Color.RED_ARGB_PACKED_INT);
+        final Font inventoryCountFont = FontFactory.create(PhoeniciaContext.fontManager, PhoeniciaContext.textureManager, 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 16, Color.RED_ARGB_PACKED_INT);
         inventoryCountFont.load();
 
         for (int i = 0; i < level.letters.size(); i++) {
@@ -107,7 +109,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
                     game.letterTiles.get(currentLetter).getTextureRegion(0),
                     game.letterTiles.get(currentLetter).getTextureRegion(1),
                     game.letterTiles.get(currentLetter).getTextureRegion(2));
-            final ButtonSprite block = new ButtonSprite(startX+(64*i), whiteRect.getHeight()/2-50, blockRegion, game.activity.getVertexBufferObjectManager());
+            final ButtonSprite block = new ButtonSprite(startX+(64*i), whiteRect.getHeight()/2-50, blockRegion, PhoeniciaContext.vboManager);
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -130,7 +132,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
 
             Debug.d("Checking inventory for "+currentLetter.name);
             Debug.d("Inventory says: "+this.game.inventory.getCount(currentLetter.name));
-            final Text inventoryCount = new Text(startX+(64*i)+24, whiteRect.getHeight()/2-80, inventoryCountFont, ""+this.game.inventory.getCount(currentLetter.name), 4, game.activity.getVertexBufferObjectManager());
+            final Text inventoryCount = new Text(startX+(64*i)+24, whiteRect.getHeight()/2-80, inventoryCountFont, ""+this.game.inventory.getCount(currentLetter.name), 4, PhoeniciaContext.vboManager);
             whiteRect.attachChild(inventoryCount);
             this.inventoryCounts.put(currentLetter.name, inventoryCount);
             this.usedCounts.put(currentLetter.name, 0);
@@ -138,15 +140,26 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
 
     }
 
+    /**
+     * Clear the letters that were used to try and build a word
+     */
     private void eraseSpelling() {
         for (int i = 0; i < this.buildWord.chars.length; i++) {
             this.spelling[i] = ' ';
         }
     }
+
+    /**
+     * When closed, stop listening for inventory changes
+     */
     public void close() {
         Inventory.getInstance().removeUpdateListener(this);
     }
 
+    /**
+     * Add the given letter to the next space in the spelling sequence for the word
+     * @param letter Letter to add to the proposed spelling
+     */
     public void putChar(Letter letter) {
         if (this.cursorAt >= this.buildWord.chars.length) {
             Debug.d("Too many characters!");
@@ -154,7 +167,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
         }
         final int startX = 200 - (this.buildWord.chars.length * 35) + 35; // TODO: replace magic numbers
         final ITextureRegion blockRegion = game.letterTiles.get(letter).getTextureRegion(0);
-        final Sprite character = new Sprite(this.charBlocksX[cursorAt], this.charBlocksY[cursorAt], blockRegion, game.activity.getVertexBufferObjectManager());
+        final Sprite character = new Sprite(this.charBlocksX[cursorAt], this.charBlocksY[cursorAt], blockRegion, PhoeniciaContext.vboManager);
         this.whiteRect.attachChild(character);
         this.charSprites[this.cursorAt] = character;
         this.spelling[cursorAt] = letter.chars[0];
@@ -192,9 +205,12 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
         }
     }
 
+    /**
+     * Aport spelling attempt and return used letters to the player's Inventory
+     */
     public synchronized void clear() {
         Debug.d("Clearing");
-        this.game.activity.runOnUpdateThread(new Runnable() {
+        PhoeniciaContext.activity.runOnUpdateThread(new Runnable() {
             @Override
             public void run() {
                 cursorAt = 0;

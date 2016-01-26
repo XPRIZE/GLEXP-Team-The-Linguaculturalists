@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by mhall on 7/17/15.
+ * Model for storing information about a GameSession's locale.
  */
 public class Locale {
 

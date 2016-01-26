@@ -15,34 +15,33 @@ import org.andengine.util.adt.color.Color;
 import java.lang.reflect.Type;
 
 /**
- * Created by mhall on 1/3/16.
+ * Manager class for getting pre-defined font instances for Phoenicia.
  */
 public class GameFonts {
-    static FontManager fontManager;
-    static TextureManager textureManager;
-
     static Font defaultHUDDisplayFont;
     static Font inventoryCountFont;
 
-    public static void init(FontManager fm, TextureManager tm) {
-        fontManager = fm;
-        textureManager = tm;
-
-    }
-
+    /**
+     * Font used for displaying the quantity of an InventoryItem.
+     * @return
+     */
     public static Font inventoryCount() {
         if (inventoryCountFont == null) {
-            BitmapTextureAtlas texture = new BitmapTextureAtlas(textureManager, 1024, 1024, TextureOptions.BILINEAR);
-            inventoryCountFont = FontFactory.createStroke(fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 32, true, Color.YELLOW_ARGB_PACKED_INT, 1, Color.RED_ARGB_PACKED_INT);
+            BitmapTextureAtlas texture = new BitmapTextureAtlas(PhoeniciaContext.textureManager, 1024, 1024, TextureOptions.BILINEAR);
+            inventoryCountFont = FontFactory.createStroke(PhoeniciaContext.fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 32, true, Color.YELLOW_ARGB_PACKED_INT, 1, Color.RED_ARGB_PACKED_INT);
             inventoryCountFont.load();
         }
         return inventoryCountFont;
     }
 
-    public static Font getDefaultHUDDisplay() {
+    /**
+     * Fond used for displaying the level and account balance in the DefaultHUD.
+     * @return
+     */
+    public static Font defaultHUDDisplay() {
         if (defaultHUDDisplayFont == null) {
-            BitmapTextureAtlas texture = new BitmapTextureAtlas(textureManager, 1024, 1024, TextureOptions.BILINEAR);
-            defaultHUDDisplayFont = FontFactory.createStroke(fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 32, true, Color.GREEN_ARGB_PACKED_INT, 1, Color.WHITE_ARGB_PACKED_INT);
+            BitmapTextureAtlas texture = new BitmapTextureAtlas(PhoeniciaContext.textureManager, 1024, 1024, TextureOptions.BILINEAR);
+            defaultHUDDisplayFont = FontFactory.createStroke(PhoeniciaContext.fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 32, true, Color.GREEN_ARGB_PACKED_INT, 1, Color.WHITE_ARGB_PACKED_INT);
             defaultHUDDisplayFont.load();
         }
         return defaultHUDDisplayFont;

@@ -2,6 +2,7 @@ package com.linguaculturalists.phoenicia.ui;
 
 import android.graphics.Typeface;
 
+import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.Scrollable;
 import com.linguaculturalists.phoenicia.locale.Level;
@@ -11,6 +12,7 @@ import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.models.WordBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
+import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.primitive.Rectangle;
@@ -31,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by mhall on 8/26/15.
+ * HUD for selecting \link Word Words \endlink to be placed as tiles onto the map.
  */
 public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.InventoryUpdateListener {
     private static Word placeWord = null;
@@ -50,17 +52,17 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.Inventor
         Inventory.getInstance().addUpdateListener(this);
         this.game = game;
 
-        this.whiteRect = new Rectangle(game.activity.CAMERA_WIDTH/2, 64, 600, 96, game.activity.getVertexBufferObjectManager());
+        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH/2, 64, 600, 96, PhoeniciaContext.vboManager);
         whiteRect.setColor(Color.WHITE);
         this.attachChild(whiteRect);
 
-        this.blockPanel = new Scrollable(game.activity.CAMERA_WIDTH/2, 64, 600, 96, Scrollable.SCROLL_HORIZONTAL);
+        this.blockPanel = new Scrollable(GameActivity.CAMERA_WIDTH/2, 64, 600, 96, Scrollable.SCROLL_HORIZONTAL);
 
         this.registerTouchArea(blockPanel);
         this.registerTouchArea(blockPanel.contents);
         this.attachChild(blockPanel);
 
-        final Font inventoryCountFont = FontFactory.create(game.activity.getFontManager(), game.activity.getTextureManager(), 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 16, Color.RED_ARGB_PACKED_INT);
+        final Font inventoryCountFont = FontFactory.create(PhoeniciaContext.fontManager, PhoeniciaContext.textureManager, 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 16, Color.RED_ARGB_PACKED_INT);
         inventoryCountFont.load();
         final List<Word> words = level.words;
         final int tile_start = 130;
@@ -73,7 +75,7 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.Inventor
                     game.wordTiles.get(currentWord).getTextureRegion(0),
                     game.wordTiles.get(currentWord).getTextureRegion(1),
                     game.wordTiles.get(currentWord).getTextureRegion(2));
-            ButtonSprite block = new ButtonSprite((64 * ((i * 2)+1)), 48, blockRegion, game.activity.getVertexBufferObjectManager());
+            ButtonSprite block = new ButtonSprite((64 * ((i * 2)+1)), 48, blockRegion, PhoeniciaContext.vboManager);
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -90,7 +92,7 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.Inventor
             this.registerTouchArea(block);
             blockPanel.attachChild(block);
 
-            final Text inventoryCount = new Text((64 * ((i * 2)+1))+24, 20, inventoryCountFont, ""+game.inventory.getCount(currentWord.name), 4, game.activity.getVertexBufferObjectManager());
+            final Text inventoryCount = new Text((64 * ((i * 2)+1))+24, 20, inventoryCountFont, ""+game.inventory.getCount(currentWord.name), 4, PhoeniciaContext.vboManager);
             blockPanel.attachChild(inventoryCount);
             this.inventoryCounts.put(currentWord.name, inventoryCount);
         }
@@ -99,15 +101,13 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.Inventor
         Debug.d("Finished instantiating BlockPlacementHUD");
     }
 
+    /**
+     * Animate the bottom panel sliding up into view.
+     */
     @Override
     public void show() {
         whiteRect.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
         blockPanel.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
-    }
-
-    @Override
-    public void hide() {
-
     }
 
     public void onInventoryUpdated(final InventoryItem[] items) {
@@ -157,6 +157,11 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.Inventor
         return handled;
     }
 
+    /**
+     * Create a new WordTile (with Sprite and Builder).
+     * @param word Word to create the tile for
+     * @param onTile Map tile to place the new tile on
+     */
     private void addWordTile(final Word word, final TMXTile onTile) {
         Debug.d("Placing word "+word.name+" at "+onTile.getTileColumn()+"x"+onTile.getTileRow());
         final WordTile wordTile = new WordTile(this.game, word);
@@ -169,11 +174,11 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.Inventor
             public void onWordSpriteCreated(WordTile tile) {
                 WordBuilder builder = new WordBuilder(game.session, wordTile, wordTile.item_name.get(), word.time);
                 builder.start();
-                builder.save(game.activity.getApplicationContext());
+                builder.save(PhoeniciaContext.context);
                 game.addBuilder(builder);
 
                 wordTile.setBuilder(builder);
-                wordTile.save(game.activity.getApplicationContext());
+                wordTile.save(PhoeniciaContext.context);
 
             }
 

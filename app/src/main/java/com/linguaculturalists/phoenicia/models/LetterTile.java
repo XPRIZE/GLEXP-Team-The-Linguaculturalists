@@ -5,6 +5,7 @@ import android.content.Context;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.locale.Letter;
+import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.Model;
 import com.orm.androrm.QuerySet;
 import com.orm.androrm.field.CharField;
@@ -18,22 +19,19 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.util.debug.Debug;
 
 /**
- * Created by mhall on 12/23/15.
+ * Database model representing a Letter tile that has been placed on the map.
  */
 public class LetterTile extends Model implements Builder.BuildStatusUpdateHandler, IOnAreaTouchListener, PlacedBlockSprite.OnClickListener {
 
-    public static final int TYPE_LETTER = 0;
-    public static final int TYPE_WORD = 1;
+    public ForeignKeyField<GameSession> game; /**< reference to the GameSession this tile is a part of */
+    public ForeignKeyField<LetterBuilder> builder; /**< reference to the LetterBuilder used by this tile */
+    public IntegerField isoX; /**< isometric X coordinate for this tile */
+    public IntegerField isoY; /**< isometric Y coordinate for this tile */
+    public CharField item_name; /**< name of the InventoryItem this tile produces */
 
-    public ForeignKeyField<GameSession> game;
-    public ForeignKeyField<LetterBuilder> builder;
-    public IntegerField isoX;
-    public IntegerField isoY;
-    public CharField item_name;
-
-    public PhoeniciaGame phoeniciaGame;
-    public Letter letter;
-    public PlacedBlockSprite sprite;
+    public PhoeniciaGame phoeniciaGame; /**< active game instance this tile is a part of */
+    public Letter letter; /**< locale Letter this tile represents */
+    public PlacedBlockSprite sprite; /**< sprite that has been placed on the map for this tile */
 
     private boolean isTouchDown = false;
     private LetterTileListener eventListener;
@@ -48,6 +46,11 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
         this.item_name = new CharField(32);
     }
 
+    /**
+     * Create a new tile for the given letter that is a part of the given game
+     * @param game active game instance this tile is a part of
+     * @param letter locale Letter this tile represents
+     */
     public LetterTile(PhoeniciaGame game, Letter letter) {
         this();
         this.phoeniciaGame = game;
@@ -60,15 +63,28 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
         return objects(context, LetterTile.class);
     }
 
+    /**
+     * Get the Sprite that represents this tile on the map
+     * @return sprite, or null if it does not have one
+     */
     public PlacedBlockSprite getSprite() {
 
         return this.sprite;
     }
 
+    /**
+     * Attach a Sprite from the map to this tile
+     * @param sprite sprite that represents this tile on the map
+     */
     public void setSprite(PlacedBlockSprite sprite) {
         this.sprite = sprite;
     }
 
+    /**
+     * Get the builder instance that produces a Letter from this tile
+     * @param context ApplicationContext for use in database calls
+     * @return the builder instance, or null if it does not have one
+     */
     public LetterBuilder getBuilder(Context context) {
         LetterBuilder builder = this.builder.get(context);
         if (builder != null) {
@@ -79,6 +95,10 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
         return builder;
     }
 
+    /**
+     * Attach a LetterBuilder to this tile
+     * @param builder used by this tile
+     */
     public void setBuilder(LetterBuilder builder) {
         builder.setUpdateHandler(this);
         this.builder.set(builder);
@@ -96,6 +116,10 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
         return;
     }
 
+    /**
+     * Called when the builder for this tile gets updated
+     * @param builtItem
+     */
     public void onProgressChanged(Builder builtItem) {
         if (sprite != null) {
             sprite.setProgress(builtItem.progress.get(), letter.time);
@@ -106,7 +130,10 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
         return;
     }
 
-
+    /**
+     * Restart the build progress for this tile
+     * @param context ApplicationContext ApplicationContext for use in database calls
+     */
     public void reset(Context context) {
         if (this.sprite != null) {
             this.sprite.setProgress(0, letter.time);
@@ -151,15 +178,21 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
 
     }
 
+    /**
+     * Called when the Sprite for the tile has been clicked by the player
+     * @param buttonSprite
+     * @param v
+     * @param v2
+     */
     public void onClick(PlacedBlockSprite buttonSprite, float v, float v2) {
         Debug.d("Clicked block: "+String.valueOf(this.letter.chars));
-        LetterBuilder builder = this.getBuilder(phoeniciaGame.activity.getApplicationContext());
+        LetterBuilder builder = this.getBuilder(PhoeniciaContext.context);
         if (builder != null) {
             if (builder.status.get() == LetterBuilder.COMPLETE) {
                 Debug.d("Clicked block was completed");
                 phoeniciaGame.playBlockSound(this.letter.phoneme);
                 Inventory.getInstance().add(this.letter.name);
-                this.reset(phoeniciaGame.activity.getApplicationContext());
+                this.reset(PhoeniciaContext.context);
             } else {
                 Debug.d("Clicked block was NOT completed");
                 phoeniciaGame.playBlockSound(this.letter.sound);
@@ -173,6 +206,9 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
         this.eventListener = listener;
     }
 
+    /**
+     * Callback handler for listening to changes and events on this tile
+     */
     public interface LetterTileListener {
         public void onLetterTileClicked(final LetterTile letterTile);
         public void onLetterTileBuildCompleted(final LetterTile letterTile);

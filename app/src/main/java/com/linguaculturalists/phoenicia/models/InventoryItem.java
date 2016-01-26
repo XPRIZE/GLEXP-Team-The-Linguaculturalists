@@ -10,14 +10,14 @@ import com.orm.androrm.field.IntegerField;
 import com.orm.androrm.migration.Migrator;
 
 /**
- * Created by mhall on 7/17/15.
+ * Database model representing a type of item in a player's Inventory.
  */
 public class InventoryItem extends Model {
 
-    public ForeignKeyField<GameSession> game;
-    public CharField item_name;
-    public IntegerField quantity;
-    public IntegerField history;
+    public ForeignKeyField<GameSession> game; /**< reference to the GameSession this item is a part of */
+    public CharField item_name; /**< unique name of this item */
+    public IntegerField quantity; /**< current quantity of this item in the Inventory */
+    public IntegerField history; /**< cumulative quantity of this item ever added to the Inventory */
 
     public static final QuerySet<InventoryItem> objects(Context context) {
         return objects(context, InventoryItem.class);

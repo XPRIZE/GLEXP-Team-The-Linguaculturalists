@@ -18,7 +18,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.util.ArrayList;
 
 /**
- * Created by mhall on 7/17/15.
+ * Read the locale XML and build it into a Locale object.
  */
 public class LocaleParser extends DefaultHandler {
 

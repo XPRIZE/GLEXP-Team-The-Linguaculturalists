@@ -3,6 +3,7 @@ package com.linguaculturalists.phoenicia.models;
 import android.content.Context;
 
 import com.linguaculturalists.phoenicia.Locale;
+import com.orm.androrm.Filter;
 import com.orm.androrm.Model;
 import com.orm.androrm.QuerySet;
 import com.orm.androrm.field.CharField;
@@ -14,20 +15,21 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by mhall on 7/17/15.
+ * Database model representing a single user's game session.
  */
 public class GameSession extends Model {
 
-    public CharField session_name;
-    public CharField locale_pack;
-    public DoubleField start_timestamp;
-    public DoubleField last_timestamp;
-    public IntegerField sessions_played;
-    public IntegerField days_played;
-    public CharField current_level;
-    public IntegerField points;
-    public IntegerField account_balance;
-    public IntegerField gross_income;
+    public CharField session_name; /**< user defined name for this session */
+    public CharField locale_pack; /**< path to the locale pack used by this session */
+    public DoubleField start_timestamp; /**< time when this session was created (in seconds from epoch) */
+    public DoubleField last_timestamp; /**< last time this session was used (in seconds from epoch) */
+    public IntegerField sessions_played; /**< incremented every time the session is used */
+    public IntegerField days_played; /**< number of unique days when this session was used */
+    public CharField current_level; /**< the name of the current level from the locale that the session has reached */
+    public IntegerField points; /**< accumulated points from various in-game actions */
+    public IntegerField account_balance; /**< current amount of in-game currency held by the player */
+    public IntegerField gross_income; /**< cumulative total of in-game currency earned over the course of this session */
+    public Filter filter;
 
     public static final QuerySet<GameSession> objects(Context context) {
         return objects(context, GameSession.class);
@@ -47,6 +49,11 @@ public class GameSession extends Model {
         this.gross_income = new IntegerField();
     }
 
+    /**
+     * Creates a new GameSession for the given local.
+     * @param locale for the new session
+     * @return a new session
+     */
     static public GameSession start(Locale locale) {
         GameSession session = new GameSession();
         session.locale_pack.set(locale.name);
@@ -62,6 +69,22 @@ public class GameSession extends Model {
         return session;
     }
 
+    @Override
+    public boolean save(Context context) {
+        final boolean retval = super.save(context);
+        if (retval && this.filter == null) {
+            this.filter = new Filter();
+            this.filter.is("game", this);
+        }
+        return retval;
+    }
+
+    /**
+     * Inform the session of a new instance of play
+     *
+     * Updates #last_timestamp, #sessions_played, and if it has been more than a day since the last
+     * time, also updates the #days_played3
+     */
     public void update() {
         Date now = new Date();
         long diff = now.getTime() - this.last_timestamp.get().longValue();

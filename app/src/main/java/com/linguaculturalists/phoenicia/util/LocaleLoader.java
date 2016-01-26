@@ -14,7 +14,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 /**
- * Created by mhall on 7/17/15.
+ * Loads the Locale instance for a GameSession.
  */
 public class LocaleLoader {
 
@@ -22,6 +22,11 @@ public class LocaleLoader {
         super();
     }
 
+    /**
+     * Load and read the manifest.xml for a Locale.
+     * @param locale_manifest_in
+     * @return
+     */
     public Locale load(InputStream locale_manifest_in) {
         LocaleParser localeParser = new LocaleParser();
         try {

@@ -18,13 +18,23 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.adt.color.Color;
 
 /**
- * Created by mhall on 1/3/16.
+ * A ButtonSprite that displays a letter and it's corresponding inventory count.
+ * A ButtonSprite and Text combination for displaying letters with an inventory count. This class is
+ * not an InventoryUpdateListener, so the count must be update by other code
  */
 public class LetterSprite extends ButtonSprite {
     private Letter letter;
     private int count;
     private Text count_text;
 
+    /**
+     * Construct a new LetterSprite
+     * @param pX the X coordinate of the scene to place this LetterSprite
+     * @param pY the Y coordinate of the scene to place this LetterSprite
+     * @param letter the locale Letter this sprite will represent
+     * @param region the ITextureRegion containing the tiles for this letter
+     * @param vbo the game's VertexBufferObjectManager
+     */
     public LetterSprite(float pX, float pY, Letter letter, int count, ITextureRegion region, VertexBufferObjectManager vbo) {
         super(pX, pY, region, vbo);
         this.letter = letter;
@@ -35,17 +45,10 @@ public class LetterSprite extends ButtonSprite {
 
     }
 
-    /*
-    @Override
-    public float getHeight() {
-        if (this.count_text == null) {
-            return super.getHeight();
-        } else {
-            return super.getHeight() + this.count_text.getHeight();
-        }
-    }
-*/
-
+    /**
+     * Update the inventory count text for this LetterSprite
+     * @param count new inventory count value
+     */
     public void setCount(int count) {
         this.count = count;
         this.count_text.setText(String.valueOf(count));

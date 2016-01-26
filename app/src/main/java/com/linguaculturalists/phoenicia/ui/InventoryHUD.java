@@ -1,11 +1,14 @@
 package com.linguaculturalists.phoenicia.ui;
 
+import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.LetterSprite;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.models.Bank;
+import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
+import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.IOnSceneTouchListener;
@@ -21,7 +24,7 @@ import org.andengine.util.debug.Debug;
 import java.util.List;
 
 /**
- * Created by mhall on 1/3/16.
+ * Display the \link InventoryItem InventoryItems \endlink with a positive balance and allow selling them.
  */
 public class InventoryHUD extends PhoeniciaHUD implements IOnSceneTouchListener {
     private PhoeniciaGame game;
@@ -33,7 +36,7 @@ public class InventoryHUD extends PhoeniciaHUD implements IOnSceneTouchListener 
         this.game = game;
         this.setOnSceneTouchListener(this);
 
-        this.whiteRect = new Rectangle(game.activity.CAMERA_WIDTH / 2, game.activity.CAMERA_HEIGHT / 2, 400, 400, game.activity.getVertexBufferObjectManager());
+        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 400, PhoeniciaContext.vboManager);
         whiteRect.setColor(Color.WHITE);
         this.attachChild(whiteRect);
 
@@ -64,7 +67,7 @@ public class InventoryHUD extends PhoeniciaHUD implements IOnSceneTouchListener 
                     game.letterTiles.get(currentLetter).getTextureRegion(0),
                     game.letterTiles.get(currentLetter).getTextureRegion(1),
                     game.letterTiles.get(currentLetter).getTextureRegion(2));
-            final LetterSprite block = new LetterSprite(startX + (96 * offsetX), offsetY, currentLetter, Inventory.getInstance().getCount(currentLetter.name), blockRegion, game.activity.getVertexBufferObjectManager());
+            final LetterSprite block = new LetterSprite(startX + (96 * offsetX), offsetY, currentLetter, Inventory.getInstance().getCount(currentLetter.name), blockRegion, PhoeniciaContext.vboManager);
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {

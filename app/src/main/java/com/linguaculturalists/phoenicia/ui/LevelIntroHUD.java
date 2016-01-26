@@ -2,6 +2,7 @@ package com.linguaculturalists.phoenicia.ui;
 
 import android.graphics.Typeface;
 
+import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.Scrollable;
 import com.linguaculturalists.phoenicia.locale.IntroPage;
@@ -10,6 +11,7 @@ import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
+import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.CameraScene;
@@ -34,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by mhall on 8/26/15.
+ * Display level transition text pages, images and sound.
  */
 public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener {
     private PhoeniciaGame game;
@@ -53,15 +55,15 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
         this.current_page = 0;
         this.setOnSceneTouchListener(this);
 
-        Rectangle whiteRect = new Rectangle(game.activity.CAMERA_WIDTH / 2, game.activity.CAMERA_HEIGHT / 2, 400, 400, game.activity.getVertexBufferObjectManager());
+        Rectangle whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 400, PhoeniciaContext.vboManager);
         whiteRect.setColor(Color.WHITE);
         this.attachChild(whiteRect);
 
-        textPanel = new Scrollable(game.activity.CAMERA_WIDTH / 2, game.activity.CAMERA_HEIGHT / 2, 400, 400, Scrollable.SCROLL_VERTICAL);
+        textPanel = new Scrollable(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 400, Scrollable.SCROLL_VERTICAL);
         this.attachChild(textPanel);
         //textPanel.setClip(false);
 
-        introPageFont = FontFactory.create(game.activity.getFontManager(), game.activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 36, Color.BLUE_ARGB_PACKED_INT);
+        introPageFont = FontFactory.create(PhoeniciaContext.fontManager, PhoeniciaContext.textureManager, 256, 256, TextureOptions.BILINEAR, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 36, Color.BLUE_ARGB_PACKED_INT);
         introPageFont.load();
         this.showPage(0);
 
@@ -73,12 +75,16 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
         Debug.d("Finished instantiating LevelIntroHUD");
     }
 
+    /**
+     * Change the display to the specified IntroPage
+     * @param page_index page to display
+     */
     private void showPage(int page_index) {
         Debug.d("Showing page: "+page_index);
         this.current_page = page_index;
         final String nextPage = level.intro.get(page_index).text;
         final TextOptions introTextOptions = new TextOptions(AutoWrap.WORDS, 400, HorizontalAlign.CENTER);
-        final Text introPageText = new Text(textPanel.getWidth()/2, textPanel.getHeight()/2, introPageFont, nextPage, introTextOptions, game.activity.getVertexBufferObjectManager());
+        final Text introPageText = new Text(textPanel.getWidth()/2, textPanel.getHeight()/2, introPageFont, nextPage, introTextOptions, PhoeniciaContext.vboManager);
 
         textPanel.detachChildren();
         textPanel.attachChild(introPageText);
@@ -101,7 +107,5 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
         return true;
     }
 
-    public void close() {
-        return;
-    }
+
 }

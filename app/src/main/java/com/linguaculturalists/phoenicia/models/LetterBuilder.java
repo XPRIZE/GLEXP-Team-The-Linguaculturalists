@@ -9,16 +9,19 @@ import com.orm.androrm.field.ForeignKeyField;
 import com.orm.androrm.field.IntegerField;
 
 /**
- * Created by mhall on 7/17/15.
+ * Builder for creating new Letter items.
  */
 public class LetterBuilder extends Builder {
-    public ForeignKeyField<GameSession> game;
-    public ForeignKeyField<LetterTile> tile;
+    public ForeignKeyField<GameSession> game; /**< reference to the GameSession this item is a part of */
+    public ForeignKeyField<LetterTile> tile; /**< reference to the LetterTile the builder is attached to */
 
     public static final QuerySet<LetterBuilder> objects(Context context) {
         return objects(context, LetterBuilder.class);
     }
 
+    /**
+     * Create empty LetterBuilder.
+     */
     public LetterBuilder() {
         super();
         this.game = new ForeignKeyField<>(GameSession.class);
@@ -33,9 +36,25 @@ public class LetterBuilder extends Builder {
         this.setUpdateHandler(new AbstractBuildStatusUpdateHandler() { });
     }
 
+    /**
+     * Create a new LetterBuilder for the specified GameSession and LetterTile
+     * @param session GameSession the builder is a part of
+     * @param tile LetterTile the builder is building for
+     * @param item_name InventoryItem for what the builder is creating
+     * @param time time (in seconds) the build will take to finish
+     */
     public LetterBuilder(GameSession session, LetterTile tile, String item_name, int time) {
         this(session, tile, item_name, time, null);
     }
+
+    /**
+     * Create a new LetterBuilder for the specified GameSession and LetterTile
+     * @param session GameSession the builder is a part of
+     * @param tile LetterTile the builder is building for
+     * @param item_name InventoryItem for what the builder is creating
+     * @param time time (in seconds) the build will take to finish
+     * @param updateHandler callback to notify when the build status changes
+     */
     public LetterBuilder(GameSession session, LetterTile tile, String item_name, int time, BuildStatusUpdateHandler updateHandler) {
         this();
         this.game.set(session);
