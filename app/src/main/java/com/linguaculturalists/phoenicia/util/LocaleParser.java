@@ -164,6 +164,7 @@ public class LocaleParser extends DefaultHandler {
         this.currentWord = new Word();
         this.currentWord.name = attributes.getValue("name");
         this.currentWord.sound = attributes.getValue("sound");
+        this.currentWord.construct = Integer.parseInt(attributes.getValue("construct"));
         this.currentWord.time = Integer.parseInt(attributes.getValue("time"));
         this.currentWord.sell = Integer.parseInt(attributes.getValue("sell"));
         this.currentWord.texture_src = attributes.getValue("texture");

@@ -5,6 +5,7 @@ package com.linguaculturalists.phoenicia.locale;
 */
 public class Word {
     public String name; /**< reference name for this word (can be different from the word itself */
+    public int construct;/**< time (in seconds) it takes to build this block */
     public int time;/**< time (in seconds) it takes to build this word */
     public int tile;/**< start tile index for a \a PlacedBlockSprite for this word */
     public int sprite;/**< start tile index for a \a LetterSprite for this word */

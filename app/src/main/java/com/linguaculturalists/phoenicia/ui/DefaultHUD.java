@@ -10,7 +10,9 @@ import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.text.Text;
+import org.andengine.entity.text.TextOptions;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.debug.Debug;
 import org.andengine.util.modifier.ease.EaseBackOut;
 
@@ -34,10 +36,10 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         this.game = game;
         this.game.addLevelListener(this);
 
-        levelDisplay = new Text(96, game.camera.getHeight()-24, GameFonts.defaultHUDDisplay(), "Level: "+game.current_level, 10, PhoeniciaContext.vboManager);
+        levelDisplay = new Text(96, game.camera.getHeight()-24, GameFonts.defaultHUDDisplay(), "Level: "+game.current_level, 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
         this.attachChild(levelDisplay);
 
-        balanceDisplay = new Text(96, game.camera.getHeight()-64, GameFonts.defaultHUDDisplay(), "Coins: "+game.session.account_balance.get(), 10, PhoeniciaContext.vboManager);
+        balanceDisplay = new Text(96, game.camera.getHeight()-64, GameFonts.defaultHUDDisplay(), "Coins: "+game.session.account_balance.get(), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
         this.attachChild(balanceDisplay);
 
         ITextureRegion inventoryRegion = game.shellTiles.getTextureRegion(2);

@@ -345,13 +345,13 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             WordBuilder builder = wordTile.getBuilder(PhoeniciaContext.context);
             if (builder == null) {
                 Debug.d("Adding new builder for tile "+wordTile.item_name.get());
-                builder = new WordBuilder(this.session, wordTile, wordTile.item_name.get(), wordTile.word.time);
+                builder = new WordBuilder(this.session, wordTile, wordTile.item_name.get(), wordTile.word.construct);
                 builder.save(PhoeniciaContext.context);
                 wordTile.setBuilder(builder);
                 wordTile.save(PhoeniciaContext.context);
                 builder.start();
             } else {
-                builder.time.set(wordTile.word.time);
+                builder.time.set(wordTile.word.construct);
                 builder.save(PhoeniciaContext.context);
                 Debug.d("Found builder with "+builder.progress.get()+"/"+builder.time.get()+" and status "+builder.status.get());
             }
@@ -500,7 +500,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         }
 
         Debug.d("Creating LetterSprite for "+tile.letter.name+" at "+tile+"x"+tileY);
-        final PlacedBlockSprite sprite = new PlacedBlockSprite(tileX, tileY, 4, letterTiles.get(tile.letter), PhoeniciaContext.vboManager);
+        final PlacedBlockSprite sprite = new PlacedBlockSprite(tileX, tileY, tile.letter.time, 4, letterTiles.get(tile.letter), PhoeniciaContext.vboManager);
         sprite.setZIndex(tileZ);
 
         final LetterBuilder builder = tile.getBuilder(PhoeniciaContext.context);
@@ -581,7 +581,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         }
 
         Debug.d("Creating WordSprite for "+tile.word.name+" at "+tile+"x"+tileY);
-        final PlacedBlockSprite sprite = new PlacedBlockSprite(tileX, tileY, 4, wordTiles.get(tile.word), PhoeniciaContext.vboManager);
+        final PlacedBlockSprite sprite = new PlacedBlockSprite(tileX, tileY, tile.word.construct, 4, wordTiles.get(tile.word), PhoeniciaContext.vboManager);
         sprite.setZIndex(tileZ);
 
         final WordBuilder builder = tile.getBuilder(PhoeniciaContext.context);
@@ -604,7 +604,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                     placedSprites[newlocation.getTileColumn()][newlocation.getTileRow()] = sprite;
 
                     if (builder != null) {
-                        sprite.setProgress(builder.progress.get(), tile.word.time);
+                        sprite.setProgress(builder.progress.get(), tile.word.construct);
                     }
                     tile.setSprite(sprite);
                     sprite.setOnClickListener(tile);
@@ -617,7 +617,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] = sprite;
 
             if (builder != null) {
-                sprite.setProgress(builder.progress.get(), tile.word.time);
+                sprite.setProgress(builder.progress.get(), tile.word.construct);
             }
             tile.setSprite(sprite);
             sprite.setOnClickListener(tile);

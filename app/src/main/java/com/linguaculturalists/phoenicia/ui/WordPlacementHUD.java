@@ -20,6 +20,7 @@ import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.text.Text;
 import org.andengine.extension.tmx.TMXTile;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.region.ITextureRegion;
@@ -35,15 +36,16 @@ import java.util.Map;
 /**
  * HUD for selecting \link Word Words \endlink to be placed as tiles onto the map.
  */
-public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.InventoryUpdateListener {
+public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.InventoryUpdateListener, ClickDetector.IClickDetectorListener {
     private static Word placeWord = null;
     private Map<String, Text> inventoryCounts;
     private PhoeniciaGame game;
-    private boolean scenePressed = false;
     private Word activeWord;
 
     private Rectangle whiteRect;
     private Scrollable blockPanel;
+
+    private ClickDetector clickDetector;
 
     public WordPlacementHUD(final PhoeniciaGame game, final Level level) {
         super(game.camera);
@@ -99,6 +101,8 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.Inventor
         Debug.d("Finished loading HUD letters");
 
         Debug.d("Finished instantiating BlockPlacementHUD");
+
+        this.clickDetector = new ClickDetector(this);
     }
 
     /**
@@ -126,35 +130,23 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.Inventor
     }
 
     @Override
+    public void onClick(ClickDetector clickDetector, int pointerId, float sceneX, float sceneY) {
+        TMXTile mapTile = game.getTileAt(sceneX, sceneY);
+        Debug.d("WordPlacementHud scene touch tile: "+mapTile);
+        Debug.d("WordPlacementHud scene touch active: "+this.activeWord);
+        if (mapTile != null && this.activeWord != null) {
+            this.addWordTile(activeWord, mapTile);
+        }
+    }
+
+    @Override
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
         Debug.d("LetterPlacementHud touched at "+pSceneTouchEvent.getX()+"x"+pSceneTouchEvent.getY());
 
         final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
         if (handled) return true;
 
-        switch (pSceneTouchEvent.getAction()) {
-            case TouchEvent.ACTION_DOWN:
-                Debug.d("WordPlacementHud scene touch ACTION_DOWN");
-                this.scenePressed = true;
-                return handled;
-            case TouchEvent.ACTION_UP:
-                Debug.d("WordPlacementHud scene touch ACTION_UP");
-                if (this.scenePressed) {
-                    TMXTile mapTile = game.getTileAt(pSceneTouchEvent.getX(), pSceneTouchEvent.getY());
-                    Debug.d("WordPlacementHud scene touch tile: "+mapTile);
-                    Debug.d("WordPlacementHud scene touch active: "+this.activeWord);
-                    if (mapTile != null && this.activeWord != null) {
-                        this.addWordTile(activeWord, mapTile);
-                        return true;
-                    }
-                    this.scenePressed = false;
-                }
-            default:
-                Debug.d("WordPlacementHud scene touch "+pSceneTouchEvent.getAction());
-                this.scenePressed = false;
-
-        }
-        return handled;
+        return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
     }
 
     /**
@@ -172,7 +164,7 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.Inventor
         game.createWordSprite(wordTile, new PhoeniciaGame.CreateWordSpriteCallback() {
             @Override
             public void onWordSpriteCreated(WordTile tile) {
-                WordBuilder builder = new WordBuilder(game.session, wordTile, wordTile.item_name.get(), word.time);
+                WordBuilder builder = new WordBuilder(game.session, wordTile, wordTile.item_name.get(), word.construct);
                 builder.start();
                 builder.save(PhoeniciaContext.context);
                 game.addBuilder(builder);

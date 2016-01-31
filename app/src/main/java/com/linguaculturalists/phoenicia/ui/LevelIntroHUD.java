@@ -22,6 +22,7 @@ import org.andengine.entity.text.AutoWrap;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.TextureOptions;
@@ -38,18 +39,18 @@ import java.util.Map;
 /**
  * Display level transition text pages, images and sound.
  */
-public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener {
+public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener, ClickDetector.IClickDetectorListener {
     private PhoeniciaGame game;
     private Scrollable textPanel;
     private Level level;
     private int current_page;
     private Font introPageFont;
 
-    private boolean isPressed = false;
+    private ClickDetector clickDetector;
 
     public LevelIntroHUD(final PhoeniciaGame game, final Level level) {
         super(game.camera);
-        this.setBackgroundEnabled(false);
+        this.setBackgroundEnabled(true);
         this.game = game;
         this.level = level;
         this.current_page = 0;
@@ -73,6 +74,8 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
         //this.attachChild(textPanel);
 
         Debug.d("Finished instantiating LevelIntroHUD");
+
+        this.clickDetector = new ClickDetector(this);
     }
 
     /**
@@ -90,22 +93,22 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
         textPanel.attachChild(introPageText);
 
     }
-    public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {
-        if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
-            this.isPressed = true;
-            return true;
-        } else if (this.isPressed && pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
-            Debug.d("Intro page size: "+this.level.intro.size());
-            Debug.d("Current page: "+this.current_page);
-            if (this.current_page+1 < this.level.intro.size()) {
-                this.showPage(this.current_page + 1);
-            } else {
-                this.game.hudManager.pop();
-            }
+
+    @Override
+    public void onClick(ClickDetector clickDetector, int pointerId, float sceneX, float sceneY) {
+        Debug.d("Intro page size: " + this.level.intro.size());
+        Debug.d("Current page: " + this.current_page);
+        if (this.current_page+1 < this.level.intro.size()) {
+            this.showPage(this.current_page + 1);
+        } else {
+            this.game.hudManager.pop();
         }
-        this.isPressed = false;
-        return true;
+
     }
 
+    public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {
+        this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
+        return true;// Don't allow touch events to fall through to the scene below
+    }
 
 }

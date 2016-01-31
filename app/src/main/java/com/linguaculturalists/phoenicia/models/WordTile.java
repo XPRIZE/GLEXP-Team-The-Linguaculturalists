@@ -5,6 +5,7 @@ import android.content.Context;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.locale.Word;
+import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.Model;
 import com.orm.androrm.QuerySet;
@@ -13,10 +14,20 @@ import com.orm.androrm.field.ForeignKeyField;
 import com.orm.androrm.field.IntegerField;
 import com.orm.androrm.migration.Migrator;
 
+import org.andengine.entity.IEntity;
+import org.andengine.entity.modifier.FadeOutModifier;
+import org.andengine.entity.modifier.IEntityModifier;
+import org.andengine.entity.modifier.MoveYModifier;
+import org.andengine.entity.modifier.ParallelEntityModifier;
+import org.andengine.entity.modifier.ScaleAtModifier;
 import org.andengine.entity.scene.IOnAreaTouchListener;
 import org.andengine.entity.scene.ITouchArea;
+import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.util.debug.Debug;
+import org.andengine.util.modifier.IModifier;
+import org.andengine.util.modifier.ease.EaseBackOut;
+import org.andengine.util.modifier.ease.EaseLinear;
 
 /**
  * Database model representing a Word tile that has been placed on the map.
@@ -122,9 +133,9 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
      */
     public void onProgressChanged(Builder builtItem) {
         if (sprite != null) {
-            sprite.setProgress(builtItem.progress.get(), word.time);
+            sprite.setProgress(builtItem.progress.get(), word.construct);
         }
-        if (builtItem.progress.get() >= word.time) {
+        if (builtItem.progress.get() >= word.construct) {
             builtItem.complete();
         }
         return;
@@ -136,7 +147,7 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
      */
     public void reset(Context context) {
         if (this.sprite != null) {
-            this.sprite.setProgress(0, word.time);
+            this.sprite.setProgress(0, word.construct);
         }
         WordBuilder builder = this.getBuilder(context);
         if (builder != null) {
@@ -191,7 +202,27 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
                 phoeniciaGame.hudManager.showWordBuilder(phoeniciaGame.locale.level_map.get(phoeniciaGame.current_level), this.word);
             } else {
                 Debug.d("Clicked block was NOT completed");
-                phoeniciaGame.playBlockSound(this.word.sound);
+                // Don't run another modifier animation if one is still running
+                if (sprite.getEntityModifierCount() <= 0) {
+                    sprite.registerEntityModifier(new ScaleAtModifier(0.5f, sprite.getScaleX(), sprite.getScaleX(), sprite.getScaleY() * 0.7f, sprite.getScaleY(), sprite.getScaleCenterX(), 0, EaseBackOut.getInstance()));
+
+                    final Text progressText = new Text(32, 32, GameFonts.inventoryCount(), String.valueOf(100 * builder.progress.get() / builder.time.get()) + "%", 4, PhoeniciaContext.vboManager);
+                    sprite.attachChild(progressText);
+                    progressText.registerEntityModifier(new ParallelEntityModifier(
+                            new MoveYModifier(0.8f, 32, 64, EaseLinear.getInstance()),
+                            new FadeOutModifier(1.0f, new IEntityModifier.IEntityModifierListener() {
+                                @Override
+                                public void onModifierStarted(IModifier<IEntity> iModifier, IEntity iEntity) {
+                                }
+
+                                @Override
+                                public void onModifierFinished(IModifier<IEntity> iModifier, IEntity iEntity) {
+                                    sprite.detachChild(progressText);
+                                }
+                            }, EaseLinear.getInstance())
+                    ));
+                }
+                //phoeniciaGame.playBlockSound(this.word.sound);
             }
         } else {
             Debug.e("Clicked block has no builder");

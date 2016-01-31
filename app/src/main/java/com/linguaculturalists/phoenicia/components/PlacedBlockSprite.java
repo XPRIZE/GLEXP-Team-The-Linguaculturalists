@@ -1,12 +1,24 @@
 package com.linguaculturalists.phoenicia.components;
 
+import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
+
+import org.andengine.entity.IEntity;
+import org.andengine.entity.modifier.IEntityModifier;
+import org.andengine.entity.modifier.MoveYModifier;
+import org.andengine.entity.modifier.ScaleAtModifier;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.ButtonSprite;
+import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
+import org.andengine.util.modifier.IModifier;
+import org.andengine.util.modifier.ease.EaseBackOut;
+import org.andengine.util.modifier.ease.EaseLinear;
 
 /**
  * An AnimatedSprite that represents a block on the game map.
@@ -16,15 +28,17 @@ import org.andengine.util.debug.Debug;
  * PlacedBlockSprites assume 4 sets of animation tiles, which are used for 0-33%, 34-66%, 67-100%
  * and 100% onward.
  */
-public class PlacedBlockSprite extends AnimatedSprite {
+public class PlacedBlockSprite extends AnimatedSprite implements ClickDetector.IClickDetectorListener {
 
     private OnClickListener mOnClickListener;
     private long[] mFrameDurations = {500, 500, 500, 500};
     private int mTileId;
     private int mProgress;
+    private int mTime;
     private int startTile;
     private boolean complete;
 
+    private ClickDetector clickDetector;
     /**
      * Create a new PlacedBlockSprite.
      * @param pX the X coordinate of the scene to place this PlacedBlockSprite
@@ -33,13 +47,16 @@ public class PlacedBlockSprite extends AnimatedSprite {
      * @param pTiledTextureRegion region containing the tile set for this PlacedBlockSprite
      * @param pVertexBufferObjectManager the game's VertexBufferObjectManager
      */
-    public PlacedBlockSprite(final float pX, final float pY, final int pTileId, final ITiledTextureRegion pTiledTextureRegion, final VertexBufferObjectManager pVertexBufferObjectManager) {
+    public PlacedBlockSprite(final float pX, final float pY, final int pTime, final int pTileId, final ITiledTextureRegion pTiledTextureRegion, final VertexBufferObjectManager pVertexBufferObjectManager) {
         super(pX, pY, pTiledTextureRegion, pVertexBufferObjectManager);
         this.mTileId = pTileId;
         this.startTile = pTileId;
         this.setCurrentTileIndex(pTileId);
+        this.mTime = pTime;
         this.mProgress = 0;
         this.complete = false;
+
+        this.clickDetector = new ClickDetector(this);
     }
 
     /**
@@ -104,16 +121,15 @@ public class PlacedBlockSprite extends AnimatedSprite {
     }
 
     @Override
-    public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-        if (pSceneTouchEvent.isActionUp()) {
-
-            if (this.mOnClickListener != null) {
-                this.mOnClickListener.onClick(this, pTouchAreaLocalX, pTouchAreaLocalY);
-            }
-            return true;
+    public void onClick(ClickDetector clickDetector, int pointerId, float touchX, float touchY) {
+        if (this.mOnClickListener != null) {
+            this.mOnClickListener.onClick(this, touchX, touchY);
         }
-        return false;
+    }
 
+    @Override
+    public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+        return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
     }
 
     /**

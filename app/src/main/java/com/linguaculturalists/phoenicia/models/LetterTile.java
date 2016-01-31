@@ -5,6 +5,7 @@ import android.content.Context;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.locale.Letter;
+import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.Model;
 import com.orm.androrm.QuerySet;
@@ -13,10 +14,21 @@ import com.orm.androrm.field.ForeignKeyField;
 import com.orm.androrm.field.IntegerField;
 import com.orm.androrm.migration.Migrator;
 
+import org.andengine.entity.IEntity;
+import org.andengine.entity.modifier.FadeOutModifier;
+import org.andengine.entity.modifier.IEntityModifier;
+import org.andengine.entity.modifier.MoveYModifier;
+import org.andengine.entity.modifier.ParallelEntityModifier;
+import org.andengine.entity.modifier.ScaleAtModifier;
+import org.andengine.entity.modifier.SequenceEntityModifier;
 import org.andengine.entity.scene.IOnAreaTouchListener;
 import org.andengine.entity.scene.ITouchArea;
+import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.util.debug.Debug;
+import org.andengine.util.modifier.IModifier;
+import org.andengine.util.modifier.ease.EaseBackOut;
+import org.andengine.util.modifier.ease.EaseLinear;
 
 /**
  * Database model representing a Letter tile that has been placed on the map.
@@ -186,7 +198,7 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
      */
     public void onClick(PlacedBlockSprite buttonSprite, float v, float v2) {
         Debug.d("Clicked block: "+String.valueOf(this.letter.chars));
-        LetterBuilder builder = this.getBuilder(PhoeniciaContext.context);
+        final LetterBuilder builder = this.getBuilder(PhoeniciaContext.context);
         if (builder != null) {
             if (builder.status.get() == LetterBuilder.COMPLETE) {
                 Debug.d("Clicked block was completed");
@@ -195,7 +207,27 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
                 this.reset(PhoeniciaContext.context);
             } else {
                 Debug.d("Clicked block was NOT completed");
-                phoeniciaGame.playBlockSound(this.letter.sound);
+                // Don't run another modifier animation if one is still running
+                if (sprite.getEntityModifierCount() <= 0) {
+                    sprite.registerEntityModifier(new ScaleAtModifier(0.5f, sprite.getScaleX(), sprite.getScaleX(), sprite.getScaleY() * 0.7f, sprite.getScaleY(), sprite.getScaleCenterX(), 0, EaseBackOut.getInstance()));
+
+                    final Text progressText = new Text(32, 32, GameFonts.inventoryCount(), String.valueOf(100 * builder.progress.get() / builder.time.get()) + "%", 4, PhoeniciaContext.vboManager);
+                    sprite.attachChild(progressText);
+                    progressText.registerEntityModifier(new ParallelEntityModifier(
+                            new MoveYModifier(0.8f, 32, 64, EaseLinear.getInstance()),
+                            new FadeOutModifier(1.0f, new IEntityModifier.IEntityModifierListener() {
+                                @Override
+                                public void onModifierStarted(IModifier<IEntity> iModifier, IEntity iEntity) {
+                                }
+
+                                @Override
+                                public void onModifierFinished(IModifier<IEntity> iModifier, IEntity iEntity) {
+                                    sprite.detachChild(progressText);
+                                }
+                            }, EaseLinear.getInstance())
+                    ));
+                }
+                //phoeniciaGame.playBlockSound(this.letter.sound);
             }
         } else {
             Debug.e("Clicked block has no builder");

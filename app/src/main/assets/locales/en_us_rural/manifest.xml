@@ -31,9 +31,9 @@
         <letter name="z" buy="10" sell="10" time="30" texture="locales/en_us_rural/textures/letters/z.png" sound="sounds/z.ogg" poneme="sounds/z.ogg">z</letter>
     </letters>
     <words>
-        <word name="cat" sell="10" time="60" texture="locales/en_us_rural/textures/words/cat.png" sound="sounds/cat.ogg">cat</word>
-        <word name="hat" sell="20" time="75" texture="locales/en_us_rural/textures/words/hat.png" sound="sounds/hat.ogg">hat</word>
-        <word name="bat" sell="30" time="90" texture="locales/en_us_rural/textures/words/bat.png" sound="sounds/bat.ogg">bat</word>
+        <word name="cat" sell="10" construct="60" time="60" texture="locales/en_us_rural/textures/words/cat.png" sound="sounds/cat.ogg">cat</word>
+        <word name="hat" sell="20" construct="120" time="75" texture="locales/en_us_rural/textures/words/hat.png" sound="sounds/hat.ogg">hat</word>
+        <word name="bat" sell="30" construct="240" time="90" texture="locales/en_us_rural/textures/words/bat.png" sound="sounds/bat.ogg">bat</word>
     </words>
     <levels>
         <level name="1">

@@ -14,6 +14,7 @@ import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.extension.tmx.TMXTile;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
@@ -22,14 +23,15 @@ import org.andengine.util.modifier.ease.EaseBackOut;
 /**
  * HUD that allows the player to re-position a sprite on the map.
  */
-public class SpriteMoveHUD extends PhoeniciaHUD {
+public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickDetectorListener {
     private PhoeniciaGame game;
     private Rectangle whiteRect;
-    private boolean scenePressed = false;
     private PlacedBlockSprite sprite;
     private TMXTile originalLocation;
     private TMXTile newLocation;
     private SpriteMoveHandler handler;
+
+    private ClickDetector clickDetector;
 
     public SpriteMoveHUD(final PhoeniciaGame game, final TMXTile startLocation, final PlacedBlockSprite sprite, final SpriteMoveHandler handler) {
         super(game.camera);
@@ -83,6 +85,7 @@ public class SpriteMoveHUD extends PhoeniciaHUD {
         this.registerTouchArea(cancelBlock);
         whiteRect.attachChild(cancelBlock);
 
+        this.clickDetector = new ClickDetector(this);
     }
 
     /**
@@ -123,29 +126,19 @@ public class SpriteMoveHUD extends PhoeniciaHUD {
     }
 
     @Override
+    public void onClick(ClickDetector clickDetector, int pointerId, float sceneX, float sceneY) {
+        TMXTile mapTile = game.getTileAt(sceneX, sceneY);
+        this.sprite.setPosition(mapTile.getTileX()+32, mapTile.getTileY()+32);// Map tiles are offset by 32px
+        this.newLocation = mapTile;
+    }
+
+    @Override
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
         Debug.d("SpriteMoveHUD touched at " + pSceneTouchEvent.getX() + "x" + pSceneTouchEvent.getY());
 
         final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
         if (handled) return true;
 
-        switch (pSceneTouchEvent.getAction()) {
-            case TouchEvent.ACTION_DOWN:
-                Debug.d("SpriteMoveHUD scene touch ACTION_DOWN");
-                this.scenePressed = true;
-                return handled;
-            case TouchEvent.ACTION_UP:
-                Debug.d("SpriteMoveHUD scene touch ACTION_UP");
-                if (this.scenePressed) {
-                    TMXTile mapTile = game.getTileAt(pSceneTouchEvent.getX(), pSceneTouchEvent.getY());
-                    this.sprite.setPosition(mapTile.getTileX()+32, mapTile.getTileY()+32);// Map tiles are offset by 32px
-                    this.newLocation = mapTile;
-                }
-            default:
-                Debug.d("SpriteMoveHUD scene touch "+pSceneTouchEvent.getAction());
-                this.scenePressed = false;
-
-        }
-        return handled;
+        return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
     }
 }

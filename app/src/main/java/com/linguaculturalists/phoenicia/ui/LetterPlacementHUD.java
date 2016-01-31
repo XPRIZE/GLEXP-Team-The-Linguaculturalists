@@ -20,6 +20,7 @@ import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.text.Text;
 import org.andengine.extension.tmx.TMXTile;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
@@ -35,15 +36,16 @@ import java.util.Map;
 /**
  * HUD for selecting \link Letter Letters \endlink to be placed as tiles onto the map.
  */
-public class LetterPlacementHUD extends PhoeniciaHUD implements Inventory.InventoryUpdateListener {
+public class LetterPlacementHUD extends PhoeniciaHUD implements Inventory.InventoryUpdateListener, ClickDetector.IClickDetectorListener {
     private Letter placeBlock = null;
     private Map<String, Text> inventoryCounts;
     private PhoeniciaGame game;
-    private boolean scenePressed = false;
     private Letter activeLetter;
 
     private Rectangle whiteRect;
     private Scrollable blockPanel;
+
+    private ClickDetector clickDetector;
 
     public LetterPlacementHUD(final PhoeniciaGame game, final Level level) {
         super(game.camera);
@@ -102,6 +104,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Inventory.Invent
 
         Debug.d("Finished instantiating LetterPlacementHUD");
 
+        this.clickDetector = new ClickDetector(this);
         //this.setOnSceneTouchListener(this);
     }
 
@@ -130,35 +133,24 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Inventory.Invent
     }
 
     @Override
+    public void onClick(ClickDetector clickDetector, int pointerId, float sceneX, float sceneY) {
+        TMXTile mapTile = game.getTileAt(sceneX, sceneY);
+        Debug.d("LetterPlacementHud scene touch tile: "+mapTile);
+        Debug.d("LetterPlacementHud scene touch active: "+this.activeLetter);
+        if (mapTile != null && this.activeLetter != null) {
+            this.addLetterTile(activeLetter, mapTile);
+            return;
+        }
+    }
+
+    @Override
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
         Debug.d("LetterPlacementHud touched at "+pSceneTouchEvent.getX()+"x"+pSceneTouchEvent.getY());
 
-        final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
+        boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
         if (handled) return true;
 
-        switch (pSceneTouchEvent.getAction()) {
-            case TouchEvent.ACTION_DOWN:
-                Debug.d("LetterPlacementHud scene touch ACTION_DOWN");
-                this.scenePressed = true;
-                return handled;
-            case TouchEvent.ACTION_UP:
-                Debug.d("LetterPlacementHud scene touch ACTION_UP");
-                if (this.scenePressed) {
-                    TMXTile mapTile = game.getTileAt(pSceneTouchEvent.getX(), pSceneTouchEvent.getY());
-                    Debug.d("LetterPlacementHud scene touch tile: "+mapTile);
-                    Debug.d("LetterPlacementHud scene touch active: "+this.activeLetter);
-                    if (mapTile != null && this.activeLetter != null) {
-                        this.addLetterTile(activeLetter, mapTile);
-                        return true;
-                    }
-                    this.scenePressed = false;
-                }
-            default:
-                Debug.d("LetterPlacementHud scene touch "+pSceneTouchEvent.getAction());
-                this.scenePressed = false;
-
-        }
-        return handled;
+        return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
     }
 
     /**
