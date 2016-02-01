@@ -302,6 +302,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 Letter letter = blockLetters.get(i);
                 Debug.d("Loading sound file "+i+": "+letter.sound);
                 blockSounds.put(letter.sound, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.activity, letter.sound));
+                blockSounds.put(letter.phoneme, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.activity, letter.phoneme));
             }
             Debug.d("Loading words");
             for (int i = 0; i < blockWords.size(); i++) {

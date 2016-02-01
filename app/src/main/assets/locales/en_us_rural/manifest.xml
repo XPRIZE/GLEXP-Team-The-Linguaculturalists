@@ -3,14 +3,14 @@
     <shell src="locales/en_us_rural/textures/gameui.png" />
     <map src="locales/en_us_rural/textures/map.tmx" />
     <letters>
-        <letter name="a" buy="0"  sell="1"  points="1" time="30" texture="locales/en_us_rural/textures/letters/a.png" sound="sounds/a.ogg" phoneme="sounds/a.ogg">a</letter>
-        <letter name="b" buy="5"  sell="4"  points="1" time="30" texture="locales/en_us_rural/textures/letters/b.png" sound="sounds/b.ogg" phoneme="sounds/b.ogg">b</letter>
-        <letter name="c" buy="2"  sell="1"  points="1" time="60" texture="locales/en_us_rural/textures/letters/c.png" sound="sounds/c.ogg" phoneme="sounds/c.ogg">c</letter>
+        <letter name="a" buy="0"  sell="1"  points="1" time="30" texture="locales/en_us_rural/textures/letters/a.png" sound="sounds/a-name.ogg" phoneme="sounds/a-phoneme.ogg">a</letter>
+        <letter name="b" buy="5"  sell="4"  points="1" time="30" texture="locales/en_us_rural/textures/letters/b.png" sound="sounds/b-name.ogg" phoneme="sounds/b-phoneme.ogg">b</letter>
+        <letter name="c" buy="2"  sell="1"  points="1" time="60" texture="locales/en_us_rural/textures/letters/c.png" sound="sounds/c-name.ogg" phoneme="sounds/c-phoneme.ogg">c</letter>
         <letter name="d" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/d.png" sound="sounds/d.ogg" phoneme="sounds/d.ogg">d</letter>
         <letter name="e" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/e.png" sound="sounds/e.ogg" phoneme="sounds/e.ogg">e</letter>
         <letter name="f" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/f.png" sound="sounds/f.ogg" phoneme="sounds/f.ogg">f</letter>
         <letter name="g" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/g.png" sound="sounds/g.ogg" phoneme="sounds/g.ogg">g</letter>
-        <letter name="h" buy="4"  sell="3"  points="1" time="30" texture="locales/en_us_rural/textures/letters/h.png" sound="sounds/h.ogg" phoneme="sounds/h.ogg">h</letter>
+        <letter name="h" buy="4"  sell="3"  points="1" time="30" texture="locales/en_us_rural/textures/letters/h.png" sound="sounds/h-name.ogg" phoneme="sounds/h-phoneme.ogg">h</letter>
         <letter name="i" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/i.png" sound="sounds/i.ogg" phoneme="sounds/i.ogg">i</letter>
         <letter name="j" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/j.png" sound="sounds/j.ogg" phoneme="sounds/j.ogg">j</letter>
         <letter name="k" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/k.png" sound="sounds/k.ogg" phoneme="sounds/k.ogg">k</letter>
@@ -22,13 +22,13 @@
         <letter name="q" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/q.png" sound="sounds/q.ogg" phoneme="sounds/q.ogg">q</letter>
         <letter name="r" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/r.png" sound="sounds/r.ogg" phoneme="sounds/r.ogg">r</letter>
         <letter name="s" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/s.png" sound="sounds/s.ogg" phoneme="sounds/s.ogg">s</letter>
-        <letter name="t" buy="3"  sell="2"  points="1" time="45" texture="locales/en_us_rural/textures/letters/t.png" sound="sounds/t.ogg" phoneme="sounds/t.ogg">t</letter>
+        <letter name="t" buy="3"  sell="2"  points="1" time="45" texture="locales/en_us_rural/textures/letters/t.png" sound="sounds/t-name.ogg" phoneme="sounds/t-phoneme.ogg">t</letter>
         <letter name="u" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/u.png" sound="sounds/u.ogg" phoneme="sounds/u.ogg">u</letter>
         <letter name="v" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/v.png" sound="sounds/v.ogg" phoneme="sounds/v.ogg">v</letter>
         <letter name="w" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/w.png" sound="sounds/w.ogg" phoneme="sounds/w.ogg">w</letter>
         <letter name="x" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/x.png" sound="sounds/x.ogg" phoneme="sounds/x.ogg">x</letter>
         <letter name="y" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/y.png" sound="sounds/y.ogg" phoneme="sounds/y.ogg">y</letter>
-        <letter name="z" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/z.png" sound="sounds/z.ogg" poneme="sounds/z.ogg">z</letter>
+        <letter name="z" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/z.png" sound="sounds/z.ogg" phoneme="sounds/z.ogg">z</letter>
     </letters>
     <words>
         <word name="cat" buy="100" sell="10" points="10" construct="60"  time="60" texture="locales/en_us_rural/textures/words/cat.png" sound="sounds/cat.ogg">cat</word>
@@ -42,7 +42,9 @@
                 <page sound="sounds/intro1p2.ogg">Use the Letter images at the bottom of your screen to start planting with the letter 'A'</page>
             </intro>
             <letters>a</letters>
-            <help>a</help>
+            <help>
+                <letters>a</letters>
+            </help>
             <words></words>
             <req>
                 <gather_letter count="1">a</gather_letter>
