@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<locale name="en_us_test" lang="en_us" display_name="US English, Testing">
+    <shell src="locales/en_us_test/textures/gameui.png" />
+    <map src="locales/en_us_test/textures/map.tmx" />
+    <letters>
+        <letter name="a" buy="1"  sell="1"  time="10" points="100" texture="locales/en_us_test/textures/letters/a.png" sound="sounds/a.ogg" phoneme="phonemes/a.ogg">a</letter>
+        <letter name="b" buy="2"  sell="2"  time="20" points="200" texture="locales/en_us_test/textures/letters/b.png" sound="sounds/b.ogg" phoneme="phonemes/b.ogg">b</letter>
+    </letters>
+    <words>
+        <word name="ab" buy="10" sell="1" construct="10" time="10" points="100" texture="locales/en_us_test/textures/words/ab.png" sound="sounds/ab.ogg">cat</word>
+        <word name="ba" buy="20" sell="2" construct="20" time="20" points="200" texture="locales/en_us_test/textures/words/ba.png" sound="sounds/ba.ogg">hat</word>
+    </words>
+    <levels>
+        <level name="test1">
+            <intro>
+                <page sound="sounds/intro1p1.ogg">Test level 1 intro page</page>
+            </intro>
+            <letters>a,b</letters>
+            <help>
+                <letters>a</letters>x
+                y<words></words>z
+            </help>
+            <words></words>
+            <req>
+                <gather_letter count="1">a</gather_letter>
+            </req>
+        </level>
+        <level name="test2">
+            <intro>
+                <page sound="sounds/intro2p1.ogg">Test level 2 intro page</page>
+            </intro>
+            <letters>a,b</letters>
+            <words>ab</words>
+            <help>
+                <letters>a,b</letters>
+                <words>ab</words>
+            </help>
+            <req>
+                <gather_word count="1">ab</gather_word>
+            </req>
+        </level>
+    </levels>
+</locale>

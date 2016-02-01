@@ -107,12 +107,12 @@ public class LocaleParser extends DefaultHandler {
         } else if (this.inLevelIntro && localName.equals(LocaleParser.TAG_PAGE)) {
             this.inLevelIntroPage = true;
             this.parseLevelIntroPage(attributes);
-        } else if (this.inLocale && this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
+        } else if (this.inLocale && this.inLevelDefinition && !this.inLevelHelp && localName.equals(LocaleParser.TAG_LETTERS)) {
             this.inLevelLetters = true;
+        } else if (this.inLocale && this.inLevelDefinition && !this.inLevelHelp && localName.equals(LocaleParser.TAG_WORDS)) {
+            this.inLevelWords = true;
         } else if (this.inLocale && this.inLevelDefinition && localName.equals(LocaleParser.TAG_HELP)) {
             this.inLevelHelp = true;
-        } else if (this.inLocale && this.inLevelDefinition && localName.equals(LocaleParser.TAG_WORDS)) {
-            this.inLevelWords = true;
         } else if (this.inLocale && this.inLevelDefinition && this.inLevelHelp && localName.equals(LocaleParser.TAG_LETTERS)) {
             this.inLevelHelpLetters = true;
         } else if (this.inLocale && this.inLevelDefinition && this.inLevelHelp && localName.equals(LocaleParser.TAG_WORDS)) {
@@ -156,6 +156,7 @@ public class LocaleParser extends DefaultHandler {
         this.currentLetter.time = Integer.parseInt(attributes.getValue("time"));
         this.currentLetter.buy = Integer.parseInt(attributes.getValue("buy"));
         this.currentLetter.sell = Integer.parseInt(attributes.getValue("sell"));
+        this.currentLetter.points = Integer.parseInt(attributes.getValue("points"));
         this.currentLetter.texture_src = attributes.getValue("texture");
     }
 
@@ -166,7 +167,9 @@ public class LocaleParser extends DefaultHandler {
         this.currentWord.sound = attributes.getValue("sound");
         this.currentWord.construct = Integer.parseInt(attributes.getValue("construct"));
         this.currentWord.time = Integer.parseInt(attributes.getValue("time"));
+        this.currentWord.buy = Integer.parseInt(attributes.getValue("buy"));
         this.currentWord.sell = Integer.parseInt(attributes.getValue("sell"));
+        this.currentWord.points = Integer.parseInt(attributes.getValue("points"));
         this.currentWord.texture_src = attributes.getValue("texture");
     }
 
@@ -231,13 +234,13 @@ public class LocaleParser extends DefaultHandler {
         } else if (this.inLevelIntroPage && localName.equals(LocaleParser.TAG_PAGE)) {
             this.inLevelIntroPage = false;
             this.currentLevel.intro.add(this.currentPage);
-        } else if (this.inLocale && this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
+        } else if (this.inLocale && this.inLevelDefinition && !this.inLevelHelpLetters && localName.equals(LocaleParser.TAG_LETTERS)) {
             this.inLevelLetters = false;
-        } else if (this.inLocale && this.inLevelDefinition && localName.equals(LocaleParser.TAG_WORDS)) {
+        } else if (this.inLocale && this.inLevelDefinition && !this.inLevelHelpWords && localName.equals(LocaleParser.TAG_WORDS)) {
             this.inLevelWords = false;
-        } else if (this.inLocale && this.inLevelDefinition && this.inLevelHelp && localName.equals(LocaleParser.TAG_LETTERS)) {
+        } else if (this.inLocale && this.inLevelDefinition && this.inLevelHelpLetters && localName.equals(LocaleParser.TAG_LETTERS)) {
             this.inLevelHelpLetters = false;
-        } else if (this.inLocale && this.inLevelDefinition && this.inLevelHelp && localName.equals(LocaleParser.TAG_WORDS)) {
+        } else if (this.inLocale && this.inLevelDefinition && this.inLevelHelpWords && localName.equals(LocaleParser.TAG_WORDS)) {
             this.inLevelHelpWords = false;
         } else if (this.inLocale && this.inLevelHelp && localName.equals(LocaleParser.TAG_HELP)) {
             this.inLevelHelp = false;

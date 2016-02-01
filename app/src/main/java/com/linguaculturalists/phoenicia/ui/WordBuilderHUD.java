@@ -73,18 +73,18 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
         this.attachChild(whiteRect);
 
         ITextureRegion wordSpriteRegion = game.wordTiles.get(word).getTextureRegion(0);
-        ButtonSprite wordSprite = new ButtonSprite((whiteRect.getWidth()/2), (GameActivity.CAMERA_HEIGHT/2)+100, wordSpriteRegion, PhoeniciaContext.vboManager);
+        ButtonSprite wordSprite = new ButtonSprite((whiteRect.getWidth()/2), whiteRect.getHeight()-50, wordSpriteRegion, PhoeniciaContext.vboManager);
         wordSprite.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                Debug.d("Activated block: "+buildWord.name);
+                Debug.d("Activated block: " + buildWord.name);
                 game.playBlockSound(buildWord.sound);
             }
         });
         this.registerTouchArea(wordSprite);
         whiteRect.attachChild(wordSprite);
 
-        final int startX = (int)(whiteRect.getWidth()/2) - (word.chars.length * 35) + 35;
+        int startX = (int)(whiteRect.getWidth()/2) - (word.chars.length * 35) + 35;
         for (int i = 0; i < word.chars.length; i++) {
             this.charBlocksX[i] = startX+(64*i);
             this.charBlocksY[i] = (int)whiteRect.getHeight()/2+50;
@@ -101,7 +101,17 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
         final Font inventoryCountFont = FontFactory.create(PhoeniciaContext.fontManager, PhoeniciaContext.textureManager, 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 16, Color.RED_ARGB_PACKED_INT);
         inventoryCountFont.load();
 
+        final int columns = 4;
+        startX = (int)(whiteRect.getWidth()/2) - (columns * 32) - 16;
+
+        int offsetX = 0;
+        int offsetY = (int) whiteRect.getHeight()/2-50;
+
         for (int i = 0; i < level.letters.size(); i++) {
+            if (offsetX >= columns) {
+                offsetY -= 80;
+                offsetX = 0;
+            }
             final Letter currentLetter = level.letters.get(i);
             Debug.d("Adding Builder letter: "+currentLetter.name+" (tile: "+currentLetter.tile+")");
             final int tile_id = currentLetter.sprite;
@@ -109,7 +119,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
                     game.letterTiles.get(currentLetter).getTextureRegion(0),
                     game.letterTiles.get(currentLetter).getTextureRegion(1),
                     game.letterTiles.get(currentLetter).getTextureRegion(2));
-            final ButtonSprite block = new ButtonSprite(startX+(64*i), whiteRect.getHeight()/2-50, blockRegion, PhoeniciaContext.vboManager);
+            final ButtonSprite block = new ButtonSprite(startX + (96 * offsetX), offsetY, blockRegion, PhoeniciaContext.vboManager);
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -132,10 +142,12 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
 
             Debug.d("Checking inventory for "+currentLetter.name);
             Debug.d("Inventory says: "+this.game.inventory.getCount(currentLetter.name));
-            final Text inventoryCount = new Text(startX+(64*i)+24, whiteRect.getHeight()/2-80, inventoryCountFont, ""+this.game.inventory.getCount(currentLetter.name), 4, PhoeniciaContext.vboManager);
+            final Text inventoryCount = new Text(startX + (96 * offsetX) + 24, offsetY-40, inventoryCountFont, ""+this.game.inventory.getCount(currentLetter.name), 4, PhoeniciaContext.vboManager);
             whiteRect.attachChild(inventoryCount);
             this.inventoryCounts.put(currentLetter.name, inventoryCount);
             this.usedCounts.put(currentLetter.name, 0);
+
+            offsetX++;
         }
 
     }

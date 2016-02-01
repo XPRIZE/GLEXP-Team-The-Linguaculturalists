@@ -44,6 +44,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
+import com.linguaculturalists.phoenicia.locale.IntroPage;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
@@ -264,6 +265,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         }
         List<Letter> blockLetters = locale.letters;
         List<Word> blockWords = locale.words;
+        SoundFactory.setAssetBasePath("locales/en_us_rural/");
         try {
             // Load letter assets
             for (int i = 0; i < blockLetters.size(); i++) {
@@ -284,6 +286,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 this.wordTextures.put(word, wordTexture);
                 this.wordTiles.put(word, TextureRegionFactory.extractTiledFromTexture(wordTexture, 0, 0, 64 * 4, 64 * 5, 4, 5));
             }
+
         } catch (final IOException e)
         {
             e.printStackTrace();
@@ -294,17 +297,33 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         try {
             SoundFactory.setAssetBasePath("locales/en_us_rural/");
             blockSounds = new HashMap<String, Sound>();
-            Debug.d("Loading level "+this.current_level+" letters");
+            Debug.d("Loading  letters");
             for (int i = 0; i < blockLetters.size(); i++) {
                 Letter letter = blockLetters.get(i);
                 Debug.d("Loading sound file "+i+": "+letter.sound);
                 blockSounds.put(letter.sound, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.activity, letter.sound));
             }
-            Debug.d("Loading level "+this.current_level+" words");
+            Debug.d("Loading words");
             for (int i = 0; i < blockWords.size(); i++) {
                 Word word = blockWords.get(i);
                 Debug.d("Loading sound file "+i+": "+word.sound);
                 blockSounds.put(word.sound, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.activity, word.sound));
+            }
+            // Load level assets
+            // TODO: Loading all level intros now is wasteful, need to hack SoundFactory to take a callback when loading finishes
+            Debug.d("Loading intros");
+            for (int i = 0; i < locale.levels.size(); i++) {
+                Level level = locale.levels.get(i);
+                Debug.d("Loading intros for level " + level.name);
+                for (int j = 0; j < level.intro.size(); j++) {
+                    IntroPage page = level.intro.get(j);
+                    Debug.d("Loading intro sound file " + page.sound);
+                    try {
+                        blockSounds.put(page.sound, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.activity, page.sound));
+                    } catch (IOException e) {
+                        Debug.w("Failed to load level intro sound: "+page.sound);
+                    }
+                }
             }
         } catch (IOException e)
         {
@@ -695,7 +714,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         if (this.blockSounds.containsKey(soundFile)) {
             this.blockSounds.get(soundFile).play();
         } else {
-            Debug.d("No blockSounds: "+soundFile+"");
+            Debug.d("No blockSounds: " + soundFile + "");
         }
     }
 

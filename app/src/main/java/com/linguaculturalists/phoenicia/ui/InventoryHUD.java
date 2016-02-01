@@ -41,8 +41,8 @@ public class InventoryHUD extends PhoeniciaHUD implements IOnSceneTouchListener 
         this.attachChild(whiteRect);
 
         final int columns = 4;
-        int startX = (int) (whiteRect.getWidth() / 2) - (columns * 32) + 32;
-        int startY = (int) whiteRect.getHeight() / 2 - 50;
+        int startX = (int) (whiteRect.getWidth() / 2) - (columns * 32) - 16;
+        int startY = (int) whiteRect.getHeight() - 50;
 
         int offsetX = 0;
         int offsetY = startY;
@@ -50,10 +50,8 @@ public class InventoryHUD extends PhoeniciaHUD implements IOnSceneTouchListener 
         List<InventoryItem> items = Inventory.getInstance().items();
         for (int i = 0; i < items.size(); i++) {
             if (offsetX >= columns) {
-                offsetY -= 50;
+                offsetY -= 80;
                 offsetX = 0;
-            } else {
-                offsetX++;
             }
             final InventoryItem item = items.get(i);
             final Letter currentLetter = game.locale.letter_map.get(item.item_name.get());
@@ -84,6 +82,7 @@ public class InventoryHUD extends PhoeniciaHUD implements IOnSceneTouchListener 
             });
             this.registerTouchArea(block);
             whiteRect.attachChild(block);
+            offsetX++;
 
         }
     }

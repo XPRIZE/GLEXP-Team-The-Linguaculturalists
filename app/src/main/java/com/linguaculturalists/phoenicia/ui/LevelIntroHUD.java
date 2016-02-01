@@ -1,5 +1,6 @@
 package com.linguaculturalists.phoenicia.ui;
 
+import android.content.Context;
 import android.graphics.Typeface;
 
 import com.linguaculturalists.phoenicia.GameActivity;
@@ -13,6 +14,9 @@ import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
+import org.andengine.audio.sound.Sound;
+import org.andengine.audio.sound.SoundFactory;
+import org.andengine.audio.sound.SoundManager;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.CameraScene;
 import org.andengine.entity.scene.IOnSceneTouchListener;
@@ -32,6 +36,7 @@ import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +55,7 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
 
     public LevelIntroHUD(final PhoeniciaGame game, final Level level) {
         super(game.camera);
-        this.setBackgroundEnabled(true);
+        this.setBackgroundEnabled(false);
         this.game = game;
         this.level = level;
         this.current_page = 0;
@@ -66,8 +71,6 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
 
         introPageFont = FontFactory.create(PhoeniciaContext.fontManager, PhoeniciaContext.textureManager, 256, 256, TextureOptions.BILINEAR, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 36, Color.BLUE_ARGB_PACKED_INT);
         introPageFont.load();
-        this.showPage(0);
-
 
         this.registerTouchArea(textPanel);
         this.registerTouchArea(textPanel.contents);
@@ -76,6 +79,11 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
         Debug.d("Finished instantiating LevelIntroHUD");
 
         this.clickDetector = new ClickDetector(this);
+    }
+
+    @Override
+    public void show() {
+        this.showPage(this.current_page);
     }
 
     /**
@@ -91,7 +99,7 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
 
         textPanel.detachChildren();
         textPanel.attachChild(introPageText);
-
+        game.playBlockSound(level.intro.get(page_index).sound);
     }
 
     @Override

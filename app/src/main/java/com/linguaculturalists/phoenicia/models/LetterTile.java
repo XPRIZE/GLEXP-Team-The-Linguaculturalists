@@ -227,7 +227,9 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
                             }, EaseLinear.getInstance())
                     ));
                 }
-                //phoeniciaGame.playBlockSound(this.letter.sound);
+                if (phoeniciaGame.locale.level_map.get(phoeniciaGame.current_level).help_letters.contains(this.letter)) {
+                    phoeniciaGame.playBlockSound(this.letter.phoneme);
+                }
             }
         } else {
             Debug.e("Clicked block has no builder");
