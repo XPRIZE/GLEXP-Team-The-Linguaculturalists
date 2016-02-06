@@ -9,6 +9,7 @@ import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import org.andengine.util.debug.Debug;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by mhall on 1/31/16.
@@ -93,10 +94,14 @@ public class LocaleParserTest extends AndroidTestCase {
         Locale locale = getLocale();
         Level test1 = locale.level_map.get("test1");
         assertNotNull(test1);
-        assertEquals(1, test1.intro.size());
+        assertEquals(2, test1.intro.size());
         IntroPage page1 = test1.intro.get(0);
-        assertEquals("Test level 1 intro page", page1.text);
+        assertEquals("Test level 1 intro page 1", page1.text);
         assertEquals("sounds/intro1p1.ogg", page1.sound);
+
+        IntroPage page2 = test1.intro.get(1);
+        assertEquals("Test level 1 intro page 2", page2.text);
+        assertEquals("sounds/intro1p2.ogg", page2.sound);
     }
 
     public void testLevelLetters() {
@@ -137,4 +142,24 @@ public class LocaleParserTest extends AndroidTestCase {
         assertEquals("b", test2.help_letters.get(1).name);
         assertEquals("ab", test2.help_words.get(0).name);
     }
+
+    public void testLevelRequirements() {
+        Locale locale = getLocale();
+        Level test1 = locale.level_map.get("test1");
+        assertNotNull(test1);
+        assertEquals(1, test1.requirements.size());
+        CollectLetterReq req1 = (CollectLetterReq) test1.requirements.get(0);
+        List<Letter> letters = req1.getLetters();
+        assertEquals(1, letters.size());
+        assertEquals("a", letters.get(0).name);
+
+        Level test2 = locale.level_map.get("test2");
+        assertNotNull(test2);
+        assertEquals(1, test2.requirements.size());
+        CollectWordReq req2 = (CollectWordReq) test2.requirements.get(0);
+        List<Word> words = req2.getWords();
+        assertEquals(1, words.size());
+        assertEquals("ab", words.get(0).name);
+    }
+
 }

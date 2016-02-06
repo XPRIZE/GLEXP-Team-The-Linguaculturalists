@@ -247,6 +247,8 @@ public class LocaleParser extends DefaultHandler {
         } else if (this.inLocale && this.inLevelReq && localName.equals(LocaleParser.TAG_REQ)) {
             this.inLevelReq = false;
         } else if (this.inLocale && this.inLevelReqLetter && localName.equals(LocaleParser.TAG_REQLETTER)) {
+            this.currentLevel.requirements.add(this.currentReqLetter);
+            this.currentReqLetter = null;
             this.inLevelReqLetter = false;
         } else if (this.inLocale && this.inLevelReqWord && localName.equals(LocaleParser.TAG_REQWORD)) {
             this.currentLevel.requirements.add(this.currentReqWord);

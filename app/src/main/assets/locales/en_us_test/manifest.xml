@@ -13,7 +13,8 @@
     <levels>
         <level name="test1">
             <intro>
-                <page sound="sounds/intro1p1.ogg">Test level 1 intro page</page>
+                <page sound="sounds/intro1p1.ogg">Test level 1 intro page 1</page>
+                <page sound="sounds/intro1p2.ogg">Test level 1 intro page 2</page>
             </intro>
             <letters>a,b</letters>
             <help>
