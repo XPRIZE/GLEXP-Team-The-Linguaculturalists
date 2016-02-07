@@ -46,9 +46,9 @@ Phoenicia will be able to include "Locale Packs" which provide unique artwork, s
 
 Phoenicia is provided under the GPLv3 open source license. It makes use of some [dependencies](#dependencies) that are provided under other compatible open source license.
 
-#### X-Prize
+#### Contributing
 
-Phoenicia is being developed as part of the [Global Learning X-Prize](http://learning.xprize.org/) competition. While the code is being developed in the open, under the GPLv3 license, the X-Prize rules require that finalists be released under the APL. Because of this, contributors must sign a CLA which will allow for that re-licensing in the event that Phoenicia is chosen as a finalist.
+See [Contributing](Contributing.md) for how to get started
 
 ## Dependencies
 
