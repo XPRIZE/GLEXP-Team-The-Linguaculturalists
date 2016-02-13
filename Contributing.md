@@ -13,6 +13,6 @@ Before you send your first contribution to Phoenicia, we will need to you sign t
 
 We are using a CLA from the [Harmony Agreements](http://www.harmonyagreements.org/about.html) project. Much like the Creative Commons licenses, these agreements have been designed to be both beneficial to those that use them as well as legally supportable.
 
-To sign the agreement, simple put your name and the email address you use in your git commits to the bottom of one of the Harmony CLA files. If you are contributing as an individual, add your name and email address to [Harmony_CLA_Individual](Harmony_CLA_Individual.md). If you are contributing as a company or non-profit, add your name, your company name, and email to [Harmony_CLA_Entity](Harmony_CLA_Entity.md)
+To sign the agreement, simply put your name and the email address you use in your git commits to the bottom of one of the Harmony CLA files. If you are contributing as an individual, add your name and email address to [Harmony_CLA_Individual](Harmony_CLA_Individual.md). If you are contributing as a company or non-profit, add your name, your company name, and email to [Harmony_CLA_Entity](Harmony_CLA_Entity.md)
 
 Contributions being made to one of Phoenicia's dependencies will not be subject to this agreement, but should follow the contribution requirements for those projects.

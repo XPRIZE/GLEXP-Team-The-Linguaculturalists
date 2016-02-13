@@ -72,7 +72,8 @@ import com.orm.androrm.Model;
 public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateListener, Bank.BankUpdateListener {
     public Locale locale; /**< the locale used by the game session */
     public Scene scene;
-    public Camera camera;
+    public ZoomCamera camera;
+    private GameActivity activity;
 
     private float mPinchZoomStartedCameraZoomFactor;
     private PinchZoomDetector mPinchZoomDetector;
@@ -129,6 +130,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         PhoeniciaContext.soundManager = activity.getSoundManager();
         PhoeniciaContext.fontManager = activity.getFontManager();
 
+        this.activity = activity;
         this.camera = camera;
 
         this.levelListeners = new ArrayList<LevelChangeListener>();
@@ -246,10 +248,19 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         try {
             final TMXLoader tmxLoader = new TMXLoader(PhoeniciaContext.assetManager, PhoeniciaContext.textureManager, TextureOptions.BILINEAR_PREMULTIPLYALPHA, PhoeniciaContext.vboManager);
             this.mTMXTiledMap = tmxLoader.loadFromAsset(this.locale.map_src);
+
+            // Add each layer to the scene
             for (TMXLayer tmxLayer : this.mTMXTiledMap.getTMXLayers()){
                 scene.attachChild(tmxLayer);
             }
+
+            // Initiate array for holding references to block sprites on the map
             placedSprites = new Sprite[this.mTMXTiledMap.getTileColumns()][this.mTMXTiledMap.getTileRows()];
+
+            // Lock the camera to the map's boundaries
+            TMXLayer baseLayer = this.mTMXTiledMap.getTMXLayers().get(0);
+            this.camera.setBoundsEnabled(true);
+            this.camera.setBounds((-baseLayer.getWidth()/2)+32, -baseLayer.getHeight(), (baseLayer.getWidth()/2)+32, 32);
         } catch (final TMXLoadException e) {
             Debug.e("Error loading map at "+this.locale.map_src, e);
         }
@@ -486,7 +497,13 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      */
     public void onBackPressed() {
         Debug.d("Back button pressed");
-        this.hudManager.pop();
+        this.activity.runOnUpdateThread(new Runnable() {
+            @Override
+            public void run() {
+                hudManager.pop();
+            }
+        });
+
     }
 
     /**
@@ -659,7 +676,12 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      */
     public TMXTile getTileAt(float x, float y) {
         final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
-        return tmxLayer.getTMXTileAt(x, y);
+        return tmxLayer.getTMXTileAt(x, y-32);
+    }
+
+    public TMXTile getTileAtIso(int isoX, int isoY) {
+        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
+        return tmxLayer.getTMXTile(isoX, isoY);
     }
 
     /**

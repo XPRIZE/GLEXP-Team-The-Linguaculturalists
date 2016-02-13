@@ -36,16 +36,13 @@ import java.util.Map;
 /**
  * HUD for selecting \link Word Words \endlink to be placed as tiles onto the map.
  */
-public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.InventoryUpdateListener, ClickDetector.IClickDetectorListener {
+public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.InventoryUpdateListener {
     private static Word placeWord = null;
     private Map<String, Text> inventoryCounts;
     private PhoeniciaGame game;
-    private Word activeWord;
 
     private Rectangle whiteRect;
     private Scrollable blockPanel;
-
-    private ClickDetector clickDetector;
 
     public WordPlacementHUD(final PhoeniciaGame game, final Level level) {
         super(game.camera);
@@ -81,14 +78,9 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.Inventor
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                    Debug.d("Activated block: " + currentWord.name);
-                    if (activeWord != currentWord) {
-                        Debug.d("Activated block: " + currentWord.name);
-                        activeWord = currentWord;
-                    } else {
-                        Debug.d("Deactivated block: " + activeWord.name);
-                        activeWord = null;
-                    }
+                    float[] cameraCenter = getCamera().getSceneCoordinatesFromCameraSceneCoordinates(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2);
+                    TMXTile mapTile = game.getTileAt(cameraCenter[0], cameraCenter[1]);
+                    addWordTile(currentWord, mapTile);
                 }
             });
             this.registerTouchArea(block);
@@ -102,7 +94,6 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.Inventor
 
         Debug.d("Finished instantiating BlockPlacementHUD");
 
-        this.clickDetector = new ClickDetector(this);
     }
 
     /**
@@ -129,15 +120,6 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.Inventor
         }
     }
 
-    @Override
-    public void onClick(ClickDetector clickDetector, int pointerId, float sceneX, float sceneY) {
-        TMXTile mapTile = game.getTileAt(sceneX, sceneY);
-        Debug.d("WordPlacementHud scene touch tile: "+mapTile);
-        Debug.d("WordPlacementHud scene touch active: "+this.activeWord);
-        if (mapTile != null && this.activeWord != null) {
-            this.addWordTile(activeWord, mapTile);
-        }
-    }
 
     @Override
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
@@ -146,7 +128,7 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.Inventor
         final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
         if (handled) return true;
 
-        return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
+        return false;
     }
 
     /**

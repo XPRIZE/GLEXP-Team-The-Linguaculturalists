@@ -1,5 +1,6 @@
 package com.linguaculturalists.phoenicia.components;
 
+import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
@@ -10,8 +11,10 @@ import org.andengine.entity.modifier.ScaleAtModifier;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.text.Text;
+import org.andengine.extension.tmx.TMXTile;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
+import org.andengine.input.touch.detector.HoldDetector;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
@@ -28,9 +31,8 @@ import org.andengine.util.modifier.ease.EaseLinear;
  * PlacedBlockSprites assume 4 sets of animation tiles, which are used for 0-33%, 34-66%, 67-100%
  * and 100% onward.
  */
-public class PlacedBlockSprite extends AnimatedSprite implements ClickDetector.IClickDetectorListener {
+public class PlacedBlockSprite extends AnimatedSprite implements ClickDetector.IClickDetectorListener, HoldDetector.IHoldDetectorListener {
 
-    private OnClickListener mOnClickListener;
     private long[] mFrameDurations = {500, 500, 500, 500};
     private int mTileId;
     private int mProgress;
@@ -38,7 +40,9 @@ public class PlacedBlockSprite extends AnimatedSprite implements ClickDetector.I
     private int startTile;
     private boolean complete;
 
+    private OnClickListener mOnClickListener;
     private ClickDetector clickDetector;
+    private HoldDetector holdDetector;
     /**
      * Create a new PlacedBlockSprite.
      * @param pX the X coordinate of the scene to place this PlacedBlockSprite
@@ -57,6 +61,8 @@ public class PlacedBlockSprite extends AnimatedSprite implements ClickDetector.I
         this.complete = false;
 
         this.clickDetector = new ClickDetector(this);
+        this.holdDetector = new HoldDetector(this);
+        this.holdDetector.setTriggerHoldMinimumMilliseconds(1000);
     }
 
     /**
@@ -128,8 +134,29 @@ public class PlacedBlockSprite extends AnimatedSprite implements ClickDetector.I
     }
 
     @Override
+    public void onHold(HoldDetector holdDetector, long holdTime, int pointerId, float touchX, float touchY) {
+        Debug.d("Holding");
+        return;
+    }
+
+    @Override
+    public void onHoldFinished(HoldDetector holdDetector, long holdTime, int pointerId, float touchX, float touchY) {
+        Debug.d("Hold finished");
+        return;
+    }
+
+    @Override
+    public void onHoldStarted(HoldDetector holdDetector, int pointerId, float touchX, float touchY) {
+        Debug.d("Hold started");
+        if (this.mOnClickListener != null) {
+            this.mOnClickListener.onHold(this, touchX, touchY);
+        }
+    }
+
+    @Override
     public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-        return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
+        boolean handled = this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
+        return this.holdDetector.onManagedTouchEvent(pSceneTouchEvent) || handled;
     }
 
     /**
@@ -143,5 +170,6 @@ public class PlacedBlockSprite extends AnimatedSprite implements ClickDetector.I
          * @param pTouchAreaLocalY
          */
         public void onClick(final PlacedBlockSprite pPlacedBlockSprite, final float pTouchAreaLocalX, final float pTouchAreaLocalY);
+        public void onHold(final PlacedBlockSprite pPlacedBlockSprite, final float pTouchAreaLocalX, final float pTouchAreaLocalY);
     }
 }

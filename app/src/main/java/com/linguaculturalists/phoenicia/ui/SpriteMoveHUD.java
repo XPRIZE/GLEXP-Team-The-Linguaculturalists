@@ -38,6 +38,7 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
         this.game = game;
         this.sprite = sprite;
         this.originalLocation = startLocation;
+        Debug.d("Start sprite Z: "+this.sprite.getZIndex());
         this.newLocation = startLocation;
         this.handler = handler;
         this.setBackgroundEnabled(false);
@@ -75,6 +76,8 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
                 sprite.unregisterEntityModifier(fadeModifier);
                 sprite.setAlpha(1.0f);
+                sprite.setZIndex(originalLocation.getTileZ());
+                game.scene.sortChildren();
                 if (hud.handler != null) {
                     hud.handler.onSpriteMoveCanceled(sprite);
                     hud.handler = null;
@@ -102,7 +105,11 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
      */
     @Override
     public void close() {
+        this.sprite.clearEntityModifiers();
+        sprite.setAlpha(1.0f);
         if (this.handler != null) {
+            this.sprite.setZIndex(this.originalLocation.getTileZ());
+            this.game.scene.sortChildren();
             this.handler.onSpriteMoveCanceled(this.sprite);
         }
     }
@@ -128,8 +135,13 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
     @Override
     public void onClick(ClickDetector clickDetector, int pointerId, float sceneX, float sceneY) {
         TMXTile mapTile = game.getTileAt(sceneX, sceneY);
-        this.sprite.setPosition(mapTile.getTileX()+32, mapTile.getTileY()+32);// Map tiles are offset by 32px
-        this.newLocation = mapTile;
+        if (mapTile != null) {
+            this.sprite.setPosition(mapTile.getTileX() + 32, mapTile.getTileY() + 32);// Map tiles are offset by 32px
+            this.sprite.setZIndex(mapTile.getTileZ()+1);
+            this.game.scene.sortChildren();
+            Debug.d("New sprite Z: " + this.sprite.getZIndex());
+            this.newLocation = mapTile;
+        }
     }
 
     @Override

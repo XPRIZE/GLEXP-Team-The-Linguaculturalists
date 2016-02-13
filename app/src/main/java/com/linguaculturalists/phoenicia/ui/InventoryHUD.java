@@ -16,6 +16,7 @@ import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.util.adt.color.Color;
@@ -26,19 +27,33 @@ import java.util.List;
 /**
  * Display the \link InventoryItem InventoryItems \endlink with a positive balance and allow selling them.
  */
-public class InventoryHUD extends PhoeniciaHUD implements IOnSceneTouchListener {
+public class InventoryHUD extends PhoeniciaHUD {
     private PhoeniciaGame game;
     private Rectangle whiteRect;
+    private ClickDetector clickDetector;
 
     public InventoryHUD(final PhoeniciaGame game) {
         super(game.camera);
         this.setBackgroundEnabled(false);
         this.game = game;
-        this.setOnSceneTouchListener(this);
+        // Close the HUD if the user clicks outside the whiteRect
+        this.clickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
+            @Override
+            public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
+                game.hudManager.pop();
+            }
+        });
 
-        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 400, PhoeniciaContext.vboManager);
+        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 400, PhoeniciaContext.vboManager) {
+            @Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+                return true;
+            }
+        };
         whiteRect.setColor(Color.WHITE);
         this.attachChild(whiteRect);
+        this.registerTouchArea(whiteRect);
 
         final int columns = 4;
         int startX = (int) (whiteRect.getWidth() / 2) - (columns * 32) - 16;
@@ -87,8 +102,12 @@ public class InventoryHUD extends PhoeniciaHUD implements IOnSceneTouchListener 
         }
     }
 
-    public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {
+    public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
         // Block touch events
-        return true;
+        final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
+        Debug.d("Inventory HUD touched, handled? "+handled);
+        if (handled) return true;
+        return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
+        // TODO: Fix inventory selling
     }
 }

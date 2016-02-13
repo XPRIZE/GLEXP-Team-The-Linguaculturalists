@@ -5,6 +5,7 @@ import android.content.Context;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.locale.Word;
+import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.Model;
@@ -23,6 +24,7 @@ import org.andengine.entity.modifier.ScaleAtModifier;
 import org.andengine.entity.scene.IOnAreaTouchListener;
 import org.andengine.entity.scene.ITouchArea;
 import org.andengine.entity.text.Text;
+import org.andengine.extension.tmx.TMXTile;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.util.debug.Debug;
 import org.andengine.util.modifier.IModifier;
@@ -227,6 +229,33 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
         } else {
             Debug.e("Clicked block has no builder");
         }
+    }
+
+    @Override
+    public void onHold(PlacedBlockSprite buttonSprite, float v, float v2) {
+        final TMXTile tmxTile = phoeniciaGame.getTileAtIso(this.isoX.get(), this.isoY.get());
+        if (tmxTile == null) {
+            Debug.d("No tile at "+this.isoX.get()+"x"+this.isoY.get());
+            return;
+        }
+        phoeniciaGame.hudManager.push(new SpriteMoveHUD(phoeniciaGame, tmxTile, sprite, new SpriteMoveHUD.SpriteMoveHandler() {
+            @Override
+            public void onSpriteMoveCanceled(PlacedBlockSprite sprite) {
+                sprite.setPosition(tmxTile.getTileX()+32, tmxTile.getTileY()+32);
+                sprite.setZIndex(tmxTile.getTileZ());
+                phoeniciaGame.scene.sortChildren();
+            }
+
+            @Override
+            public void onSpriteMoveFinished(PlacedBlockSprite sprite, TMXTile newlocation) {
+                isoX.set(newlocation.getTileColumn());
+                isoY.set(newlocation.getTileRow());
+                phoeniciaGame.placedSprites[newlocation.getTileColumn()][newlocation.getTileRow()] = sprite;
+                phoeniciaGame.scene.sortChildren();
+
+            }
+        }));
+
     }
 
     public void setListener(final WordTileListener listener) {

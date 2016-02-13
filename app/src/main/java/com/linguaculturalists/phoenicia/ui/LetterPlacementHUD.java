@@ -36,16 +36,13 @@ import java.util.Map;
 /**
  * HUD for selecting \link Letter Letters \endlink to be placed as tiles onto the map.
  */
-public class LetterPlacementHUD extends PhoeniciaHUD implements Inventory.InventoryUpdateListener, ClickDetector.IClickDetectorListener {
+public class LetterPlacementHUD extends PhoeniciaHUD implements Inventory.InventoryUpdateListener {
     private Letter placeBlock = null;
     private Map<String, Text> inventoryCounts;
     private PhoeniciaGame game;
-    private Letter activeLetter;
 
     private Rectangle whiteRect;
     private Scrollable blockPanel;
-
-    private ClickDetector clickDetector;
 
     public LetterPlacementHUD(final PhoeniciaGame game, final Level level) {
         super(game.camera);
@@ -84,13 +81,9 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Inventory.Invent
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                    if (activeLetter != currentLetter) {
-                        Debug.d("Activated block: " + currentLetter.name);
-                        activeLetter = currentLetter;
-                    } else {
-                        Debug.d("Deactivated block: " + activeLetter.name);
-                        activeLetter = null;
-                    }
+                    float[] cameraCenter = getCamera().getSceneCoordinatesFromCameraSceneCoordinates(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2);
+                    TMXTile mapTile = game.getTileAt(cameraCenter[0], cameraCenter[1]);
+                    addLetterTile(currentLetter, mapTile);
                 }
             });
             this.registerTouchArea(block);
@@ -104,7 +97,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Inventory.Invent
 
         Debug.d("Finished instantiating LetterPlacementHUD");
 
-        this.clickDetector = new ClickDetector(this);
+        //this.clickDetector = new ClickDetector(this);
         //this.setOnSceneTouchListener(this);
     }
 
@@ -132,16 +125,6 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Inventory.Invent
         }
     }
 
-    @Override
-    public void onClick(ClickDetector clickDetector, int pointerId, float sceneX, float sceneY) {
-        TMXTile mapTile = game.getTileAt(sceneX, sceneY);
-        Debug.d("LetterPlacementHud scene touch tile: "+mapTile);
-        Debug.d("LetterPlacementHud scene touch active: "+this.activeLetter);
-        if (mapTile != null && this.activeLetter != null) {
-            this.addLetterTile(activeLetter, mapTile);
-            return;
-        }
-    }
 
     @Override
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
@@ -150,7 +133,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Inventory.Invent
         boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
         if (handled) return true;
 
-        return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
+        return false;
     }
 
     /**
