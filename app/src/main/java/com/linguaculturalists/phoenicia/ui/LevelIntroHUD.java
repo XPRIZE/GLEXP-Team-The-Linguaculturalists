@@ -61,11 +61,13 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
         this.current_page = 0;
         this.setOnSceneTouchListener(this);
 
-        Rectangle whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 400, PhoeniciaContext.vboManager);
+        final float dialogWidth = GameActivity.CAMERA_WIDTH * 0.6f;
+        final float dialogHeight = GameActivity.CAMERA_HEIGHT * 0.75f;
+        Rectangle whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, dialogWidth, dialogHeight, PhoeniciaContext.vboManager);
         whiteRect.setColor(Color.WHITE);
         this.attachChild(whiteRect);
 
-        textPanel = new Scrollable(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 400, Scrollable.SCROLL_VERTICAL);
+        textPanel = new Scrollable(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, dialogWidth, dialogHeight, Scrollable.SCROLL_VERTICAL);
         this.attachChild(textPanel);
         //textPanel.setClip(false);
 
@@ -94,8 +96,9 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
         Debug.d("Showing page: "+page_index);
         this.current_page = page_index;
         final String nextPage = level.intro.get(page_index).text;
-        final TextOptions introTextOptions = new TextOptions(AutoWrap.WORDS, 400, HorizontalAlign.CENTER);
+        final TextOptions introTextOptions = new TextOptions(AutoWrap.WORDS, textPanel.getWidth(), HorizontalAlign.CENTER);
         final Text introPageText = new Text(textPanel.getWidth()/2, textPanel.getHeight()/2, introPageFont, nextPage, introTextOptions, PhoeniciaContext.vboManager);
+        introPageText.setPosition(textPanel.getWidth()/2, textPanel.getHeight()-(introPageText.getHeight()/2));
 
         textPanel.detachChildren();
         textPanel.attachChild(introPageText);
