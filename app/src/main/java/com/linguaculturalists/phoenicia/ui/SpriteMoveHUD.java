@@ -52,25 +52,8 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
 
         final SpriteMoveHUD hud = this;
 
-        ITextureRegion confirmRegion = game.shellTiles.getTextureRegion(6);
-        ButtonSprite confirmBlock = new ButtonSprite((whiteRect.getWidth()/2)-64, 48, confirmRegion, PhoeniciaContext.vboManager);
-        confirmBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
-            @Override
-            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                sprite.unregisterEntityModifier(fadeModifier);
-                sprite.setAlpha(1.0f);
-                if (hud.handler != null) {
-                    hud.handler.onSpriteMoveFinished(sprite, hud.newLocation);
-                    hud.handler = null;
-                }
-                game.hudManager.pop();
-            }
-        });
-        this.registerTouchArea(confirmBlock);
-        whiteRect.attachChild(confirmBlock);
-
         ITextureRegion cancelRegion = game.shellTiles.getTextureRegion(7);
-        ButtonSprite cancelBlock = new ButtonSprite((whiteRect.getWidth()/2)+64, 48, cancelRegion, PhoeniciaContext.vboManager);
+        ButtonSprite cancelBlock = new ButtonSprite((whiteRect.getWidth()/2)-64, 48, cancelRegion, PhoeniciaContext.vboManager);
         cancelBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -87,6 +70,23 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
         });
         this.registerTouchArea(cancelBlock);
         whiteRect.attachChild(cancelBlock);
+
+        ITextureRegion confirmRegion = game.shellTiles.getTextureRegion(6);
+        ButtonSprite confirmBlock = new ButtonSprite((whiteRect.getWidth()/2)+64, 48, confirmRegion, PhoeniciaContext.vboManager);
+        confirmBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
+                sprite.unregisterEntityModifier(fadeModifier);
+                sprite.setAlpha(1.0f);
+                if (hud.handler != null) {
+                    hud.handler.onSpriteMoveFinished(sprite, hud.newLocation);
+                    hud.handler = null;
+                }
+                game.hudManager.pop();
+            }
+        });
+        this.registerTouchArea(confirmBlock);
+        whiteRect.attachChild(confirmBlock);
 
         this.clickDetector = new ClickDetector(this);
     }
