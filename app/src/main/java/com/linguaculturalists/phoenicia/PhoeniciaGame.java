@@ -148,6 +148,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.wordTextures = new HashMap<Word, AssetBitmapTexture>();
         this.wordTiles = new HashMap<Word, ITiledTextureRegion>();
 
+        final float minZoomFactor = 1.0f;
+        final float maxZoomFactor = 5.0f;
         mPinchZoomDetector = new PinchZoomDetector(new PinchZoomDetector.IPinchZoomDetectorListener() {
             @Override
             public void onPinchZoomStarted(final PinchZoomDetector pPinchZoomDetector, final TouchEvent pTouchEvent) {
@@ -156,12 +158,15 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
             @Override
             public void onPinchZoom(final PinchZoomDetector pPinchZoomDetector, final TouchEvent pTouchEvent, final float pZoomFactor) {
-                camera.setZoomFactor(mPinchZoomStartedCameraZoomFactor * pZoomFactor);
+                final float newZoomFactor = mPinchZoomStartedCameraZoomFactor * pZoomFactor;
+                if (newZoomFactor >= minZoomFactor && newZoomFactor <= maxZoomFactor) {
+                    camera.setZoomFactor(newZoomFactor);
+                }
             }
 
             @Override
             public void onPinchZoomFinished(final PinchZoomDetector pPinchZoomDetector, final TouchEvent pTouchEvent, final float pZoomFactor) {
-                camera.setZoomFactor(mPinchZoomStartedCameraZoomFactor * pZoomFactor);
+                //camera.setZoomFactor(mPinchZoomStartedCameraZoomFactor * pZoomFactor);
             }
         });
         scene.setOnSceneTouchListener(new IOnSceneTouchListener() {
@@ -447,6 +452,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public void start() {
         this.session.update();
         this.camera.setCenter(50, -500);
+        this.camera.setZoomFactor(2.0f);
         this.camera.setHUD(this.hudManager);
         this.hudManager.showDefault();
         if (this.current_level != this.session.current_level.get()) {
