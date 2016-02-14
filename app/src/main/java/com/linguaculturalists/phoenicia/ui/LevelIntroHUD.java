@@ -69,7 +69,6 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
 
         textPanel = new Scrollable(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, dialogWidth, dialogHeight, Scrollable.SCROLL_VERTICAL);
         this.attachChild(textPanel);
-        //textPanel.setClip(false);
 
         introPageFont = FontFactory.create(PhoeniciaContext.fontManager, PhoeniciaContext.textureManager, 256, 256, TextureOptions.BILINEAR, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 36, Color.BLUE_ARGB_PACKED_INT);
         introPageFont.load();

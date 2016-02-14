@@ -56,7 +56,6 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Inventory.Invent
         this.attachChild(whiteRect);
 
         this.blockPanel = new Scrollable(GameActivity.CAMERA_WIDTH/2, 64, 600, 96, Scrollable.SCROLL_HORIZONTAL);
-        //this.blockPanel.setClip(false);
 
         this.registerTouchArea(blockPanel);
         this.registerTouchArea(blockPanel.contents);
@@ -128,7 +127,6 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Inventory.Invent
 
     @Override
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
-        Debug.d("LetterPlacementHud touched at "+pSceneTouchEvent.getX()+"x"+pSceneTouchEvent.getY());
 
         boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
         if (handled) return true;
