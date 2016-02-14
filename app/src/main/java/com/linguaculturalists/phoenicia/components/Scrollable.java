@@ -67,8 +67,8 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
         this.scroll_lock = scroll_lock;
         this.scrollDetector = new SurfaceScrollDetector(this);
 
-        this.contents = new Entity(w/2, h/2, w, h);
-        this.childRect.set(0, y, w, h);
+        this.contents = new Entity(w/2, h/2, 0, 0);
+        this.childRect.set(0, 0, 0, 0);
 
         super.attachChild(this.contents);
 
@@ -134,19 +134,24 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
      * re-calculated to find the new boundary rectangle that will contain them
      */
     private void recalculateContentBounds() {
+        this.childRect.set(0, 0, 0, 0);
         for(int i = 0; i < this.contents.getChildCount(); i++) {
             IEntity child = this.contents.getChildByIndex(i);
-            Debug.d("Recalculating with child: "+child);
+            Debug.d("Scrollable Recalculating with child: "+child);
             final float childLeft = child.getX()-(child.getWidth()/2);
             final float childRight = child.getX()+(child.getWidth()/2);
             final float childBottom = child.getY()-(child.getHeight()/2);
             final float childTop = child.getY()+(child.getHeight()/2);
-            if (childLeft   < this.childRect.left)   { Debug.d("New left: "+childLeft); this.childRect.left = childLeft; }
-            if (childRight  > this.childRect.right)  { Debug.d("New right: "+childRight); this.childRect.right = childRight; }
-            if (childTop    > this.childRect.top)    { Debug.d("New top: "+childTop); this.childRect.top = childTop; }
-            if (childBottom < this.childRect.bottom) { Debug.d("New bottom: "+childBottom); this.childRect.bottom = childBottom; }
+            if (childLeft   < this.childRect.left)   { Debug.d("Scrollable New left: "+childLeft); this.childRect.left = childLeft; }
+            if (childRight  > this.childRect.right)  { Debug.d("Scrollable New right: "+childRight); this.childRect.right = childRight; }
+            if (childTop    > this.childRect.top)    { Debug.d("Scrollable New top: "+childTop); this.childRect.top = childTop; }
+            if (childBottom < this.childRect.bottom) { Debug.d("Scrollable New bottom: "+childBottom); this.childRect.bottom = childBottom; }
+
         }
-        Debug.d("Scrollable childRect: x("+this.childRect.left+","+this.childRect.right+") y("+this.childRect.top+","+this.childRect.bottom+")");
+        Debug.d("Scrollable childRect: x(" + this.childRect.left + "," + this.childRect.right + ") y(" + this.childRect.bottom + "," + this.childRect.top + ")");
+        this.contents.setWidth(this.childRect.getWidth());
+        this.contents.setHeight(this.childRect.getHeight());
+        this.contents.setPosition(this.childRect.getWidth() / 2, this.childRect.getHeight() / 2);
     }
 
     /**
@@ -186,26 +191,24 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
         float newX = currentX;
         float newY = currentY;
         if (this.scroll_lock != SCROLL_VERTICAL) {
-            float newLeft = currentX + dx - (this.getWidth()/2);
-            float newRight = currentX  + dx + (this.getWidth()/2);
-            Debug.d("Checking X bounds for "+newLeft+", "+newRight);
-            if (true || newLeft <= 0 || newRight >= this.getWidth()) {
-                // TODO: enable scroll bounds locking
+            float newLeft  = currentX - (this.contents.getWidth()/2) + dx;
+            float newRight = currentX + (this.contents.getWidth()/2) + dx;
+            //Debug.d("Scrollable Checking X bounds ["+this.childRect.left+", "+this.getWidth()+"] contains ("+newLeft+", "+newRight+")");
+            if (newLeft+this.childRect.left <= 0 && newRight >= this.getWidth()) {
                 newX = currentX + dx;
             }
         }
         if (this.scroll_lock != SCROLL_HORIZONTAL) {
-            float newTop = currentY - dy + (this.getHeight()/2);
-            float newBottom = currentY - dy - (this.getHeight()/2);
-            Debug.d("Checking Y bounds for "+newTop+", "+newBottom);
-            if (true || newTop < this.getHeight() || newBottom > 0) {
-                // TODO: enable scroll bounds locking
+            float newTop    = currentY + (this.contents.getHeight()/2) - dy;
+            float newBottom = currentY - (this.contents.getHeight()/2) - dy;
+            //Debug.d("Scrollable Checking Y bounds ["+this.childRect.bottom+ ", "+this.getHeight()+"] contains ("+newBottom+", "+newTop+")");
+            if (newBottom+this.childRect.bottom <= 0 && newTop-this.contents.getHeight() >= 0) {
                 newY = currentY - dy;
             }
         }
         // Stop at bounds
-        Debug.d("Scrollable newX="+newX);
-        Debug.d("Scrollable newY="+newY);
+        //Debug.d("Scrollable newX="+newX);
+        //Debug.d("Scrollable newY="+newY);
         this.contents.setPosition(newX, newY);
         //Debug.d("this.contents.setPosition("+newX+", "+newY+")");
     }
