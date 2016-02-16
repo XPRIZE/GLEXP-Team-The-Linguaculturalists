@@ -1,20 +1,15 @@
 package com.linguaculturalists.phoenicia;
 
-import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.view.MotionEvent;
 
 import org.andengine.audio.sound.Sound;
 import org.andengine.audio.sound.SoundFactory;
-import org.andengine.audio.sound.SoundManager;
-import org.andengine.engine.camera.Camera;
 import org.andengine.engine.camera.ZoomCamera;
-import org.andengine.engine.camera.hud.HUD;
 import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.Background;
-import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.tmx.TMXLayer;
 import org.andengine.input.touch.TouchEvent;
@@ -22,12 +17,10 @@ import org.andengine.input.touch.detector.PinchZoomDetector;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.ITexture;
-import org.andengine.opengl.texture.TextureManager;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.texture.region.TextureRegionFactory;
-import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.adt.color.Color;
 import org.andengine.extension.tmx.TMXLoader;
 import org.andengine.extension.tmx.TMXTile;
@@ -47,6 +40,7 @@ import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.locale.IntroPage;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
+import com.linguaculturalists.phoenicia.locale.Locale;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.Builder;
@@ -59,11 +53,9 @@ import com.linguaculturalists.phoenicia.models.WordBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
 import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
-import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.LocaleLoader;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.DatabaseAdapter;
-import com.orm.androrm.Filter;
 import com.orm.androrm.Model;
 
 /**
@@ -84,16 +76,14 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public AssetBitmapTexture shellTexture;
     public ITiledTextureRegion shellTiles; /**< Tile regions for building the game shell */
 
-    // To be deprecated
-    //public AssetBitmapTexture lettersTexture;
-    //public ITiledTextureRegion letterTiles;
+    public AssetBitmapTexture inventoryTexture;
+    public ITiledTextureRegion inventoryTiles; /**< Tile regions for the inventory block */
+
+    public AssetBitmapTexture marketTexture;
+    public ITiledTextureRegion marketTiles; /**< Tile regions for the market block */
 
     public Map<Letter, AssetBitmapTexture> letterTextures;
     public Map<Letter, ITiledTextureRegion> letterTiles; /**< Tile regions depicting letters */
-
-    // To be deprecated
-    //public AssetBitmapTexture wordsTexture;
-    //public ITiledTextureRegion wordTiles;
 
     public Map<Word, AssetBitmapTexture> wordTextures;
     public Map<Word, ITiledTextureRegion> wordTiles; /**< Tile regions depicting words */
@@ -279,6 +269,21 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             e.printStackTrace();
             throw e;
         }
+
+        try {
+            inventoryTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.inventoryBlock.texture_src);
+            inventoryTexture.load();
+            inventoryTiles = TextureRegionFactory.extractTiledFromTexture(inventoryTexture, 0, 0, 64 * 8, 64 * 8, 8, 8);
+
+            marketTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.marketBlock.texture_src);
+            marketTexture.load();
+            marketTiles = TextureRegionFactory.extractTiledFromTexture(marketTexture, 0, 0, 64 * 8, 64 * 8, 8, 8);
+
+        } catch (final IOException e) {
+            e.printStackTrace();
+            throw e;
+        }
+
         List<Letter> blockLetters = locale.letters;
         List<Word> blockWords = locale.words;
         SoundFactory.setAssetBasePath("locales/en_us_rural/");
@@ -442,8 +447,95 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.session = GameSession.start(this.locale);
         this.session.save(PhoeniciaContext.context);
         this.current_level = this.session.current_level.get();
+        this.loadMapDefaults();
         this.changeLevel(this.locale.level_map.get(this.current_level));
 
+    }
+
+    private void loadMapDefaults() {
+        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
+        final TMXTile inventoryTile = tmxLayer.getTMXTile(locale.inventoryBlock.mapCol, locale.inventoryBlock.mapRow);
+        int inventoryX = (int)inventoryTile.getTileX() + 32;// tiles are 64px wide and anchors in the center
+        int inventoryY = (int)inventoryTile.getTileY() + 32;// tiles are 64px wide and anchors in the center
+        int inventoryZ = inventoryTile.getTileZ();
+
+        Debug.d("Creating Sprite for Inventory");
+        final PlacedBlockSprite inventorySprite = new PlacedBlockSprite(inventoryX, inventoryY, 0, 0, inventoryTiles, PhoeniciaContext.vboManager);
+        inventorySprite.setZIndex(inventoryZ);
+
+        scene.attachChild(inventorySprite);
+
+        placedSprites[locale.inventoryBlock.mapCol][locale.inventoryBlock.mapRow] = inventorySprite;
+        final PhoeniciaGame phoeniciaGame = this;
+        inventorySprite.setOnClickListener(new PlacedBlockSprite.OnClickListener() {
+            @Override
+            public void onClick(PlacedBlockSprite pPlacedBlockSprite, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                hudManager.showInventory();
+            }
+
+            @Override
+            public void onHold(PlacedBlockSprite pPlacedBlockSprite, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                phoeniciaGame.hudManager.push(new SpriteMoveHUD(phoeniciaGame, inventoryTile, inventorySprite, new SpriteMoveHUD.SpriteMoveHandler() {
+                    @Override
+                    public void onSpriteMoveCanceled(PlacedBlockSprite sprite) {
+                        sprite.setPosition(inventoryTile.getTileX()+32, inventoryTile.getTileY()+32);
+                        sprite.setZIndex(inventoryTile.getTileZ());
+                        phoeniciaGame.scene.sortChildren();
+                    }
+
+                    @Override
+                    public void onSpriteMoveFinished(PlacedBlockSprite sprite, TMXTile newlocation) {
+                        phoeniciaGame.placedSprites[newlocation.getTileColumn()][newlocation.getTileRow()] = sprite;
+                        phoeniciaGame.scene.sortChildren();
+
+                    }
+                }));
+            }
+        });
+        inventorySprite.animate();
+        scene.registerTouchArea(inventorySprite);
+
+        final TMXTile marketTile = tmxLayer.getTMXTile(locale.marketBlock.mapCol, locale.marketBlock.mapRow);
+        int marketX = (int)marketTile.getTileX() + 32;// tiles are 64px wide and anchors in the center
+        int marketY = (int)marketTile.getTileY() + 32;// tiles are 64px wide and anchors in the center
+        int marketZ = marketTile.getTileZ();
+
+        Debug.d("Creating Sprite for market");
+        final PlacedBlockSprite marketSprite = new PlacedBlockSprite(marketX, marketY, 0, 0, marketTiles, PhoeniciaContext.vboManager);
+        marketSprite.setZIndex(marketZ);
+
+        scene.attachChild(marketSprite);
+
+        placedSprites[locale.marketBlock.mapCol][locale.marketBlock.mapRow] = marketSprite;
+        marketSprite.setOnClickListener(new PlacedBlockSprite.OnClickListener() {
+            @Override
+            public void onClick(PlacedBlockSprite pPlacedBlockSprite, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                hudManager.showInventory();
+            }
+
+            @Override
+            public void onHold(PlacedBlockSprite pPlacedBlockSprite, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                phoeniciaGame.hudManager.push(new SpriteMoveHUD(phoeniciaGame, marketTile, marketSprite, new SpriteMoveHUD.SpriteMoveHandler() {
+                    @Override
+                    public void onSpriteMoveCanceled(PlacedBlockSprite sprite) {
+                        sprite.setPosition(marketTile.getTileX()+32, marketTile.getTileY()+32);
+                        sprite.setZIndex(marketTile.getTileZ());
+                        phoeniciaGame.scene.sortChildren();
+                    }
+
+                    @Override
+                    public void onSpriteMoveFinished(PlacedBlockSprite sprite, TMXTile newlocation) {
+                        phoeniciaGame.placedSprites[newlocation.getTileColumn()][newlocation.getTileRow()] = sprite;
+                        phoeniciaGame.scene.sortChildren();
+
+                    }
+                }));
+            }
+        });
+        marketSprite.animate();
+        scene.registerTouchArea(marketSprite);
+
+        scene.sortChildren();
     }
 
     /**

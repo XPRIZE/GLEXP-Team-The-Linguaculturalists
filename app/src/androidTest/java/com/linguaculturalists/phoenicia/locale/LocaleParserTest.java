@@ -2,11 +2,8 @@ package com.linguaculturalists.phoenicia.locale;
 
 import android.test.AndroidTestCase;
 
-import com.linguaculturalists.phoenicia.Locale;
 import com.linguaculturalists.phoenicia.util.LocaleLoader;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
-
-import org.andengine.util.debug.Debug;
 
 import java.io.IOException;
 import java.util.List;

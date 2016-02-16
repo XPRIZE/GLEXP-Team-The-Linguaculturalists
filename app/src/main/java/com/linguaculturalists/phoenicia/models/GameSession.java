@@ -2,7 +2,7 @@ package com.linguaculturalists.phoenicia.models;
 
 import android.content.Context;
 
-import com.linguaculturalists.phoenicia.Locale;
+import com.linguaculturalists.phoenicia.locale.Locale;
 import com.orm.androrm.Filter;
 import com.orm.androrm.Model;
 import com.orm.androrm.QuerySet;

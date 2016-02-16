@@ -1,11 +1,13 @@
 package com.linguaculturalists.phoenicia.util;
 
-import com.linguaculturalists.phoenicia.Locale;
+import com.linguaculturalists.phoenicia.locale.InventoryBlock;
+import com.linguaculturalists.phoenicia.locale.Locale;
 import com.linguaculturalists.phoenicia.locale.CollectLetterReq;
 import com.linguaculturalists.phoenicia.locale.CollectWordReq;
 import com.linguaculturalists.phoenicia.locale.IntroPage;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
+import com.linguaculturalists.phoenicia.locale.MarketBlock;
 import com.linguaculturalists.phoenicia.locale.Requirement;
 import com.linguaculturalists.phoenicia.locale.Word;
 
@@ -24,6 +26,8 @@ public class LocaleParser extends DefaultHandler {
 
     private static final String TAG_LOCALE = "locale";
     private static final String TAG_MAP = "map";
+    private static final String TAG_INVENTORY = "inventory";
+    private static final String TAG_MARKET = "market";
     private static final String TAG_SHELL = "shell";
     private static final String TAG_LETTERS = "letters";
     private static final String TAG_LETTER = "letter";
@@ -83,6 +87,10 @@ public class LocaleParser extends DefaultHandler {
             this.parseMap(attributes);
         } else if (this.inLocale && localName.equals(LocaleParser.TAG_SHELL)) {
             this.parseShell(attributes);
+        } else if (this.inLocale && localName.equals(LocaleParser.TAG_INVENTORY)) {
+            this.parseInventory(attributes);
+        } else if (this.inLocale && localName.equals(LocaleParser.TAG_MARKET)) {
+            this.parseMarket(attributes);
         } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
             if (!this.inLevelDefinition) {
                 this.inLettersList = true;
@@ -145,6 +153,24 @@ public class LocaleParser extends DefaultHandler {
     private void parseShell(Attributes attributes) throws SAXException {
         Debug.v("Parsing locale shell");
         this.locale.shell_src = attributes.getValue("src");
+    }
+
+    private void parseInventory(Attributes attributes) throws SAXException {
+        Debug.v("Parsing locale inventory");
+        this.locale.inventoryBlock = new InventoryBlock();
+        this.locale.inventoryBlock.name = attributes.getValue("name");
+        this.locale.inventoryBlock.texture_src = attributes.getValue("texture");
+        this.locale.inventoryBlock.mapCol = Integer.parseInt(attributes.getValue("col"));
+        this.locale.inventoryBlock.mapRow = Integer.parseInt(attributes.getValue("row"));
+    }
+
+    private void parseMarket(Attributes attributes) throws SAXException {
+        Debug.v("Parsing locale market");
+        this.locale.marketBlock = new MarketBlock();
+        this.locale.marketBlock.name = attributes.getValue("name");
+        this.locale.marketBlock.texture_src = attributes.getValue("texture");
+        this.locale.marketBlock.mapCol = Integer.parseInt(attributes.getValue("col"));
+        this.locale.marketBlock.mapRow = Integer.parseInt(attributes.getValue("row"));
     }
 
     private void parseLetterDefinition(Attributes attributes) throws SAXException {
