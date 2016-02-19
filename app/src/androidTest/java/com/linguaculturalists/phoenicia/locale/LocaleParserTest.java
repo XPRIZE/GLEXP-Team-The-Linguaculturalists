@@ -49,6 +49,24 @@ public class LocaleParserTest extends AndroidTestCase {
         assertEquals("locales/en_us_test/textures/map.tmx", locale.map_src);
     }
 
+    public void testDefaultTiles() {
+        Locale locale = getLocale();
+        assertEquals(2, locale.letters.size());
+        InventoryBlock i = locale.inventoryBlock;
+        assertNotNull(i);
+        assertEquals("InventoryTest", i.name);
+        assertEquals(1, i.mapCol);
+        assertEquals(2, i.mapRow);
+        assertEquals("locales/en_us_test/textures/inventory.png", i.texture_src);
+
+        MarketBlock m = locale.marketBlock;
+        assertNotNull(m);
+        assertEquals("MarketTest", m.name);
+        assertEquals(2, m.mapCol);
+        assertEquals(1, m.mapRow);
+        assertEquals("locales/en_us_test/textures/market.png", m.texture_src);
+    }
+
     public void testLetterDefinitions() {
         Locale locale = getLocale();
         assertEquals(2, locale.letters.size());

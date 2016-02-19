@@ -3,6 +3,7 @@ package com.linguaculturalists.phoenicia.models;
 import android.content.Context;
 
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
+import com.linguaculturalists.phoenicia.components.MapBlockSprite;
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
@@ -35,7 +36,7 @@ import org.andengine.util.modifier.ease.EaseLinear;
 /**
  * Database model representing a Letter tile that has been placed on the map.
  */
-public class LetterTile extends Model implements Builder.BuildStatusUpdateHandler, IOnAreaTouchListener, PlacedBlockSprite.OnClickListener {
+public class LetterTile extends Model implements Builder.BuildStatusUpdateHandler, IOnAreaTouchListener, MapBlockSprite.OnClickListener {
 
     public ForeignKeyField<GameSession> game; /**< reference to the GameSession this tile is a part of */
     public ForeignKeyField<LetterBuilder> builder; /**< reference to the LetterBuilder used by this tile */
@@ -198,7 +199,7 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
      * @param v
      * @param v2
      */
-    public void onClick(PlacedBlockSprite buttonSprite, float v, float v2) {
+    public void onClick(MapBlockSprite buttonSprite, float v, float v2) {
         Debug.d("Clicked block: "+String.valueOf(this.letter.chars));
         final LetterBuilder builder = this.getBuilder(PhoeniciaContext.context);
         if (builder != null) {
@@ -238,7 +239,7 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
         }
     }
 
-    public void onHold(PlacedBlockSprite buttonSprite, float v, float v2) {
+    public void onHold(MapBlockSprite buttonSprite, float v, float v2) {
         final TMXTile tmxTile = phoeniciaGame.getTileAtIso(this.isoX.get(), this.isoY.get());
         if (tmxTile == null) {
             Debug.d("No tile at "+this.isoX.get()+"x"+this.isoY.get());
@@ -246,14 +247,14 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
         }
         phoeniciaGame.hudManager.push(new SpriteMoveHUD(phoeniciaGame, tmxTile, sprite, new SpriteMoveHUD.SpriteMoveHandler() {
             @Override
-            public void onSpriteMoveCanceled(PlacedBlockSprite sprite) {
+            public void onSpriteMoveCanceled(MapBlockSprite sprite) {
                 sprite.setPosition(tmxTile.getTileX()+32, tmxTile.getTileY()+32);
                 sprite.setZIndex(tmxTile.getTileZ());
                 phoeniciaGame.scene.sortChildren();
             }
 
             @Override
-            public void onSpriteMoveFinished(PlacedBlockSprite sprite, TMXTile newlocation) {
+            public void onSpriteMoveFinished(MapBlockSprite sprite, TMXTile newlocation) {
                 isoX.set(newlocation.getTileColumn());
                 isoY.set(newlocation.getTileRow());
                 phoeniciaGame.placedSprites[newlocation.getTileColumn()][newlocation.getTileRow()] = sprite;

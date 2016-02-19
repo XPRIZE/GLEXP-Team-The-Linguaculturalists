@@ -2,6 +2,7 @@ package com.linguaculturalists.phoenicia.ui;
 
 import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
+import com.linguaculturalists.phoenicia.components.MapBlockSprite;
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
@@ -26,14 +27,14 @@ import org.andengine.util.modifier.ease.EaseBackOut;
 public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickDetectorListener {
     private PhoeniciaGame game;
     private Rectangle whiteRect;
-    private PlacedBlockSprite sprite;
+    private MapBlockSprite sprite;
     private TMXTile originalLocation;
     private TMXTile newLocation;
     private SpriteMoveHandler handler;
 
     private ClickDetector clickDetector;
 
-    public SpriteMoveHUD(final PhoeniciaGame game, final TMXTile startLocation, final PlacedBlockSprite sprite, final SpriteMoveHandler handler) {
+    public SpriteMoveHUD(final PhoeniciaGame game, final TMXTile startLocation, final MapBlockSprite sprite, final SpriteMoveHandler handler) {
         super(game.camera);
         this.game = game;
         this.sprite = sprite;
@@ -122,14 +123,14 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
          * The player has decided not to move the sprite
          * @param sprite sprite being moved
          */
-        public void onSpriteMoveCanceled(PlacedBlockSprite sprite);
+        public void onSpriteMoveCanceled(MapBlockSprite sprite);
 
         /**
          * The player confirmed the placement of the sprite
          * @param sprite sprite being moved
          * @param newLocation the new map tile location for the sprite
          */
-        public void onSpriteMoveFinished(PlacedBlockSprite sprite, TMXTile newLocation);
+        public void onSpriteMoveFinished(MapBlockSprite sprite, TMXTile newLocation);
     }
 
     @Override

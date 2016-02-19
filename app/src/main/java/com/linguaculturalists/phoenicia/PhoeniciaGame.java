@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.linguaculturalists.phoenicia.components.MapBlockSprite;
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.locale.IntroPage;
 import com.linguaculturalists.phoenicia.locale.Letter;
@@ -44,6 +45,7 @@ import com.linguaculturalists.phoenicia.locale.Locale;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.Builder;
+import com.linguaculturalists.phoenicia.models.DefaultTile;
 import com.linguaculturalists.phoenicia.models.LetterBuilder;
 import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.Inventory;
@@ -56,6 +58,7 @@ import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
 import com.linguaculturalists.phoenicia.util.LocaleLoader;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.DatabaseAdapter;
+import com.orm.androrm.Filter;
 import com.orm.androrm.Model;
 
 /**
@@ -161,11 +164,12 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         });
         scene.setOnSceneTouchListener(new IOnSceneTouchListener() {
             private boolean pressed = false;
+
             @Override
             public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {
                 mPinchZoomDetector.onTouchEvent(pSceneTouchEvent);
 
-                switch(pSceneTouchEvent.getAction()) {
+                switch (pSceneTouchEvent.getAction()) {
                     case TouchEvent.ACTION_DOWN:
                         this.pressed = true;
                         break;
@@ -179,14 +183,14 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                     case TouchEvent.ACTION_MOVE:
                         this.pressed = false;
                         MotionEvent motion = pSceneTouchEvent.getMotionEvent();
-                        if(motion.getHistorySize() > 0){
-                            for(int i = 1, n = motion.getHistorySize(); i < n; i++){
-                                int calcX = (int) motion.getHistoricalX(i) - (int) motion.getHistoricalX(i-1);
-                                int calcY = (int) motion.getHistoricalY(i) - (int) motion.getHistoricalY(i-1);
+                        if (motion.getHistorySize() > 0) {
+                            for (int i = 1, n = motion.getHistorySize(); i < n; i++) {
+                                int calcX = (int) motion.getHistoricalX(i) - (int) motion.getHistoricalX(i - 1);
+                                int calcY = (int) motion.getHistoricalY(i) - (int) motion.getHistoricalY(i - 1);
                                 //Debug.d("diffX: "+calcX+", diffY: "+calcY);
                                 final float zoom = camera.getZoomFactor();
 
-                                camera.setCenter(camera.getCenterX() - (calcX/zoom), camera.getCenterY() + (calcY/zoom));
+                                camera.setCenter(camera.getCenterX() - (calcX / zoom), camera.getCenterY() + (calcY / zoom));
                             }
                         }
                         return true;
@@ -352,6 +356,28 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             e.printStackTrace();
         }
 
+        Debug.d("Loading inventory tile");
+        try {
+            final Filter inventoryFilter = new Filter();
+            inventoryFilter.is("item_type", "inventory");
+            final DefaultTile inventoryDefaultTile = DefaultTile.objects(PhoeniciaContext.context).filter(inventoryFilter).toList().get(0);
+            inventoryDefaultTile.phoeniciaGame = this;
+            this.createInventorySprite(inventoryDefaultTile);
+        } catch (IndexOutOfBoundsException e) {
+            this.createInventoryTile();
+        }
+
+        Debug.d("Loading market tile");
+        try {
+            final Filter marketFilter = new Filter();
+            marketFilter.is("item_type", "market");
+            final DefaultTile marketDefaultTile = DefaultTile.objects(PhoeniciaContext.context).filter(marketFilter).toList().get(0);
+            marketDefaultTile.phoeniciaGame = this;
+            this.createMarketSprite(marketDefaultTile);
+        } catch (IndexOutOfBoundsException e) {
+            this.createMarketTile();
+        }
+
         Debug.d("Loading letter tiles");
         List<LetterTile> letterTiles = LetterTile.objects(PhoeniciaContext.context).filter(session.filter).toList();
         for (int i = 0; i < letterTiles.size(); i++) {
@@ -409,6 +435,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         List<Class<? extends Model>> models = new ArrayList<Class<? extends Model>>();
         models.add(GameSession.class);
         models.add(InventoryItem.class);
+        models.add(DefaultTile.class);
         models.add(LetterTile.class);
         models.add(WordTile.class);
         models.add(LetterBuilder.class);
@@ -447,55 +474,65 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.session = GameSession.start(this.locale);
         this.session.save(PhoeniciaContext.context);
         this.current_level = this.session.current_level.get();
-        this.loadMapDefaults();
+        this.createInventoryTile();
+        this.createMarketTile();
         this.changeLevel(this.locale.level_map.get(this.current_level));
 
     }
 
-    private void loadMapDefaults() {
+    private void createInventoryTile() {
+        // Create Inventory tile
+        Debug.d("Creating DefaultTile for Inventory");
+        final DefaultTile inventoryDefaultTile = new DefaultTile();
+        inventoryDefaultTile.phoeniciaGame = this;
+        inventoryDefaultTile.item_type.set("inventory");
+        inventoryDefaultTile.game.set(this.session);
+        inventoryDefaultTile.isoX.set(locale.inventoryBlock.mapCol);
+        inventoryDefaultTile.isoY.set(locale.inventoryBlock.mapRow);
+        this.createInventorySprite(inventoryDefaultTile);
+        inventoryDefaultTile.save(PhoeniciaContext.context);
+    }
+
+    private void createInventorySprite(DefaultTile inventoryDefaultTile) {
         final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
-        final TMXTile inventoryTile = tmxLayer.getTMXTile(locale.inventoryBlock.mapCol, locale.inventoryBlock.mapRow);
+
+        final TMXTile inventoryTile = tmxLayer.getTMXTile(inventoryDefaultTile.isoX.get(), inventoryDefaultTile.isoY.get());
+
         int inventoryX = (int)inventoryTile.getTileX() + 32;// tiles are 64px wide and anchors in the center
         int inventoryY = (int)inventoryTile.getTileY() + 32;// tiles are 64px wide and anchors in the center
         int inventoryZ = inventoryTile.getTileZ();
 
         Debug.d("Creating Sprite for Inventory");
-        final PlacedBlockSprite inventorySprite = new PlacedBlockSprite(inventoryX, inventoryY, 0, 0, inventoryTiles, PhoeniciaContext.vboManager);
+        final MapBlockSprite inventorySprite = new MapBlockSprite(inventoryX, inventoryY, 0, inventoryTiles, PhoeniciaContext.vboManager);
         inventorySprite.setZIndex(inventoryZ);
 
         scene.attachChild(inventorySprite);
 
-        placedSprites[locale.inventoryBlock.mapCol][locale.inventoryBlock.mapRow] = inventorySprite;
-        final PhoeniciaGame phoeniciaGame = this;
-        inventorySprite.setOnClickListener(new PlacedBlockSprite.OnClickListener() {
-            @Override
-            public void onClick(PlacedBlockSprite pPlacedBlockSprite, float pTouchAreaLocalX, float pTouchAreaLocalY) {
-                hudManager.showInventory();
-            }
-
-            @Override
-            public void onHold(PlacedBlockSprite pPlacedBlockSprite, float pTouchAreaLocalX, float pTouchAreaLocalY) {
-                phoeniciaGame.hudManager.push(new SpriteMoveHUD(phoeniciaGame, inventoryTile, inventorySprite, new SpriteMoveHUD.SpriteMoveHandler() {
-                    @Override
-                    public void onSpriteMoveCanceled(PlacedBlockSprite sprite) {
-                        sprite.setPosition(inventoryTile.getTileX()+32, inventoryTile.getTileY()+32);
-                        sprite.setZIndex(inventoryTile.getTileZ());
-                        phoeniciaGame.scene.sortChildren();
-                    }
-
-                    @Override
-                    public void onSpriteMoveFinished(PlacedBlockSprite sprite, TMXTile newlocation) {
-                        phoeniciaGame.placedSprites[newlocation.getTileColumn()][newlocation.getTileRow()] = sprite;
-                        phoeniciaGame.scene.sortChildren();
-
-                    }
-                }));
-            }
-        });
+        placedSprites[inventoryDefaultTile.isoX.get()][inventoryDefaultTile.isoY.get()] = inventorySprite;
+        inventorySprite.setOnClickListener(inventoryDefaultTile);
         inventorySprite.animate();
         scene.registerTouchArea(inventorySprite);
 
-        final TMXTile marketTile = tmxLayer.getTMXTile(locale.marketBlock.mapCol, locale.marketBlock.mapRow);
+        inventoryDefaultTile.setSprite(inventorySprite);
+    }
+
+    private void createMarketTile() {
+        // Create Market tile
+        Debug.d("Creating DefaultTile for Market");
+        final DefaultTile marketDefaultTile = new DefaultTile();
+        marketDefaultTile.phoeniciaGame = this;
+        marketDefaultTile.item_type.set("market");
+        marketDefaultTile.game.set(this.session);
+        marketDefaultTile.isoX.set(locale.marketBlock.mapCol);
+        marketDefaultTile.isoY.set(locale.marketBlock.mapRow);
+        this.createMarketSprite(marketDefaultTile);
+        marketDefaultTile.save(PhoeniciaContext.context);
+    }
+
+    private void createMarketSprite(DefaultTile marketDefaultTile) {
+        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
+
+        final TMXTile marketTile = tmxLayer.getTMXTile(marketDefaultTile.isoX.get(), marketDefaultTile.isoY.get());
         int marketX = (int)marketTile.getTileX() + 32;// tiles are 64px wide and anchors in the center
         int marketY = (int)marketTile.getTileY() + 32;// tiles are 64px wide and anchors in the center
         int marketZ = marketTile.getTileZ();
@@ -506,34 +543,12 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         scene.attachChild(marketSprite);
 
-        placedSprites[locale.marketBlock.mapCol][locale.marketBlock.mapRow] = marketSprite;
-        marketSprite.setOnClickListener(new PlacedBlockSprite.OnClickListener() {
-            @Override
-            public void onClick(PlacedBlockSprite pPlacedBlockSprite, float pTouchAreaLocalX, float pTouchAreaLocalY) {
-                hudManager.showInventory();
-            }
-
-            @Override
-            public void onHold(PlacedBlockSprite pPlacedBlockSprite, float pTouchAreaLocalX, float pTouchAreaLocalY) {
-                phoeniciaGame.hudManager.push(new SpriteMoveHUD(phoeniciaGame, marketTile, marketSprite, new SpriteMoveHUD.SpriteMoveHandler() {
-                    @Override
-                    public void onSpriteMoveCanceled(PlacedBlockSprite sprite) {
-                        sprite.setPosition(marketTile.getTileX()+32, marketTile.getTileY()+32);
-                        sprite.setZIndex(marketTile.getTileZ());
-                        phoeniciaGame.scene.sortChildren();
-                    }
-
-                    @Override
-                    public void onSpriteMoveFinished(PlacedBlockSprite sprite, TMXTile newlocation) {
-                        phoeniciaGame.placedSprites[newlocation.getTileColumn()][newlocation.getTileRow()] = sprite;
-                        phoeniciaGame.scene.sortChildren();
-
-                    }
-                }));
-            }
-        });
+        placedSprites[marketDefaultTile.isoX.get()][marketDefaultTile.isoY.get()] = marketSprite;
+        marketSprite.setOnClickListener(marketDefaultTile);
         marketSprite.animate();
         scene.registerTouchArea(marketSprite);
+
+        marketDefaultTile.setSprite(marketSprite);
 
         scene.sortChildren();
     }
@@ -646,13 +661,13 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         if (callback != null) {
             this.hudManager.push(new SpriteMoveHUD(this, tmxTile, sprite, new SpriteMoveHUD.SpriteMoveHandler() {
                 @Override
-                public void onSpriteMoveCanceled(PlacedBlockSprite sprite) {
+                public void onSpriteMoveCanceled(MapBlockSprite pSprite) {
                     scene.detachChild(sprite);
                     callback.onLetterSpriteCreationFailed(tile);
                 }
 
                 @Override
-                public void onSpriteMoveFinished(PlacedBlockSprite sprite, TMXTile newlocation) {
+                public void onSpriteMoveFinished(MapBlockSprite pSprite, TMXTile newlocation) {
                     tile.isoX.set(newlocation.getTileColumn());
                     tile.isoY.set(newlocation.getTileRow());
                     placedSprites[newlocation.getTileColumn()][newlocation.getTileRow()] = sprite;
@@ -727,13 +742,13 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         if (callback != null) {
             this.hudManager.push(new SpriteMoveHUD(this, tmxTile, sprite, new SpriteMoveHUD.SpriteMoveHandler() {
                 @Override
-                public void onSpriteMoveCanceled(PlacedBlockSprite sprite) {
+                public void onSpriteMoveCanceled(MapBlockSprite sprite) {
                     scene.detachChild(sprite);
                     callback.onWordSpriteCreationFailed(tile);
                 }
 
                 @Override
-                public void onSpriteMoveFinished(PlacedBlockSprite sprite, TMXTile newlocation) {
+                public void onSpriteMoveFinished(MapBlockSprite pSprite, TMXTile newlocation) {
                     tile.isoX.set(newlocation.getTileColumn());
                     tile.isoY.set(newlocation.getTileRow());
                     placedSprites[newlocation.getTileColumn()][newlocation.getTileRow()] = sprite;

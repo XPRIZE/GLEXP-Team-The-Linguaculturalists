@@ -23,6 +23,8 @@ import org.andengine.util.modifier.IModifier;
 import org.andengine.util.modifier.ease.EaseBackOut;
 import org.andengine.util.modifier.ease.EaseLinear;
 
+import java.util.Map;
+
 /**
  * An AnimatedSprite that represents a block on the game map.
  * PlacedBlockSprites maintain their own build progress and images tiles, and will update the set
@@ -31,18 +33,12 @@ import org.andengine.util.modifier.ease.EaseLinear;
  * PlacedBlockSprites assume 4 sets of animation tiles, which are used for 0-33%, 34-66%, 67-100%
  * and 100% onward.
  */
-public class PlacedBlockSprite extends AnimatedSprite implements ClickDetector.IClickDetectorListener, HoldDetector.IHoldDetectorListener {
+public class PlacedBlockSprite extends MapBlockSprite {
 
-    private long[] mFrameDurations = {500, 500, 500, 500};
-    private int mTileId;
     private int mProgress;
     private int mTime;
-    private int startTile;
     private boolean complete;
 
-    private OnClickListener mOnClickListener;
-    private ClickDetector clickDetector;
-    private HoldDetector holdDetector;
     /**
      * Create a new PlacedBlockSprite.
      * @param pX the X coordinate of the scene to place this PlacedBlockSprite
@@ -52,17 +48,10 @@ public class PlacedBlockSprite extends AnimatedSprite implements ClickDetector.I
      * @param pVertexBufferObjectManager the game's VertexBufferObjectManager
      */
     public PlacedBlockSprite(final float pX, final float pY, final int pTime, final int pTileId, final ITiledTextureRegion pTiledTextureRegion, final VertexBufferObjectManager pVertexBufferObjectManager) {
-        super(pX, pY, pTiledTextureRegion, pVertexBufferObjectManager);
-        this.mTileId = pTileId;
-        this.startTile = pTileId;
-        this.setCurrentTileIndex(pTileId);
+        super(pX, pY, pTileId, pTiledTextureRegion, pVertexBufferObjectManager);
         this.mTime = pTime;
         this.mProgress = 0;
         this.complete = false;
-
-        this.clickDetector = new ClickDetector(this);
-        this.holdDetector = new HoldDetector(this);
-        this.holdDetector.setTriggerHoldMinimumMilliseconds(1000);
     }
 
     /**
@@ -107,56 +96,6 @@ public class PlacedBlockSprite extends AnimatedSprite implements ClickDetector.I
      */
     public int getProgress() {
         return this.mProgress;
-    }
-
-    /**
-     * Start the animation of this sprite.
-     * AnimatedSprites do not begin their animation sequence at the time they are created, they must
-     * be started by other code.
-     */
-    public void animate() {
-        this.animate(this.mFrameDurations, this.startTile, this.startTile + mFrameDurations.length - 1, true);
-    }
-
-    /**
-     * Add a Click listener for this sprite.
-     * @param pOnClickListener listener to be called when this sprite is clicked
-     */
-    public void setOnClickListener(final OnClickListener pOnClickListener) {
-        this.mOnClickListener = pOnClickListener;
-    }
-
-    @Override
-    public void onClick(ClickDetector clickDetector, int pointerId, float touchX, float touchY) {
-        if (this.mOnClickListener != null) {
-            this.mOnClickListener.onClick(this, touchX, touchY);
-        }
-    }
-
-    @Override
-    public void onHold(HoldDetector holdDetector, long holdTime, int pointerId, float touchX, float touchY) {
-        Debug.d("Holding");
-        return;
-    }
-
-    @Override
-    public void onHoldFinished(HoldDetector holdDetector, long holdTime, int pointerId, float touchX, float touchY) {
-        Debug.d("Hold finished");
-        return;
-    }
-
-    @Override
-    public void onHoldStarted(HoldDetector holdDetector, int pointerId, float touchX, float touchY) {
-        Debug.d("Hold started");
-        if (this.mOnClickListener != null) {
-            this.mOnClickListener.onHold(this, touchX, touchY);
-        }
-    }
-
-    @Override
-    public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-        boolean handled = this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
-        return this.holdDetector.onManagedTouchEvent(pSceneTouchEvent) || handled;
     }
 
     /**
