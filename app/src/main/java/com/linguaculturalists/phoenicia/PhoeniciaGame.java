@@ -1,5 +1,6 @@
 package com.linguaculturalists.phoenicia;
 
+import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.view.MotionEvent;
 
@@ -12,11 +13,14 @@ import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.tmx.TMXLayer;
+import org.andengine.extension.tmx.TMXProperties;
+import org.andengine.extension.tmx.TMXTileProperty;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.PinchZoomDetector;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.ITexture;
+import org.andengine.opengl.texture.TextureManager;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
@@ -92,6 +96,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public Map<Word, ITiledTextureRegion> wordTiles; /**< Tile regions depicting words */
 
     public Sprite[][] placedSprites; /**< active map tiles arranged according to the ISO map grid */
+    public String[][] mapRestrictions; /**< map tile class types arranged according to the ISO map grid */
+    public Map<Integer, String> mapTileClass;
     private Letter placeLetter;
     private Word placeWord;
 
@@ -248,9 +254,36 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             final TMXLoader tmxLoader = new TMXLoader(PhoeniciaContext.assetManager, PhoeniciaContext.textureManager, TextureOptions.BILINEAR_PREMULTIPLYALPHA, PhoeniciaContext.vboManager);
             this.mTMXTiledMap = tmxLoader.loadFromAsset(this.locale.map_src);
 
+            // Initiate array for holding tile type restrictions
+            mapTileClass = new HashMap<Integer, String>();
+            mapRestrictions = new String[this.mTMXTiledMap.getTileColumns()][this.mTMXTiledMap.getTileRows()];
+
             // Add each layer to the scene
             for (TMXLayer tmxLayer : this.mTMXTiledMap.getTMXLayers()){
                 scene.attachChild(tmxLayer);
+
+                // Check tiles in this layer for map restrictions
+                TMXTile[][] tiles = tmxLayer.getTMXTiles();
+                for (int r = 0; r < this.mTMXTiledMap.getTileRows(); r++) {
+                    for (int c = 0; c < this.mTMXTiledMap.getTileColumns(); c++) {
+                        TMXTile tile = tiles[r][c];
+                        if (tile == null) continue;
+                        if (!mapTileClass.containsKey(tile.getGlobalTileID())) {
+                            try {
+                                TMXProperties<TMXTileProperty> props = this.mTMXTiledMap.getTMXTileProperties(tile.getGlobalTileID());
+                                if (props == null) continue;
+                                for (TMXTileProperty prop : props) {
+                                    if (prop.getName().equals("class")) {
+                                        mapTileClass.put(tile.getGlobalTileID(), prop.getValue());
+                                    }
+                                }
+                            } catch (IllegalArgumentException e) {
+                                // Do nothing, it just means there are no properties for this tile
+                            }
+                        }
+                        mapRestrictions[r][c] = mapTileClass.get(tile.getGlobalTileID());
+                    }
+                }
             }
 
             // Initiate array for holding references to block sprites on the map
@@ -494,7 +527,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     }
 
     private void createInventorySprite(DefaultTile inventoryDefaultTile) {
-        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
+        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(0);
 
         final TMXTile inventoryTile = tmxLayer.getTMXTile(inventoryDefaultTile.isoX.get(), inventoryDefaultTile.isoY.get());
 
