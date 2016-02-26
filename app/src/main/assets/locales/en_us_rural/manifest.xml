@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <locale name="en_us_rural" lang="en_us" display_name="US English, Rural Setting">
     <shell src="locales/en_us_rural/textures/gameui.png" />
-    <map src="locales/en_us_rural/textures/map.tmx" />
+    <map src="locales/en_us_rural/map.tmx" />
 
     <!-- default blocks -->
-    <inventory name="Barn" col="17" row="23" texture="locales/en_us_rural/textures/inventory.png" />
-    <market name="Market" col="20" row="20" texture="locales/en_us_rural/textures/market.png" />
+    <inventory name="Barn" col="37" row="43" texture="locales/en_us_rural/textures/inventory.png" />
+    <market name="Market" col="41" row="41" texture="locales/en_us_rural/textures/market.png" />
 
     <letters>
         <letter name="a" buy="0"  sell="1"  points="1" time="10" texture="locales/en_us_rural/textures/letters/a.png" sound="sounds/a-name.ogg" phoneme="sounds/a-phoneme.ogg">a</letter>

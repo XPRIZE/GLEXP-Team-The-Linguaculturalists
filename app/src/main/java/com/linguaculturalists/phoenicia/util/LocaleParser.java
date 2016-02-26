@@ -177,6 +177,7 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale letter");
         this.currentLetter = new Letter();
         this.currentLetter.name = attributes.getValue("name");
+        this.currentLetter.restriction = attributes.getValue("restriction");
         this.currentLetter.sound = attributes.getValue("sound");
         this.currentLetter.phoneme = attributes.getValue("phoneme");
         this.currentLetter.time = Integer.parseInt(attributes.getValue("time"));
@@ -190,6 +191,7 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale word");
         this.currentWord = new Word();
         this.currentWord.name = attributes.getValue("name");
+        this.currentWord.restriction = attributes.getValue("restriction");
         this.currentWord.sound = attributes.getValue("sound");
         this.currentWord.construct = Integer.parseInt(attributes.getValue("construct"));
         this.currentWord.time = Integer.parseInt(attributes.getValue("time"));

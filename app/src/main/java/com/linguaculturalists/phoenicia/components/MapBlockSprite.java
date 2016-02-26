@@ -31,6 +31,7 @@ public class MapBlockSprite extends AnimatedSprite implements ClickDetector.ICli
     protected long[] mFrameDurations = {500, 500, 500, 500};
     protected int mTileId;
     protected int startTile;
+    protected String restriction;
 
     protected OnClickListener mOnClickListener;
     protected ClickDetector clickDetector;
@@ -55,6 +56,9 @@ public class MapBlockSprite extends AnimatedSprite implements ClickDetector.ICli
         this.holdDetector.setTriggerHoldMinimumMilliseconds(1000);
     }
 
+    public String getRestriction() {
+        return this.restriction;
+    }
     /**
      * Start the animation of this sprite.
      * AnimatedSprites do not begin their animation sequence at the time they are created, they must

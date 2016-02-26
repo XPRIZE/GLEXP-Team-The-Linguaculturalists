@@ -12,6 +12,8 @@ import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.tmx.TMXLayer;
+import org.andengine.extension.tmx.TMXProperties;
+import org.andengine.extension.tmx.TMXTileProperty;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.PinchZoomDetector;
 import org.andengine.opengl.font.Font;
@@ -65,9 +67,19 @@ import com.orm.androrm.Model;
  * The main class for managing a game.
  */
 public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateListener, Bank.BankUpdateListener {
+    public static final int LETTER_TEXTURE_COLS = 4;
+    public static final int LETTER_TEXTURE_ROWS = 6;
+    public static final int LETTER_TILE_WIDTH = 64;
+    public static final int LETTER_TILE_HEIGHT = 64;
+    public static final int WORD_TEXTURE_COLS = 4;
+    public static final int WORD_TEXTURE_ROWS = 6;
+    public static final int WORD_TILE_WIDTH = 64;
+    public static final int WORD_TILE_HEIGHT = 64;
     public Locale locale; /**< the locale used by the game session */
     public Scene scene;
     public ZoomCamera camera;
+    private float startCenterX;
+    private float startCenterY;
     private GameActivity activity;
 
     private float mPinchZoomStartedCameraZoomFactor;
@@ -92,6 +104,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public Map<Word, ITiledTextureRegion> wordTiles; /**< Tile regions depicting words */
 
     public Sprite[][] placedSprites; /**< active map tiles arranged according to the ISO map grid */
+    public String[][] mapRestrictions; /**< map tile class types arranged according to the ISO map grid */
+    public Map<Integer, String> mapTileClass;
     private Letter placeLetter;
     private Word placeWord;
 
@@ -248,9 +262,37 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             final TMXLoader tmxLoader = new TMXLoader(PhoeniciaContext.assetManager, PhoeniciaContext.textureManager, TextureOptions.BILINEAR_PREMULTIPLYALPHA, PhoeniciaContext.vboManager);
             this.mTMXTiledMap = tmxLoader.loadFromAsset(this.locale.map_src);
 
+            // Initiate array for holding tile type restrictions
+            mapTileClass = new HashMap<Integer, String>();
+            mapRestrictions = new String[this.mTMXTiledMap.getTileColumns()][this.mTMXTiledMap.getTileRows()];
+
             // Add each layer to the scene
             for (TMXLayer tmxLayer : this.mTMXTiledMap.getTMXLayers()){
                 scene.attachChild(tmxLayer);
+
+                // Check tiles in this layer for map restrictions
+                TMXTile[][] tiles = tmxLayer.getTMXTiles();
+                for (int r = 0; r < this.mTMXTiledMap.getTileRows(); r++) {
+                    for (int c = 0; c < this.mTMXTiledMap.getTileColumns(); c++) {
+                        TMXTile tile = tiles[r][c];
+                        if (tile == null) continue;
+                        if (!mapTileClass.containsKey(tile.getGlobalTileID())) {
+                            try {
+                                TMXProperties<TMXTileProperty> props = this.mTMXTiledMap.getTMXTileProperties(tile.getGlobalTileID());
+                                if (props == null) continue;
+                                for (TMXTileProperty prop : props) {
+                                    if (prop.getName().equals("class")) {
+                                        Debug.d("Found map restriction '"+prop.getValue()+"' at "+r+"x"+c);
+                                        mapTileClass.put(tile.getGlobalTileID(), prop.getValue());
+                                    }
+                                }
+                            } catch (IllegalArgumentException e) {
+                                // Do nothing, it just means there are no properties for this tile
+                            }
+                        }
+                        mapRestrictions[r][c] = mapTileClass.get(tile.getGlobalTileID());
+                    }
+                }
             }
 
             // Initiate array for holding references to block sprites on the map
@@ -299,7 +341,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 final AssetBitmapTexture letterTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, letter.texture_src);
                 letterTexture.load();
                 this.letterTextures.put(letter, letterTexture);
-                this.letterTiles.put(letter, TextureRegionFactory.extractTiledFromTexture(letterTexture, 0, 0, 64 * 4, 64 * 5, 4, 5));
+                this.letterTiles.put(letter, TextureRegionFactory.extractTiledFromTexture(letterTexture, 0, 0, LETTER_TILE_WIDTH * LETTER_TEXTURE_COLS, LETTER_TILE_HEIGHT * LETTER_TEXTURE_ROWS, LETTER_TEXTURE_COLS, LETTER_TEXTURE_ROWS));
             }
 
             // Load word assets
@@ -309,7 +351,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 final AssetBitmapTexture wordTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, word.texture_src);
                 wordTexture.load();
                 this.wordTextures.put(word, wordTexture);
-                this.wordTiles.put(word, TextureRegionFactory.extractTiledFromTexture(wordTexture, 0, 0, 64 * 4, 64 * 5, 4, 5));
+                this.wordTiles.put(word, TextureRegionFactory.extractTiledFromTexture(wordTexture, 0, 0, WORD_TILE_WIDTH * WORD_TEXTURE_COLS, WORD_TILE_HEIGHT * WORD_TEXTURE_ROWS, WORD_TEXTURE_COLS, WORD_TEXTURE_ROWS));
             }
 
         } catch (final IOException e)
@@ -363,6 +405,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             final DefaultTile inventoryDefaultTile = DefaultTile.objects(PhoeniciaContext.context).filter(inventoryFilter).toList().get(0);
             inventoryDefaultTile.phoeniciaGame = this;
             this.createInventorySprite(inventoryDefaultTile);
+            this.startCenterX = inventoryDefaultTile.sprite.getX();
+            this.startCenterY = inventoryDefaultTile.sprite.getY();
         } catch (IndexOutOfBoundsException e) {
             this.createInventoryTile();
         }
@@ -494,7 +538,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     }
 
     private void createInventorySprite(DefaultTile inventoryDefaultTile) {
-        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
+        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(0);
 
         final TMXTile inventoryTile = tmxLayer.getTMXTile(inventoryDefaultTile.isoX.get(), inventoryDefaultTile.isoY.get());
 
@@ -530,7 +574,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     }
 
     private void createMarketSprite(DefaultTile marketDefaultTile) {
-        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
+        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(0);
 
         final TMXTile marketTile = tmxLayer.getTMXTile(marketDefaultTile.isoX.get(), marketDefaultTile.isoY.get());
         int marketX = (int)marketTile.getTileX() + 32;// tiles are 64px wide and anchors in the center
@@ -558,7 +602,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      */
     public void start() {
         this.session.update();
-        this.camera.setCenter(50, -500);
+        this.camera.setCenter(this.startCenterX, this.startCenterY);
         this.camera.setZoomFactor(2.0f);
         this.camera.setHUD(this.hudManager);
         this.hudManager.showDefault();
@@ -633,7 +677,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      * @param callback handler to inform the calling code if the user completes or cancels placement
      */
     public void createLetterSprite(final LetterTile tile, final CreateLetterSpriteCallback callback) {
-        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
+        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(0);
         final TMXTile tmxTile = tmxLayer.getTMXTile(tile.isoX.get(), tile.isoY.get());
         if (tmxTile == null) {
             Debug.d("Can't place blocks outside of map");
@@ -644,13 +688,13 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         int tileY = (int)tmxTile.getTileY() + 32;// tiles are 64px wide and anchors in the center
         int tileZ = tmxTile.getTileZ();
 
-        if (placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] != null) {
+        if (placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] != null && callback == null) {
             Debug.d("Can't place blocks over existing blocks");
             return;
         }
 
         Debug.d("Creating LetterSprite for "+tile.letter.name+" at "+tile+"x"+tileY);
-        final PlacedBlockSprite sprite = new PlacedBlockSprite(tileX, tileY, tile.letter.time, 4, letterTiles.get(tile.letter), PhoeniciaContext.vboManager);
+        final PlacedBlockSprite sprite = new PlacedBlockSprite(tileX, tileY, tile.letter.time, 8, letterTiles.get(tile.letter), PhoeniciaContext.vboManager);
         sprite.setZIndex(tileZ);
 
         final LetterBuilder builder = tile.getBuilder(PhoeniciaContext.context);
@@ -659,7 +703,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         scene.sortChildren();
 
         if (callback != null) {
-            this.hudManager.push(new SpriteMoveHUD(this, tmxTile, sprite, new SpriteMoveHUD.SpriteMoveHandler() {
+            this.hudManager.push(new SpriteMoveHUD(this, tmxTile, sprite, tile.letter.restriction, new SpriteMoveHUD.SpriteMoveHandler() {
                 @Override
                 public void onSpriteMoveCanceled(MapBlockSprite pSprite) {
                     scene.detachChild(sprite);
@@ -714,7 +758,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      * @param callback handler to inform the calling code if the user completes or cancels placement
      */
     public void createWordSprite(final WordTile tile, final CreateWordSpriteCallback callback) {
-        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
+        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(0);
         final TMXTile tmxTile = tmxLayer.getTMXTile(tile.isoX.get(), tile.isoY.get());
         if (tmxTile == null) {
             Debug.d("Can't place blocks outside of map");
@@ -725,22 +769,21 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         int tileY = (int)tmxTile.getTileY() + 32;// tiles are 64px wide and anchors in the center
         int tileZ = tmxTile.getTileZ();
 
-        if (placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] != null) {
+        if (placedSprites[tmxTile.getTileColumn()][tmxTile.getTileRow()] != null && callback == null) {
             Debug.d("Can't place blocks over existing blocks");
             return;
         }
 
-        Debug.d("Creating WordSprite for "+tile.word.name+" at "+tile+"x"+tileY);
-        final PlacedBlockSprite sprite = new PlacedBlockSprite(tileX, tileY, tile.word.construct, 4, wordTiles.get(tile.word), PhoeniciaContext.vboManager);
+        Debug.d("Creating WordSprite for " + tile.word.name + " at " +tile+"x"+tileY);
+        final PlacedBlockSprite sprite = new PlacedBlockSprite(tileX, tileY, tile.word.construct, 8, wordTiles.get(tile.word), PhoeniciaContext.vboManager);
         sprite.setZIndex(tileZ);
 
         final WordBuilder builder = tile.getBuilder(PhoeniciaContext.context);
 
-        scene.attachChild(sprite);
         scene.sortChildren();
 
         if (callback != null) {
-            this.hudManager.push(new SpriteMoveHUD(this, tmxTile, sprite, new SpriteMoveHUD.SpriteMoveHandler() {
+            this.hudManager.push(new SpriteMoveHUD(this, tmxTile, sprite, tile.word.restriction, new SpriteMoveHUD.SpriteMoveHandler() {
                 @Override
                 public void onSpriteMoveCanceled(MapBlockSprite sprite) {
                     scene.detachChild(sprite);
@@ -788,12 +831,12 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      * @return the associated map tile under the given coordinates, or null if none is found
      */
     public TMXTile getTileAt(float x, float y) {
-        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
-        return tmxLayer.getTMXTileAt(x, y-32);
+        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(0);
+        return tmxLayer.getTMXTileAt(x, y);
     }
 
     public TMXTile getTileAtIso(int isoX, int isoY) {
-        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(1);
+        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(0);
         return tmxLayer.getTMXTile(isoX, isoY);
     }
 
