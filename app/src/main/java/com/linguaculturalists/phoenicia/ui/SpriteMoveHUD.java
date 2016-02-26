@@ -28,16 +28,21 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
     private PhoeniciaGame game;
     private Rectangle whiteRect;
     private MapBlockSprite sprite;
+    private int originalTileIndex;
+    private String restriction;
     private TMXTile originalLocation;
     private TMXTile newLocation;
     private SpriteMoveHandler handler;
 
+    private ButtonSprite cancelBlock;
+    private ButtonSprite confirmBlock;
     private ClickDetector clickDetector;
 
-    public SpriteMoveHUD(final PhoeniciaGame game, final TMXTile startLocation, final MapBlockSprite sprite, final SpriteMoveHandler handler) {
+    public SpriteMoveHUD(final PhoeniciaGame game, final TMXTile startLocation, final MapBlockSprite sprite, final String restriction, final SpriteMoveHandler handler) {
         super(game.camera);
         this.game = game;
         this.sprite = sprite;
+        this.restriction = restriction;
         this.originalLocation = startLocation;
         Debug.d("Start sprite Z: "+this.sprite.getZIndex());
         this.newLocation = startLocation;
@@ -54,8 +59,8 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
         final SpriteMoveHUD hud = this;
 
         ITextureRegion cancelRegion = game.shellTiles.getTextureRegion(7);
-        ButtonSprite cancelBlock = new ButtonSprite((whiteRect.getWidth()/2)-64, 48, cancelRegion, PhoeniciaContext.vboManager);
-        cancelBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
+        this.cancelBlock = new ButtonSprite((whiteRect.getWidth()/2)-64, 48, cancelRegion, PhoeniciaContext.vboManager);
+        this.cancelBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
                 sprite.unregisterEntityModifier(fadeModifier);
@@ -73,8 +78,8 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
         whiteRect.attachChild(cancelBlock);
 
         ITextureRegion confirmRegion = game.shellTiles.getTextureRegion(6);
-        ButtonSprite confirmBlock = new ButtonSprite((whiteRect.getWidth()/2)+64, 48, confirmRegion, PhoeniciaContext.vboManager);
-        confirmBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
+        this.confirmBlock = new ButtonSprite((whiteRect.getWidth()/2)+64, 48, confirmRegion, PhoeniciaContext.vboManager);
+        this.confirmBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
                 sprite.unregisterEntityModifier(fadeModifier);
@@ -97,6 +102,10 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
      */
     @Override
     public void show() {
+        this.originalTileIndex = this.sprite.getCurrentTileIndex();
+        this.sprite.stopAnimation();
+        this.sprite.setCurrentTileIndex(4);
+        Debug.d("Sprite placement restriction: "+this.restriction);
         whiteRect.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
     }
 
@@ -107,6 +116,8 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
     @Override
     public void close() {
         this.sprite.clearEntityModifiers();
+        this.sprite.setCurrentTileIndex(this.originalTileIndex);
+        this.sprite.animate();
         sprite.setAlpha(1.0f);
         if (this.handler != null) {
             this.sprite.setZIndex(this.originalLocation.getTileZ());
@@ -137,18 +148,32 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
     public void onClick(ClickDetector clickDetector, int pointerId, float sceneX, float sceneY) {
         TMXTile mapTile = game.getTileAt(sceneX, sceneY);
         if (mapTile != null) {
-            this.sprite.setPosition(mapTile.getTileX() + 32, mapTile.getTileY() + 32);// Map tiles are offset by 32px
+            final String tileRestriction = this.game.mapRestrictions[mapTile.getTileRow()][mapTile.getTileColumn()];
+
+            if (this.game.placedSprites[mapTile.getTileColumn()][mapTile.getTileRow()] != null &&
+                    this.game.placedSprites[mapTile.getTileColumn()][mapTile.getTileRow()] != this.sprite) {
+                this.sprite.setCurrentTileIndex(5);
+                this.confirmBlock.setVisible(false);
+            } else if (tileRestriction != null && (this.restriction == null || !this.restriction.equals(tileRestriction))) {
+                Debug.d("Map tile class: " + tileRestriction);
+                this.sprite.setCurrentTileIndex(5);
+                this.confirmBlock.setVisible(false);
+            } else {
+                this.sprite.setCurrentTileIndex(4);
+                this.confirmBlock.setVisible(true);
+            }
+            this.sprite.setPosition(mapTile.getTileX() + 32, mapTile.getTileY() + 32);// Map tiles are anchor bottom-left, but scene is anchor-center
             this.sprite.setZIndex(mapTile.getTileZ()+1);
             this.game.scene.sortChildren();
             Debug.d("New sprite Z: " + this.sprite.getZIndex());
             this.newLocation = mapTile;
+        } else {
+            Debug.d("No map tile");
         }
     }
 
     @Override
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
-        Debug.d("SpriteMoveHUD touched at " + pSceneTouchEvent.getX() + "x" + pSceneTouchEvent.getY());
-
         final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
         if (handled) return true;
 

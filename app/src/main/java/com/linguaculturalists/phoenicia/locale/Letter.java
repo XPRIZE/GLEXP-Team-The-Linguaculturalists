@@ -5,6 +5,7 @@ package com.linguaculturalists.phoenicia.locale;
 */
 public class Letter {
     public String name; /**< reference name for this letter (can be different from the letter character itself */
+    public String restriction; /**< tile class this letter can be placed on */
     public int time; /**< time (in seconds) it takes to build this letter */
     public final int tile = 4; /**< start tile index for a PlacedBlockSprite for this letter */
     public final int sprite = 0; /**< start tile index for a LetterSprite for this letter */

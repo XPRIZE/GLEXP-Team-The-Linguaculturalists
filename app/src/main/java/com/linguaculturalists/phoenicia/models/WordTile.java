@@ -239,7 +239,7 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
             Debug.d("No tile at "+this.isoX.get()+"x"+this.isoY.get());
             return;
         }
-        phoeniciaGame.hudManager.push(new SpriteMoveHUD(phoeniciaGame, tmxTile, sprite, new SpriteMoveHUD.SpriteMoveHandler() {
+        phoeniciaGame.hudManager.push(new SpriteMoveHUD(phoeniciaGame, tmxTile, sprite, this.word.restriction, new SpriteMoveHUD.SpriteMoveHandler() {
             @Override
             public void onSpriteMoveCanceled(MapBlockSprite sprite) {
                 sprite.setPosition(tmxTile.getTileX()+32, tmxTile.getTileY()+32);
