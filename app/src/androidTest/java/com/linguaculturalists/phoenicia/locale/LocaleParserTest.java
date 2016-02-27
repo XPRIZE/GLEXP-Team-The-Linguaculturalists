@@ -2,7 +2,6 @@ package com.linguaculturalists.phoenicia.locale;
 
 import android.test.AndroidTestCase;
 
-import com.linguaculturalists.phoenicia.util.LocaleLoader;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import java.io.IOException;
@@ -80,6 +79,10 @@ public class LocaleParserTest extends AndroidTestCase {
         assertEquals("locales/en_us_test/textures/letters/a.png", a.texture_src);
         assertEquals("sounds/a.ogg", a.sound);
         assertEquals("phonemes/a.ogg", a.phoneme);
+
+        Letter b = locale.letter_map.get("b");
+        assertNotNull(b);
+        assertEquals("test", b.restriction);
     }
 
     public void testWordDefinitions() {
@@ -95,6 +98,10 @@ public class LocaleParserTest extends AndroidTestCase {
         assertEquals(100, ab.points);
         assertEquals("locales/en_us_test/textures/words/ab.png", ab.texture_src);
         assertEquals("sounds/ab.ogg", ab.sound);
+
+        Word ba = locale.word_map.get("ba");
+        assertNotNull(ba);
+        assertEquals("test", ba.restriction);
     }
 
     public void testLevelDefinitions() {
@@ -117,6 +124,7 @@ public class LocaleParserTest extends AndroidTestCase {
         IntroPage page2 = test1.intro.get(1);
         assertEquals("Test level 1 intro page 2", page2.text);
         assertEquals("sounds/intro1p2.ogg", page2.sound);
+        assertEquals("textures/intro1p2.png", page2.texture_src);
     }
 
     public void testLevelLetters() {

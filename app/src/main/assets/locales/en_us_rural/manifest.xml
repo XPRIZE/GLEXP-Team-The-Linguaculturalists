@@ -44,7 +44,7 @@
         <level name="1">
             <intro>
                 <page sound="sounds/intro1p1.ogg">Welcome to Phoenicia!</page>
-                <page sound="sounds/intro1p2.ogg">Use the Letter images at the bottom of your screen to start planting with the letter 'A'</page>
+                <page sound="sounds/intro1p2.ogg" texture="locales/en_us_rural/textures/levels/intro1p2.png">Use the Letter images at the bottom of your screen to start planting with the letter 'A'</page>
             </intro>
             <letters>a</letters>
             <help>
@@ -73,7 +73,7 @@
         <level name="3">
             <intro>
                 <page sound="sounds/intro3p1.ogg">Now you're getting it! Lets grow some 'C's and you'll have enough letters to start building something</page>
-                <page sound="sounds/intro3p2.ogg">Use the Word images to build a 'cat' factory</page>
+                <page sound="sounds/intro3p2.ogg" texture="locales/en_us_rural/textures/levels/intro3p2.png">Use the Word images to build a 'cat' factory</page>
             </intro>
             <letters>a,t,c</letters>
             <help>a,t,c</help>

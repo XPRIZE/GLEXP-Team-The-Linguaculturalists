@@ -57,7 +57,7 @@ import com.linguaculturalists.phoenicia.models.WordBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
 import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
-import com.linguaculturalists.phoenicia.util.LocaleLoader;
+import com.linguaculturalists.phoenicia.locale.LocaleLoader;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.DatabaseAdapter;
 import com.orm.androrm.Filter;

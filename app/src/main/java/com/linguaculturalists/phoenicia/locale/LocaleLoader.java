@@ -1,6 +1,4 @@
-package com.linguaculturalists.phoenicia.util;
-
-import com.linguaculturalists.phoenicia.locale.Locale;
+package com.linguaculturalists.phoenicia.locale;
 
 import org.andengine.util.debug.Debug;
 import org.xml.sax.InputSource;

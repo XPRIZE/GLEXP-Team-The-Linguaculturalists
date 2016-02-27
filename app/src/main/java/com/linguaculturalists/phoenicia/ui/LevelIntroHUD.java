@@ -21,6 +21,7 @@ import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.CameraScene;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
+import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.text.AutoWrap;
 import org.andengine.entity.text.Text;
@@ -29,8 +30,12 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
+import org.andengine.opengl.texture.Texture;
 import org.andengine.opengl.texture.TextureOptions;
+import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.ITiledTextureRegion;
+import org.andengine.opengl.texture.region.TextureRegionFactory;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
@@ -50,6 +55,7 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
     private Level level;
     private int current_page;
     private Font introPageFont;
+    private ITiledTextureRegion[] introPageImages;
 
     private ClickDetector clickDetector;
 
@@ -77,6 +83,19 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
         this.registerTouchArea(textPanel.contents);
         //this.attachChild(textPanel);
 
+        this.introPageImages = new ITiledTextureRegion[level.intro.size()];
+        for (int i = 0; i < level.intro.size(); i++) {
+            IntroPage page = level.intro.get(i);
+            if (page.texture_src != null && page.texture_src != "") {
+                try {
+                    final Texture imageTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, page.texture_src);
+                    imageTexture.load();
+                    this.introPageImages[i] = TextureRegionFactory.extractTiledFromTexture(imageTexture, 0, 0, 128 * 4, 128 * 1, 4, 1);
+                } catch (IOException e) {
+                    Debug.e("Failed to load IntroPage texture: "+page.texture_src, e);
+                }
+            }
+        }
         Debug.d("Finished instantiating LevelIntroHUD");
 
         this.clickDetector = new ClickDetector(this);
@@ -97,10 +116,16 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
         final String nextPage = level.intro.get(page_index).text;
         final TextOptions introTextOptions = new TextOptions(AutoWrap.WORDS, textPanel.getWidth(), HorizontalAlign.CENTER);
         final Text introPageText = new Text(textPanel.getWidth()/2, textPanel.getHeight()/2, introPageFont, nextPage, introTextOptions, PhoeniciaContext.vboManager);
-        introPageText.setPosition(textPanel.getWidth()/2, textPanel.getHeight()-(introPageText.getHeight()/2));
+        introPageText.setPosition(textPanel.getWidth() / 2, textPanel.getHeight() - (introPageText.getHeight() / 2));
 
         textPanel.detachChildren();
         textPanel.attachChild(introPageText);
+
+        if (this.introPageImages[page_index] != null) {
+            final AnimatedSprite introImage = new AnimatedSprite(textPanel.getWidth()/2, textPanel.getHeight() - introPageText.getHeight() - 64, this.introPageImages[page_index], PhoeniciaContext.vboManager);
+            textPanel.attachChild(introImage);
+            introImage.animate(500);
+        }
         game.playBlockSound(level.intro.get(page_index).sound);
     }
 

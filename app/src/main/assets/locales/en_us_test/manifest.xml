@@ -8,17 +8,17 @@
 
     <letters>
         <letter name="a" buy="1"  sell="1"  time="10" points="100" texture="locales/en_us_test/textures/letters/a.png" sound="sounds/a.ogg" phoneme="phonemes/a.ogg">a</letter>
-        <letter name="b" buy="2"  sell="2"  time="20" points="200" texture="locales/en_us_test/textures/letters/b.png" sound="sounds/b.ogg" phoneme="phonemes/b.ogg">b</letter>
+        <letter restrict="test" name="b" buy="2"  sell="2"  time="20" points="200" texture="locales/en_us_test/textures/letters/b.png" sound="sounds/b.ogg" phoneme="phonemes/b.ogg">b</letter>
     </letters>
     <words>
         <word name="ab" buy="10" sell="1" construct="10" time="10" points="100" texture="locales/en_us_test/textures/words/ab.png" sound="sounds/ab.ogg">cat</word>
-        <word name="ba" buy="20" sell="2" construct="20" time="20" points="200" texture="locales/en_us_test/textures/words/ba.png" sound="sounds/ba.ogg">hat</word>
+        <word restrict="test" name="ba" buy="20" sell="2" construct="20" time="20" points="200" texture="locales/en_us_test/textures/words/ba.png" sound="sounds/ba.ogg">hat</word>
     </words>
     <levels>
         <level name="test1">
             <intro>
                 <page sound="sounds/intro1p1.ogg">Test level 1 intro page 1</page>
-                <page sound="sounds/intro1p2.ogg">Test level 1 intro page 2</page>
+                <page sound="sounds/intro1p2.ogg" texture="textures/intro1p2.png">Test level 1 intro page 2</page>
             </intro>
             <letters>a,b</letters>
             <help>

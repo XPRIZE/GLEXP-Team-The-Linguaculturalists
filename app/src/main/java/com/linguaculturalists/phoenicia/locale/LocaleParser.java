@@ -1,15 +1,4 @@
-package com.linguaculturalists.phoenicia.util;
-
-import com.linguaculturalists.phoenicia.locale.InventoryBlock;
-import com.linguaculturalists.phoenicia.locale.Locale;
-import com.linguaculturalists.phoenicia.locale.CollectLetterReq;
-import com.linguaculturalists.phoenicia.locale.CollectWordReq;
-import com.linguaculturalists.phoenicia.locale.IntroPage;
-import com.linguaculturalists.phoenicia.locale.Letter;
-import com.linguaculturalists.phoenicia.locale.Level;
-import com.linguaculturalists.phoenicia.locale.MarketBlock;
-import com.linguaculturalists.phoenicia.locale.Requirement;
-import com.linguaculturalists.phoenicia.locale.Word;
+package com.linguaculturalists.phoenicia.locale;
 
 import org.andengine.util.debug.Debug;
 import org.apache.commons.lang3.StringUtils;
@@ -177,7 +166,7 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale letter");
         this.currentLetter = new Letter();
         this.currentLetter.name = attributes.getValue("name");
-        this.currentLetter.restriction = attributes.getValue("restriction");
+        this.currentLetter.restriction = attributes.getValue("restrict");
         this.currentLetter.sound = attributes.getValue("sound");
         this.currentLetter.phoneme = attributes.getValue("phoneme");
         this.currentLetter.time = Integer.parseInt(attributes.getValue("time"));
@@ -191,7 +180,7 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale word");
         this.currentWord = new Word();
         this.currentWord.name = attributes.getValue("name");
-        this.currentWord.restriction = attributes.getValue("restriction");
+        this.currentWord.restriction = attributes.getValue("restrict");
         this.currentWord.sound = attributes.getValue("sound");
         this.currentWord.construct = Integer.parseInt(attributes.getValue("construct"));
         this.currentWord.time = Integer.parseInt(attributes.getValue("time"));
@@ -217,6 +206,7 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale level intro");
         this.currentPage = new IntroPage();
         this.currentPage.sound = attributes.getValue("sound");
+        this.currentPage.texture_src = attributes.getValue("texture");
     }
 
     private void parseLevelReqLetter(Attributes attributes) throws SAXException {
