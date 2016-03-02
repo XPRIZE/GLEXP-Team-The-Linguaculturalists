@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Created by mhall on 12/2/15.
  */
-public abstract class PhoeniciaGameTest extends ActivityInstrumentationTestCase2<GameActivity> {
+public class PhoeniciaGameTest extends ActivityInstrumentationTestCase2<GameActivity> {
 
     public GameActivity activity;
     public PhoeniciaGame game;
@@ -22,13 +22,13 @@ public abstract class PhoeniciaGameTest extends ActivityInstrumentationTestCase2
         super(GameActivity.class);
     }
 
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         activity = getActivity();
         assertNotNull("GameActivity is Null", activity);
         game = new PhoeniciaGame(activity, activity.main_camera);
     }
-
 
     public void loadGame() {
         if (isLoaded) return;
