@@ -29,26 +29,18 @@ Progressios through the game is driven by a marketplace where the player can sel
 
 Even though Phoenicia is designed to be a single-player, offline game, the social aspect of learning has not been forgotten. Players will be encouraged to share the words they learn to spell with their friends, who can then create those words (if they have the letters) even if they haven't themselves progressed to the level where that word will be introduced. These words can then be sold in the marketplace for a higher in-game currency value than the words at the player's own level. This gives the **knowledge** of spelling a social and economic value, which in turn will encourage the children and their peers to obtain more of it.
 
-## Contributing
-
-You should be able to clone Phoenicia's Git repository and open it in Android Studio. It is being developed on Ubuntu 15.04 and Android Studio 
-1.1. [Dependencies](#dependencies) are included in the Git branch.
-
-*Phoenicia is a new project, with very little working at the moment. You are welcome to try the code out, and contribute to it, but expect it to change significantly and rapidly*
-
 #### Localization
 
 Phoenicia will be able to include "Locale Packs" which provide unique artwork, sounds, letter and word assets specific to a targeted community. In addition, each locale will have it's own specific progression of letters and words defined for that locale.
 
 *Once this localization support is working, more information will be added here about contributing to a locale pack*
 
-#### License
+## Contributing
 
-Phoenicia is provided under the GPLv3 open source license. It makes use of some [dependencies](#dependencies) that are provided under other compatible open source license.
+You should be able to clone Phoenicia's Git repository and open it in Android Studio. It is being developed on Ubuntu 15.10 and Android Studio 
+1.1. [Dependencies](#dependencies) are included in the Git branch.
 
-#### Contributing
-
-See [Contributing](Contributing.md) for how to get started
+For full contributing requirements, please read our [Contributing](docs/Contributing.md) docs.
 
 ## Dependencies
 

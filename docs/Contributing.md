@@ -1,6 +1,6 @@
 ## License
 
-Phoenicia is provided under the [GPLv3](COPYING) open source license. It makes use of some [dependencies](README.md#dependencies) that are provided under other compatible open source license.
+Phoenicia is provided under the [GPLv3](../COPYING) open source license. It makes use of some [dependencies](../README.md#dependencies) that are provided under other compatible open source license.
 
 ## X-Prize
 
