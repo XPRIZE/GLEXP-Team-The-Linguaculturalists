@@ -31,9 +31,10 @@ Even though Phoenicia is designed to be a single-player, offline game, the socia
 
 #### Localization
 
-Phoenicia will be able to include "Locale Packs" which provide unique artwork, sounds, letter and word assets specific to a targeted community. In addition, each locale will have it's own specific progression of letters and words defined for that locale.
+Phoenicia is powered by "Locale Packs" which provide unique artwork, sounds, letter and word assets specific to a targeted community. In addition, each locale will have it's own specific progression of letters and words defined for that locale.
 
-*Once this localization support is working, more information will be added here about contributing to a locale pack*
+You can learn how to build your own Locale Pack by reading our [Localization](docs/Localization.md) guide.
+
 
 ## Contributing
 
