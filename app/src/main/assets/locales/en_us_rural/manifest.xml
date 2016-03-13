@@ -5,7 +5,10 @@
 
     <!-- default blocks -->
     <inventory name="Barn" col="37" row="43" texture="locales/en_us_rural/textures/inventory.png" />
-    <market name="Market" col="41" row="41" texture="locales/en_us_rural/textures/market.png" />
+    <market name="Market" col="41" row="41" texture="locales/en_us_rural/textures/market.png" >
+        <person name="Konqi" texture="locales/en_us_rural/persons/konqi.png" />
+        <person name="Tux" texture="locales/en_us_rural/persons/tux.png" />
+    </market>
 
     <letters>
         <letter name="a" buy="0"  sell="1"  points="1" time="10" texture="locales/en_us_rural/textures/letters/a.png" sound="locales/en_us_rural/sounds/a-name.ogg" phoneme="locales/en_us_rural/sounds/a-phoneme.ogg">a</letter>

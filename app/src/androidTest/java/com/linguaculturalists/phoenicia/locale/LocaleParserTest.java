@@ -66,6 +66,16 @@ public class LocaleParserTest extends AndroidTestCase {
         assertEquals("locales/en_us_test/textures/market.png", m.texture_src);
     }
 
+    public void testPeopleDefinitions() {
+        Locale locale = getLocale();
+        assertEquals(2, locale.people.size());
+        assertEquals("Konqi", locale.people.get(0).name);
+        assertEquals("locales/en_us_test/textures/persons/konqi.png", locale.people.get(0).texture_src);
+
+        assertEquals("Tux", locale.people.get(1).name);
+        assertEquals("locales/en_us_test/textures/persons/tux.png", locale.people.get(1).texture_src);
+    }
+
     public void testLetterDefinitions() {
         Locale locale = getLocale();
         assertEquals(2, locale.letters.size());

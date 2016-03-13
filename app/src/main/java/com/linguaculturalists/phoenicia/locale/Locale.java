@@ -23,6 +23,7 @@ public class Locale {
 
     public InventoryBlock inventoryBlock;
     public MarketBlock marketBlock;
+    public List<Person> people;
 
     public String letters_texture;
     public List<Letter> letters;
@@ -36,6 +37,8 @@ public class Locale {
     public Map<String, Level> level_map;
 
     public Locale() {
+        this.people = new ArrayList<Person>();
+
         this.letters = new ArrayList<Letter>();
         this.letter_map = new HashMap<String, Letter>();
 

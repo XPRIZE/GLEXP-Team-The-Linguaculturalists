@@ -17,6 +17,7 @@ public class LocaleParser extends DefaultHandler {
     private static final String TAG_MAP = "map";
     private static final String TAG_INVENTORY = "inventory";
     private static final String TAG_MARKET = "market";
+    private static final String TAG_PERSON = "person";
     private static final String TAG_SHELL = "shell";
     private static final String TAG_LETTERS = "letters";
     private static final String TAG_LETTER = "letter";
@@ -31,6 +32,7 @@ public class LocaleParser extends DefaultHandler {
     private static final String TAG_REQLETTER = "gather_letter";
     private static final String TAG_REQWORD = "gather_word";
     private boolean inLocale = false;
+    private boolean inMarket = false;
     private boolean inLettersList = false;
     private boolean inLetterDefinition = false;
     private boolean inWordsList = false;
@@ -79,7 +81,10 @@ public class LocaleParser extends DefaultHandler {
         } else if (this.inLocale && localName.equals(LocaleParser.TAG_INVENTORY)) {
             this.parseInventory(attributes);
         } else if (this.inLocale && localName.equals(LocaleParser.TAG_MARKET)) {
+            this.inMarket = true;
             this.parseMarket(attributes);
+        } else if (this.inLocale && this.inMarket && localName.equals(LocaleParser.TAG_PERSON)) {
+            this.parsePerson(attributes);
         } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
             if (!this.inLevelDefinition) {
                 this.inLettersList = true;
@@ -162,6 +167,15 @@ public class LocaleParser extends DefaultHandler {
         this.locale.marketBlock.mapRow = Integer.parseInt(attributes.getValue("row"));
     }
 
+    private void parsePerson(Attributes attributes) throws SAXException {
+        Debug.v("Parsing locale person");
+        Person newPerson = new Person();
+        newPerson.name = attributes.getValue("name");
+        newPerson.texture_src = attributes.getValue("texture");
+        this.locale.people.add(newPerson);
+
+    }
+
     private void parseLetterDefinition(Attributes attributes) throws SAXException {
         Debug.v("Parsing locale letter");
         this.currentLetter = new Letter();
@@ -224,6 +238,8 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parser end: "+localName);
         if (localName.equals(LocaleParser.TAG_LOCALE)) {
             this.inLocale = false;
+        } else if (this.inLocale && this.inMarket && localName.equals(LocaleParser.TAG_MARKET)) {
+            this.inMarket = false;
         } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
             if (!this.inLevelDefinition) {
                 this.inLettersList = false;
