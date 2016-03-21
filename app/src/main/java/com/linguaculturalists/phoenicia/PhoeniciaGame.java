@@ -221,11 +221,10 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      * Load the game data from both the locale and the saved session.
      * @throws IOException
      */
-    public void load() throws IOException {
+    public void load(final String locale_pack_manifest) throws IOException {
         this.syncDB();
 
         // Load locale pack
-        final String locale_pack_manifest = "locales/en_us_rural/manifest.xml";
         LocaleLoader localeLoader = new LocaleLoader();
         try {
             this.locale = localeLoader.load(PhoeniciaContext.assetManager.open(locale_pack_manifest));
@@ -332,7 +331,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         List<Letter> blockLetters = locale.letters;
         List<Word> blockWords = locale.words;
-        SoundFactory.setAssetBasePath("locales/en_us_rural/");
+        //SoundFactory.setAssetBasePath("locales/en_us_rural/");
         try {
             // Load letter assets
             for (int i = 0; i < blockLetters.size(); i++) {
@@ -362,7 +361,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         // Load sound data
         try {
-            SoundFactory.setAssetBasePath("locales/en_us_rural/");
+            //SoundFactory.setAssetBasePath("locales/en_us_rural/");
             blockSounds = new HashMap<String, Sound>();
             Debug.d("Loading  letters");
             for (int i = 0; i < blockLetters.size(); i++) {

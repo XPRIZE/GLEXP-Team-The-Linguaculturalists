@@ -31,11 +31,14 @@ public class PhoeniciaGameTest extends ActivityInstrumentationTestCase2<GameActi
     }
 
     public void loadGame() {
+        this.loadGame("locales/en_us_test/manifest.xml");
+    }
+    public void loadGame(final String locale_pack_manifest) {
         if (isLoaded) return;
         try {
-            game.load();
+            game.load(locale_pack_manifest);
         } catch (IOException e) {
-            assertNull("Game loading failed", e);
+            assertNull("Game loading failed: "+e.getMessage(), e);
         }
         isLoaded = true;
     }

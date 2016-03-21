@@ -74,7 +74,7 @@ public class GameActivity extends BaseGameActivity {
                 mEngine.unregisterUpdateHandler(pTimerHandler);
                 try {
                     mEngine.setTouchController(new MultiTouchController());
-                    game.load();
+                    game.load("locales/en_us_rural/manifest.xml");
                     splash.detachSelf();
                     mEngine.setScene(game.scene);
                     mEngine.registerUpdateHandler(game);

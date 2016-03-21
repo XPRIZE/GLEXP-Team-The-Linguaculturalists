@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <locale name="en_us_test" lang="en_us" display_name="US English, Testing">
     <shell src="locales/en_us_test/textures/gameui.png" />
-    <map src="locales/en_us_test/textures/map.tmx" />
+    <map src="locales/en_us_test/map.tmx" />
 
     <inventory name="InventoryTest" col="1" row="2" texture="locales/en_us_test/textures/inventory.png" />
     <market name="MarketTest" col="2" row="1" texture="locales/en_us_test/textures/market.png" />
 
     <letters>
-        <letter name="a" buy="1"  sell="1"  time="10" points="100" texture="locales/en_us_test/textures/letters/a.png" sound="sounds/a.ogg" phoneme="phonemes/a.ogg">a</letter>
-        <letter restrict="test" name="b" buy="2"  sell="2"  time="20" points="200" texture="locales/en_us_test/textures/letters/b.png" sound="sounds/b.ogg" phoneme="phonemes/b.ogg">b</letter>
+        <letter name="a" buy="1"  sell="1"  time="10" points="100" texture="locales/en_us_test/textures/letters/a.png" sound="locales/en_us_test/sounds/a.ogg" phoneme="locales/en_us_test/phonemes/a.ogg">a</letter>
+        <letter restrict="test" name="b" buy="2"  sell="2"  time="20" points="200" texture="locales/en_us_test/textures/letters/b.png" sound="locales/en_us_test/sounds/b.ogg" phoneme="locales/en_us_test/phonemes/b.ogg">b</letter>
     </letters>
     <words>
-        <word name="ab" buy="10" sell="1" construct="10" time="10" points="100" texture="locales/en_us_test/textures/words/ab.png" sound="sounds/ab.ogg">cat</word>
-        <word restrict="test" name="ba" buy="20" sell="2" construct="20" time="20" points="200" texture="locales/en_us_test/textures/words/ba.png" sound="sounds/ba.ogg">hat</word>
+        <word name="ab" buy="10" sell="1" construct="10" time="10" points="100" texture="locales/en_us_test/textures/words/ab.png" sound="locales/en_us_test/sounds/ab.ogg">cat</word>
+        <word restrict="test" name="ba" buy="20" sell="2" construct="20" time="20" points="200" texture="locales/en_us_test/textures/words/ba.png" sound="locales/en_us_test/sounds/ba.ogg">hat</word>
     </words>
     <levels>
         <level name="test1">
             <intro>
-                <page sound="sounds/intro1p1.ogg">Test level 1 intro page 1</page>
-                <page sound="sounds/intro1p2.ogg" texture="textures/intro1p2.png">Test level 1 intro page 2</page>
+                <page sound="locales/en_us_test/sounds/intro1p1.ogg">Test level 1 intro page 1</page>
+                <page sound="locales/en_us_test/sounds/intro1p2.ogg" texture="locales/en_us_test/textures/intro1p2.png">Test level 1 intro page 2</page>
             </intro>
             <letters>a,b</letters>
             <help>
@@ -32,7 +32,7 @@
         </level>
         <level name="test2">
             <intro>
-                <page sound="sounds/intro2p1.ogg">Test level 2 intro page</page>
+                <page sound="locales/en_us_test/sounds/intro2p1.ogg">Test level 2 intro page</page>
             </intro>
             <letters>a,b</letters>
             <words>ab</words>
