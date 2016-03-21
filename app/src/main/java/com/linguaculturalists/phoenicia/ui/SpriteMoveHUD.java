@@ -44,7 +44,7 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
         this.sprite = sprite;
         this.restriction = restriction;
         this.originalLocation = startLocation;
-        Debug.d("Start sprite Z: "+this.sprite.getZIndex());
+        //Debug.d("Start sprite Z: "+this.sprite.getZIndex());
         this.newLocation = startLocation;
         this.handler = handler;
         this.setBackgroundEnabled(false);

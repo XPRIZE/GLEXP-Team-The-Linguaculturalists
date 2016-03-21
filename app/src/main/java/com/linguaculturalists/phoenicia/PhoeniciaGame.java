@@ -780,6 +780,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         final WordBuilder builder = tile.getBuilder(PhoeniciaContext.context);
 
+        scene.attachChild(sprite);
         scene.sortChildren();
 
         if (callback != null) {
