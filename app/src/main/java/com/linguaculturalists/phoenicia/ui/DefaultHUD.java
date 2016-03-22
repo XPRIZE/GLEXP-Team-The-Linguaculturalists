@@ -26,7 +26,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
     private PhoeniciaGame game;
     private Text levelDisplay;
     private Text balanceDisplay;
-    private ButtonSprite inventoryBlock;
+    //private ButtonSprite inventoryBlock;
     private ButtonSprite letterBlock;
     private ButtonSprite wordBlock;
 
@@ -42,6 +42,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         balanceDisplay = new Text(96, game.camera.getHeight()-64, GameFonts.defaultHUDDisplay(), "Coins: "+game.session.account_balance.get(), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
         this.attachChild(balanceDisplay);
 
+/*
         ITextureRegion inventoryRegion = game.shellTiles.getTextureRegion(2);
         this.inventoryBlock = new ButtonSprite(64, 64, inventoryRegion, PhoeniciaContext.vboManager);
         inventoryBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
@@ -52,6 +53,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         });
         this.registerTouchArea(inventoryBlock);
         this.attachChild(inventoryBlock);
+*/
 
         ITextureRegion letterRegion = game.shellTiles.getTextureRegion(0);
         this.letterBlock = new ButtonSprite(GameActivity.CAMERA_WIDTH-(64*3), 64, letterRegion, PhoeniciaContext.vboManager);
@@ -94,7 +96,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
      */
     @Override
     public void show() {
-        inventoryBlock.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
+        //inventoryBlock.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
         letterBlock.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
         wordBlock.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
 
@@ -108,7 +110,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
      */
     @Override
     public void hide() {
-        inventoryBlock.setY(-48);
+        //inventoryBlock.setY(-48);
         letterBlock.setY(-48);
         wordBlock.setY(-48);
         levelDisplay.setY(GameActivity.CAMERA_HEIGHT + 48);

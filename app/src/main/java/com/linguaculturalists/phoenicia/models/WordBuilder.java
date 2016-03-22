@@ -24,8 +24,8 @@ public class WordBuilder extends Builder {
      */
     public WordBuilder() {
         super();
-        this.game = new ForeignKeyField<>(GameSession.class);
-        this.tile = new ForeignKeyField<>(WordTile.class);
+        this.game = new ForeignKeyField<GameSession>(GameSession.class);
+        this.tile = new ForeignKeyField<WordTile>(WordTile.class);
         this.item_name = new CharField(32);
         this.time = new IntegerField();
         this.progress = new IntegerField();

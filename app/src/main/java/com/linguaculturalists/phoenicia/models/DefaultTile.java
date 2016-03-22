@@ -87,10 +87,12 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
      * @param v2
      */
     public void onClick(MapBlockSprite buttonSprite, float v, float v2) {
-        if (this.item_type.get() == "inventory") {
+        if (this.item_type.get().equals("inventory")) {
             phoeniciaGame.hudManager.showInventory();
-        } else if (this.item_type.get() == "market") {
+        } else if (this.item_type.get().equals("market")) {
             phoeniciaGame.hudManager.showInventory();
+        } else {
+            Debug.e("Unknown default block: "+this.item_type.get());
         }
     }
 
@@ -100,7 +102,7 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
             Debug.d("No tile at "+this.isoX.get()+"x"+this.isoY.get());
             return;
         }
-        phoeniciaGame.hudManager.push(new SpriteMoveHUD(phoeniciaGame, tmxTile, sprite, null, new SpriteMoveHUD.SpriteMoveHandler() {
+        phoeniciaGame.hudManager.push(new SpriteMoveHUD(phoeniciaGame, tmxTile, buttonSprite, null, new SpriteMoveHUD.SpriteMoveHandler() {
             @Override
             public void onSpriteMoveCanceled(MapBlockSprite sprite) {
                 sprite.setPosition(tmxTile.getTileX() + 32, tmxTile.getTileY() + 32);
