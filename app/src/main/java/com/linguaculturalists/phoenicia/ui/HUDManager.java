@@ -50,7 +50,7 @@ public class HUDManager extends HUD {
      * @param level
      */
     public void showLevelIntro(final Level level) {
-        this.push(new LevelIntroHUD(this.game, level));
+        this.set(new LevelIntroHUD(this.game, level));
     }
 
     /**
@@ -97,6 +97,15 @@ public class HUDManager extends HUD {
     }
 
     /**
+     * Remove everything except the DefaultHUD from the stack
+     */
+    public void clear() {
+        while (this.hudStack.size() >= 1) {
+            this.pop();
+        }
+    }
+
+    /**
      * Hide the currently displayed HUD, and show the one below it on the stack
      */
     public void pop() {
@@ -114,6 +123,15 @@ public class HUDManager extends HUD {
             Debug.d("Nothing to pop off the stack");
             return;
         }
+    }
+
+    /**
+     * Remove everything except the DefaultHUD and push newHUD on top of that
+     * @param newHUD
+     */
+    public void set(PhoeniciaHUD newHUD) {
+        this.clear();
+        this.push(newHUD);
     }
 
     /**

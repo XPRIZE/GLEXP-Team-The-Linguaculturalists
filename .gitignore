@@ -9,3 +9,5 @@
 /screenshots
 /deps
 /app/doc
+*.apk
+*.jks

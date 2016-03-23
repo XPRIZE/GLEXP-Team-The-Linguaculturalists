@@ -123,7 +123,6 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Inventory.Inventor
 
     @Override
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
-        Debug.d("LetterPlacementHud touched at "+pSceneTouchEvent.getX()+"x"+pSceneTouchEvent.getY());
 
         final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
         if (handled) return true;

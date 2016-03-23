@@ -35,6 +35,7 @@ public class InventoryHUD extends PhoeniciaHUD {
     public InventoryHUD(final PhoeniciaGame game) {
         super(game.camera);
         this.setBackgroundEnabled(false);
+        this.setOnAreaTouchTraversalFrontToBack();
         this.game = game;
         // Close the HUD if the user clicks outside the whiteRect
         this.clickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
@@ -47,6 +48,7 @@ public class InventoryHUD extends PhoeniciaHUD {
         this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 400, PhoeniciaContext.vboManager) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                Debug.d("Inventory dialog touched");
                 super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
                 return true;
             }

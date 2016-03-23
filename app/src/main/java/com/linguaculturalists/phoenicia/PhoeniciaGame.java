@@ -301,11 +301,11 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         try {
             inventoryTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.inventoryBlock.texture_src);
             inventoryTexture.load();
-            inventoryTiles = TextureRegionFactory.extractTiledFromTexture(inventoryTexture, 0, 0, 64 * 8, 64 * 8, 8, 8);
+            inventoryTiles = TextureRegionFactory.extractTiledFromTexture(inventoryTexture, 0, 0, 64 * 4, 64 * 5, 4, 5);
 
             marketTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.marketBlock.texture_src);
             marketTexture.load();
-            marketTiles = TextureRegionFactory.extractTiledFromTexture(marketTexture, 0, 0, 64 * 8, 64 * 8, 8, 8);
+            marketTiles = TextureRegionFactory.extractTiledFromTexture(marketTexture, 0, 0, 64 * 4, 64 * 5, 4, 5);
 
         } catch (final IOException e) {
             e.printStackTrace();
@@ -754,6 +754,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         final WordBuilder builder = tile.getBuilder(PhoeniciaContext.context);
 
+        scene.attachChild(sprite);
         scene.sortChildren();
 
         if (callback != null) {

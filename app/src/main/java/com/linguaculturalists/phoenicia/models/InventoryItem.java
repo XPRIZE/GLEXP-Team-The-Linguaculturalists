@@ -25,7 +25,7 @@ public class InventoryItem extends Model {
 
     public InventoryItem() {
         super();
-        this.game = new ForeignKeyField<>(GameSession.class);
+        this.game = new ForeignKeyField<GameSession>(GameSession.class);
         this.item_name = new CharField(32);
         this.quantity = new IntegerField();
         this.history = new IntegerField();

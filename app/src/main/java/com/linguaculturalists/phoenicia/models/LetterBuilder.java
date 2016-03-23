@@ -24,8 +24,8 @@ public class LetterBuilder extends Builder {
      */
     public LetterBuilder() {
         super();
-        this.game = new ForeignKeyField<>(GameSession.class);
-        this.tile = new ForeignKeyField<>(LetterTile.class);
+        this.game = new ForeignKeyField<GameSession>(GameSession.class);
+        this.tile = new ForeignKeyField<LetterTile>(LetterTile.class);
         this.item_name = new CharField(32);
         this.time = new IntegerField();
         this.progress = new IntegerField();

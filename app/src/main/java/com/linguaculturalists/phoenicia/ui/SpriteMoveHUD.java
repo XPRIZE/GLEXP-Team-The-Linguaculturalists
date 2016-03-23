@@ -44,7 +44,7 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
         this.sprite = sprite;
         this.restriction = restriction;
         this.originalLocation = startLocation;
-        Debug.d("Start sprite Z: "+this.sprite.getZIndex());
+        //Debug.d("Start sprite Z: "+this.sprite.getZIndex());
         this.newLocation = startLocation;
         this.handler = handler;
         this.setBackgroundEnabled(false);
@@ -95,6 +95,7 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
         whiteRect.attachChild(confirmBlock);
 
         this.clickDetector = new ClickDetector(this);
+
     }
 
     /**
@@ -105,6 +106,7 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
         this.originalTileIndex = this.sprite.getCurrentTileIndex();
         this.sprite.stopAnimation();
         this.sprite.setCurrentTileIndex(4);
+        this.checkPlacement(this.newLocation);
         Debug.d("Sprite placement restriction: "+this.restriction);
         whiteRect.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
     }
@@ -144,24 +146,26 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
         public void onSpriteMoveFinished(MapBlockSprite sprite, TMXTile newLocation);
     }
 
+    private void checkPlacement(TMXTile mapTile) {
+        final String tileRestriction = this.game.mapRestrictions[mapTile.getTileRow()][mapTile.getTileColumn()];
+        if (this.game.placedSprites[mapTile.getTileColumn()][mapTile.getTileRow()] != null &&
+                this.game.placedSprites[mapTile.getTileColumn()][mapTile.getTileRow()] != this.sprite) {
+            this.sprite.setCurrentTileIndex(5);
+            this.confirmBlock.setVisible(false);
+        } else if (tileRestriction != null && (this.restriction == null || !this.restriction.equals(tileRestriction))) {
+            Debug.d("Map tile class: " + tileRestriction);
+            this.sprite.setCurrentTileIndex(5);
+            this.confirmBlock.setVisible(false);
+        } else {
+            this.sprite.setCurrentTileIndex(4);
+            this.confirmBlock.setVisible(true);
+        }
+    }
     @Override
     public void onClick(ClickDetector clickDetector, int pointerId, float sceneX, float sceneY) {
         TMXTile mapTile = game.getTileAt(sceneX, sceneY);
         if (mapTile != null) {
-            final String tileRestriction = this.game.mapRestrictions[mapTile.getTileRow()][mapTile.getTileColumn()];
-
-            if (this.game.placedSprites[mapTile.getTileColumn()][mapTile.getTileRow()] != null &&
-                    this.game.placedSprites[mapTile.getTileColumn()][mapTile.getTileRow()] != this.sprite) {
-                this.sprite.setCurrentTileIndex(5);
-                this.confirmBlock.setVisible(false);
-            } else if (tileRestriction != null && (this.restriction == null || !this.restriction.equals(tileRestriction))) {
-                Debug.d("Map tile class: " + tileRestriction);
-                this.sprite.setCurrentTileIndex(5);
-                this.confirmBlock.setVisible(false);
-            } else {
-                this.sprite.setCurrentTileIndex(4);
-                this.confirmBlock.setVisible(true);
-            }
+            this.checkPlacement(mapTile);
             this.sprite.setPosition(mapTile.getTileX() + 32, mapTile.getTileY() + 32);// Map tiles are anchor bottom-left, but scene is anchor-center
             this.sprite.setZIndex(mapTile.getTileZ()+1);
             this.game.scene.sortChildren();

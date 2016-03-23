@@ -35,7 +35,7 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
     private boolean isInHUD = false;
     private boolean clip = true;
 
-    private boolean print_debug = true;
+    private boolean print_debug = false;
 
     public final ChildRect childRect = new ChildRect(); /**< Bounding box that holds all child Entities */
 
@@ -137,7 +137,7 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
         this.childRect.set(0, 0, 0, 0);
         for(int i = 0; i < this.contents.getChildCount(); i++) {
             IEntity child = this.contents.getChildByIndex(i);
-            Debug.d("Scrollable Recalculating with child: "+child);
+            //Debug.d("Scrollable Recalculating with child: "+child);
             final float childLeft = child.getX()-(child.getWidth()/2);
             final float childRight = child.getX()+(child.getWidth()/2);
             final float childBottom = child.getY()-(child.getHeight()/2);
@@ -148,7 +148,7 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
             if (childBottom < this.childRect.bottom) { Debug.d("Scrollable New bottom: "+childBottom); this.childRect.bottom = childBottom; }
 
         }
-        Debug.d("Scrollable childRect: x(" + this.childRect.left + "," + this.childRect.right + ") y(" + this.childRect.bottom + "," + this.childRect.top + ")");
+        //Debug.d("Scrollable childRect: x(" + this.childRect.left + "," + this.childRect.right + ") y(" + this.childRect.bottom + "," + this.childRect.top + ")");
         this.contents.setWidth(this.childRect.getWidth());
         this.contents.setHeight(this.childRect.getHeight());
         this.contents.setPosition(this.childRect.getWidth() / 2, this.childRect.getHeight() / 2);
@@ -226,7 +226,7 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
 
     @Override
     public void attachChild(IEntity child) {
-        Debug.d("Scrollable.attachChild("+child+")");
+        //Debug.d("Scrollable.attachChild("+child+")");
         this.contents.attachChild(child);
         this.recalculateContentBounds();
     }
