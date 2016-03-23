@@ -35,6 +35,7 @@ import com.orm.androrm.statement.Statement;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Debug;
 
 /**
  * @author Philipp Giese
@@ -54,12 +55,12 @@ public class QuerySet<T extends Model> implements Iterable<T> {
 	public void injectQuery(SelectStatement query) {
 		mQuery = query;
 	}
-	
+
 	private Cursor getCursor(SelectStatement query) {
 		mAdapter.open();
 		return mAdapter.query(query);
 	}
-	
+
 	private void closeConnection(Cursor c) {
 		c.close();
 		mAdapter.close();
@@ -108,10 +109,20 @@ public class QuerySet<T extends Model> implements Iterable<T> {
 			mQuery = new SelectStatement();
 			mQuery.from(DatabaseBuilder.getTableName(mClass));
 		}
-		
+
 		return this;
 	}
-	
+
+    // This is suboptimal, but I don't see an easy way to generate a delete statement from the current query
+	public int delete(Context context) {
+        int count = 0;
+        for (T instance : this.toList()) {
+            instance.delete(context);
+            count++;
+        }
+        return count;
+    }
+
 	public QuerySet<T> filter(Filter filter) throws NoSuchFieldException {
 		SelectStatement query = QueryBuilder.buildQuery(mClass, filter.getRules());
 		

@@ -4,6 +4,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.test.ActivityTestCase;
 import android.test.ActivityUnitTestCase;
 
+import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
 
 import java.io.IOException;
@@ -26,6 +27,7 @@ public class PhoeniciaGameTest extends ActivityInstrumentationTestCase2<GameActi
     public void setUp() throws Exception {
         super.setUp();
         activity = getActivity();
+        activity.syncDB();
         assertNotNull("GameActivity is Null", activity);
         game = new PhoeniciaGame(activity, activity.main_camera);
     }
@@ -36,7 +38,8 @@ public class PhoeniciaGameTest extends ActivityInstrumentationTestCase2<GameActi
     public void loadGame(final String locale_pack_manifest) {
         if (isLoaded) return;
         try {
-            game.load(locale_pack_manifest);
+            GameSession session = GameSession.start(locale_pack_manifest, "1");
+            game.load(session);
         } catch (IOException e) {
             assertNull("Game loading failed: "+e.getMessage(), e);
         }

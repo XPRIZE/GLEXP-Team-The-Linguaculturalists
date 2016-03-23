@@ -30,6 +30,7 @@ public class GameSession extends Model {
     public IntegerField account_balance; /**< current amount of in-game currency held by the player */
     public IntegerField gross_income; /**< cumulative total of in-game currency earned over the course of this session */
     public Filter filter;
+    private String startLevel;
 
     public static final QuerySet<GameSession> objects(Context context) {
         return objects(context, GameSession.class);
@@ -57,16 +58,45 @@ public class GameSession extends Model {
     static public GameSession start(Locale locale) {
         GameSession session = new GameSession();
         session.locale_pack.set(locale.name);
+        session.startLevel = locale.levels.get(0).name;
         Date now = new Date();
         session.start_timestamp.set((double)now.getTime());
         session.last_timestamp.set((double)now.getTime());
         session.sessions_played.set(0);
         session.days_played.set(0);
-        session.current_level.set(locale.levels.get(0).name);
+        session.current_level.set(session.startLevel);
         session.points.set(0);
         session.account_balance.set(0);
         session.gross_income.set(0);
         return session;
+    }
+
+    static public GameSession start(String locale_path, String startLevel) {
+        GameSession session = new GameSession();
+        session.locale_pack.set(locale_path);
+        session.startLevel = startLevel;
+        Date now = new Date();
+        session.start_timestamp.set((double)now.getTime());
+        session.last_timestamp.set((double)now.getTime());
+        session.sessions_played.set(0);
+        session.days_played.set(0);
+        session.current_level.set(session.startLevel);
+        session.points.set(0);
+        session.account_balance.set(0);
+        session.gross_income.set(0);
+        return session;
+    }
+
+    public void reset() {
+        Date now = new Date();
+        this.start_timestamp.set((double)now.getTime());
+        this.last_timestamp.set((double)now.getTime());
+        this.sessions_played.set(0);
+        this.days_played.set(0);
+        this.current_level.set(this.startLevel);
+        this.points.set(0);
+        this.account_balance.set(0);
+        this.gross_income.set(0);
     }
 
     @Override
