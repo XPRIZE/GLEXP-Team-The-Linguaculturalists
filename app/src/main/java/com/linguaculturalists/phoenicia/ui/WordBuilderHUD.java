@@ -195,21 +195,31 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
                         Debug.d("You spelled it!");
                         that.game.playBlockSound(that.buildWord.sound);
                         try {Thread.sleep(500);} catch (InterruptedException e) {}
-                        try {
-                            for (int i = 0; i < that.spelling.length; i++) {
-                                final String letter = new String(spelling, i, 1);
-                                usedCounts.put(letter, usedCounts.get(letter)-1);
-                                Inventory.getInstance().subtract(letter);
+                        game.activity.runOnUpdateThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    for (int i = 0; i < that.spelling.length; i++) {
+                                        final String letter = new String(spelling, i, 1);
+                                        usedCounts.put(letter, usedCounts.get(letter)-1);
+                                        Inventory.getInstance().subtract(letter);
+                                    }
+                                    that.game.hudManager.pop();
+                                    Inventory.getInstance().add(that.buildWord.name);
+                                } catch (Exception e) {
+                                    Debug.e("Error subtracting letter: "+e.getMessage());
+                                    e.printStackTrace();
+                                }
                             }
-                            that.game.hudManager.pop();
-                            Inventory.getInstance().add(that.buildWord.name);
-                        } catch (Exception e) {
-                            Debug.e("Error subtracting letter: "+e.getMessage());
-                            e.printStackTrace();
-                        }
+                        });
                     } else {
                         try {Thread.sleep(500);} catch (InterruptedException e) {}
-                        that.clear();
+                        game.activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                that.clear();
+                            }
+                        });
                     }
                 }
             };
