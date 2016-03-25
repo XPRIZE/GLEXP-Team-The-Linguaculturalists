@@ -80,7 +80,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public ZoomCamera camera;
     private float startCenterX;
     private float startCenterY;
-    private GameActivity activity;
+    public GameActivity activity;
 
     private float mPinchZoomStartedCameraZoomFactor;
     private PinchZoomDetector mPinchZoomDetector;

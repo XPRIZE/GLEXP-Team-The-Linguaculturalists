@@ -220,7 +220,12 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
 
                                 @Override
                                 public void onModifierFinished(IModifier<IEntity> iModifier, IEntity iEntity) {
-                                    sprite.detachChild(progressText);
+                                    phoeniciaGame.activity.runOnUpdateThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            sprite.detachChild(progressText);
+                                        }
+                                    });
                                 }
                             }, EaseLinear.getInstance())
                     ));
