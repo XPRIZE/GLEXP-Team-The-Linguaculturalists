@@ -8,7 +8,7 @@ android {
         }
     }
     compileSdkVersion 19
-    buildToolsVersion "21.1.2"
+    buildToolsVersion '21.1.2'
     defaultConfig {
         applicationId "com.linguaculturalists.phoenicia"
         minSdkVersion 15
@@ -22,6 +22,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_6
+        targetCompatibility JavaVersion.VERSION_1_6
     }
 }
 
