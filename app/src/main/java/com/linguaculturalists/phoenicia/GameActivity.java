@@ -89,33 +89,15 @@ public class GameActivity extends BaseGameActivity {
         this.syncDB();
         game = new PhoeniciaGame(this, main_camera);
 
-        mEngine.registerUpdateHandler(new TimerHandler(1f, new ITimerCallback()
+        mEngine.registerUpdateHandler(new TimerHandler(0.5f, new ITimerCallback()
         {
             public void onTimePassed(final TimerHandler pTimerHandler)
             {
                 mEngine.unregisterUpdateHandler(pTimerHandler);
-                try {
-                    mEngine.setTouchController(new MultiTouchController());
-                    // Load phoeniciaGame session
-                    GameSession session;
-                    try {
-                        session = GameSession.objects(PhoeniciaContext.context).all().toList().get(0);
-                        if (session.locale_pack.get().equals("en_us_rural")) {
-                            session.locale_pack.set("locales/en_us_rural/manifest.xml");
-                            session.save(PhoeniciaContext.context);
-                        }
-                    } catch (IndexOutOfBoundsException e) {
-                        session = GameSession.start("locales/en_us_rural/manifest.xml", "1");
-                    }
-                    session.save(PhoeniciaContext.context);
-                    game.load(session);
-                    splash.detachSelf();
-                    mEngine.setScene(game.scene);
-                    mEngine.registerUpdateHandler(game);
-                    game.start();
-                } catch (final IOException e) {
-                    Debug.e("Failed to load game!", e);
-                }
+                mEngine.setTouchController(new MultiTouchController());
+                // Load phoeniciaGame session
+                splash.detachSelf();
+                mEngine.setScene(new LocaleSelectionScene(game, splash));
             }
         }));
 

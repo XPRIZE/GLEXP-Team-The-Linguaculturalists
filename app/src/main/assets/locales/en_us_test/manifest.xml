@@ -15,7 +15,7 @@
         <word restrict="test" name="ba" buy="20" sell="2" construct="20" time="20" points="200" texture="locales/en_us_test/textures/words/ba.png" sound="locales/en_us_test/sounds/ba.ogg">hat</word>
     </words>
     <levels>
-        <level name="test1">
+        <level name="1">
             <intro>
                 <page sound="locales/en_us_test/sounds/intro1p1.ogg">Test level 1 intro page 1</page>
                 <page sound="locales/en_us_test/sounds/intro1p2.ogg" texture="locales/en_us_test/textures/intro1p2.png">Test level 1 intro page 2</page>

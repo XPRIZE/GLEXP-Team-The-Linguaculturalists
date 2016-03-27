@@ -13,6 +13,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,35 +36,19 @@ public class LocaleManager {
      * @param locales_directory
      * @return
      */
-    public Map<String, String> scan(File locales_directory) {
+    public Map<String, String> scan(String locales_directory) throws IOException {
         final Map<String, String> locale_map = new HashMap<String, String>();
-        DefaultHandler localeScanner = new DefaultHandler() {
-            @Override
-            public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-                super.startElement(uri, localName, qName, attributes);
-                if (localName.equals("locale")) {
-                    locale_map.put(uri, attributes.getValue("display_name"));
-                }
-            }
-        };
 
-        FilenameFilter manifestDirectoryFilter = new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String filename) {
-                File testDir = new File(dir, filename);
-                File manifestFile = new File(testDir, "manifest.xml");
-                return manifestFile.exists();
-            }
-        };
-
-        for (File locale_dir: locales_directory.listFiles(manifestDirectoryFilter)) {
-            File locale_file = new File(locale_dir, "manifest.xml");
+        String[] files = PhoeniciaContext.assetManager.list(locales_directory);
+        for (String locale_dir: files) {
+            String locale_path = locales_directory+"/"+locale_dir+"/manifest.xml";
+            LocaleHeaderScanner scanner = new LocaleHeaderScanner(locale_path, locale_map);
             try {
-                InputStream locale_manifest_in = PhoeniciaContext.assetManager.open(locale_file.getAbsolutePath());
+                InputStream locale_manifest_in = PhoeniciaContext.assetManager.open(locale_path);
                 final SAXParserFactory spf = SAXParserFactory.newInstance();
                 final SAXParser sp = spf.newSAXParser();
                 final XMLReader xr = sp.getXMLReader();
-                xr.setContentHandler(localeScanner);
+                xr.setContentHandler(scanner);
                 xr.parse(new InputSource(new BufferedInputStream(locale_manifest_in)));
             } catch (Exception e) {
                 Debug.e(e);
@@ -72,4 +57,20 @@ public class LocaleManager {
         return locale_map;
     }
 
+    public class LocaleHeaderScanner extends DefaultHandler {
+
+        private Map<String, String> locale_map;
+        private String locale_path;
+        public LocaleHeaderScanner(String locale_path, Map<String, String> map) {
+            this.locale_map = map;
+            this.locale_path = locale_path;
+        }
+        @Override
+        public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+            super.startElement(uri, localName, qName, attributes);
+            if (localName.equals("locale")) {
+                locale_map.put(locale_path, attributes.getValue("display_name"));
+            }
+        }
+    };
 }

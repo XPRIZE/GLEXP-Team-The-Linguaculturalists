@@ -20,6 +20,7 @@ import java.lang.reflect.Type;
 public class GameFonts {
     static Font defaultHUDDisplayFont;
     static Font inventoryCountFont;
+    static Font buttonFont;
 
     /**
      * Font used for displaying the quantity of an InventoryItem.
@@ -35,7 +36,7 @@ public class GameFonts {
     }
 
     /**
-     * Fond used for displaying the level and account balance in the DefaultHUD.
+     * Font used for displaying the level and account balance in the DefaultHUD.
      * @return
      */
     public static Font defaultHUDDisplay() {
@@ -45,6 +46,19 @@ public class GameFonts {
             defaultHUDDisplayFont.load();
         }
         return defaultHUDDisplayFont;
+    }
+
+    /**
+     * Font used for displaying text in a Button
+     * @return
+     */
+    public static Font buttonText() {
+        if (buttonFont == null) {
+            BitmapTextureAtlas texture = new BitmapTextureAtlas(PhoeniciaContext.textureManager, 1024, 1024, TextureOptions.BILINEAR);
+            buttonFont = FontFactory.createStroke(PhoeniciaContext.fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 32, true, Color.WHITE_ARGB_PACKED_INT, 1, Color.BLACK_ARGB_PACKED_INT);
+            buttonFont.load();
+        }
+        return buttonFont;
     }
 
 }
