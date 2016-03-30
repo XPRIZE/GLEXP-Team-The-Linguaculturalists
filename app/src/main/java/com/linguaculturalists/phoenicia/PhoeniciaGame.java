@@ -214,7 +214,6 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      */
     public void load(final GameSession session) throws IOException {
         this.session = session;
-        this.current_level = this.session.current_level.get();
 
         // Load locale pack
         LocaleLoader localeLoader = new LocaleLoader();
@@ -450,6 +449,11 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             }
             this.addBuilder(builder);
             this.createWordSprite(wordTile);
+        }
+
+        this.current_level = this.session.current_level.get();
+        if (this.current_level == null) {
+            this.changeLevel( this.locale.levels.get(0));
         }
 
     }

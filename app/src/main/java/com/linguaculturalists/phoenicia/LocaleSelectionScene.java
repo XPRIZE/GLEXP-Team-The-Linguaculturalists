@@ -100,7 +100,7 @@ public class LocaleSelectionScene extends Scene {
                     byLocale.is("locale_pack", locale_src);
                     session = GameSession.objects(PhoeniciaContext.context).filter(byLocale).toList().get(0);
                 } catch (IndexOutOfBoundsException e) {
-                    session = GameSession.start(locale_src, "1");
+                    session = GameSession.start(locale_src);
                 }
                 session.save(PhoeniciaContext.context);
                 try {

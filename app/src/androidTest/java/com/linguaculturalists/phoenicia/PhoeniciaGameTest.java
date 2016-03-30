@@ -7,6 +7,7 @@ import android.test.ActivityUnitTestCase;
 import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
+import com.orm.androrm.Filter;
 
 import java.io.IOException;
 
@@ -39,15 +40,13 @@ public class PhoeniciaGameTest extends ActivityInstrumentationTestCase2<GameActi
     public void loadGame(final String locale_pack_manifest) {
         if (isLoaded) return;
         try {
-            GameSession session = GameSession.start(locale_pack_manifest, "1");
+            GameSession session;
             try {
-                session = GameSession.objects(PhoeniciaContext.context).all().toList().get(0);
-                if (session.locale_pack.get().equals("en_us_test")) {
-                    session.locale_pack.set("locales/en_us_test/manifest.xml");
-                    session.save(PhoeniciaContext.context);
-                }
+                Filter byLocale = new Filter();
+                byLocale.is("locale_pack", locale_pack_manifest);
+                session = GameSession.objects(PhoeniciaContext.context).filter(byLocale).toList().get(0);
             } catch (IndexOutOfBoundsException e) {
-                session = GameSession.start("locales/en_us_test/manifest.xml", "1");
+                session = GameSession.start(locale_pack_manifest);
             }
             session.save(PhoeniciaContext.context);
             game.load(session);
