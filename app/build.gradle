@@ -7,7 +7,7 @@ android {
             storeFile file('./release.keystore.jks')
         }
     }
-    compileSdkVersion 19
+    compileSdkVersion 21
     buildToolsVersion '21.1.2'
     defaultConfig {
         applicationId "com.linguaculturalists.phoenicia"

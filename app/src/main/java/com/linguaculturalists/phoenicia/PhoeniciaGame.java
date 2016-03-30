@@ -313,7 +313,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         List<Letter> blockLetters = locale.letters;
         List<Word> blockWords = locale.words;
-        SoundFactory.setAssetBasePath("locales/en_us_rural/");
+        //SoundFactory.setAssetBasePath("locales/en_us_rural/");
         try {
             // Load letter assets
             for (int i = 0; i < blockLetters.size(); i++) {
