@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<locale name="sw_tz_village" lang="en_us" display_name="Kiswahili, Tanzania Village">
+    <shell src="locales/common/textures/gameui.png" />
+    <map src="locales/sw_tz_village/map.tmx" />
+
+    <!-- default blocks -->
+    <inventory name="Barn" col="37" row="43" texture="locales/en_us_rural/textures/inventory.png" />
+    <market name="Market" col="41" row="41" texture="locales/sw_tz_village/textures/market.png" />
+
+    <letters>
+        <letter name="i" buy="10" sell="10" points="1" time="30" texture="locales/sw_tz_village/textures/letters/i.png" sound="locales/sw_tz_village/sounds/i.ogg" phoneme="locales/sw_tz_village/sounds/i.ogg">i</letter>
+        <letter name="k" buy="10" sell="10" points="1" time="30" texture="locales/sw_tz_village/textures/letters/k.png" sound="locales/sw_tz_village/sounds/k.ogg" phoneme="locales/sw_tz_village/sounds/k.ogg">k</letter>
+        <letter name="t" buy="3"  sell="2"  points="1" time="10" texture="locales/sw_tz_village/textures/letters/t.png" sound="locales/sw_tz_village/sounds/t-name.ogg" phoneme="locales/sw_tz_village/sounds/t-phoneme.ogg">t</letter>
+        <letter name="u" buy="10" sell="10" points="1" time="30" texture="locales/sw_tz_village/textures/letters/u.png" sound="locales/sw_tz_village/sounds/u.ogg" phoneme="locales/sw_tz_village/sounds/u.ogg">u</letter>
+    </letters>
+    <words>
+        <word name="kiti" buy="100" sell="10" points="10" construct="20"  time="60" texture="locales/sw_tz_village/textures/words/kiti.png" sound="locales/sw_tz_village/sounds/kiti.ogg">kiti</word>
+        <word name="kuku" buy="300" sell="30" points="30" construct="20" time="90" texture="locales/sw_tz_village/textures/words/kuku.png" sound="locales/sw_tz_village/sounds/kuku.ogg">kuku</word>
+    </words>
+    <levels>
+        <level name="1">
+            <intro>
+                <page sound="locales/sw_tz_village/sounds/intro1p1.ogg">Jambo!</page>
+                <page sound="locales/sw_tz_village/sounds/intro1p2.ogg">This is an example locale back. It will show you how Phoenicia can be adapted to different languages and locations without needing to write any code or generate lots of new content</page>
+            </intro>
+            <letters>k,t,i,u</letters>
+            <help>
+                <letters>k,t,i,u</letters>
+            </help>
+            <words></words>
+            <req>
+                <gather_letter count="1">k,t,i,u</gather_letter>
+            </req>
+        </level>
+        <level name="5">
+            <intro>
+                <page sound="locales/sw_tz_village/sounds/intro5p1.ogg">Every locale pack contains it's own set of words specific to it's language</page>
+                <page sound="locales/sw_tz_village/sounds/intro5p2.ogg">This works for any language with a phonetic or even semi-phonetic alphabet</page>
+            </intro>
+            <letters>k,t,i,u</letters>
+            <words>kiti,kuku</words>
+            <help>
+                <letters>k,t</letters>
+                <words>kiti,kuku</words>
+            </help>
+        </level>
+    </levels>
+</locale>

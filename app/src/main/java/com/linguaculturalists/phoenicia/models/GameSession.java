@@ -62,11 +62,36 @@ public class GameSession extends Model {
         session.last_timestamp.set((double)now.getTime());
         session.sessions_played.set(0);
         session.days_played.set(0);
-        session.current_level.set(locale.levels.get(0).name);
         session.points.set(0);
         session.account_balance.set(0);
         session.gross_income.set(0);
         return session;
+    }
+
+    static public GameSession start(String locale_path) {
+        GameSession session = new GameSession();
+        session.locale_pack.set(locale_path);
+        Date now = new Date();
+        session.start_timestamp.set((double)now.getTime());
+        session.last_timestamp.set((double)now.getTime());
+        session.sessions_played.set(0);
+        session.days_played.set(0);
+        session.points.set(0);
+        session.account_balance.set(0);
+        session.gross_income.set(0);
+        return session;
+    }
+
+    public void reset() {
+        Date now = new Date();
+        this.start_timestamp.set((double)now.getTime());
+        this.last_timestamp.set((double)now.getTime());
+        this.sessions_played.set(0);
+        this.days_played.set(0);
+        this.current_level.reset();
+        this.points.set(0);
+        this.account_balance.set(0);
+        this.gross_income.set(0);
     }
 
     @Override

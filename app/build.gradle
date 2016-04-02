@@ -8,10 +8,10 @@ android {
         }
     }
     compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    buildToolsVersion '21.1.2'
     defaultConfig {
         applicationId "com.linguaculturalists.phoenicia"
-        minSdkVersion 19
+        minSdkVersion 15
         targetSdkVersion 19
         versionCode 1
         versionName "1.0"

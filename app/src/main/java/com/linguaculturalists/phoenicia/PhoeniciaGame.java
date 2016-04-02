@@ -128,15 +128,6 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public PhoeniciaGame(GameActivity activity, final ZoomCamera camera) {
         FontFactory.setAssetBasePath("fonts/");
 
-        // Prime the static context utility
-        PhoeniciaContext.activity = activity;
-        PhoeniciaContext.context = activity.getApplicationContext();
-        PhoeniciaContext.textureManager = activity.getTextureManager();
-        PhoeniciaContext.assetManager = activity.getAssets();
-        PhoeniciaContext.vboManager = activity.getVertexBufferObjectManager();
-        PhoeniciaContext.soundManager = activity.getSoundManager();
-        PhoeniciaContext.fontManager = activity.getFontManager();
-
         this.activity = activity;
         this.camera = camera;
 
@@ -221,27 +212,17 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      * Load the game data from both the locale and the saved session.
      * @throws IOException
      */
-    public void load() throws IOException {
-        this.syncDB();
+    public void load(final GameSession session) throws IOException {
+        this.session = session;
 
         // Load locale pack
-        final String locale_pack_manifest = "locales/en_us_rural/manifest.xml";
         LocaleLoader localeLoader = new LocaleLoader();
         try {
-            this.locale = localeLoader.load(PhoeniciaContext.assetManager.open(locale_pack_manifest));
+            this.locale = localeLoader.load(PhoeniciaContext.assetManager.open(this.session.locale_pack.get()));
             Debug.d("Locale map: "+locale.map_src);
         } catch (final IOException e) {
-            Debug.e("Error loading Locale from "+locale_pack_manifest, e);
+            Debug.e("Error loading Locale from "+this.session.locale_pack.get(), e);
         }
-
-        // Load phoeniciaGame session
-        try {
-            this.session = GameSession.objects(PhoeniciaContext.context).all().toList().get(0);
-            this.current_level = this.session.current_level.get();
-        } catch (IndexOutOfBoundsException e) {
-            this.session = GameSession.start(this.locale);
-        }
-        this.session.save(PhoeniciaContext.context);
 
         // Start the Inventory for this session
         Inventory.init(this.session);
@@ -332,7 +313,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         List<Letter> blockLetters = locale.letters;
         List<Word> blockWords = locale.words;
-        SoundFactory.setAssetBasePath("locales/en_us_rural/");
+        //SoundFactory.setAssetBasePath("locales/en_us_rural/");
         try {
             // Load letter assets
             for (int i = 0; i < blockLetters.size(); i++) {
@@ -362,7 +343,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         // Load sound data
         try {
-            SoundFactory.setAssetBasePath("locales/en_us_rural/");
+            //SoundFactory.setAssetBasePath("locales/en_us_rural/");
             blockSounds = new HashMap<String, Sound>();
             Debug.d("Loading  letters");
             for (int i = 0; i < blockLetters.size(); i++) {
@@ -470,24 +451,11 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             this.createWordSprite(wordTile);
         }
 
-    }
+        this.current_level = this.session.current_level.get();
+        if (this.current_level == null) {
+            this.changeLevel( this.locale.levels.get(0));
+        }
 
-    /**
-     * Tell AndOrm about the Models that will be used to read and write to the database.
-     */
-    private void syncDB() {
-        List<Class<? extends Model>> models = new ArrayList<Class<? extends Model>>();
-        models.add(GameSession.class);
-        models.add(InventoryItem.class);
-        models.add(DefaultTile.class);
-        models.add(LetterTile.class);
-        models.add(WordTile.class);
-        models.add(LetterBuilder.class);
-        models.add(WordBuilder.class);
-
-        DatabaseAdapter.setDatabaseName("game_db");
-        DatabaseAdapter adapter = DatabaseAdapter.getInstance(PhoeniciaContext.context);
-        adapter.setModels(models);
     }
 
     /**
@@ -509,18 +477,28 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 }
             }
         }
+
+        this.inventory.removeUpdateListener(this);
+        this.bank.removeUpdateListener(this);
+
         // Delete DB records
-        Inventory.getInstance().clear();
         Bank.getInstance().clear();
-        DatabaseAdapter adapter = DatabaseAdapter.getInstance(PhoeniciaContext.context);
-        adapter.drop();
-        this.syncDB();
-        this.session = GameSession.start(this.locale);
+        InventoryItem.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
+        DefaultTile.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
+        LetterBuilder.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
+        LetterTile.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
+        WordBuilder.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
+        WordTile.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
+
+        this.inventory.addUpdateListener(this);
+        this.bank.addUpdateListener(this);
+
+        this.session.reset();
         this.session.save(PhoeniciaContext.context);
-        this.current_level = this.session.current_level.get();
+        this.current_level = this.locale.levels.get(0).name;
         this.createInventoryTile();
         this.createMarketTile();
-        this.changeLevel(this.locale.level_map.get(this.current_level));
+        this.changeLevel(this.locale.levels.get(0));
 
     }
 

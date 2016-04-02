@@ -1,6 +1,9 @@
 package com.linguaculturalists.phoenicia.models;
 
+import android.content.Context;
+
 import com.orm.androrm.Model;
+import com.orm.androrm.QuerySet;
 import com.orm.androrm.field.CharField;
 import com.orm.androrm.field.IntegerField;
 
