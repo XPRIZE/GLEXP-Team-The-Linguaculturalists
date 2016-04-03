@@ -36,10 +36,10 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         this.game = game;
         this.game.addLevelListener(this);
 
-        levelDisplay = new Text(96, game.camera.getHeight()-24, GameFonts.defaultHUDDisplay(), "Level: "+game.current_level, 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        levelDisplay = new Text(96, game.camera.getHeight()-24, GameFonts.defaultHUDDisplay(), "Level: "+game.current_level, 20, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
         this.attachChild(levelDisplay);
 
-        balanceDisplay = new Text(96, game.camera.getHeight()-64, GameFonts.defaultHUDDisplay(), "Coins: "+game.session.account_balance.get(), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        balanceDisplay = new Text(96, game.camera.getHeight()-64, GameFonts.defaultHUDDisplay(), "Coins: "+game.session.account_balance.get(), 20, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
         this.attachChild(balanceDisplay);
 
 /*

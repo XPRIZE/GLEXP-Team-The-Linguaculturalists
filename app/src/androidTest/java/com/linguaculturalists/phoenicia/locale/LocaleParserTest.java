@@ -33,6 +33,7 @@ public class LocaleParserTest extends AndroidTestCase {
         try {
              locale = localeLoader.load(PhoeniciaContext.assetManager.open(this.test_locale_manifest));
         } catch (final IOException e) {
+            assertNotNull(e);
         }
         assertNotNull("Failed to load Locale", locale);
         return locale;

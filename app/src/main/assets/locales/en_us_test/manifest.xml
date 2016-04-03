@@ -5,10 +5,12 @@
 
     <inventory name="InventoryTest" col="1" row="2" texture="locales/en_us_test/textures/inventory.png" />
 
-    <market name="MarketTest" col="2" row="1" texture="locales/en_us_test/textures/market.png">
+    <market name="MarketTest" col="2" row="1" texture="locales/en_us_test/textures/market.png" />
+
+    <people>
         <person name="Konqi" texture="locales/en_us_test/textures/persons/konqi.png" />
         <person name="Tux" texture="locales/en_us_test/textures/persons/tux.png" />
-    </market>
+    </people>
 
     <letters>
         <letter name="a" buy="1"  sell="1"  time="10" points="100" texture="locales/en_us_test/textures/letters/a.png" sound="locales/en_us_test/sounds/a.ogg" phoneme="locales/en_us_test/phonemes/a.ogg">a</letter>
@@ -21,7 +23,7 @@
     </words>
     
     <levels>
-        <level name="1">
+        <level name="test1" market="0">
             <intro>
                 <page sound="locales/en_us_test/sounds/intro1p1.ogg">Test level 1 intro page 1</page>
                 <page sound="locales/en_us_test/sounds/intro1p2.ogg" texture="locales/en_us_test/textures/intro1p2.png">Test level 1 intro page 2</page>
@@ -36,7 +38,7 @@
                 <gather_letter count="1">a</gather_letter>
             </req>
         </level>
-        <level name="test2">
+        <level name="test2" market="1">
             <intro>
                 <page sound="locales/en_us_test/sounds/intro2p1.ogg">Test level 2 intro page</page>
             </intro>

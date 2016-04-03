@@ -452,7 +452,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         }
 
         this.current_level = this.session.current_level.get();
-        if (this.current_level == null) {
+        if (this.current_level == null || this.current_level == "") {
             this.changeLevel( this.locale.levels.get(0));
         }
 

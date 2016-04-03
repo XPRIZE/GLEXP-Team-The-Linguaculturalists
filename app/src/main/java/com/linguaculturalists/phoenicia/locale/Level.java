@@ -11,6 +11,7 @@ import java.util.List;
 */
 public class Level {
     public String name; /**< reference name for this level */
+    public int marketRequests; /**< number of market requests available */
     public List<Letter> letters; /**< list of \link Letter Letters \endlink available in this level */
     public List<Word> words; /**< list of \link Word Words \endlink available in this level */
     public List<Letter> help_letters; /**< list of \link Letter Letters \endlink to give extra help with on this level */

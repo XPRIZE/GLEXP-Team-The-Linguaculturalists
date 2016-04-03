@@ -17,6 +17,7 @@ public class LocaleParser extends DefaultHandler {
     private static final String TAG_MAP = "map";
     private static final String TAG_INVENTORY = "inventory";
     private static final String TAG_MARKET = "market";
+    private static final String TAG_PEOPLE= "people";
     private static final String TAG_PERSON = "person";
     private static final String TAG_SHELL = "shell";
     private static final String TAG_LETTERS = "letters";
@@ -32,7 +33,7 @@ public class LocaleParser extends DefaultHandler {
     private static final String TAG_REQLETTER = "gather_letter";
     private static final String TAG_REQWORD = "gather_word";
     private boolean inLocale = false;
-    private boolean inMarket = false;
+    private boolean inPeople = false;
     private boolean inLettersList = false;
     private boolean inLetterDefinition = false;
     private boolean inWordsList = false;
@@ -81,9 +82,10 @@ public class LocaleParser extends DefaultHandler {
         } else if (this.inLocale && localName.equals(LocaleParser.TAG_INVENTORY)) {
             this.parseInventory(attributes);
         } else if (this.inLocale && localName.equals(LocaleParser.TAG_MARKET)) {
-            this.inMarket = true;
             this.parseMarket(attributes);
-        } else if (this.inLocale && this.inMarket && localName.equals(LocaleParser.TAG_PERSON)) {
+        } else if (this.inLocale && localName.equals(LocaleParser.TAG_PEOPLE)) {
+            this.inPeople = true;
+        } else if (this.inLocale && this.inPeople && localName.equals(LocaleParser.TAG_PERSON)) {
             this.parsePerson(attributes);
         } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
             if (!this.inLevelDefinition) {
@@ -208,6 +210,7 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale level");
         this.currentLevel = new Level();
         this.currentLevel.name = attributes.getValue("name");
+        //this.currentLevel.marketRequests = Integer.parseInt(attributes.getValue("market"));
         this.currentLevel.letters = new ArrayList<Letter>();
         this.currentLevel.words = new ArrayList<Word>();
         this.currentLevel.help_letters = new ArrayList<Letter>();
@@ -238,8 +241,8 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parser end: "+localName);
         if (localName.equals(LocaleParser.TAG_LOCALE)) {
             this.inLocale = false;
-        } else if (this.inLocale && this.inMarket && localName.equals(LocaleParser.TAG_MARKET)) {
-            this.inMarket = false;
+        } else if (this.inLocale && this.inPeople && localName.equals(LocaleParser.TAG_PEOPLE)) {
+            this.inPeople = false;
         } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
             if (!this.inLevelDefinition) {
                 this.inLettersList = false;
