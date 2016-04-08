@@ -91,7 +91,7 @@
                 <gather_word count="1">cat</gather_word>
             </req>
         </level>
-        <level name="4" market="1">
+        <level name="4" market="3">
             <intro>
                 <page sound="locales/en_us_rural/sounds/intro4p1.ogg">Yay! Building words from letters is what Phoenicia is all about!</page>
                 <page sound="locales/en_us_rural/sounds/intro4p2.ogg">Here's a new letter: 'H', you can use it with your other letters to build the word 'hat'</page>
@@ -106,7 +106,7 @@
                 <gather_word count="1">hat</gather_word>
             </req>
         </level>
-        <level name="5" market="2">
+        <level name="5" market="5">
             <intro>
                 <page sound="locales/en_us_rural/sounds/intro5p1.ogg">You're doing great! Now that you have the hang of it, here's some more letters and words that you can grown and build.</page>
                 <page sound="locales/en_us_rural/sounds/intro5p2.ogg">Keeping building words and you'll reach new levels, each new level will open up new letters and words for you to use.</page>

@@ -53,15 +53,20 @@ public class Market {
         Filter openRequests = new Filter();
         openRequests.is("status", MarketRequest.REQUESTED);
         List<MarketRequest> items = MarketRequest.objects(PhoeniciaContext.context).filter(this.session.filter).filter(openRequests).toList();
+        Debug.d("Found "+items.size()+" requests");
         return items;
     }
 
     public void populate() {
+        Debug.d("Populating marketplace");
         int limit = this.game.locale.level_map.get(this.game.current_level).marketRequests;
-        int needed = limit = this.requests().size();
+        Debug.d("Level " + this.game.current_level + " accepts up to " + limit + " requests");
+        int needed = limit - this.requests().size();
+        Debug.d("Need "+needed+" more requests");
         if (needed > 0) {
             for (int i = 0; i < needed; i++) {
-                this.createRequest();
+                MarketRequest newRequest = this.createRequest();
+                Debug.d("Adding request from "+newRequest.person_name.get());
             }
         }
     }
@@ -71,7 +76,8 @@ public class Market {
         MarketRequest request = new MarketRequest();
         request.game.set(this.session);
         // TODO: pick random available person
-        request.person_name.set(this.game.locale.people.get(0).name);
+        int person_id = Math.round((float)Math.random());
+        request.person_name.set(this.game.locale.people.get(person_id).name);
         request.status.set(MarketRequest.REQUESTED);
         request.requested.set((double) now.getTime());
         request.save(PhoeniciaContext.context);
@@ -98,14 +104,36 @@ public class Market {
             requestWord.quantity.set((int) (Math.random() * 5) + 1);
             requestWord.save(PhoeniciaContext.context);
         }
+        this.requestAdded(request);
         return request;
     }
 
     /**
-     * Set all InventoryItem quantities to 0
+     * Delete all Market requests
      */
     public void clear() {
-        // TODO: Clear market requests
+        List<MarketRequest> items = MarketRequest.objects(PhoeniciaContext.context).filter(this.session.filter).toList();
+        for (int i = 0; i < items.size(); i++) {
+            items.get(i).delete(PhoeniciaContext.context);
+        }
+    }
+
+    private void requestAdded(MarketRequest request) {
+        for (MarketUpdateListener listener : this.listeners) {
+            listener.onMarketRequestAdded(request);
+        }
+    }
+
+    private void requestFulfilled(MarketRequest request) {
+        for (MarketUpdateListener listener : this.listeners) {
+            listener.onMarketRequestAdded(request);
+        }
+    }
+
+    private void requestCanceled(MarketRequest request) {
+        for (MarketUpdateListener listener : this.listeners) {
+            listener.onMarketRequestAdded(request);
+        }
     }
 
     public void addUpdateListener(MarketUpdateListener listener) {
@@ -120,6 +148,8 @@ public class Market {
      */
     public interface MarketUpdateListener {
         public void onMarketRequestAdded(final MarketRequest request);
+        public void onMarketRequestFulfilled(final MarketRequest request);
+        public void onMarketRequestCanceled(final MarketRequest request);
     }
 
 }

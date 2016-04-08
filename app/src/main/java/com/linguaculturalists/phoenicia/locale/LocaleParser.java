@@ -175,7 +175,7 @@ public class LocaleParser extends DefaultHandler {
         newPerson.name = attributes.getValue("name");
         newPerson.texture_src = attributes.getValue("texture");
         this.locale.people.add(newPerson);
-
+        this.locale.person_map.put(newPerson.name, newPerson);
     }
 
     private void parseLetterDefinition(Attributes attributes) throws SAXException {
@@ -210,7 +210,7 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale level");
         this.currentLevel = new Level();
         this.currentLevel.name = attributes.getValue("name");
-        //this.currentLevel.marketRequests = Integer.parseInt(attributes.getValue("market"));
+        this.currentLevel.marketRequests = Integer.parseInt(attributes.getValue("market"));
         this.currentLevel.letters = new ArrayList<Letter>();
         this.currentLevel.words = new ArrayList<Word>();
         this.currentLevel.help_letters = new ArrayList<Letter>();

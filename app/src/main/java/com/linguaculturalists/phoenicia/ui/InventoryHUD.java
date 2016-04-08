@@ -69,7 +69,7 @@ public class InventoryHUD extends PhoeniciaHUD {
         List<InventoryItem> items = Inventory.getInstance().items();
         for (int i = 0; i < items.size(); i++) {
             if (offsetX >= columns) {
-                offsetY -= 80;
+                offsetY -= 96;
                 offsetX = 0;
             }
             final InventoryItem item = items.get(i);

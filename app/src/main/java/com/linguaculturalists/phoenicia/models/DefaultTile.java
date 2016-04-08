@@ -90,7 +90,7 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
         if (this.item_type.get().equals("inventory")) {
             phoeniciaGame.hudManager.showInventory();
         } else if (this.item_type.get().equals("market")) {
-            phoeniciaGame.hudManager.showInventory();
+            phoeniciaGame.hudManager.showMarket();
         } else {
             Debug.e("Unknown default block: "+this.item_type.get());
         }

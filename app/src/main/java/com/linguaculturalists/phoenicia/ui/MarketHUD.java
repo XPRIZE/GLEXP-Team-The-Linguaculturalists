@@ -4,9 +4,12 @@ import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.LetterSprite;
 import com.linguaculturalists.phoenicia.locale.Letter;
+import com.linguaculturalists.phoenicia.locale.Person;
 import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
+import com.linguaculturalists.phoenicia.models.Market;
+import com.linguaculturalists.phoenicia.models.MarketRequest;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.primitive.Rectangle;
@@ -41,10 +44,10 @@ public class MarketHUD extends PhoeniciaHUD {
             }
         });
 
-        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 400, PhoeniciaContext.vboManager) {
+        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, (int)(GameActivity.CAMERA_WIDTH * 0.9), (int)(GameActivity.CAMERA_HEIGHT * 0.9), PhoeniciaContext.vboManager) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
-                Debug.d("Inventory dialog touched");
+                Debug.d("Market dialog touched");
                 super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
                 return true;
             }
@@ -53,44 +56,37 @@ public class MarketHUD extends PhoeniciaHUD {
         this.attachChild(whiteRect);
         this.registerTouchArea(whiteRect);
 
-        final int columns = 4;
-        int startX = (int) (whiteRect.getWidth() / 2) - (columns * 32) - 16;
-        int startY = (int) whiteRect.getHeight() - 50;
+        final int columns = 2;
+        int startX = (int) (whiteRect.getWidth() / 2) - (columns * 128) - 64;
+        int startY = (int) whiteRect.getHeight() - 192;
 
         int offsetX = 0;
         int offsetY = startY;
 
-        List<InventoryItem> items = Inventory.getInstance().items();
-        for (int i = 0; i < items.size(); i++) {
+        // Make sure we have all requests we can get
+        Market.getInstance().populate();
+
+        List<MarketRequest> requests = Market.getInstance().requests();
+        for (int i = 0; i < requests.size(); i++) {
             if (offsetX >= columns) {
-                offsetY -= 80;
+                offsetY -= 288;
                 offsetX = 0;
             }
-            final InventoryItem item = items.get(i);
-            final Letter currentLetter = game.locale.letter_map.get(item.item_name.get());
-            if (currentLetter == null) {
-                Debug.d("Inventory Word: "+item.item_name.get());
+            final MarketRequest request = requests.get(i);
+            final Person currentPerson = game.locale.person_map.get(request.person_name.get());
+            if (currentPerson == null) {
+                Debug.d("Market Request without person!");
                 continue;
             }
-            Debug.d("Adding Builder letter: " + currentLetter.name + " (tile: " + currentLetter.tile + ")");
-            final int tile_id = currentLetter.sprite;
-            final ITextureRegion blockRegion = new TiledTextureRegion(game.letterTextures.get(currentLetter),
-                    game.letterTiles.get(currentLetter).getTextureRegion(0),
-                    game.letterTiles.get(currentLetter).getTextureRegion(1),
-                    game.letterTiles.get(currentLetter).getTextureRegion(2));
-            final LetterSprite block = new LetterSprite(startX + (96 * offsetX), offsetY, currentLetter, Inventory.getInstance().getCount(currentLetter.name), blockRegion, PhoeniciaContext.vboManager);
+            Debug.d("Adding Market request: " + currentPerson.name);
+            final ITextureRegion personRegion = game.personTiles.get(currentPerson);
+
+            final ButtonSprite block = new ButtonSprite(startX + (272 * offsetX), offsetY, personRegion, PhoeniciaContext.vboManager);
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                    Debug.d("Inventory Item " + currentLetter.name + " clicked");
-                    try {
-                        Inventory.getInstance().subtract(currentLetter.name);
-                        Bank.getInstance().credit(currentLetter.sell);
-                        block.setCount(Inventory.getInstance().getCount(currentLetter.name));
-                    } catch (Exception e) {
-                        Debug.d("Could not sell "+currentLetter.name, e);
-
-                    }
+                    Debug.d("Request from " + currentPerson.name + " clicked");
+                    // TODO: Populate market request
                 }
             });
             this.registerTouchArea(block);
@@ -98,6 +94,11 @@ public class MarketHUD extends PhoeniciaHUD {
             offsetX++;
 
         }
+    }
+
+    @Override
+    public void close() {
+        Market.getInstance().clear();
     }
 
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
