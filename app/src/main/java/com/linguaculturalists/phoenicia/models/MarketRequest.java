@@ -25,6 +25,8 @@ public class MarketRequest extends Model {
     public ForeignKeyField<GameSession> game; /**< reference to the GameSession this item is a part of */
     public CharField person_name; /**< name of the locale Person making the request */
     public IntegerField status; /**< status of this request */
+    public IntegerField coins; /**< number of coins being offered */
+    public IntegerField points; /**< number of experience points being offered */
     public DoubleField requested; /**< time when the request was created */
     public DoubleField fulfilled; /**< time when the request was fulfilled */
 
@@ -55,6 +57,9 @@ public class MarketRequest extends Model {
     @Override
     protected void migrate(Context context) {
         Migrator<MarketRequest> migrator = new Migrator<MarketRequest>(MarketRequest.class);
+
+        migrator.addField("coins", new IntegerField());
+        migrator.addField("points", new IntegerField());
 
         // roll out all migrations
         migrator.migrate(context);

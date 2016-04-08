@@ -46,7 +46,7 @@ import java.util.List;
 public class GameActivity extends BaseGameActivity {
 
     public static final int CAMERA_WIDTH = 1280;
-    public static final int CAMERA_HEIGHT = 800;
+    public static final int CAMERA_HEIGHT = 750;
 
     public ZoomCamera main_camera = new ZoomCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
     private PhoeniciaGame game;

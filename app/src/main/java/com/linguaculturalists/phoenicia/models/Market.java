@@ -76,7 +76,7 @@ public class Market {
         MarketRequest request = new MarketRequest();
         request.game.set(this.session);
         // TODO: pick random available person
-        int person_id = Math.round((float)Math.random());
+        int person_id = Math.round((float)Math.random() * (this.game.locale.people.size()-1));
         request.person_name.set(this.game.locale.people.get(person_id).name);
         request.status.set(MarketRequest.REQUESTED);
         request.requested.set((double) now.getTime());

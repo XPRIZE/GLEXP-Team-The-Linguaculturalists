@@ -8,8 +8,8 @@
     <market name="Market" col="41" row="41" texture="locales/en_us_rural/textures/market.png" />
 
     <people>
-        <person name="Konqi" texture="locales/en_us_rural/textures/persons/konqi.png" />
-        <person name="Tux" texture="locales/en_us_rural/textures/persons/tux.png" />
+        <person name="Dave" texture="locales/common/textures/persons/Dave.png" />
+        <person name="Roxanne" texture="locales/common/textures/persons/Roxanne.png" />
     </people>
 
     <letters>
@@ -106,7 +106,7 @@
                 <gather_word count="1">hat</gather_word>
             </req>
         </level>
-        <level name="5" market="5">
+        <level name="5" market="7">
             <intro>
                 <page sound="locales/en_us_rural/sounds/intro5p1.ogg">You're doing great! Now that you have the hang of it, here's some more letters and words that you can grown and build.</page>
                 <page sound="locales/en_us_rural/sounds/intro5p2.ogg">Keeping building words and you'll reach new levels, each new level will open up new letters and words for you to use.</page>
