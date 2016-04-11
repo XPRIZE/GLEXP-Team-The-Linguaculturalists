@@ -10,6 +10,7 @@ public abstract class PhoeniciaHUD extends CameraScene {
 
     public PhoeniciaHUD(Camera camera) {
         super(camera);
+        this.setOnAreaTouchTraversalFrontToBack();
     }
 
     /**

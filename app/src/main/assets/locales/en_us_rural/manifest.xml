@@ -10,6 +10,8 @@
     <people>
         <person name="Dave" texture="locales/common/textures/persons/Dave.png" />
         <person name="Roxanne" texture="locales/common/textures/persons/Roxanne.png" />
+        <person name="Ben" texture="locales/common/textures/persons/Ben.png" />
+        <person name="Laura" texture="locales/common/textures/persons/Laura.png" />
     </people>
 
     <letters>
