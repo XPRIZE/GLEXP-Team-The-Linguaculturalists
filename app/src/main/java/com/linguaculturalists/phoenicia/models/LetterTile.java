@@ -265,7 +265,7 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
                 isoY.set(newlocation.getTileRow());
                 phoeniciaGame.placedSprites[newlocation.getTileColumn()][newlocation.getTileRow()] = sprite;
                 phoeniciaGame.scene.sortChildren();
-
+                save(PhoeniciaContext.context);
             }
         }));
 

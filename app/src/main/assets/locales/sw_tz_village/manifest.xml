@@ -8,8 +8,8 @@
     <market name="Market" col="41" row="41" texture="locales/sw_tz_village/textures/market.png" />
 
     <people>
-        <person name="Konqi" texture="locales/en_us_rural/persons/konqi.png" />
-        <person name="Tux" texture="locales/en_us_rural/persons/tux.png" />
+        <person name="Konqi" texture="locales/common/textures/persons/konqi.png" />
+        <person name="Tux" texture="locales/common/textures/persons/tux.png" />
     </people>
 
     <letters>

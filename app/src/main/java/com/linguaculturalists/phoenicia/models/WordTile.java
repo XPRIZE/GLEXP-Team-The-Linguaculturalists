@@ -258,7 +258,7 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
                 isoY.set(newlocation.getTileRow());
                 phoeniciaGame.placedSprites[newlocation.getTileColumn()][newlocation.getTileRow()] = sprite;
                 phoeniciaGame.scene.sortChildren();
-
+                save(PhoeniciaContext.context);
             }
         }));
 

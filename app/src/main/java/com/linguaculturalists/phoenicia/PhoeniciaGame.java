@@ -409,7 +409,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         try {
             final Filter inventoryFilter = new Filter();
             inventoryFilter.is("item_type", "inventory");
-            final DefaultTile inventoryDefaultTile = DefaultTile.objects(PhoeniciaContext.context).filter(inventoryFilter).toList().get(0);
+            final DefaultTile inventoryDefaultTile = DefaultTile.objects(PhoeniciaContext.context).filter(session.filter).filter(inventoryFilter).toList().get(0);
             inventoryDefaultTile.phoeniciaGame = this;
             this.createInventorySprite(inventoryDefaultTile);
             this.startCenterX = inventoryDefaultTile.sprite.getX();
@@ -422,7 +422,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         try {
             final Filter marketFilter = new Filter();
             marketFilter.is("item_type", "market");
-            final DefaultTile marketDefaultTile = DefaultTile.objects(PhoeniciaContext.context).filter(marketFilter).toList().get(0);
+            final DefaultTile marketDefaultTile = DefaultTile.objects(PhoeniciaContext.context).filter(session.filter).filter(marketFilter).toList().get(0);
             marketDefaultTile.phoeniciaGame = this;
             this.createMarketSprite(marketDefaultTile);
         } catch (IndexOutOfBoundsException e) {
