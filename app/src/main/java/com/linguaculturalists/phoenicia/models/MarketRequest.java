@@ -41,6 +41,8 @@ public class MarketRequest extends Model {
         this.game = new ForeignKeyField<GameSession>(GameSession.class);
         this.person_name = new CharField(32);
         this.status = new IntegerField();
+        this.coins = new IntegerField();
+        this.points = new IntegerField();
         this.requested = new DoubleField();
         this.fulfilled = new DoubleField();
     }

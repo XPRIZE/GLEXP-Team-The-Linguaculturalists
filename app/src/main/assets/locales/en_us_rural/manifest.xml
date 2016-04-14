@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <locale name="en_us_rural" lang="en_us" display_name="US English, Rural Setting">
-    <shell src="locales/en_us_rural/textures/gameui.png" />
+    <shell src="locales/common/textures/gameui.png" />
     <map src="locales/en_us_rural/map.tmx" />
 
     <!-- default blocks -->

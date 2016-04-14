@@ -30,7 +30,7 @@ public class Market {
 
     /**
      * Initialize the singleton for a given session
-     * @param session
+     * @param game
      */
     public static void init(PhoeniciaGame game) {
         instance = new Market(game);
@@ -86,6 +86,8 @@ public class Market {
 
         final List<Letter> levelLetters = this.game.locale.level_map.get(this.game.current_level).letters;
         final List<Word> levelWords = this.game.locale.level_map.get(this.game.current_level).words;
+        int requestCoins = 0;
+        int requestPoints = 0;
         for (int i = 0; i < num_items; ) {
 
             // TODO: pick letters and words based on inventory, history and level
@@ -97,6 +99,8 @@ public class Market {
                 requestLetter.item_name.set(levelLetters.get(randomLetter).name);
                 requestLetter.quantity.set((int) (Math.random() * 5) + 1);
                 requestLetter.save(PhoeniciaContext.context);
+                requestCoins += (levelLetters.get(randomLetter).sell * requestLetter.quantity.get());
+                requestPoints += (levelLetters.get(randomLetter).points * requestLetter.quantity.get());
                 i += 1;
             }
 
@@ -108,10 +112,15 @@ public class Market {
                 requestWord.item_name.set(levelWords.get(randomWord).name);
                 requestWord.quantity.set((int) (Math.random() * 5) + 1);
                 requestWord.save(PhoeniciaContext.context);
+                requestCoins += (levelWords.get(randomWord).sell * requestWord.quantity.get());
+                requestPoints += (levelWords.get(randomWord).points * requestWord.quantity.get());
                 i += 1;
             }
 
         }
+        request.coins.set(requestCoins);
+        request.points.set(requestPoints);
+        request.save(PhoeniciaContext.context);
         this.requestAdded(request);
         return request;
     }

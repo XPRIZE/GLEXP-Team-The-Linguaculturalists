@@ -5,10 +5,12 @@ import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.sprite.ButtonSprite;
+import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.opengl.texture.region.ITextureRegion;
@@ -36,26 +38,21 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         this.game = game;
         this.game.addLevelListener(this);
 
-        levelDisplay = new Text(96, game.camera.getHeight()-24, GameFonts.defaultHUDDisplay(), "Level: "+game.current_level, 20, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        ITextureRegion levelRegion = game.shellTiles.getTextureRegion(GameTextures.LEVEL_ICON);
+        Sprite levelIcon = new Sprite(32, GameActivity.CAMERA_HEIGHT - 24, levelRegion, PhoeniciaContext.vboManager);
+        levelDisplay = new Text(160, GameActivity.CAMERA_HEIGHT - 24, GameFonts.defaultHUDDisplay(), game.current_level, 20, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        this.attachChild(levelIcon);
         this.attachChild(levelDisplay);
+        levelDisplay.setPosition(64 + (levelDisplay.getWidth() / 2), levelDisplay.getY());
 
-        balanceDisplay = new Text(96, game.camera.getHeight()-64, GameFonts.defaultHUDDisplay(), "Coins: "+game.session.account_balance.get(), 20, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        ITextureRegion coinRegion = game.shellTiles.getTextureRegion(GameTextures.COIN_ICON);
+        Sprite coinIcon = new Sprite(32, GameActivity.CAMERA_HEIGHT-64, coinRegion, PhoeniciaContext.vboManager);
+        balanceDisplay = new Text(160, GameActivity.CAMERA_HEIGHT-64, GameFonts.defaultHUDDisplay(), game.session.account_balance.get().toString(), 20, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        this.attachChild(coinIcon);
         this.attachChild(balanceDisplay);
+        balanceDisplay.setPosition(64 + (balanceDisplay.getWidth() / 2), balanceDisplay.getY());
 
-/*
-        ITextureRegion inventoryRegion = game.shellTiles.getTextureRegion(2);
-        this.inventoryBlock = new ButtonSprite(64, 64, inventoryRegion, PhoeniciaContext.vboManager);
-        inventoryBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
-            @Override
-            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                game.hudManager.showInventory();
-            }
-        });
-        this.registerTouchArea(inventoryBlock);
-        this.attachChild(inventoryBlock);
-*/
-
-        ITextureRegion letterRegion = game.shellTiles.getTextureRegion(0);
+        ITextureRegion letterRegion = game.shellTiles.getTextureRegion(GameTextures.LETTER_PLACEMENT);
         this.letterBlock = new ButtonSprite(GameActivity.CAMERA_WIDTH-(64*3), 64, letterRegion, PhoeniciaContext.vboManager);
         letterBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
@@ -66,7 +63,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         this.registerTouchArea(letterBlock);
         this.attachChild(letterBlock);
 
-        ITextureRegion wordRegion = game.shellTiles.getTextureRegion(1);
+        ITextureRegion wordRegion = game.shellTiles.getTextureRegion(GameTextures.WORD_PLACEMENT);
         this.wordBlock = new ButtonSprite(GameActivity.CAMERA_WIDTH-64, 64, wordRegion, PhoeniciaContext.vboManager);
         wordBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
@@ -77,7 +74,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         this.registerTouchArea(wordBlock);
         this.attachChild(wordBlock);
 
-        ITextureRegion clearRegion = game.shellTiles.getTextureRegion(7);
+        ITextureRegion clearRegion = game.shellTiles.getTextureRegion(GameTextures.CANCEL);
         ButtonSprite clearBlock = new ButtonSprite(GameActivity.CAMERA_WIDTH-32, GameActivity.CAMERA_HEIGHT-48, clearRegion, PhoeniciaContext.vboManager);
         clearBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override

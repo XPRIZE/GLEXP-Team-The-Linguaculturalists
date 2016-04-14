@@ -17,11 +17,13 @@ import com.linguaculturalists.phoenicia.models.Market;
 import com.linguaculturalists.phoenicia.models.MarketRequest;
 import com.linguaculturalists.phoenicia.models.RequestItem;
 import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.Entity;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.sprite.ButtonSprite;
+import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.AutoWrap;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
@@ -160,6 +162,20 @@ public class MarketHUD extends PhoeniciaHUD {
             offsetX++;
             startX += 96;
         }
+
+        ITextureRegion coinRegion = game.shellTiles.getTextureRegion(GameTextures.COIN_ICON);
+        Sprite coinIcon = new Sprite(32, 92, coinRegion, PhoeniciaContext.vboManager);
+        Text iconDisplay = new Text(32, 92, GameFonts.dialogText(), request.coins.get().toString(), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        iconDisplay.setPosition(64 + (iconDisplay.getWidth() / 2), iconDisplay.getY());
+        this.requestItemsPane.attachChild(iconDisplay);
+        this.requestItemsPane.attachChild(coinIcon);
+
+        ITextureRegion pointsRegion = game.shellTiles.getTextureRegion(GameTextures.XP_ICON);
+        Sprite pointsIcon = new Sprite((this.requestItemsPane.getWidth() / 2)+32, 92, pointsRegion, PhoeniciaContext.vboManager);
+        Text pointsDisplay = new Text((this.requestItemsPane.getWidth() / 2)+32, 92, GameFonts.dialogText(), request.points.get().toString(), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        pointsDisplay.setPosition((this.requestItemsPane.getWidth() / 2) + 64 + (pointsDisplay.getWidth() / 2), pointsDisplay.getY());
+        this.requestItemsPane.attachChild(pointsDisplay);
+        this.requestItemsPane.attachChild(pointsIcon);
 
         Button sellButton = new Button(this.requestItemsPane.getWidth() / 2, 32, this.requestItemsPane.getWidth(), 64, "Sell", PhoeniciaContext.vboManager, new Button.OnClickListener() {
             @Override
