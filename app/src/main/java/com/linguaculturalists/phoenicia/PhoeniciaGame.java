@@ -923,6 +923,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public void changeLevel(Level next) {
         this.current_level = next.name;
         this.session.current_level.set(current_level);
+        Bank.getInstance().credit(next.coinsEarned);
         this.session.save(PhoeniciaContext.context);
 
         Debug.d("Level changed to: " + current_level);

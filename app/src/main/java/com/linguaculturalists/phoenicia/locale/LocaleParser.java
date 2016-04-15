@@ -215,6 +215,11 @@ public class LocaleParser extends DefaultHandler {
         } else {
             this.currentLevel.marketRequests = 0;
         }
+        if (attributes.getValue("coins") != null) {
+            this.currentLevel.coinsEarned = Integer.parseInt(attributes.getValue("coins"));
+        } else {
+            this.currentLevel.coinsEarned = 0;
+        }
         this.currentLevel.letters = new ArrayList<Letter>();
         this.currentLevel.words = new ArrayList<Word>();
         this.currentLevel.help_letters = new ArrayList<Letter>();
