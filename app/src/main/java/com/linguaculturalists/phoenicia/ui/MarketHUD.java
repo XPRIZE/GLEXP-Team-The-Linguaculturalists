@@ -218,6 +218,7 @@ public class MarketHUD extends PhoeniciaHUD {
         request.status.set(MarketRequest.FULFILLED);
         request.save(PhoeniciaContext.context);
         this.requestItemsPane.detachChildren();
+        game.hudManager.clear();
     }
 
     public void abortSale(RequestItem item, int needed) {

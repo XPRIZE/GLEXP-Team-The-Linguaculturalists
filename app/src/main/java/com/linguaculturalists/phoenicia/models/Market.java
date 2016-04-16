@@ -3,12 +3,14 @@ package com.linguaculturalists.phoenicia.models;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Locale;
+import com.linguaculturalists.phoenicia.locale.Person;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.Filter;
 
 import org.andengine.util.debug.Debug;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -75,9 +77,19 @@ public class Market {
         Date now = new Date();
         MarketRequest request = new MarketRequest();
         request.game.set(this.session);
-        // TODO: pick random available person
-        int person_id = Math.round((float)Math.random() * (this.game.locale.people.size()-1));
-        request.person_name.set(this.game.locale.people.get(person_id).name);
+        // TODO: refactor to be more efficient when adding more than one request at a time
+        List<String> existing_persons = new ArrayList<String>();
+        for (MarketRequest existing_request : this.requests()) {
+            existing_persons.add(existing_request.person_name.get());
+        }
+        List<String> available_persons = new ArrayList<String>();
+        for (Person check_person : this.game.locale.people) {
+            if (!existing_persons.contains(check_person.name)) {
+                available_persons.add(check_person.name);
+            }
+        }
+        int person_id = Math.round((float)Math.random() * (available_persons.size()-1));
+        request.person_name.set(available_persons.get(person_id));
         request.status.set(MarketRequest.REQUESTED);
         request.requested.set((double) now.getTime());
         request.save(PhoeniciaContext.context);
@@ -88,6 +100,7 @@ public class Market {
         final List<Word> levelWords = this.game.locale.level_map.get(this.game.current_level).words;
         int requestCoins = 0;
         int requestPoints = 0;
+        List<String> usedList = new ArrayList<String>();
         for (int i = 0; i < num_items; ) {
 
             // TODO: pick letters and words based on inventory, history and level
@@ -96,6 +109,10 @@ public class Market {
                 requestLetter.game.set(this.session);
                 requestLetter.request.set(request);
                 int randomLetter = (int) (Math.random() * levelLetters.size());
+
+                if (usedList.contains(levelLetters.get(randomLetter).name)) continue;
+                usedList.add(levelLetters.get(randomLetter).name);
+
                 requestLetter.item_name.set(levelLetters.get(randomLetter).name);
                 requestLetter.quantity.set((int) (Math.random() * 5) + 1);
                 requestLetter.save(PhoeniciaContext.context);
@@ -109,6 +126,10 @@ public class Market {
                 requestWord.game.set(this.session);
                 requestWord.request.set(request);
                 int randomWord = (int) (Math.random() * levelWords.size());
+
+                if (usedList.contains(levelLetters.get(randomWord).name)) continue;
+                usedList.add(levelLetters.get(randomWord).name);
+
                 requestWord.item_name.set(levelWords.get(randomWord).name);
                 requestWord.quantity.set((int) (Math.random() * 5) + 1);
                 requestWord.save(PhoeniciaContext.context);
