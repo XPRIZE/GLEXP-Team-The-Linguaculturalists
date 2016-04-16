@@ -64,7 +64,7 @@ public class Bank extends Model {
      */
     public int debit(int amount) {
         int new_balance = this.session.account_balance.get() - amount;
-        if (new_balance > 0) {
+        if (new_balance >= 0) {
             this.session.account_balance.set(new_balance);
             this.session.save(PhoeniciaContext.context);
             this.accountUpdated(new_balance);

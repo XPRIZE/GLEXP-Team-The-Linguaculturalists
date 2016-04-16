@@ -7,6 +7,11 @@
     <inventory name="Barn" col="37" row="43" texture="locales/en_us_rural/textures/inventory.png" />
     <market name="Market" col="41" row="41" texture="locales/sw_tz_village/textures/market.png" />
 
+    <people>
+        <person name="Konqi" texture="locales/common/textures/persons/konqi.png" />
+        <person name="Tux" texture="locales/common/textures/persons/tux.png" />
+    </people>
+
     <letters>
         <letter name="i" buy="10" sell="10" points="1" time="30" texture="locales/sw_tz_village/textures/letters/i.png" sound="locales/sw_tz_village/sounds/i.ogg" phoneme="locales/sw_tz_village/sounds/i.ogg">i</letter>
         <letter name="k" buy="10" sell="10" points="1" time="30" texture="locales/sw_tz_village/textures/letters/k.png" sound="locales/sw_tz_village/sounds/k.ogg" phoneme="locales/sw_tz_village/sounds/k.ogg">k</letter>

@@ -41,6 +41,7 @@ public class LocaleManager {
 
         String[] files = PhoeniciaContext.assetManager.list(locales_directory);
         for (String locale_dir: files) {
+            if (locale_dir.equals("common")) continue;
             String locale_path = locales_directory+"/"+locale_dir+"/manifest.xml";
             LocaleHeaderScanner scanner = new LocaleHeaderScanner(locale_path, locale_map);
             try {

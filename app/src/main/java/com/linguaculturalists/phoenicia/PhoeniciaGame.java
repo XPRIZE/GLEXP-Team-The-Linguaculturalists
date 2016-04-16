@@ -22,6 +22,7 @@ import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
+import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.opengl.texture.region.TextureRegionFactory;
 import org.andengine.util.adt.color.Color;
 import org.andengine.extension.tmx.TMXLoader;
@@ -44,6 +45,7 @@ import com.linguaculturalists.phoenicia.locale.IntroPage;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Locale;
+import com.linguaculturalists.phoenicia.locale.Person;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.Builder;
@@ -53,6 +55,7 @@ import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.models.LetterTile;
+import com.linguaculturalists.phoenicia.models.Market;
 import com.linguaculturalists.phoenicia.models.WordBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
@@ -67,6 +70,8 @@ import com.orm.androrm.Model;
  * The main class for managing a game.
  */
 public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateListener, Bank.BankUpdateListener {
+    public static final int PERSON_TILE_WIDTH = 256;
+    public static final int PERSON_TILE_HEIGHT = 256;
     public static final int LETTER_TEXTURE_COLS = 4;
     public static final int LETTER_TEXTURE_ROWS = 6;
     public static final int LETTER_TILE_WIDTH = 64;
@@ -90,6 +95,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
     public AssetBitmapTexture shellTexture;
     public ITiledTextureRegion shellTiles; /**< Tile regions for building the game shell */
+
+    public Map<Person, AssetBitmapTexture> personTextures;
+    public Map<Person, TextureRegion> personTiles; /**< Tile regions depicting people */
 
     public AssetBitmapTexture inventoryTexture;
     public ITiledTextureRegion inventoryTiles; /**< Tile regions for the inventory block */
@@ -139,6 +147,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.blockSounds = new HashMap<String, Sound>();
         this.builders = new HashSet<Builder>();
         this.updateTime = 0;
+
+        this.personTextures = new HashMap<Person, AssetBitmapTexture>();
+        this.personTiles = new HashMap<Person, TextureRegion>();
 
         this.letterTextures = new HashMap<Letter, AssetBitmapTexture>();
         this.letterTiles = new HashMap<Letter, ITiledTextureRegion>();
@@ -229,6 +240,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.inventory = Inventory.getInstance();
         this.inventory.addUpdateListener(this);
 
+        // Start the Market for this session
+        Market.init(this);
+
         // Start the Bank for this session
         Bank.init(this.session);
         this.bank = Bank.getInstance();
@@ -284,7 +298,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             this.camera.setBoundsEnabled(true);
             this.camera.setBounds((-baseLayer.getWidth()/2)+32, -baseLayer.getHeight(), (baseLayer.getWidth()/2)+32, 32);
         } catch (final TMXLoadException e) {
-            Debug.e("Error loading map at "+this.locale.map_src, e);
+            Debug.e("Error loading map at " + this.locale.map_src, e);
         }
 
         try {
@@ -295,6 +309,18 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         } catch (final IOException e) {
             e.printStackTrace();
             throw e;
+        }
+
+        for (Person person : this.locale.people) {
+            try {
+                AssetBitmapTexture texture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, person.texture_src);
+                texture.load();
+                this.personTextures.put(person, texture);
+                this.personTiles.put(person, TextureRegionFactory.extractFromTexture(texture, 0, 0, PERSON_TILE_WIDTH, PERSON_TILE_HEIGHT));
+            } catch (final IOException e) {
+                e.printStackTrace();
+                throw e;
+            }
         }
 
         try {
@@ -383,7 +409,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         try {
             final Filter inventoryFilter = new Filter();
             inventoryFilter.is("item_type", "inventory");
-            final DefaultTile inventoryDefaultTile = DefaultTile.objects(PhoeniciaContext.context).filter(inventoryFilter).toList().get(0);
+            final DefaultTile inventoryDefaultTile = DefaultTile.objects(PhoeniciaContext.context).filter(session.filter).filter(inventoryFilter).toList().get(0);
             inventoryDefaultTile.phoeniciaGame = this;
             this.createInventorySprite(inventoryDefaultTile);
             this.startCenterX = inventoryDefaultTile.sprite.getX();
@@ -396,7 +422,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         try {
             final Filter marketFilter = new Filter();
             marketFilter.is("item_type", "market");
-            final DefaultTile marketDefaultTile = DefaultTile.objects(PhoeniciaContext.context).filter(marketFilter).toList().get(0);
+            final DefaultTile marketDefaultTile = DefaultTile.objects(PhoeniciaContext.context).filter(session.filter).filter(marketFilter).toList().get(0);
             marketDefaultTile.phoeniciaGame = this;
             this.createMarketSprite(marketDefaultTile);
         } catch (IndexOutOfBoundsException e) {
@@ -452,7 +478,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         }
 
         this.current_level = this.session.current_level.get();
-        if (this.current_level == null) {
+        if (this.current_level == null || this.current_level == "") {
             this.changeLevel( this.locale.levels.get(0));
         }
 
@@ -897,6 +923,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public void changeLevel(Level next) {
         this.current_level = next.name;
         this.session.current_level.set(current_level);
+        Bank.getInstance().credit(next.coinsEarned);
         this.session.save(PhoeniciaContext.context);
 
         Debug.d("Level changed to: " + current_level);

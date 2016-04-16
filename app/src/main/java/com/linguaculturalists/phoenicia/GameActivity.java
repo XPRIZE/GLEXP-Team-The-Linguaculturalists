@@ -7,6 +7,8 @@ import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.models.LetterBuilder;
 import com.linguaculturalists.phoenicia.models.LetterTile;
+import com.linguaculturalists.phoenicia.models.MarketRequest;
+import com.linguaculturalists.phoenicia.models.RequestItem;
 import com.linguaculturalists.phoenicia.models.WordBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
@@ -44,7 +46,7 @@ import java.util.List;
 public class GameActivity extends BaseGameActivity {
 
     public static final int CAMERA_WIDTH = 1280;
-    public static final int CAMERA_HEIGHT = 800;
+    public static final int CAMERA_HEIGHT = 750;
 
     public ZoomCamera main_camera = new ZoomCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
     private PhoeniciaGame game;
@@ -111,6 +113,8 @@ public class GameActivity extends BaseGameActivity {
     public void syncDB() {
         List<Class<? extends Model>> models = new ArrayList<Class<? extends Model>>();
         models.add(GameSession.class);
+        models.add(MarketRequest.class);
+        models.add(RequestItem.class);
         models.add(InventoryItem.class);
         models.add(DefaultTile.class);
         models.add(LetterTile.class);

@@ -62,6 +62,14 @@ public class HUDManager extends HUD {
     }
 
     /**
+     * Create a new instance of the marketplace HUD and display it
+     */
+    public void showMarket() {
+        MarketHUD marketHUD = new MarketHUD(this.game);
+        this.push(marketHUD);
+    }
+
+    /**
      * Create a new instance of the letter placement HUD for the current game level
      */
     public void showLetterPlacement() {

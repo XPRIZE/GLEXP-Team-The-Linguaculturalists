@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <locale name="en_us_rural" lang="en_us" display_name="US English, Rural Setting">
-    <shell src="locales/en_us_rural/textures/gameui.png" />
+    <shell src="locales/common/textures/gameui.png" />
     <map src="locales/en_us_rural/map.tmx" />
 
     <!-- default blocks -->
     <inventory name="Barn" col="37" row="43" texture="locales/en_us_rural/textures/inventory.png" />
     <market name="Market" col="41" row="41" texture="locales/en_us_rural/textures/market.png" />
+
+    <people>
+        <person name="Dave" texture="locales/common/textures/persons/Dave.png" />
+        <person name="Roxanne" texture="locales/common/textures/persons/Roxanne.png" />
+        <person name="Ben" texture="locales/common/textures/persons/Ben.png" />
+        <person name="Laura" texture="locales/common/textures/persons/Laura.png" />
+    </people>
 
     <letters>
         <letter name="a" buy="0"  sell="1"  points="1" time="10" texture="locales/en_us_rural/textures/letters/a.png" sound="locales/en_us_rural/sounds/a-name.ogg" phoneme="locales/en_us_rural/sounds/a-phoneme.ogg">a</letter>
@@ -36,12 +43,12 @@
         <letter name="z" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/z.png" sound="locales/en_us_rural/sounds/z.ogg" phoneme="locales/en_us_rural/sounds/z.ogg">z</letter>
     </letters>
     <words>
-        <word name="cat" buy="100" sell="10" points="10" construct="20"  time="60" texture="locales/en_us_rural/textures/words/cat.png" sound="locales/en_us_rural/sounds/cat.ogg">cat</word>
+        <word name="cat" buy="100" sell="10" points="10" construct="20" time="60" texture="locales/en_us_rural/textures/words/cat.png" sound="locales/en_us_rural/sounds/cat.ogg">cat</word>
         <word name="hat" buy="200" sell="20" points="20" construct="20" time="75" texture="locales/en_us_rural/textures/words/hat.png" sound="locales/en_us_rural/sounds/hat.ogg">hat</word>
         <word name="bat" buy="300" sell="30" points="30" construct="20" time="90" texture="locales/en_us_rural/textures/words/bat.png" sound="locales/en_us_rural/sounds/bat.ogg">bat</word>
     </words>
     <levels>
-        <level name="1">
+        <level name="1" market="0" coins="0">
             <intro>
                 <page sound="locales/en_us_rural/sounds/intro1p1.ogg">Welcome to Phoenicia!</page>
                 <page sound="locales/en_us_rural/sounds/intro1p2.ogg" texture="locales/en_us_rural/textures/levels/intro1p2.png">Use the Letter images at the bottom of your screen to start planting with the letter 'A'</page>
@@ -55,7 +62,7 @@
                 <gather_letter count="1">a</gather_letter>
             </req>
         </level>
-        <level name="2">
+        <level name="2" market="0" coins="5">
             <intro>
                 <page sound="locales/en_us_rural/sounds/intro2p1.ogg">Great job!
                 Now that you've grown some 'A's, lets try planting some 'T's</page>
@@ -70,7 +77,7 @@
                 <gather_letter count="1">t</gather_letter>
             </req>
         </level>
-        <level name="3">
+        <level name="3" market="1" coins="110">
             <intro>
                 <page sound="locales/en_us_rural/sounds/intro3p1.ogg">Now you're getting it! Lets grow some 'C's and you'll have enough letters to start building something</page>
                 <page sound="locales/en_us_rural/sounds/intro3p2.ogg" texture="locales/en_us_rural/textures/levels/intro3p2.png">Use the Word images to build a 'cat' factory</page>
@@ -86,7 +93,7 @@
                 <gather_word count="1">cat</gather_word>
             </req>
         </level>
-        <level name="4">
+        <level name="4" market="2" coins="220">
             <intro>
                 <page sound="locales/en_us_rural/sounds/intro4p1.ogg">Yay! Building words from letters is what Phoenicia is all about!</page>
                 <page sound="locales/en_us_rural/sounds/intro4p2.ogg">Here's a new letter: 'H', you can use it with your other letters to build the word 'hat'</page>
@@ -101,7 +108,7 @@
                 <gather_word count="1">hat</gather_word>
             </req>
         </level>
-        <level name="5">
+        <level name="5" market="3"  coins="330">
             <intro>
                 <page sound="locales/en_us_rural/sounds/intro5p1.ogg">You're doing great! Now that you have the hang of it, here's some more letters and words that you can grown and build.</page>
                 <page sound="locales/en_us_rural/sounds/intro5p2.ogg">Keeping building words and you'll reach new levels, each new level will open up new letters and words for you to use.</page>

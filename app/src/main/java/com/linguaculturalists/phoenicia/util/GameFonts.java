@@ -18,10 +18,23 @@ import java.lang.reflect.Type;
  * Manager class for getting pre-defined font instances for Phoenicia.
  */
 public class GameFonts {
+    static Font dialogFont;
     static Font defaultHUDDisplayFont;
     static Font inventoryCountFont;
     static Font buttonFont;
 
+    /**
+     * Font used for displaying text in a Button
+     * @return
+     */
+    public static Font dialogText() {
+        if (dialogFont == null) {
+            BitmapTextureAtlas texture = new BitmapTextureAtlas(PhoeniciaContext.textureManager, 1024, 1024, TextureOptions.BILINEAR);
+            dialogFont = FontFactory.create(PhoeniciaContext.fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 32, true, Color.BLACK_ARGB_PACKED_INT);
+            dialogFont.load();
+        }
+        return dialogFont;
+    }
     /**
      * Font used for displaying the quantity of an InventoryItem.
      * @return
@@ -29,7 +42,7 @@ public class GameFonts {
     public static Font inventoryCount() {
         if (inventoryCountFont == null) {
             BitmapTextureAtlas texture = new BitmapTextureAtlas(PhoeniciaContext.textureManager, 1024, 1024, TextureOptions.BILINEAR);
-            inventoryCountFont = FontFactory.createStroke(PhoeniciaContext.fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 32, true, Color.YELLOW_ARGB_PACKED_INT, 1, Color.RED_ARGB_PACKED_INT);
+            inventoryCountFont = FontFactory.create(PhoeniciaContext.fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 24, true, new Color(0.5f, 0.5f, 0.5f).getABGRPackedInt());
             inventoryCountFont.load();
         }
         return inventoryCountFont;

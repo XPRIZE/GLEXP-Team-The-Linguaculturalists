@@ -43,7 +43,7 @@ public class LocaleManagerTest extends ActivityInstrumentationTestCase2<TestActi
         try {
             Map<String, String> locales = this.localeManager.scan("locales");
 
-            assertEquals(2, locales.size());
+            assertEquals(3, locales.size());
             assertTrue(locales.containsKey("locales/en_us_test/manifest.xml"));
             assertTrue(locales.containsValue("US English, Testing"));
 

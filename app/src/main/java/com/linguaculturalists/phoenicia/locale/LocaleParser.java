@@ -17,6 +17,8 @@ public class LocaleParser extends DefaultHandler {
     private static final String TAG_MAP = "map";
     private static final String TAG_INVENTORY = "inventory";
     private static final String TAG_MARKET = "market";
+    private static final String TAG_PEOPLE= "people";
+    private static final String TAG_PERSON = "person";
     private static final String TAG_SHELL = "shell";
     private static final String TAG_LETTERS = "letters";
     private static final String TAG_LETTER = "letter";
@@ -31,6 +33,7 @@ public class LocaleParser extends DefaultHandler {
     private static final String TAG_REQLETTER = "gather_letter";
     private static final String TAG_REQWORD = "gather_word";
     private boolean inLocale = false;
+    private boolean inPeople = false;
     private boolean inLettersList = false;
     private boolean inLetterDefinition = false;
     private boolean inWordsList = false;
@@ -80,6 +83,10 @@ public class LocaleParser extends DefaultHandler {
             this.parseInventory(attributes);
         } else if (this.inLocale && localName.equals(LocaleParser.TAG_MARKET)) {
             this.parseMarket(attributes);
+        } else if (this.inLocale && localName.equals(LocaleParser.TAG_PEOPLE)) {
+            this.inPeople = true;
+        } else if (this.inLocale && this.inPeople && localName.equals(LocaleParser.TAG_PERSON)) {
+            this.parsePerson(attributes);
         } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
             if (!this.inLevelDefinition) {
                 this.inLettersList = true;
@@ -162,6 +169,15 @@ public class LocaleParser extends DefaultHandler {
         this.locale.marketBlock.mapRow = Integer.parseInt(attributes.getValue("row"));
     }
 
+    private void parsePerson(Attributes attributes) throws SAXException {
+        Debug.v("Parsing locale person");
+        Person newPerson = new Person();
+        newPerson.name = attributes.getValue("name");
+        newPerson.texture_src = attributes.getValue("texture");
+        this.locale.people.add(newPerson);
+        this.locale.person_map.put(newPerson.name, newPerson);
+    }
+
     private void parseLetterDefinition(Attributes attributes) throws SAXException {
         Debug.v("Parsing locale letter");
         this.currentLetter = new Letter();
@@ -194,6 +210,16 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale level");
         this.currentLevel = new Level();
         this.currentLevel.name = attributes.getValue("name");
+        if (attributes.getValue("market") != null) {
+            this.currentLevel.marketRequests = Integer.parseInt(attributes.getValue("market"));
+        } else {
+            this.currentLevel.marketRequests = 0;
+        }
+        if (attributes.getValue("coins") != null) {
+            this.currentLevel.coinsEarned = Integer.parseInt(attributes.getValue("coins"));
+        } else {
+            this.currentLevel.coinsEarned = 0;
+        }
         this.currentLevel.letters = new ArrayList<Letter>();
         this.currentLevel.words = new ArrayList<Word>();
         this.currentLevel.help_letters = new ArrayList<Letter>();
@@ -224,6 +250,8 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parser end: "+localName);
         if (localName.equals(LocaleParser.TAG_LOCALE)) {
             this.inLocale = false;
+        } else if (this.inLocale && this.inPeople && localName.equals(LocaleParser.TAG_PEOPLE)) {
+            this.inPeople = false;
         } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
             if (!this.inLevelDefinition) {
                 this.inLettersList = false;

@@ -33,6 +33,7 @@ public class LocaleParserTest extends AndroidTestCase {
         try {
              locale = localeLoader.load(PhoeniciaContext.assetManager.open(this.test_locale_manifest));
         } catch (final IOException e) {
+            assertNotNull(e);
         }
         assertNotNull("Failed to load Locale", locale);
         return locale;
@@ -64,6 +65,16 @@ public class LocaleParserTest extends AndroidTestCase {
         assertEquals(2, m.mapCol);
         assertEquals(1, m.mapRow);
         assertEquals("locales/en_us_test/textures/market.png", m.texture_src);
+    }
+
+    public void testPeopleDefinitions() {
+        Locale locale = getLocale();
+        assertEquals(2, locale.people.size());
+        assertEquals("Konqi", locale.people.get(0).name);
+        assertEquals("locales/en_us_test/textures/persons/konqi.png", locale.people.get(0).texture_src);
+
+        assertEquals("Tux", locale.people.get(1).name);
+        assertEquals("locales/en_us_test/textures/persons/tux.png", locale.people.get(1).texture_src);
     }
 
     public void testLetterDefinitions() {
