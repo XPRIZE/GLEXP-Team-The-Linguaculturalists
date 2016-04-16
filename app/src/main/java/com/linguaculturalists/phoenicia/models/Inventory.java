@@ -33,6 +33,7 @@ public class Inventory {
 
     /**
      * Initialize the singleton for a given session
+     *
      * @param session
      */
     public static void init(GameSession session) {
@@ -42,6 +43,7 @@ public class Inventory {
     /**
      * Returns an Singleton instance of the Inventory class.
      * You must call init(PhoeniciaGame) before calling this method
+     *
      * @return
      */
     public static Inventory getInstance() {
@@ -50,6 +52,7 @@ public class Inventory {
 
     /**
      * Retrieve a list of all items in the player's inventory.
+     *
      * @return a list of \link InventoryItem InventoryItems \endlink with a positive quantity
      */
     public List<InventoryItem> items() {
@@ -70,13 +73,14 @@ public class Inventory {
             items[i].delete(PhoeniciaContext.context);
         }
         for (int i = 0; i < this.listeners.size(); i++) {
-            Debug.d("Calling update listener: "+this.listeners.get(i).getClass());
+            Debug.d("Calling update listener: " + this.listeners.get(i).getClass());
             this.listeners.get(i).onInventoryUpdated(items);
         }
     }
 
     /**
      * Get an InventoryItem by name
+     *
      * @param inventory_id name of the InventoryItem
      * @return an existing InventoryItem from the inventory, or a new one with 0 quantity
      */
@@ -90,7 +94,7 @@ public class Inventory {
                 return item;
             }
         } catch (IndexOutOfBoundsException e) {
-            Debug.d("No record for "+inventory_id+", creating a new one");
+            Debug.d("No record for " + inventory_id + ", creating a new one");
         }
         item = new InventoryItem();
         item.item_name.set(inventory_id);
@@ -99,12 +103,16 @@ public class Inventory {
         return item;
     }
 
+    public int add(final String inventory_id) {
+        return this.add(inventory_id, 1);
+    }
     /**
      * Increment the quantity of an InventoryItem (creating a new one of necessary).
+     *
      * @param inventory_id name of the InventoryItem
      * @return the new quantity of this item
      */
-    public int add(final String inventory_id) {
+    public int add(final String inventory_id, final int quantity) {
         Debug.d("Adding item: " + inventory_id);
         final Filter filter = new Filter();
         filter.is("item_name", inventory_id);
@@ -113,11 +121,11 @@ public class Inventory {
             item = InventoryItem.objects(PhoeniciaContext.context).filter(this.session.filter).filter(filter).toList().get(0);
             if (item != null) {
                 Debug.d("Found record for " + inventory_id + ", updating to " + (item.quantity.get() + 1));
-                item.quantity.set(item.quantity.get() + 1);
-                item.history.set(item.history.get() + 1);
+                item.quantity.set(item.quantity.get() + quantity);
+                item.history.set(item.history.get() + quantity);
             }
         } catch (IndexOutOfBoundsException e) {
-            Debug.d("No record for "+inventory_id+", creating a new one");
+            Debug.d("No record for " + inventory_id + ", creating a new one");
             item = new InventoryItem();
             item.game.set(this.session);
             item.item_name.set(inventory_id);
@@ -129,6 +137,9 @@ public class Inventory {
         return item.quantity.get();
     }
 
+    public int subtract(final String inventory_id) throws Exception {
+        return this.subtract(inventory_id, 1);
+    }
     /**
      * Decrement the quantity of an InventoryItem.
      *
@@ -137,14 +148,14 @@ public class Inventory {
      * @param inventory_id name of the InventoryItem
      * @return the new quantity of this item
      */
-    public int subtract(final String inventory_id) throws Exception {
+    public int subtract(final String inventory_id, final int quantity) throws Exception {
         Debug.d("Subtracting item: " + inventory_id);
         final Filter filter = new Filter();
         filter.is("item_name", inventory_id);
         try {
             InventoryItem item = InventoryItem.objects(PhoeniciaContext.context).filter(this.session.filter).filter(filter).toList().get(0);
             if (item != null) {
-                final int count = item.quantity.get() - 1;
+                final int count = item.quantity.get() - quantity;
                 item.quantity.set(count);
                 item.save(PhoeniciaContext.context);
                 this.inventoryUpdated(item);

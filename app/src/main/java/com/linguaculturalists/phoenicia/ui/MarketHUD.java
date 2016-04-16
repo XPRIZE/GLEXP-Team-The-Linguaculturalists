@@ -135,26 +135,12 @@ public class MarketHUD extends PhoeniciaHUD {
             }            final Letter currentLetter = game.locale.letter_map.get(item.item_name.get());
             final Word currentWord = game.locale.word_map.get(item.item_name.get());
             if (currentLetter != null) {
-                Debug.d("Request Letter: "+item.item_name.get());
+                Debug.d("Request Letter: " + item.item_name.get());
                 LetterSprite requestItemSprite = new LetterSprite(startX, startY, currentLetter, item.quantity.get(), game.letterTiles.get(currentLetter).getTextureRegion(0), PhoeniciaContext.vboManager);
-                requestItemSprite.setOnClickListener(new ButtonSprite.OnClickListener() {
-                    @Override
-                    public void onClick(ButtonSprite buttonSprite, float v, float v1) {
-                        game.playBlockSound(currentLetter.sound);
-                    }
-                });
-                this.registerTouchArea(requestItemSprite);
                 this.requestItemsPane.attachChild(requestItemSprite);
             } else if (currentWord != null) {
                 Debug.d("Request Word: " + item.item_name.get());
                 WordSprite requestItemSprite = new WordSprite(startX, startY, currentWord, item.quantity.get(), game.wordTiles.get(currentWord).getTextureRegion(0), PhoeniciaContext.vboManager);
-                requestItemSprite.setOnClickListener(new ButtonSprite.OnClickListener() {
-                    @Override
-                    public void onClick(ButtonSprite buttonSprite, float v, float v1) {
-                        game.playBlockSound(currentWord.sound);
-                    }
-                });
-                this.registerTouchArea(requestItemSprite);
                 this.requestItemsPane.attachChild(requestItemSprite);
             } else {
                 continue;
@@ -162,6 +148,18 @@ public class MarketHUD extends PhoeniciaHUD {
             offsetX++;
             startX += 96;
         }
+
+        ButtonSprite cancelSprite = new ButtonSprite(requestItemsPane.getWidth()-32, requestItemsPane.getHeight()+32, game.shellTiles.getTextureRegion(GameTextures.CANCEL), PhoeniciaContext.vboManager);
+        cancelSprite.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
+                request.status.set(MarketRequest.CANCELED);
+                request.save(PhoeniciaContext.context);
+                requestItemsPane.detachChildren();
+            }
+        });
+        this.registerTouchArea(cancelSprite);
+        requestItemsPane.attachChild(cancelSprite);
 
         ITextureRegion coinRegion = game.shellTiles.getTextureRegion(GameTextures.COIN_ICON);
         Sprite coinIcon = new Sprite(32, 92, coinRegion, PhoeniciaContext.vboManager);
@@ -189,12 +187,41 @@ public class MarketHUD extends PhoeniciaHUD {
 
     @Override
     public void close() {
-        Market.getInstance().clear();
+        //Market.getInstance().clear();
     }
 
     private void attemptSale(MarketRequest request) {
-        // TODO: Fix inventory selling
         Debug.d("Attempting sale to " + request.person_name.get());
+        for (RequestItem item : request.getItems(PhoeniciaContext.context)) {
+            int available = Inventory.getInstance().getCount(item.item_name.get());
+            if (available < item.quantity.get()) {
+                abortSale(item, (item.quantity.get() - available));
+                return;
+            }
+        }
+        completeSale(request);
+        // TODO: remove request and replace it with a new one
+    }
+
+    public void completeSale(MarketRequest request) {
+        Debug.d("Completing sale to " + request.person_name.get());
+        for (RequestItem item : request.getItems(PhoeniciaContext.context)) {
+            try {
+                Inventory.getInstance().subtract(item.item_name.get(), item.quantity.get());
+            } catch (Exception e) {
+                Debug.e("Failed to subtract inventory item "+item.item_name.get()+" while completing sale");
+                return;
+            }
+        }
+        Bank.getInstance().credit(request.coins.get());
+        this.game.session.points.set(this.game.session.points.get() + request.points.get());
+        request.status.set(MarketRequest.FULFILLED);
+        request.save(PhoeniciaContext.context);
+        this.requestItemsPane.detachChildren();
+    }
+
+    public void abortSale(RequestItem item, int needed) {
+        Debug.d("Aborting sale due to not enough " + item.item_name.get());
         Dialog confirmDialog = new Dialog(500, 300, Dialog.Buttons.OK, PhoeniciaContext.vboManager, new Dialog.DialogListener() {
             @Override
             public void onDialogButtonClicked(Dialog dialog, Dialog.DialogButton dialogButton) {
@@ -207,11 +234,10 @@ public class MarketHUD extends PhoeniciaHUD {
         });
         Text confirmText = new Text(confirmDialog.getWidth()/2, confirmDialog.getHeight()-48, GameFonts.dialogText(), "You need more of these:", 24,  new TextOptions(AutoWrap.WORDS, confirmDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
         confirmDialog.attachChild(confirmText);
-        RequestItem item = request.getItems(PhoeniciaContext.context).get(0);
         final Letter isLetter = game.locale.letter_map.get(item.item_name.get());
         final Word isWord = game.locale.word_map.get(item.item_name.get());
         if (isLetter != null) {
-            LetterSprite sprite = new LetterSprite(confirmDialog.getWidth()/2, confirmDialog.getHeight()/2, isLetter, 1, game.letterTiles.get(isLetter).getTextureRegion(0), PhoeniciaContext.vboManager);
+            LetterSprite sprite = new LetterSprite(confirmDialog.getWidth()/2, confirmDialog.getHeight()/2, isLetter, needed, game.letterTiles.get(isLetter).getTextureRegion(0), PhoeniciaContext.vboManager);
             sprite.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v1) {
@@ -221,7 +247,7 @@ public class MarketHUD extends PhoeniciaHUD {
             confirmDialog.registerTouchArea(sprite);
             confirmDialog.attachChild(sprite);
         } else if (isWord != null) {
-            WordSprite sprite = new WordSprite(confirmDialog.getWidth()/2, confirmDialog.getHeight()/2, isWord, 1, game.wordTiles.get(isWord).getTextureRegion(0), PhoeniciaContext.vboManager);
+            WordSprite sprite = new WordSprite(confirmDialog.getWidth()/2, confirmDialog.getHeight()/2, isWord, needed, game.wordTiles.get(isWord).getTextureRegion(0), PhoeniciaContext.vboManager);
             sprite.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v1) {
@@ -234,6 +260,7 @@ public class MarketHUD extends PhoeniciaHUD {
         this.registerTouchArea(confirmDialog);
         confirmDialog.open(this);
     }
+
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
         // Block touch events
         final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
