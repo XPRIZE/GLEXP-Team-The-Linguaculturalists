@@ -88,6 +88,7 @@ public class Market {
                 available_persons.add(check_person.name);
             }
         }
+
         int person_id = Math.round((float)Math.random() * (available_persons.size()-1));
         request.person_name.set(available_persons.get(person_id));
         request.status.set(MarketRequest.REQUESTED);

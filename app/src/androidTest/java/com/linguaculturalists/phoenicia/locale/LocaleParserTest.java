@@ -121,6 +121,9 @@ public class LocaleParserTest extends AndroidTestCase {
         Level test1 = locale.level_map.get("test1");
         assertNotNull(test1);
         assertEquals("test1", test1.name);
+
+        assertEquals(0, test1.marketRequests);
+        assertEquals(100, test1.coinsEarned);
     }
 
     public void testLevelIntro() {
