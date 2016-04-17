@@ -58,8 +58,15 @@ public class PhoeniciaGameTest extends ActivityInstrumentationTestCase2<GameActi
 
     public void startGame() {
         if (isStarted) return;
+
         if (!isLoaded) this.loadGame();
+        assertTrue(isLoaded);
+        activity.getEngine().getScene().detachSelf();
+        activity.getEngine().setScene(game.scene);
+        activity.getEngine().registerUpdateHandler(game);
+
         game.start();
         isStarted = true;
+        assertTrue(isStarted);
     }
 }

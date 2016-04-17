@@ -8,8 +8,8 @@
     <market name="MarketTest" col="2" row="1" texture="locales/en_us_test/textures/market.png" />
 
     <people>
-        <person name="Konqi" texture="locales/common/textures/persons/konqi.png" />
-        <person name="Tux" texture="locales/common/textures/persons/tux.png" />
+        <person name="Konqi" texture="locales/en_us_test/textures/persons/konqi.png" />
+        <person name="Tux" texture="locales/en_us_test/textures/persons/tux.png" />
     </people>
 
     <letters>
