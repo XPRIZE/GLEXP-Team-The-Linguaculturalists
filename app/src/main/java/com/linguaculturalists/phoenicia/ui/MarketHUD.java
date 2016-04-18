@@ -153,8 +153,7 @@ public class MarketHUD extends PhoeniciaHUD {
         cancelSprite.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                request.status.set(MarketRequest.CANCELED);
-                request.save(PhoeniciaContext.context);
+                Market.getInstance().cancelRequest(request);
                 requestItemsPane.detachChildren();
             }
         });
@@ -204,19 +203,7 @@ public class MarketHUD extends PhoeniciaHUD {
     }
 
     public void completeSale(MarketRequest request) {
-        Debug.d("Completing sale to " + request.person_name.get());
-        for (RequestItem item : request.getItems(PhoeniciaContext.context)) {
-            try {
-                Inventory.getInstance().subtract(item.item_name.get(), item.quantity.get());
-            } catch (Exception e) {
-                Debug.e("Failed to subtract inventory item "+item.item_name.get()+" while completing sale");
-                return;
-            }
-        }
-        Bank.getInstance().credit(request.coins.get());
-        this.game.session.points.set(this.game.session.points.get() + request.points.get());
-        request.status.set(MarketRequest.FULFILLED);
-        request.save(PhoeniciaContext.context);
+        Market.getInstance().fulfillRequest(request);
         this.requestItemsPane.detachChildren();
         game.hudManager.clear();
     }

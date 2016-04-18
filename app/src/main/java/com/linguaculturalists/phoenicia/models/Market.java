@@ -88,7 +88,10 @@ public class Market {
                 available_persons.add(check_person.name);
             }
         }
-
+        if (available_persons.size() < 1) {
+            Debug.e("Not enough people for all requests!");
+            return null;
+        }
         int person_id = Math.round((float)Math.random() * (available_persons.size()-1));
         request.person_name.set(available_persons.get(person_id));
         request.status.set(MarketRequest.REQUESTED);
@@ -147,6 +150,28 @@ public class Market {
         return request;
     }
 
+    public void fulfillRequest(MarketRequest request) {
+        Debug.d("Completing sale to " + request.person_name.get());
+        for (RequestItem item : request.getItems(PhoeniciaContext.context)) {
+            try {
+                Inventory.getInstance().subtract(item.item_name.get(), item.quantity.get());
+            } catch (Exception e) {
+                Debug.e("Failed to subtract inventory item "+item.item_name.get()+" while completing sale");
+                return;
+            }
+        }
+        Bank.getInstance().credit(request.coins.get());
+        this.game.session.points.set(this.game.session.points.get() + request.points.get());
+        request.status.set(MarketRequest.FULFILLED);
+        request.save(PhoeniciaContext.context);
+        this.requestFulfilled(request);
+    }
+
+    public void cancelRequest(MarketRequest request) {
+        request.status.set(MarketRequest.CANCELED);
+        request.save(PhoeniciaContext.context);
+        this.requestCanceled(request);
+    }
     /**
      * Delete all Market requests
      */
@@ -165,13 +190,13 @@ public class Market {
 
     private void requestFulfilled(MarketRequest request) {
         for (MarketUpdateListener listener : this.listeners) {
-            listener.onMarketRequestAdded(request);
+            listener.onMarketRequestFulfilled(request);
         }
     }
 
     private void requestCanceled(MarketRequest request) {
         for (MarketUpdateListener listener : this.listeners) {
-            listener.onMarketRequestAdded(request);
+            listener.onMarketRequestCanceled(request);
         }
     }
 

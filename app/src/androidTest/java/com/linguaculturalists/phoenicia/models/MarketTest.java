@@ -1,15 +1,9 @@
 package com.linguaculturalists.phoenicia.models;
 
-import android.test.AndroidTestCase;
-
 import com.linguaculturalists.phoenicia.PhoeniciaGameTest;
+import com.linguaculturalists.phoenicia.mock.MockMethod;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
-import com.orm.androrm.DatabaseAdapter;
-import com.orm.androrm.Model;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by mhall on 4/16/16.
@@ -21,13 +15,18 @@ public class MarketTest extends PhoeniciaGameTest {
         super.setUp();
         this.loadGame();
         assertNotNull("Null context", PhoeniciaContext.context);
-
+        Market.getInstance().clear();
     }
 
     @Override
     protected void tearDown() throws Exception {
-        Market.getInstance().clear();
         super.tearDown();
+    }
+
+    private void fillInventory(MarketRequest request) {
+        for (RequestItem item : request.getItems(PhoeniciaContext.context)) {
+            Inventory.getInstance().add(item.item_name.get(), item.quantity.get());
+        }
     }
 
     public void testRequests() {
@@ -35,6 +34,23 @@ public class MarketTest extends PhoeniciaGameTest {
         MarketRequest testRequest = Market.getInstance().createRequest();
         assertNotNull(testRequest);
         assertEquals(1, Market.getInstance().requests().size());
+    }
+
+    public void testFulfill() {
+        MarketRequest testRequest = Market.getInstance().createRequest();
+        this.fillInventory(testRequest);
+        assertNotNull(testRequest);
+        assertEquals(1, Market.getInstance().requests().size());
+        Market.getInstance().fulfillRequest(testRequest);
+        assertEquals(0, Market.getInstance().requests().size());
+    }
+
+    public void testCanceled() {
+        MarketRequest testRequest = Market.getInstance().createRequest();
+        assertNotNull(testRequest);
+        assertEquals(1, Market.getInstance().requests().size());
+        Market.getInstance().cancelRequest(testRequest);
+        assertEquals(0, Market.getInstance().requests().size());
     }
 
     public void testPopulate() {
@@ -61,4 +77,62 @@ public class MarketTest extends PhoeniciaGameTest {
         Market.getInstance().populate();
         assertEquals(tooManyRequests, Market.getInstance().requests().size());
     }
+
+    public void testMarketListenerRequestAdded() {
+        MockMarketUpdateListener listener = new MockMarketUpdateListener();
+        Market.getInstance().addUpdateListener(listener);
+
+        assertFalse(listener.requestAdded.called);
+        MarketRequest testRequest = Market.getInstance().createRequest();
+        assertNotNull(testRequest);
+        assertTrue(listener.requestAdded.called);
+        assertEquals(1, listener.requestAdded.call_count);
+    }
+
+    public void testMarketListenerRequestFulfilled() {
+        MockMarketUpdateListener listener = new MockMarketUpdateListener();
+        Market.getInstance().addUpdateListener(listener);
+
+        assertFalse(listener.requestFulfilled.called);
+        MarketRequest testRequest = Market.getInstance().createRequest();
+        assertNotNull(testRequest);
+        Market.getInstance().fulfillRequest(testRequest);
+        assertTrue(listener.requestFulfilled.called);
+        assertEquals(1, listener.requestFulfilled.call_count);
+    }
+
+    public void testMarketListenerRequestCanceled() {
+        MockMarketUpdateListener listener = new MockMarketUpdateListener();
+        Market.getInstance().addUpdateListener(listener);
+
+        assertFalse(listener.requestCanceled.called);
+        MarketRequest testRequest = Market.getInstance().createRequest();
+        assertNotNull(testRequest);
+        Market.getInstance().cancelRequest(testRequest);
+        assertTrue(listener.requestCanceled.called);
+        assertEquals(1, listener.requestCanceled.call_count);
+    }
+
+    class MockMarketUpdateListener implements Market.MarketUpdateListener {
+        public MockMethod requestAdded = new MockMethod();
+        public MockMethod requestFulfilled = new MockMethod();
+        public MockMethod requestCanceled = new MockMethod();
+
+        @Override
+        public void onMarketRequestAdded(MarketRequest request) {
+            this.requestAdded.call();
+        }
+
+        @Override
+        public void onMarketRequestFulfilled(MarketRequest request) {
+            this.requestFulfilled.call();
+        }
+
+        @Override
+        public void onMarketRequestCanceled(MarketRequest request) {
+            this.requestCanceled.call();
+        }
+    }
+
+
 }

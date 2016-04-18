@@ -20,12 +20,12 @@ import java.util.Map;
  * Managing class for adding and removing items from the player's inventory.
  */
 public class Inventory {
-    private static Inventory instance;
+    protected static Inventory instance;
     //private PhoeniciaGame game;
     private GameSession session;
     private List<InventoryUpdateListener> listeners;
 
-    private Inventory(GameSession session) {
+    protected Inventory(GameSession session) {
         //this.game = game;
         this.session = session;
         this.listeners = new LinkedList<InventoryUpdateListener>();
