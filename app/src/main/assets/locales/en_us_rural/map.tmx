@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="isometric" renderorder="right-down" width="50" height="50" tilewidth="64" tileheight="32" nextobjectid="8">
- <tileset firstgid="1" name="Terrain" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="Terrain" tilewidth="64" tileheight="64" tilecount="130">
   <image source="locales/en_us_rural/textures/terrain.png" width="640" height="832"/>
+  <tile id="50">
+   <properties>
+    <property name="class" value="mine"/>
+   </properties>
+  </tile>
+  <tile id="51">
+   <properties>
+    <property name="class" value="mine"/>
+   </properties>
+  </tile>
   <tile id="52">
    <properties>
     <property name="class" value="mine"/>
+   </properties>
+  </tile>
+  <tile id="53">
+   <properties>
+    <property name="class" value="mine"/>
+   </properties>
+  </tile>
+  <tile id="54">
+   <properties>
+    <property name="class" value="unbuildable"/>
+   </properties>
+  </tile>
+  <tile id="55">
+   <properties>
+    <property name="class" value="unbuildable"/>
    </properties>
   </tile>
   <tile id="56">
@@ -12,7 +37,17 @@
     <property name="class" value="mine"/>
    </properties>
   </tile>
+  <tile id="57">
+   <properties>
+    <property name="class" value="mine"/>
+   </properties>
+  </tile>
   <tile id="58">
+   <properties>
+    <property name="class" value="mine"/>
+   </properties>
+  </tile>
+  <tile id="59">
    <properties>
     <property name="class" value="mine"/>
    </properties>
@@ -37,6 +72,16 @@
     <property name="class" value="shore"/>
    </properties>
   </tile>
+  <tile id="84">
+   <properties>
+    <property name="class" value="water"/>
+   </properties>
+  </tile>
+  <tile id="85">
+   <properties>
+    <property name="class" value="water"/>
+   </properties>
+  </tile>
   <tile id="86">
    <properties>
     <property name="class" value="shore"/>
@@ -55,6 +100,71 @@
   <tile id="89">
    <properties>
     <property name="class" value="shore"/>
+   </properties>
+  </tile>
+  <tile id="90">
+   <properties>
+    <property name="class" value="shore"/>
+   </properties>
+  </tile>
+  <tile id="91">
+   <properties>
+    <property name="class" value="shore"/>
+   </properties>
+  </tile>
+  <tile id="92">
+   <properties>
+    <property name="class" value="shore"/>
+   </properties>
+  </tile>
+  <tile id="93">
+   <properties>
+    <property name="class" value="shore"/>
+   </properties>
+  </tile>
+  <tile id="94">
+   <properties>
+    <property name="class" value="shore"/>
+   </properties>
+  </tile>
+  <tile id="95">
+   <properties>
+    <property name="class" value="shore"/>
+   </properties>
+  </tile>
+  <tile id="96">
+   <properties>
+    <property name="class" value="water"/>
+   </properties>
+  </tile>
+  <tile id="97">
+   <properties>
+    <property name="class" value="water"/>
+   </properties>
+  </tile>
+  <tile id="98">
+   <properties>
+    <property name="class" value="water"/>
+   </properties>
+  </tile>
+  <tile id="99">
+   <properties>
+    <property name="class" value="water"/>
+   </properties>
+  </tile>
+  <tile id="100">
+   <properties>
+    <property name="class" value="unbuildable"/>
+   </properties>
+  </tile>
+  <tile id="101">
+   <properties>
+    <property name="class" value="shore"/>
+   </properties>
+  </tile>
+  <tile id="102">
+   <properties>
+    <property name="class" value="unbuildable"/>
    </properties>
   </tile>
  </tileset>

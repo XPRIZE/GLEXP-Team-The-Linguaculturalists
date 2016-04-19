@@ -148,12 +148,15 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
 
     private void checkPlacement(TMXTile mapTile) {
         final String tileRestriction = this.game.mapRestrictions[mapTile.getTileRow()][mapTile.getTileColumn()];
+        Debug.d("Map tile at "+mapTile.getTileRow()+"x"+mapTile.getTileColumn()+" has restriction class: " + tileRestriction);
         if (this.game.placedSprites[mapTile.getTileColumn()][mapTile.getTileRow()] != null &&
                 this.game.placedSprites[mapTile.getTileColumn()][mapTile.getTileRow()] != this.sprite) {
             this.sprite.setCurrentTileIndex(5);
             this.confirmBlock.setVisible(false);
         } else if (tileRestriction != null && (this.restriction == null || !this.restriction.equals(tileRestriction))) {
-            Debug.d("Map tile class: " + tileRestriction);
+            this.sprite.setCurrentTileIndex(5);
+            this.confirmBlock.setVisible(false);
+        } else if (tileRestriction == null && (this.restriction != null)) {
             this.sprite.setCurrentTileIndex(5);
             this.confirmBlock.setVisible(false);
         } else {

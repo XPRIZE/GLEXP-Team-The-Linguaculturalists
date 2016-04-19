@@ -285,7 +285,10 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                                 // Do nothing, it just means there are no properties for this tile
                             }
                         }
-                        mapRestrictions[r][c] = mapTileClass.get(tile.getGlobalTileID());
+                        if (mapTileClass.get(tile.getGlobalTileID()) != null) {
+                            Debug.d("Tile at "+r+"x"+c+" restriction: "+mapTileClass.get(tile.getGlobalTileID()));
+                            mapRestrictions[r][c] = mapTileClass.get(tile.getGlobalTileID());
+                        }
                     }
                 }
             }
