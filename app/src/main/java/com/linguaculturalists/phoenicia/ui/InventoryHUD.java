@@ -34,6 +34,10 @@ public class InventoryHUD extends PhoeniciaHUD {
     private Rectangle whiteRect;
     private ClickDetector clickDetector;
 
+    /**
+     * Display the \link InventoryItem InventoryItems \endlink with a positive balance and allow selling them.
+     * @param game Reference to the PhoeniciaGame this HUD is running in
+     */
     public InventoryHUD(final PhoeniciaGame game) {
         super(game.camera);
         this.setBackgroundEnabled(false);
@@ -144,6 +148,11 @@ public class InventoryHUD extends PhoeniciaHUD {
         }
     }
 
+    /**
+     * Capture scene touch events and look for click events
+     * @param pSceneTouchEvent
+     * @return
+     */
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
         // Block touch events
         final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);

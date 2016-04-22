@@ -13,14 +13,16 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
 /**
  * Utiltiy class for quick access to common Android, AndEngine and AndrOrm state varaibles.
+ *
+ * Must be populated at the start of the game activity.
  */
 public class PhoeniciaContext {
-    public static Context context;
-    public static GameActivity activity;
-    public static TextureManager textureManager;
-    public static AssetManager assetManager;
-    public static VertexBufferObjectManager vboManager;
-    public static SoundManager soundManager;
-    public static FontManager fontManager;
+    public static Context context; /**< Application context, used for database calls */
+    public static GameActivity activity; /**< Reference to the Android Activity the game is runing in */
+    public static TextureManager textureManager; /**< Common AndEngine TextureManager used throughout the game */
+    public static AssetManager assetManager; /**< Common Android AssetManager used throughout the game */
+    public static VertexBufferObjectManager vboManager; /**< Common AndEngine VBO used throughout the game */
+    public static SoundManager soundManager; /**< Common AndEngine SoundManager used throughout the game */
+    public static FontManager fontManager; /**< Common AndEngine FontManager used throughout the game */
 
 }

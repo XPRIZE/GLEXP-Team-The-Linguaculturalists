@@ -59,6 +59,11 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
 
     private ClickDetector clickDetector;
 
+    /**
+     * Display level transition text pages, images and sound.
+     * @param game Reference to the PhoeniciaGame this HUD is running in
+     * @param level The level to display introduction pages for
+     */
     public LevelIntroHUD(final PhoeniciaGame game, final Level level) {
         super(game.camera);
         this.setBackgroundEnabled(false);
@@ -101,6 +106,9 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
         this.clickDetector = new ClickDetector(this);
     }
 
+    /**
+     * Trigger showing the current page when the HUD is displayed to the player
+     */
     @Override
     public void show() {
         this.showPage(this.current_page);
@@ -129,6 +137,13 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
         game.playBlockSound(level.intro.get(page_index).sound);
     }
 
+    /**
+     * Capture click events to advance to the next page, or close the HUD when all pages have been shown
+     * @param clickDetector
+     * @param pointerId
+     * @param sceneX
+     * @param sceneY
+     */
     @Override
     public void onClick(ClickDetector clickDetector, int pointerId, float sceneX, float sceneY) {
         Debug.d("Intro page size: " + this.level.intro.size());
@@ -141,6 +156,12 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
 
     }
 
+    /**
+     * Capture scene touch events and check for click events
+     * @param pScene
+     * @param pSceneTouchEvent
+     * @return
+     */
     public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {
         this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
         return true;// Don't allow touch events to fall through to the scene below

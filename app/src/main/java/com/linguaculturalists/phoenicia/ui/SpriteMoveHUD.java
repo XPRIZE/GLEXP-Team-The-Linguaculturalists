@@ -38,6 +38,17 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
     private ButtonSprite confirmBlock;
     private ClickDetector clickDetector;
 
+    /**
+     * A HUD used for placing or moving blocks on the map.
+     *
+     * Allows the player to reposition items until they are happy with their location, then requiring
+     * them to either accept or cancel the placement.
+     * @param game Reference to the current PhoeniciaGame the HUD is running in
+     * @param startLocation the Tile location where this block was originally located (or originally targetted if a new block)
+     * @param sprite A MapBlockSprite that represents the block being moved
+     * @param restriction What placement restriction this block has, or null if no restrictions apply
+     * @param handler Callback for when the new placement is accepted or canceled by the player
+     */
     public SpriteMoveHUD(final PhoeniciaGame game, final TMXTile startLocation, final MapBlockSprite sprite, final String restriction, final SpriteMoveHandler handler) {
         super(game.camera);
         this.game = game;
@@ -146,6 +157,10 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
         public void onSpriteMoveFinished(MapBlockSprite sprite, TMXTile newLocation);
     }
 
+    /**
+     * Checks that the target location is compatible with the placed block's restrictions
+     * @param mapTile Map tile of the target location
+     */
     private void checkPlacement(TMXTile mapTile) {
         final String tileRestriction = this.game.mapRestrictions[mapTile.getTileRow()][mapTile.getTileColumn()];
         Debug.d("Map tile at "+mapTile.getTileRow()+"x"+mapTile.getTileColumn()+" has restriction class: " + tileRestriction);
@@ -164,6 +179,14 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
             this.confirmBlock.setVisible(true);
         }
     }
+
+    /**
+     * Handle map click events to trigger moving the placedBlock to the touched location
+     * @param clickDetector
+     * @param pointerId
+     * @param sceneX
+     * @param sceneY
+     */
     @Override
     public void onClick(ClickDetector clickDetector, int pointerId, float sceneX, float sceneY) {
         TMXTile mapTile = game.getTileAt(sceneX, sceneY);
@@ -179,6 +202,13 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
         }
     }
 
+    /**
+     * Capture scene touch events and look for click/touch events on the map to trigger placement.
+     * All other touch events are passed through.
+     *
+     * @param pSceneTouchEvent
+     * @return
+     */
     @Override
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
         final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);

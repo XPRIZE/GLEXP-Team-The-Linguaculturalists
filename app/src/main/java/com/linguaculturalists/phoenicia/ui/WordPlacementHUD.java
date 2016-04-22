@@ -43,18 +43,21 @@ import java.util.Map;
  * HUD for selecting \link Word Words \endlink to be placed as tiles onto the map.
  */
 public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateListener {
-    private static Word placeWord = null;
-    private Map<String, Text> inventoryCounts;
-    private PhoeniciaGame game;
+    private PhoeniciaGame game; /**< Reference to the current PhoeniciaGame */
 
-    private Rectangle whiteRect;
-    private Scrollable blockPanel;
+    private Rectangle whiteRect; /**< Background of this HUD */
+    private Scrollable blockPanel; /**< Scrollpane containing the word icons */
 
+    /**
+     * A HUD which allows the selection of new word blocks to be placed on the map
+     *
+     * @param game Refernece to the current PhoeniciaGame the HUD is running in
+     * @param level The level whos words will be displayed in the HUD
+     */
     public WordPlacementHUD(final PhoeniciaGame game, final Level level) {
         super(game.camera);
         this.setBackgroundEnabled(false);
         this.setOnAreaTouchTraversalFrontToBack();
-        this.inventoryCounts = new HashMap<String, Text>();
         Bank.getInstance().addUpdateListener(this);
         this.game = game;
 
@@ -93,9 +96,8 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
             this.registerTouchArea(block);
             blockPanel.attachChild(block);
 
-            final Text inventoryCount = new Text((64 * ((i * 2)+1))+24, 20, inventoryCountFont, ""+currentWord.buy, 4, PhoeniciaContext.vboManager);
-            blockPanel.attachChild(inventoryCount);
-            this.inventoryCounts.put(currentWord.name, inventoryCount);
+            final Text purchaseCost = new Text((64 * ((i * 2)+1))+24, 20, inventoryCountFont, ""+currentWord.buy, 4, PhoeniciaContext.vboManager);
+            blockPanel.attachChild(purchaseCost);
         }
         Debug.d("Finished loading HUD letters");
 
@@ -112,11 +114,20 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
         blockPanel.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
     }
 
+    /**
+     * Handles changes to the player's account balance by enablind or disabling word options
+     * @param new_balance The player's new account balance
+     */
     @Override
     public void onBankAccountUpdated(int new_balance) {
         // TODO: Enable/disable words based on available balance
     }
 
+    /**
+     * Capture scene touch events and allow them to pass through if not handled by anything in this HUD
+     * @param pSceneTouchEvent
+     * @return
+     */
     @Override
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
 

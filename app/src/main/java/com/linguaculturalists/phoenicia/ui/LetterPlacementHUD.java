@@ -50,6 +50,11 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
     private Rectangle whiteRect;
     private Scrollable blockPanel;
 
+    /**
+     * HUD for selecting \link Letter Letters \endlink to be placed as tiles onto the map.
+     * @param game Reference to the current PhoeniciaGame this HUD is running in
+     * @param level The level whos letters will be displayed
+     */
     public LetterPlacementHUD(final PhoeniciaGame game, final Level level) {
         super(game.camera);
         this.setBackgroundEnabled(false);
@@ -116,11 +121,20 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
         blockPanel.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
     }
 
+    /**
+     * Handles changes to the player's account balance by enablind or disabling letter options
+     * @param new_balance The player's new account balance
+     */
     @Override
     public void onBankAccountUpdated(int new_balance) {
         // TODO: Enable/disable words based on available balance
     }
 
+    /**
+     * Capture scene touch events and allow them to pass through if not handled by anything in this HUD
+     * @param pSceneTouchEvent
+     * @return
+     */
     @Override
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
 

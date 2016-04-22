@@ -38,7 +38,7 @@ import org.andengine.util.debug.Debug;
 import java.util.List;
 
 /**
- * Display the \link InventoryItem InventoryItems \endlink with a positive balance and allow selling them.
+ * A HUD used to display a list of Marketplace requests and facilitate those sales
  */
 public class MarketHUD extends PhoeniciaHUD {
     private PhoeniciaGame game;
@@ -46,6 +46,10 @@ public class MarketHUD extends PhoeniciaHUD {
     private Entity requestItemsPane;
     private ClickDetector clickDetector;
 
+    /**
+     * A HUD used to display a list of Marketplace requests and facilitate those sales
+     * @param game Reference to the current PhoeniciaGame this HUD is running in
+     */
     public MarketHUD(final PhoeniciaGame game) {
         super(game.camera);
         this.setBackgroundEnabled(false);
@@ -121,6 +125,11 @@ public class MarketHUD extends PhoeniciaHUD {
         }
     }
 
+    /**
+     * When a MarketRequest is selected, display it's list of RequestItems, the offered coins and
+     * experience points, and a button to attempt the sale
+     * @param request The activated MarketRequest to display items for
+     */
     private void populateRequestItems(final MarketRequest request) {
         this.requestItemsPane.detachChildren();
         final int columns = 3;
@@ -184,11 +193,10 @@ public class MarketHUD extends PhoeniciaHUD {
         this.registerTouchArea(sellButton);
     }
 
-    @Override
-    public void close() {
-        //Market.getInstance().clear();
-    }
-
+    /**
+     * Check if the player has enough inventory to complete the sale, otherwise abort the sale
+     * @param request
+     */
     private void attemptSale(MarketRequest request) {
         Debug.d("Attempting sale to " + request.person_name.get());
         for (RequestItem item : request.getItems(PhoeniciaContext.context)) {
@@ -202,12 +210,22 @@ public class MarketHUD extends PhoeniciaHUD {
         // TODO: remove request and replace it with a new one
     }
 
+    /**
+     * Tells the Market class to fulfill the request, deducting the items from the inventory and
+     * crediting the player coins and experience points
+     * @param request
+     */
     public void completeSale(MarketRequest request) {
         Market.getInstance().fulfillRequest(request);
         this.requestItemsPane.detachChildren();
         game.hudManager.clear();
     }
 
+    /**
+     * Abort the sale with a message to the player indicating item who's lack of inventory caused it
+     * @param item Item that the player does not have enough of to complete the sale
+     * @param needed How many more of this item is needed
+     */
     public void abortSale(RequestItem item, int needed) {
         Debug.d("Aborting sale due to not enough " + item.item_name.get());
         Dialog confirmDialog = new Dialog(500, 300, Dialog.Buttons.OK, PhoeniciaContext.vboManager, new Dialog.DialogListener() {
@@ -249,6 +267,11 @@ public class MarketHUD extends PhoeniciaHUD {
         confirmDialog.open(this);
     }
 
+    /**
+     * Capture scene touch events
+     * @param pSceneTouchEvent
+     * @return
+     */
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
         // Block touch events
         final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);

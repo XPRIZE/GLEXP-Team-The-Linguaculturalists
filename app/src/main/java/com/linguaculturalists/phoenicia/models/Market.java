@@ -59,6 +59,9 @@ public class Market {
         return items;
     }
 
+    /**
+     * Make sure there are as many requests as the current game level allows, creating more if necessary
+     */
     public void populate() {
         Debug.d("Populating marketplace");
         int limit = this.game.locale.level_map.get(this.game.current_level).marketRequests;
@@ -73,6 +76,10 @@ public class Market {
         }
     }
 
+    /**
+     * Generate a new request based on the current game level
+     * @return newly created and saved request
+     */
     public MarketRequest createRequest() {
         Date now = new Date();
         MarketRequest request = new MarketRequest();
@@ -150,6 +157,12 @@ public class Market {
         return request;
     }
 
+    /**
+     * Mark a given request as having been fulfilled, and at the same time subtract the requested
+     * items from the player's inventory, and credit the player for the coins and experience points
+     * offered in the request
+     * @param request
+     */
     public void fulfillRequest(MarketRequest request) {
         Debug.d("Completing sale to " + request.person_name.get());
         for (RequestItem item : request.getItems(PhoeniciaContext.context)) {

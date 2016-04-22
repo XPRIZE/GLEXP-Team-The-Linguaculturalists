@@ -34,6 +34,10 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
     private ButtonSprite letterBlock;
     private ButtonSprite wordBlock;
 
+    /**
+     * Displays the current level, bank account balance, and buttons for adding letter or work tiles
+     * @param game Reference to the PhoeniciaGame this HUD is running in
+     */
     public DefaultHUD(final PhoeniciaGame game) {
         super(game.camera);
         this.setBackgroundEnabled(false);

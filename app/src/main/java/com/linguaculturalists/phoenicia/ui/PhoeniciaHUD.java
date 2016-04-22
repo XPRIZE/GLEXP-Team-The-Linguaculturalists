@@ -8,6 +8,10 @@ import org.andengine.entity.scene.CameraScene;
  */
 public abstract class PhoeniciaHUD extends CameraScene {
 
+    /**
+     * Common setup for game HUDs
+     * @param camera Camera this HUD will be attached to
+     */
     public PhoeniciaHUD(Camera camera) {
         super(camera);
         this.setOnAreaTouchTraversalFrontToBack();

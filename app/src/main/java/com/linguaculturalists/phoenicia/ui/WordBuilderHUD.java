@@ -49,6 +49,12 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
 
     private Rectangle whiteRect;
 
+    /**
+     * A HUD for allowing the player to combine letters from their inventory to build a word
+     * @param game A reference to the current PhoeniciaGame the HUD is running in
+     * @param level The current level, used to display only available letters
+     * @param word The word which the player is attempting to build
+     */
     public WordBuilderHUD(final PhoeniciaGame game, final Level level, final Word word) {
         super(game.camera);
         this.setBackgroundEnabled(false);
@@ -253,6 +259,10 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
         });
     }
 
+    /**
+     * Handle changes in the player's inventory by resetting the counter under each letter
+     * @param items The items which have changed
+     */
     public void onInventoryUpdated(final InventoryItem[] items) {
         Debug.d("Updating BlockPlacementHUD inventory");
         for (int i = 0; i < items.length; i++) {
@@ -269,8 +279,14 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
         }
     }
 
+    /**
+     * Capture scene touch events without passing them through
+     * @param pScene
+     * @param pSceneTouchEvent
+     * @return
+     */
     public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {
-        // Block touch events
+        // TODO: instead of ignoring touch events outside the HUD, make them trigger closing the HUD
         return true;
     }
 }
