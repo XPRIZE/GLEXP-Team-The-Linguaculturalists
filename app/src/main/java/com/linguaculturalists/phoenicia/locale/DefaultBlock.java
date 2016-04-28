@@ -7,6 +7,8 @@ public class DefaultBlock {
     public String name;
     public int mapCol;
     public int mapRow;
+    public int columns; /**< number of map columns this block occupies. Default is 1 */
+    public int rows; /**< number of map rows this block occupies. Default is 1 */
     public String texture_src;
 
     @Override

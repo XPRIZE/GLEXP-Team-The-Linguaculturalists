@@ -102,7 +102,18 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
             Debug.d("No tile at "+this.isoX.get()+"x"+this.isoY.get());
             return;
         }
-        phoeniciaGame.hudManager.push(new SpriteMoveHUD(phoeniciaGame, tmxTile, buttonSprite, null, new SpriteMoveHUD.SpriteMoveHandler() {
+        int cols = 1;
+        int rows = 1;
+        if (this.item_type.get().equals("inventory")) {
+            cols = phoeniciaGame.locale.inventoryBlock.columns;
+            rows = phoeniciaGame.locale.inventoryBlock.rows;
+        } else if (this.item_type.get().equals("market")) {
+            cols = phoeniciaGame.locale.marketBlock.columns;
+            rows = phoeniciaGame.locale.marketBlock.rows;
+        } else {
+            Debug.e("Unknown default block: "+this.item_type.get());
+        }
+        phoeniciaGame.hudManager.push(new SpriteMoveHUD(phoeniciaGame, tmxTile, buttonSprite, cols, rows, null, new SpriteMoveHUD.SpriteMoveHandler() {
             @Override
             public void onSpriteMoveCanceled(MapBlockSprite sprite) {
                 sprite.setPosition(tmxTile.getTileX() + 32, tmxTile.getTileY() + 32);
@@ -114,7 +125,28 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
             public void onSpriteMoveFinished(MapBlockSprite sprite, TMXTile newlocation) {
                 isoX.set(newlocation.getTileColumn());
                 isoY.set(newlocation.getTileRow());
-                phoeniciaGame.placedSprites[newlocation.getTileColumn()][newlocation.getTileRow()] = sprite;
+                int cols = 1;
+                int rows = 1;
+                if (item_type.get().equals("inventory")) {
+                    cols = phoeniciaGame.locale.inventoryBlock.columns;
+                    rows = phoeniciaGame.locale.inventoryBlock.rows;
+                } else if (item_type.get().equals("market")) {
+                    cols = phoeniciaGame.locale.marketBlock.columns;
+                    rows = phoeniciaGame.locale.marketBlock.rows;
+                } else {
+                    Debug.e("Unknown default block: " + item_type.get());
+                }
+                for (int c = 0; c < cols; c++) {
+                    for (int r = 0; r < rows; r++) {
+                        phoeniciaGame.placedSprites[tmxTile.getTileColumn()-c][tmxTile.getTileRow()-r] = null;
+                    }
+                }
+                for (int c = 0; c < cols; c++) {
+                    for (int r = 0; r < rows; r++) {
+                        phoeniciaGame.placedSprites[newlocation.getTileColumn()-c][newlocation.getTileRow()-r] = sprite;
+                    }
+                }
+                sprite.setZIndex(newlocation.getTileZ());
                 phoeniciaGame.scene.sortChildren();
                 save(PhoeniciaContext.context);
 

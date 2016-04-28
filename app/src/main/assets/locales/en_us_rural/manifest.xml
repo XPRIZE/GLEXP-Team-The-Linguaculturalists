@@ -5,7 +5,7 @@
 
     <!-- default blocks -->
     <inventory name="Barn" col="37" row="43" texture="locales/en_us_rural/textures/inventory.png" />
-    <market name="Market" col="41" row="41" texture="locales/en_us_rural/textures/market.png" />
+    <market size="2x1" name="Market" col="41" row="41" texture="locales/en_us_rural/textures/bigmarket.png" />
 
     <people>
         <person name="Dave" texture="locales/common/textures/persons/Dave.png" />
@@ -43,7 +43,7 @@
         <letter name="z" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/z.png" sound="locales/en_us_rural/sounds/z.ogg" phoneme="locales/en_us_rural/sounds/z.ogg">z</letter>
     </letters>
     <words>
-        <word name="cat" buy="100" sell="10" points="10" construct="20" time="60" texture="locales/en_us_rural/textures/words/cat.png" sound="locales/en_us_rural/sounds/cat.ogg">cat</word>
+        <word name="cat" size="2x1" buy="100" sell="10" points="10" construct="20" time="60" texture="locales/en_us_rural/textures/words/cat.png" sound="locales/en_us_rural/sounds/cat.ogg">cat</word>
         <word name="hat" buy="200" sell="20" points="20" construct="20" time="75" texture="locales/en_us_rural/textures/words/hat.png" sound="locales/en_us_rural/sounds/hat.ogg">hat</word>
         <word name="bat" buy="300" sell="30" points="30" construct="20" time="90" texture="locales/en_us_rural/textures/words/bat.png" sound="locales/en_us_rural/sounds/bat.ogg">bat</word>
     </words>

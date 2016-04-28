@@ -244,7 +244,7 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
             Debug.d("No tile at "+this.isoX.get()+"x"+this.isoY.get());
             return;
         }
-        phoeniciaGame.hudManager.push(new SpriteMoveHUD(phoeniciaGame, tmxTile, sprite, this.word.restriction, new SpriteMoveHUD.SpriteMoveHandler() {
+        phoeniciaGame.hudManager.push(new SpriteMoveHUD(phoeniciaGame, tmxTile, sprite, word.columns, word.rows, this.word.restriction, new SpriteMoveHUD.SpriteMoveHandler() {
             @Override
             public void onSpriteMoveCanceled(MapBlockSprite sprite) {
                 sprite.setPosition(tmxTile.getTileX()+32, tmxTile.getTileY()+32);
@@ -256,7 +256,19 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
             public void onSpriteMoveFinished(MapBlockSprite sprite, TMXTile newlocation) {
                 isoX.set(newlocation.getTileColumn());
                 isoY.set(newlocation.getTileRow());
-                phoeniciaGame.placedSprites[newlocation.getTileColumn()][newlocation.getTileRow()] = sprite;
+                // Unset previous sprite location
+                for (int c = 0; c < word.columns; c++) {
+                    for (int r = 0; r < word.rows; r++) {
+                        phoeniciaGame.placedSprites[tmxTile.getTileColumn()-c][tmxTile.getTileRow()-r] = null;
+                    }
+                }
+                // Set new sprite location
+                for (int c = 0; c < word.columns; c++) {
+                    for (int r = 0; r < word.rows; r++) {
+                        phoeniciaGame.placedSprites[newlocation.getTileColumn()-c][newlocation.getTileRow()-r] = sprite;
+                    }
+                }
+                sprite.setZIndex(newlocation.getTileZ());
                 phoeniciaGame.scene.sortChildren();
                 save(PhoeniciaContext.context);
             }

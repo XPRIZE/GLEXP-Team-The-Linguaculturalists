@@ -5,6 +5,8 @@ package com.linguaculturalists.phoenicia.locale;
 */
 public class Word {
     public String name; /**< reference name for this word (can be different from the word itself */
+    public int columns; /**< number of map columns this word block occupies. Default is 1 */
+    public int rows; /**< number of map rows this word block occupies. Default is 1 */
     public String restriction; /**< tile class this letter can be placed on */
     public int construct;/**< time (in seconds) it takes to build this block */
     public int time;/**< time (in seconds) it takes to build this word */

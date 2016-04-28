@@ -155,6 +155,20 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale inventory");
         this.locale.inventoryBlock = new InventoryBlock();
         this.locale.inventoryBlock.name = attributes.getValue("name");
+        String size = attributes.getValue("size");
+        if (size == null || size == "" || size == "1x1") {
+            this.locale.inventoryBlock.columns = 1;
+            this.locale.inventoryBlock.rows = 1;
+        } else {
+            try {
+                String[] dimensions = size.split("x");
+                this.locale.inventoryBlock.columns = Integer.parseInt(dimensions[0]);
+                this.locale.inventoryBlock.rows = Integer.parseInt(dimensions[1]);
+            } catch (Exception e) {
+                Debug.e("Failed to parse size for: "+this.locale.inventoryBlock.name);
+                e.printStackTrace();
+            }
+        }
         this.locale.inventoryBlock.texture_src = attributes.getValue("texture");
         this.locale.inventoryBlock.mapCol = Integer.parseInt(attributes.getValue("col"));
         this.locale.inventoryBlock.mapRow = Integer.parseInt(attributes.getValue("row"));
@@ -164,6 +178,20 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale market");
         this.locale.marketBlock = new MarketBlock();
         this.locale.marketBlock.name = attributes.getValue("name");
+        String size = attributes.getValue("size");
+        if (size == null || size == "" || size == "1x1") {
+            this.locale.marketBlock.columns = 1;
+            this.locale.marketBlock.rows = 1;
+        } else {
+            try {
+                String[] dimensions = size.split("x");
+                this.locale.marketBlock.columns = Integer.parseInt(dimensions[0]);
+                this.locale.marketBlock.rows = Integer.parseInt(dimensions[1]);
+            } catch (Exception e) {
+                Debug.e("Failed to parse size for: "+this.locale.marketBlock.name);
+                e.printStackTrace();
+            }
+        }
         this.locale.marketBlock.texture_src = attributes.getValue("texture");
         this.locale.marketBlock.mapCol = Integer.parseInt(attributes.getValue("col"));
         this.locale.marketBlock.mapRow = Integer.parseInt(attributes.getValue("row"));
@@ -182,6 +210,20 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale letter");
         this.currentLetter = new Letter();
         this.currentLetter.name = attributes.getValue("name");
+        String size = attributes.getValue("size");
+        if (size == null || size == "" || size == "1x1") {
+            this.currentLetter.columns = 1;
+            this.currentLetter.rows = 1;
+        } else {
+            try {
+                String[] dimensions = size.split("x");
+                this.currentLetter.columns = Integer.parseInt(dimensions[0]);
+                this.currentLetter.rows = Integer.parseInt(dimensions[1]);
+            } catch (Exception e) {
+                Debug.e("Failed to parse letter size for: "+this.currentLetter.name);
+                e.printStackTrace();
+            }
+        }
         this.currentLetter.restriction = attributes.getValue("restrict");
         this.currentLetter.sound = attributes.getValue("sound");
         this.currentLetter.phoneme = attributes.getValue("phoneme");
@@ -196,6 +238,20 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale word");
         this.currentWord = new Word();
         this.currentWord.name = attributes.getValue("name");
+        String size = attributes.getValue("size");
+        if (size == null || size == "" || size == "1x1") {
+            this.currentWord.columns = 1;
+            this.currentWord.rows = 1;
+        } else {
+            try {
+                String[] dimensions = size.split("x");
+                this.currentWord.columns = Integer.parseInt(dimensions[0]);
+                this.currentWord.rows = Integer.parseInt(dimensions[1]);
+            } catch (Exception e) {
+                Debug.e("Failed to parse word size for: "+this.currentWord.name);
+                e.printStackTrace();
+            }
+        }
         this.currentWord.restriction = attributes.getValue("restrict");
         this.currentWord.sound = attributes.getValue("sound");
         this.currentWord.construct = Integer.parseInt(attributes.getValue("construct"));

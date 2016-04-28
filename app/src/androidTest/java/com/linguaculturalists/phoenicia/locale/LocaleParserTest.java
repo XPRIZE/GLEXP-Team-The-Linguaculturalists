@@ -94,6 +94,8 @@ public class LocaleParserTest extends AndroidTestCase {
         Letter b = locale.letter_map.get("b");
         assertNotNull(b);
         assertEquals("test", b.restriction);
+        assertEquals(2, b.columns);
+        assertEquals(3, b.rows);
     }
 
     public void testWordDefinitions() {
@@ -113,6 +115,8 @@ public class LocaleParserTest extends AndroidTestCase {
         Word ba = locale.word_map.get("ba");
         assertNotNull(ba);
         assertEquals("test", ba.restriction);
+        assertEquals(4, ba.columns);
+        assertEquals(4, ba.rows);
     }
 
     public void testLevelDefinitions() {
