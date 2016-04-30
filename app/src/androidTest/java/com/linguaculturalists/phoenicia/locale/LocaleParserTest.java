@@ -118,7 +118,7 @@ public class LocaleParserTest extends AndroidTestCase {
         assertNotNull(ba);
         assertEquals("test", ba.restriction);
         assertEquals(4, ba.columns);
-        assertEquals(4, ba.rows);
+        assertEquals(5, ba.rows);
     }
 
     public void testLevelDefinitions() {

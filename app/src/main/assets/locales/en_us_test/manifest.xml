@@ -3,9 +3,9 @@
     <shell src="locales/en_us_test/textures/gameui.png" />
     <map src="locales/en_us_test/map.tmx" />
 
-    <inventory name="InventoryTest" col="1" row="2" texture="locales/en_us_test/textures/inventory.png" />
+    <inventory name="InventoryTest" col="1" row="2" block="locales/en_us_test/textures/inventory.png" />
 
-    <market name="MarketTest" col="2" row="1" texture="locales/en_us_test/textures/market.png" />
+    <market name="MarketTest" col="2" row="1" block="locales/en_us_test/textures/market.png" />
 
     <people>
         <person name="Konqi" texture="locales/en_us_test/textures/persons/konqi.png" />
