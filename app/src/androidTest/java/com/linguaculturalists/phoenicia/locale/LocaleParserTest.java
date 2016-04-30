@@ -57,14 +57,14 @@ public class LocaleParserTest extends AndroidTestCase {
         assertEquals("InventoryTest", i.name);
         assertEquals(1, i.mapCol);
         assertEquals(2, i.mapRow);
-        assertEquals("locales/en_us_test/textures/inventory.png", i.texture_src);
+        assertEquals("locales/en_us_test/textures/inventory.png", i.block_texture);
 
         MarketBlock m = locale.marketBlock;
         assertNotNull(m);
         assertEquals("MarketTest", m.name);
         assertEquals(2, m.mapCol);
         assertEquals(1, m.mapRow);
-        assertEquals("locales/en_us_test/textures/market.png", m.texture_src);
+        assertEquals("locales/en_us_test/textures/market.png", m.block_texture);
     }
 
     public void testPeopleDefinitions() {
@@ -87,13 +87,16 @@ public class LocaleParserTest extends AndroidTestCase {
         assertEquals(1, a.sell);
         assertEquals(10, a.time);
         assertEquals(100, a.points);
-        assertEquals("locales/en_us_test/textures/letters/a.png", a.texture_src);
+        assertEquals("locales/en_us_test/textures/letters/sprites/a.png", a.sprite_texture);
+        assertEquals("locales/en_us_test/textures/letters/blocks/a.png", a.block_texture);
         assertEquals("locales/en_us_test/sounds/a.ogg", a.sound);
         assertEquals("locales/en_us_test/phonemes/a.ogg", a.phoneme);
 
         Letter b = locale.letter_map.get("b");
         assertNotNull(b);
         assertEquals("test", b.restriction);
+        assertEquals(2, b.columns);
+        assertEquals(3, b.rows);
     }
 
     public void testWordDefinitions() {
@@ -107,12 +110,15 @@ public class LocaleParserTest extends AndroidTestCase {
         assertEquals(10, ab.construct);
         assertEquals(10, ab.time);
         assertEquals(100, ab.points);
-        assertEquals("locales/en_us_test/textures/words/ab.png", ab.texture_src);
+        assertEquals("locales/en_us_test/textures/words/sprites/ab.png", ab.sprite_texture);
+        assertEquals("locales/en_us_test/textures/words/blocks/ab.png", ab.block_texture);
         assertEquals("locales/en_us_test/sounds/ab.ogg", ab.sound);
 
         Word ba = locale.word_map.get("ba");
         assertNotNull(ba);
         assertEquals("test", ba.restriction);
+        assertEquals(4, ba.columns);
+        assertEquals(5, ba.rows);
     }
 
     public void testLevelDefinitions() {

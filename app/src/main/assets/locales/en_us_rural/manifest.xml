@@ -4,8 +4,8 @@
     <map src="locales/en_us_rural/map.tmx" />
 
     <!-- default blocks -->
-    <inventory name="Barn" col="37" row="43" texture="locales/en_us_rural/textures/inventory.png" />
-    <market name="Market" col="41" row="41" texture="locales/en_us_rural/textures/market.png" />
+    <inventory size="1x2" name="Barn" col="37" row="43" block="locales/en_us_rural/textures/biginventory.png" />
+    <market size="2x1" name="Market" col="41" row="41" block="locales/en_us_rural/textures/bigmarket.png" />
 
     <people>
         <person name="Dave" texture="locales/common/textures/persons/Dave.png" />
@@ -15,37 +15,37 @@
     </people>
 
     <letters>
-        <letter name="a" buy="0"  sell="1"  points="1" time="10" texture="locales/en_us_rural/textures/letters/a.png" sound="locales/en_us_rural/sounds/a-name.ogg" phoneme="locales/en_us_rural/sounds/a-phoneme.ogg">a</letter>
-        <letter name="b" buy="5"  sell="4"  points="1" time="10" texture="locales/en_us_rural/textures/letters/b.png" sound="locales/en_us_rural/sounds/b-name.ogg" phoneme="locales/en_us_rural/sounds/b-phoneme.ogg">b</letter>
-        <letter name="c" buy="2"  sell="1"  points="1" time="10" texture="locales/en_us_rural/textures/letters/c.png" sound="locales/en_us_rural/sounds/c-name.ogg" phoneme="locales/en_us_rural/sounds/c-phoneme.ogg">c</letter>
-        <letter name="d" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/d.png" sound="locales/en_us_rural/sounds/d.ogg" phoneme="locales/en_us_rural/sounds/d.ogg">d</letter>
-        <letter name="e" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/e.png" sound="locales/en_us_rural/sounds/e.ogg" phoneme="locales/en_us_rural/sounds/e.ogg">e</letter>
-        <letter name="f" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/f.png" sound="locales/en_us_rural/sounds/f.ogg" phoneme="locales/en_us_rural/sounds/f.ogg">f</letter>
-        <letter name="g" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/g.png" sound="locales/en_us_rural/sounds/g.ogg" phoneme="locales/en_us_rural/sounds/g.ogg">g</letter>
-        <letter name="h" buy="4"  sell="3"  points="1" time="10" texture="locales/en_us_rural/textures/letters/h.png" sound="locales/en_us_rural/sounds/h-name.ogg" phoneme="locales/en_us_rural/sounds/h-phoneme.ogg">h</letter>
-        <letter name="i" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/i.png" sound="locales/en_us_rural/sounds/i.ogg" phoneme="locales/en_us_rural/sounds/i.ogg">i</letter>
-        <letter name="j" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/j.png" sound="locales/en_us_rural/sounds/j.ogg" phoneme="locales/en_us_rural/sounds/j.ogg">j</letter>
-        <letter name="k" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/k.png" sound="locales/en_us_rural/sounds/k.ogg" phoneme="locales/en_us_rural/sounds/k.ogg">k</letter>
-        <letter name="l" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/l.png" sound="locales/en_us_rural/sounds/l.ogg" phoneme="locales/en_us_rural/sounds/l.ogg">l</letter>
-        <letter name="m" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/m.png" sound="locales/en_us_rural/sounds/m.ogg" phoneme="locales/en_us_rural/sounds/m.ogg">m</letter>
-        <letter name="n" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/n.png" sound="locales/en_us_rural/sounds/n.ogg" phoneme="locales/en_us_rural/sounds/n.ogg">n</letter>
-        <letter name="o" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/o.png" sound="locales/en_us_rural/sounds/o.ogg" phoneme="locales/en_us_rural/sounds/o.ogg">o</letter>
-        <letter name="p" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/p.png" sound="locales/en_us_rural/sounds/p.ogg" phoneme="locales/en_us_rural/sounds/p.ogg">p</letter>
-        <letter name="q" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/q.png" sound="locales/en_us_rural/sounds/q.ogg" phoneme="locales/en_us_rural/sounds/q.ogg">q</letter>
-        <letter name="r" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/r.png" sound="locales/en_us_rural/sounds/r.ogg" phoneme="locales/en_us_rural/sounds/r.ogg">r</letter>
-        <letter name="s" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/s.png" sound="locales/en_us_rural/sounds/s.ogg" phoneme="locales/en_us_rural/sounds/s.ogg">s</letter>
-        <letter name="t" buy="3"  sell="2"  points="1" time="10" texture="locales/en_us_rural/textures/letters/t.png" sound="locales/en_us_rural/sounds/t-name.ogg" phoneme="locales/en_us_rural/sounds/t-phoneme.ogg">t</letter>
-        <letter name="u" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/u.png" sound="locales/en_us_rural/sounds/u.ogg" phoneme="locales/en_us_rural/sounds/u.ogg">u</letter>
-        <letter name="v" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/v.png" sound="locales/en_us_rural/sounds/v.ogg" phoneme="locales/en_us_rural/sounds/v.ogg">v</letter>
-        <letter name="w" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/w.png" sound="locales/en_us_rural/sounds/w.ogg" phoneme="locales/en_us_rural/sounds/w.ogg">w</letter>
-        <letter name="x" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/x.png" sound="locales/en_us_rural/sounds/x.ogg" phoneme="locales/en_us_rural/sounds/x.ogg">x</letter>
-        <letter name="y" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/y.png" sound="locales/en_us_rural/sounds/y.ogg" phoneme="locales/en_us_rural/sounds/y.ogg">y</letter>
-        <letter name="z" buy="10" sell="10" points="1" time="30" texture="locales/en_us_rural/textures/letters/z.png" sound="locales/en_us_rural/sounds/z.ogg" phoneme="locales/en_us_rural/sounds/z.ogg">z</letter>
+        <letter name="a" buy="0"  sell="1"  points="1" time="10" sprite="locales/en_us_rural/textures/letters/sprites/a.png" block="locales/en_us_rural/textures/letters/blocks/a.png" sound="locales/en_us_rural/sounds/a-name.ogg" phoneme="locales/en_us_rural/sounds/a-phoneme.ogg">a</letter>
+        <letter name="b" buy="5"  sell="4"  points="1" time="10" sprite="locales/en_us_rural/textures/letters/sprites/b.png" block="locales/en_us_rural/textures/letters/blocks/b.png" sound="locales/en_us_rural/sounds/b-name.ogg" phoneme="locales/en_us_rural/sounds/b-phoneme.ogg">b</letter>
+        <letter name="c" buy="2"  sell="1"  points="1" time="10" sprite="locales/en_us_rural/textures/letters/sprites/c.png" block="locales/en_us_rural/textures/letters/blocks/c.png" sound="locales/en_us_rural/sounds/c-name.ogg" phoneme="locales/en_us_rural/sounds/c-phoneme.ogg">c</letter>
+        <letter name="d" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/d.png" block="locales/en_us_rural/textures/letters/blocks/d.png" sound="locales/en_us_rural/sounds/d.ogg" phoneme="locales/en_us_rural/sounds/d.ogg">d</letter>
+        <letter name="e" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/e.png" block="locales/en_us_rural/textures/letters/blocks/e.png" sound="locales/en_us_rural/sounds/e.ogg" phoneme="locales/en_us_rural/sounds/e.ogg">e</letter>
+        <letter name="f" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/f.png" block="locales/en_us_rural/textures/letters/blocks/f.png" sound="locales/en_us_rural/sounds/f.ogg" phoneme="locales/en_us_rural/sounds/f.ogg">f</letter>
+        <letter name="g" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/g.png" block="locales/en_us_rural/textures/letters/blocks/g.png" sound="locales/en_us_rural/sounds/g.ogg" phoneme="locales/en_us_rural/sounds/g.ogg">g</letter>
+        <letter name="h" buy="4"  sell="3"  points="1" time="10" sprite="locales/en_us_rural/textures/letters/sprites/h.png" block="locales/en_us_rural/textures/letters/blocks/h.png" sound="locales/en_us_rural/sounds/h-name.ogg" phoneme="locales/en_us_rural/sounds/h-phoneme.ogg">h</letter>
+        <letter name="i" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/i.png" block="locales/en_us_rural/textures/letters/blocks/i.png" sound="locales/en_us_rural/sounds/i.ogg" phoneme="locales/en_us_rural/sounds/i.ogg">i</letter>
+        <letter name="j" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/j.png" block="locales/en_us_rural/textures/letters/blocks/j.png" sound="locales/en_us_rural/sounds/j.ogg" phoneme="locales/en_us_rural/sounds/j.ogg">j</letter>
+        <letter name="k" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/k.png" block="locales/en_us_rural/textures/letters/blocks/k.png" sound="locales/en_us_rural/sounds/k.ogg" phoneme="locales/en_us_rural/sounds/k.ogg">k</letter>
+        <letter name="l" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/l.png" block="locales/en_us_rural/textures/letters/blocks/l.png" sound="locales/en_us_rural/sounds/l.ogg" phoneme="locales/en_us_rural/sounds/l.ogg">l</letter>
+        <letter name="m" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/m.png" block="locales/en_us_rural/textures/letters/blocks/m.png" sound="locales/en_us_rural/sounds/m.ogg" phoneme="locales/en_us_rural/sounds/m.ogg">m</letter>
+        <letter name="n" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/n.png" block="locales/en_us_rural/textures/letters/blocks/n.png" sound="locales/en_us_rural/sounds/n.ogg" phoneme="locales/en_us_rural/sounds/n.ogg">n</letter>
+        <letter name="o" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/o.png" block="locales/en_us_rural/textures/letters/blocks/o.png" sound="locales/en_us_rural/sounds/o.ogg" phoneme="locales/en_us_rural/sounds/o.ogg">o</letter>
+        <letter name="p" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/p.png" block="locales/en_us_rural/textures/letters/blocks/p.png" sound="locales/en_us_rural/sounds/p.ogg" phoneme="locales/en_us_rural/sounds/p.ogg">p</letter>
+        <letter name="q" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/q.png" block="locales/en_us_rural/textures/letters/blocks/q.png" sound="locales/en_us_rural/sounds/q.ogg" phoneme="locales/en_us_rural/sounds/q.ogg">q</letter>
+        <letter name="r" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/r.png" block="locales/en_us_rural/textures/letters/blocks/r.png" sound="locales/en_us_rural/sounds/r.ogg" phoneme="locales/en_us_rural/sounds/r.ogg">r</letter>
+        <letter name="s" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/s.png" block="locales/en_us_rural/textures/letters/blocks/s.png" sound="locales/en_us_rural/sounds/s.ogg" phoneme="locales/en_us_rural/sounds/s.ogg">s</letter>
+        <letter name="t" buy="3"  sell="2"  points="1" time="10" sprite="locales/en_us_rural/textures/letters/sprites/t.png" block="locales/en_us_rural/textures/letters/blocks/t.png" sound="locales/en_us_rural/sounds/t-name.ogg" phoneme="locales/en_us_rural/sounds/t-phoneme.ogg">t</letter>
+        <letter name="u" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/u.png" block="locales/en_us_rural/textures/letters/blocks/u.png" sound="locales/en_us_rural/sounds/u.ogg" phoneme="locales/en_us_rural/sounds/u.ogg">u</letter>
+        <letter name="v" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/v.png" block="locales/en_us_rural/textures/letters/blocks/v.png" sound="locales/en_us_rural/sounds/v.ogg" phoneme="locales/en_us_rural/sounds/v.ogg">v</letter>
+        <letter name="w" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/w.png" block="locales/en_us_rural/textures/letters/blocks/w.png" sound="locales/en_us_rural/sounds/w.ogg" phoneme="locales/en_us_rural/sounds/w.ogg">w</letter>
+        <letter name="x" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/x.png" block="locales/en_us_rural/textures/letters/blocks/x.png" sound="locales/en_us_rural/sounds/x.ogg" phoneme="locales/en_us_rural/sounds/x.ogg">x</letter>
+        <letter name="y" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/y.png" block="locales/en_us_rural/textures/letters/blocks/y.png" sound="locales/en_us_rural/sounds/y.ogg" phoneme="locales/en_us_rural/sounds/y.ogg">y</letter>
+        <letter name="z" buy="10" sell="10" points="1" time="30" sprite="locales/en_us_rural/textures/letters/sprites/z.png" block="locales/en_us_rural/textures/letters/blocks/z.png" sound="locales/en_us_rural/sounds/z.ogg" phoneme="locales/en_us_rural/sounds/z.ogg">z</letter>
     </letters>
     <words>
-        <word name="cat" buy="100" sell="10" points="10" construct="20" time="60" texture="locales/en_us_rural/textures/words/cat.png" sound="locales/en_us_rural/sounds/cat.ogg">cat</word>
-        <word name="hat" buy="200" sell="20" points="20" construct="20" time="75" texture="locales/en_us_rural/textures/words/hat.png" sound="locales/en_us_rural/sounds/hat.ogg">hat</word>
-        <word name="bat" buy="300" sell="30" points="30" construct="20" time="90" texture="locales/en_us_rural/textures/words/bat.png" sound="locales/en_us_rural/sounds/bat.ogg">bat</word>
+        <word name="cat" size="2x2" buy="100" sell="10" points="10" construct="20" time="60" sprite="locales/en_us_rural/textures/words/sprites/cat.png" block="locales/en_us_rural/textures/words/blocks/cat.png" sound="locales/en_us_rural/sounds/cat.ogg">cat</word>
+        <word name="hat" buy="200" sell="20" points="20" construct="20" time="75" sprite="locales/en_us_rural/textures/words/sprites/hat.png" block="locales/en_us_rural/textures/words/blocks/hat.png" sound="locales/en_us_rural/sounds/hat.ogg">hat</word>
+        <word name="bat" buy="300" sell="30" points="30" construct="20" time="90" sprite="locales/en_us_rural/textures/words/sprites/bat.png" block="locales/en_us_rural/textures/words/blocks/bat.png" sound="locales/en_us_rural/sounds/bat.ogg">bat</word>
     </words>
     <levels>
         <level name="1" market="0" coins="0">

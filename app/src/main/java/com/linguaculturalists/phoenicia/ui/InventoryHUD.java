@@ -85,9 +85,9 @@ public class InventoryHUD extends PhoeniciaHUD {
             Debug.d("Adding Builder letter: " + currentLetter.name + " (tile: " + currentLetter.tile + ")");
             final int tile_id = currentLetter.sprite;
             final ITextureRegion blockRegion = new TiledTextureRegion(game.letterTextures.get(currentLetter),
-                    game.letterTiles.get(currentLetter).getTextureRegion(0),
-                    game.letterTiles.get(currentLetter).getTextureRegion(1),
-                    game.letterTiles.get(currentLetter).getTextureRegion(2));
+                    game.letterSprites.get(currentLetter).getTextureRegion(0),
+                    game.letterSprites.get(currentLetter).getTextureRegion(1),
+                    game.letterSprites.get(currentLetter).getTextureRegion(2));
             final LetterSprite block = new LetterSprite(startX + (96 * offsetX), offsetY, currentLetter, Inventory.getInstance().getCount(currentLetter.name), blockRegion, PhoeniciaContext.vboManager);
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
@@ -123,9 +123,9 @@ public class InventoryHUD extends PhoeniciaHUD {
             Debug.d("Adding Builder letter: " + currentWord.name + " (tile: " + currentWord.tile + ")");
             final int tile_id = currentWord.sprite;
             final ITextureRegion blockRegion = new TiledTextureRegion(game.wordTextures.get(currentWord),
-                    game.wordTiles.get(currentWord).getTextureRegion(0),
-                    game.wordTiles.get(currentWord).getTextureRegion(1),
-                    game.wordTiles.get(currentWord).getTextureRegion(2));
+                    game.wordSprites.get(currentWord).getTextureRegion(0),
+                    game.wordSprites.get(currentWord).getTextureRegion(1),
+                    game.wordSprites.get(currentWord).getTextureRegion(2));
             final WordSprite block = new WordSprite(startX + (96 * offsetX), offsetY, currentWord, Inventory.getInstance().getCount(currentWord.name), blockRegion, PhoeniciaContext.vboManager);
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override

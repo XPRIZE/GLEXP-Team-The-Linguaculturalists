@@ -8,6 +8,7 @@ import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
 import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.Model;
 import com.orm.androrm.QuerySet;
@@ -244,10 +245,11 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
             Debug.d("No tile at "+this.isoX.get()+"x"+this.isoY.get());
             return;
         }
-        phoeniciaGame.hudManager.push(new SpriteMoveHUD(phoeniciaGame, tmxTile, sprite, this.word.restriction, new SpriteMoveHUD.SpriteMoveHandler() {
+        phoeniciaGame.hudManager.push(new SpriteMoveHUD(phoeniciaGame, tmxTile, sprite, word.columns, word.rows, this.word.restriction, new SpriteMoveHUD.SpriteMoveHandler() {
             @Override
             public void onSpriteMoveCanceled(MapBlockSprite sprite) {
-                sprite.setPosition(tmxTile.getTileX()+32, tmxTile.getTileY()+32);
+                float[] oldPos = GameTextures.calculateTilePosition(tmxTile, sprite, word.columns, word.rows);
+                sprite.setPosition(oldPos[0], oldPos[1]);
                 sprite.setZIndex(tmxTile.getTileZ());
                 phoeniciaGame.scene.sortChildren();
             }
@@ -256,7 +258,19 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
             public void onSpriteMoveFinished(MapBlockSprite sprite, TMXTile newlocation) {
                 isoX.set(newlocation.getTileColumn());
                 isoY.set(newlocation.getTileRow());
-                phoeniciaGame.placedSprites[newlocation.getTileColumn()][newlocation.getTileRow()] = sprite;
+                // Unset previous sprite location
+                for (int c = 0; c < word.columns; c++) {
+                    for (int r = 0; r < word.rows; r++) {
+                        phoeniciaGame.placedSprites[tmxTile.getTileColumn()-c][tmxTile.getTileRow()-r] = null;
+                    }
+                }
+                // Set new sprite location
+                for (int c = 0; c < word.columns; c++) {
+                    for (int r = 0; r < word.rows; r++) {
+                        phoeniciaGame.placedSprites[newlocation.getTileColumn()-c][newlocation.getTileRow()-r] = sprite;
+                    }
+                }
+                sprite.setZIndex(newlocation.getTileZ());
                 phoeniciaGame.scene.sortChildren();
                 save(PhoeniciaContext.context);
             }

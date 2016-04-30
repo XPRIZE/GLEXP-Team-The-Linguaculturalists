@@ -78,7 +78,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
         whiteRect.setColor(Color.WHITE);
         this.attachChild(whiteRect);
 
-        ITextureRegion wordSpriteRegion = game.wordTiles.get(word).getTextureRegion(0);
+        ITextureRegion wordSpriteRegion = game.wordSprites.get(word).getTextureRegion(0);
         ButtonSprite wordSprite = new ButtonSprite((whiteRect.getWidth()/2), whiteRect.getHeight()-50, wordSpriteRegion, PhoeniciaContext.vboManager);
         wordSprite.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
@@ -122,9 +122,9 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
             Debug.d("Adding Builder letter: "+currentLetter.name+" (tile: "+currentLetter.tile+")");
             final int tile_id = currentLetter.sprite;
             final ITextureRegion blockRegion = new TiledTextureRegion(game.letterTextures.get(currentLetter),
-                    game.letterTiles.get(currentLetter).getTextureRegion(0),
-                    game.letterTiles.get(currentLetter).getTextureRegion(1),
-                    game.letterTiles.get(currentLetter).getTextureRegion(2));
+                    game.letterSprites.get(currentLetter).getTextureRegion(0),
+                    game.letterSprites.get(currentLetter).getTextureRegion(1),
+                    game.letterSprites.get(currentLetter).getTextureRegion(2));
             final ButtonSprite block = new ButtonSprite(startX + (96 * offsetX), offsetY, blockRegion, PhoeniciaContext.vboManager);
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
@@ -184,7 +184,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
             return;
         }
         final int startX = 200 - (this.buildWord.chars.length * 35) + 35; // TODO: replace magic numbers
-        final ITextureRegion blockRegion = game.letterTiles.get(letter).getTextureRegion(0);
+        final ITextureRegion blockRegion = game.letterSprites.get(letter).getTextureRegion(0);
         final Sprite character = new Sprite(this.charBlocksX[cursorAt], this.charBlocksY[cursorAt], blockRegion, PhoeniciaContext.vboManager);
         this.whiteRect.attachChild(character);
         this.charSprites[this.cursorAt] = character;
