@@ -169,7 +169,7 @@ public class LocaleParser extends DefaultHandler {
                 e.printStackTrace();
             }
         }
-        this.locale.inventoryBlock.texture_src = attributes.getValue("texture");
+        this.locale.inventoryBlock.block_texture = attributes.getValue("block");
         this.locale.inventoryBlock.mapCol = Integer.parseInt(attributes.getValue("col"));
         this.locale.inventoryBlock.mapRow = Integer.parseInt(attributes.getValue("row"));
     }
@@ -192,7 +192,7 @@ public class LocaleParser extends DefaultHandler {
                 e.printStackTrace();
             }
         }
-        this.locale.marketBlock.texture_src = attributes.getValue("texture");
+        this.locale.marketBlock.block_texture = attributes.getValue("block");
         this.locale.marketBlock.mapCol = Integer.parseInt(attributes.getValue("col"));
         this.locale.marketBlock.mapRow = Integer.parseInt(attributes.getValue("row"));
     }
@@ -231,7 +231,8 @@ public class LocaleParser extends DefaultHandler {
         this.currentLetter.buy = Integer.parseInt(attributes.getValue("buy"));
         this.currentLetter.sell = Integer.parseInt(attributes.getValue("sell"));
         this.currentLetter.points = Integer.parseInt(attributes.getValue("points"));
-        this.currentLetter.texture_src = attributes.getValue("texture");
+        this.currentLetter.sprite_texture = attributes.getValue("sprite");
+        this.currentLetter.block_texture = attributes.getValue("block");
     }
 
     private void parseWordDefinition(Attributes attributes) throws SAXException {
@@ -259,7 +260,8 @@ public class LocaleParser extends DefaultHandler {
         this.currentWord.buy = Integer.parseInt(attributes.getValue("buy"));
         this.currentWord.sell = Integer.parseInt(attributes.getValue("sell"));
         this.currentWord.points = Integer.parseInt(attributes.getValue("points"));
-        this.currentWord.texture_src = attributes.getValue("texture");
+        this.currentWord.sprite_texture = attributes.getValue("sprite");
+        this.currentWord.block_texture = attributes.getValue("block");
     }
 
     private void parseLevel(Attributes attributes) throws SAXException {

@@ -13,13 +13,13 @@
     </people>
 
     <letters>
-        <letter name="a" buy="1"  sell="1"  time="10" points="100" texture="locales/en_us_test/textures/letters/a.png" sound="locales/en_us_test/sounds/a.ogg" phoneme="locales/en_us_test/phonemes/a.ogg">a</letter>
-        <letter size="2x3" restrict="test" name="b" buy="2"  sell="2"  time="20" points="200" texture="locales/en_us_test/textures/letters/b.png" sound="locales/en_us_test/sounds/b.ogg" phoneme="locales/en_us_test/phonemes/b.ogg">b</letter>
+        <letter name="a" buy="1"  sell="1"  time="10" points="100" sprite="locales/en_us_test/textures/letters/sprites/a.png" block="locales/en_us_test/textures/letters/blocks/a.png" sound="locales/en_us_test/sounds/a.ogg" phoneme="locales/en_us_test/phonemes/a.ogg">a</letter>
+        <letter size="2x3" restrict="test" name="b" buy="2"  sell="2"  time="20" points="200" sprite="locales/en_us_test/textures/letters/sprites/b.png" block="locales/en_us_test/textures/letters/blocks/b.png" sound="locales/en_us_test/sounds/b.ogg" phoneme="locales/en_us_test/phonemes/b.ogg">b</letter>
     </letters>
 
     <words>
-        <word name="ab" buy="10" sell="1" construct="10" time="10" points="100" texture="locales/en_us_test/textures/words/ab.png" sound="locales/en_us_test/sounds/ab.ogg">cat</word>
-        <word size="4x5" restrict="test" name="ba" buy="20" sell="2" construct="20" time="20" points="200" texture="locales/en_us_test/textures/words/ba.png" sound="locales/en_us_test/sounds/ba.ogg">hat</word>
+        <word name="ab" buy="10" sell="1" construct="10" time="10" points="100" sprite="locales/en_us_test/textures/words/sprites/ab.png" block="locales/en_us_test/textures/words/blocks/ab.png" sound="locales/en_us_test/sounds/ab.ogg">cat</word>
+        <word size="4x5" restrict="test" name="ba" buy="20" sell="2" construct="20" time="20" points="200" sprite="locales/en_us_test/textures/words/sprites/ba.png" block="locales/en_us_test/textures/words/blocks/ba.png" sound="locales/en_us_test/sounds/ba.ogg">hat</word>
     </words>
     
     <levels>

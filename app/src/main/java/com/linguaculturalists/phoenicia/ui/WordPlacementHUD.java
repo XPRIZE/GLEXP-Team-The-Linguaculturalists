@@ -81,9 +81,9 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
             Debug.d("Adding HUD word: " + currentWord.name + " (tile: " + currentWord.tile + ")");
             final int tile_id = currentWord.sprite;
             ITextureRegion blockRegion = new TiledTextureRegion(game.wordTextures.get(currentWord),
-                    game.wordTiles.get(currentWord).getTextureRegion(0),
-                    game.wordTiles.get(currentWord).getTextureRegion(1),
-                    game.wordTiles.get(currentWord).getTextureRegion(2));
+                    game.wordSprites.get(currentWord).getTextureRegion(0),
+                    game.wordSprites.get(currentWord).getTextureRegion(1),
+                    game.wordSprites.get(currentWord).getTextureRegion(2));
             ButtonSprite block = new ButtonSprite((64 * ((i * 2)+1)), 48, blockRegion, PhoeniciaContext.vboManager);
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override

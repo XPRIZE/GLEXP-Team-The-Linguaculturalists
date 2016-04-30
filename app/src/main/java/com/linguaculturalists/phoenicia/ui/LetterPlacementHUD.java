@@ -85,9 +85,9 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
             Debug.d("Adding HUD letter: "+currentLetter.name+" (sprite: "+currentLetter.sprite+")");
             final int tile_id = currentLetter.sprite;
             ITiledTextureRegion blockRegion = new TiledTextureRegion(game.letterTextures.get(currentLetter),
-                    game.letterTiles.get(currentLetter).getTextureRegion(0),
-                    game.letterTiles.get(currentLetter).getTextureRegion(1),
-                    game.letterTiles.get(currentLetter).getTextureRegion(2));
+                    game.letterSprites.get(currentLetter).getTextureRegion(0),
+                    game.letterSprites.get(currentLetter).getTextureRegion(1),
+                    game.letterSprites.get(currentLetter).getTextureRegion(2));
             final ButtonSprite block = new ButtonSprite((64 * ((i * 2)+1)), 48, blockRegion, PhoeniciaContext.vboManager);
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override

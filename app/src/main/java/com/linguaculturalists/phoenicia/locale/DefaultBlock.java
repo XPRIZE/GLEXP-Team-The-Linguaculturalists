@@ -9,7 +9,7 @@ public class DefaultBlock {
     public int mapRow;
     public int columns; /**< number of map columns this block occupies. Default is 1 */
     public int rows; /**< number of map rows this block occupies. Default is 1 */
-    public String texture_src;
+    public String block_texture;
 
     @Override
     public int hashCode() {

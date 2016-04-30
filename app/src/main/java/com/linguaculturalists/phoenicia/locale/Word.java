@@ -14,7 +14,8 @@ public class Word {
     public int sprite;/**< start tile index for a \a LetterSprite for this word */
     public String sound;/**< path to audio file for this word */
     public char[] chars;/**< character sequence for this word */
-    public String texture_src;/**< path to texture file for this word */
+    public String sprite_texture;/**< path to texture file for this word's sprite */
+    public String block_texture;/**< path to texture file for this word's block */
 
     public int points; /**< number of in-game points earned from the creation of this word */
     public int buy;/**< amount of in-game currency required to create this word */

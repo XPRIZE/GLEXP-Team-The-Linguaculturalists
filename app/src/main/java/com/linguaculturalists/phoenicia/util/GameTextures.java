@@ -2,6 +2,9 @@ package com.linguaculturalists.phoenicia.util;
 
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 
+import org.andengine.entity.sprite.Sprite;
+import org.andengine.extension.tmx.TMXTile;
+
 /**
  * Predined tile indexes from the Shell UI texture
  */
@@ -21,9 +24,22 @@ public class GameTextures {
     public static int[] calculateTileSize(int columns, int rows) {
         int[] size = new int[2];
         // Calculate width
-        size[0] = BASE_TILE_WIDTH + ((BASE_TILE_WIDTH/2) * (columns-1 + rows-1));
+        size[0] = BASE_TILE_WIDTH + ((BASE_TILE_WIDTH/2) * (columns+rows-2));
         // Calculate height
-        size[1] = BASE_TILE_HEIGHT + ((BASE_TILE_HEIGHT/4) * Math.max(columns-1, rows-1));
+        size[1] = BASE_TILE_HEIGHT + ((BASE_TILE_HEIGHT/4) * (columns+rows-2));
         return size;
+    }
+
+    public static float[] calculateTilePosition(TMXTile mapTile, Sprite sprite, int columns, int rows) {
+        return calculateTilePosition(mapTile, (int)sprite.getWidth(), (int)sprite.getHeight(), columns, rows);
+    }
+    public static float[] calculateTilePosition(TMXTile mapTile, int[] tileSize, int columns, int rows) {
+        return calculateTilePosition(mapTile, tileSize[0], tileSize[1], columns, rows);
+    }
+    public static float[] calculateTilePosition(TMXTile mapTile, int width, int height, int columns, int rows) {
+        float[] pos = new float[2];
+        pos[0] = mapTile.getTileX() + (width/2) - ((GameTextures.BASE_TILE_WIDTH/2)*(columns-1));// anchor sprite center to tile center
+        pos[1] = mapTile.getTileY() + (height/2);// anchor sprite center half the sprite's height higher than the tile bottom
+        return pos;
     }
 }

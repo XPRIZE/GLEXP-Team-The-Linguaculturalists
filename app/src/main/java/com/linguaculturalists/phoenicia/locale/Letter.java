@@ -14,7 +14,8 @@ public class Letter {
     public String sound; /**< path to audio file for this letter's name */
     public String phoneme; /**< path to audio file for this letter's sound */
     public char[] chars; /**< character sequence for this letter. Will usually be just one character, but multiple are supported */
-    public String texture_src; /**< path to texture file for this letter */
+    public String sprite_texture; /**< path to texture file for this letter's sprites */
+    public String block_texture; /**< path to texture file for this letter's map block */
     public int points; /**< number of in-game points earned from the creation of this letter */
     public int buy; /**< amount of in-game currency required to create this letter */
     public int sell; /**< amount of in-game currency obtained from selling this letter */

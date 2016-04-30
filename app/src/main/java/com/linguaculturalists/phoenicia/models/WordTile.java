@@ -8,6 +8,7 @@ import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
 import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.Model;
 import com.orm.androrm.QuerySet;
@@ -247,7 +248,8 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
         phoeniciaGame.hudManager.push(new SpriteMoveHUD(phoeniciaGame, tmxTile, sprite, word.columns, word.rows, this.word.restriction, new SpriteMoveHUD.SpriteMoveHandler() {
             @Override
             public void onSpriteMoveCanceled(MapBlockSprite sprite) {
-                sprite.setPosition(tmxTile.getTileX()+32, tmxTile.getTileY()+32);
+                float[] oldPos = GameTextures.calculateTilePosition(tmxTile, sprite, word.columns, word.rows);
+                sprite.setPosition(oldPos[0], oldPos[1]);
                 sprite.setZIndex(tmxTile.getTileZ());
                 phoeniciaGame.scene.sortChildren();
             }

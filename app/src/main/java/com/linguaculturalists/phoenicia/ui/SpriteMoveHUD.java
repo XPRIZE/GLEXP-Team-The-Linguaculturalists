@@ -121,7 +121,7 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
     public void show() {
         this.originalTileIndex = this.sprite.getCurrentTileIndex();
         this.sprite.stopAnimation();
-        this.sprite.setCurrentTileIndex(4);
+        this.sprite.setCurrentTileIndex(0);
         this.checkPlacement(this.newLocation);
         Debug.d("Sprite placement restriction: "+this.restriction);
         whiteRect.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
@@ -167,7 +167,7 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
      * @param mapTile Map tile of the target location
      */
     private void checkPlacement(TMXTile mapTile) {
-        this.sprite.setCurrentTileIndex(4);
+        this.sprite.setCurrentTileIndex(0);
         this.confirmBlock.setVisible(true);
         for (int c = 0; c < spriteColumns; c++) {
             for (int r = 0; r < spriteRows; r++) {
@@ -175,13 +175,13 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
                 Debug.d("Map tile at "+(mapTile.getTileRow()-r)+"x"+(mapTile.getTileColumn()-c)+" has restriction class: " + tileRestriction);
                 if (this.game.placedSprites[mapTile.getTileColumn()-c][mapTile.getTileRow()-r] != null &&
                         this.game.placedSprites[mapTile.getTileColumn()-c][mapTile.getTileRow()-r] != this.sprite) {
-                    this.sprite.setCurrentTileIndex(5);
+                    this.sprite.setCurrentTileIndex(1);
                     this.confirmBlock.setVisible(false);
                 } else if (tileRestriction != null && (this.restriction == null || !this.restriction.equals(tileRestriction))) {
-                    this.sprite.setCurrentTileIndex(5);
+                    this.sprite.setCurrentTileIndex(1);
                     this.confirmBlock.setVisible(false);
                 } else if (tileRestriction == null && (this.restriction != null)) {
-                    this.sprite.setCurrentTileIndex(5);
+                    this.sprite.setCurrentTileIndex(1);
                     this.confirmBlock.setVisible(false);
                 }
             }
@@ -200,9 +200,8 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
         TMXTile mapTile = game.getTileAt(sceneX, sceneY);
         if (mapTile != null) {
             this.checkPlacement(mapTile);
-            float newX = mapTile.getTileX() + (sprite.getWidth()/2) - ((GameTextures.BASE_TILE_WIDTH/2)*(this.spriteColumns-1));// anchor sprite center to tile center
-            float newY = mapTile.getTileY() + (sprite.getHeight()/2);// anchor sprite center half the sprite's height higher than the tile bottom
-            this.sprite.setPosition(newX, newY);// Map tiles are anchor bottom-left, but scene is anchor-center
+            float[] tilePos = GameTextures.calculateTilePosition(mapTile, sprite, this.spriteColumns, this.spriteRows);
+            this.sprite.setPosition(tilePos[0], tilePos[1]);// Map tiles are anchor bottom-left, but scene is anchor-center
             this.sprite.setZIndex(mapTile.getTileZ()+1);
             this.game.scene.sortChildren();
             Debug.d("New sprite Z: " + this.sprite.getZIndex());
