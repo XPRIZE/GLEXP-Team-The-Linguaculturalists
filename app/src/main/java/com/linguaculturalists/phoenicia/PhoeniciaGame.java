@@ -551,8 +551,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         final TMXTile inventoryTile = tmxLayer.getTMXTile(inventoryDefaultTile.isoX.get(), inventoryDefaultTile.isoY.get());
 
         int[] tileSize = GameTextures.calculateTileSize(locale.inventoryBlock.columns, locale.inventoryBlock.rows);
-        int inventoryX = (int)inventoryTile.getTileX() + (GameTextures.BASE_TILE_WIDTH/2);// anchor sprite center to tile center
-        int inventoryY = (int)inventoryTile.getTileY() + (GameTextures.BASE_TILE_HEIGHT) - (tileSize[1]/2);// anchor sprite center half the sprite's height higher than the tile bottom
+        int inventoryX = (int)inventoryTile.getTileX() + (tileSize[0]/2) - ((GameTextures.BASE_TILE_WIDTH/2)*(locale.inventoryBlock.columns-1));// anchor sprite center to tile center
+        int inventoryY = (int)inventoryTile.getTileY() +  (tileSize[1]/2);// anchor sprite center half the sprite's height higher than the tile bottom
         int inventoryZ = inventoryTile.getTileZ();
 
         Debug.d("Creating Sprite for Inventory");
@@ -592,8 +592,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         final TMXTile marketTile = tmxLayer.getTMXTile(marketDefaultTile.isoX.get(), marketDefaultTile.isoY.get());
 
         int[] tileSize = GameTextures.calculateTileSize(locale.marketBlock.columns, locale.marketBlock.rows);
-        int marketX = (int)marketTile.getTileX() + (GameTextures.BASE_TILE_WIDTH/2);// anchor sprite center to tile center
-        int marketY = (int)marketTile.getTileY() + (GameTextures.BASE_TILE_HEIGHT) - (tileSize[1]/2);// anchor sprite center half the sprite's height higher than the tile bottom
+        int marketX = (int)marketTile.getTileX() + (tileSize[0]/2) - ((GameTextures.BASE_TILE_WIDTH/2)*(locale.marketBlock.columns-1));// anchor sprite center to tile center
+        int marketY = (int)marketTile.getTileY() +  (tileSize[1]/2);// anchor sprite center half the sprite's height higher than the tile bottom
         int marketZ = marketTile.getTileZ();
 
         Debug.d("Creating Sprite for market");

@@ -4,6 +4,7 @@ import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.MapBlockSprite;
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
+import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.engine.camera.Camera;
@@ -28,8 +29,8 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
     private PhoeniciaGame game;
     private Rectangle whiteRect;
     private MapBlockSprite sprite;
-    private int spriteColumns;
-    private int spriteRows;
+    public int spriteColumns;
+    public int spriteRows;
     private int originalTileIndex;
     private String restriction;
     private TMXTile originalLocation;
@@ -199,7 +200,9 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
         TMXTile mapTile = game.getTileAt(sceneX, sceneY);
         if (mapTile != null) {
             this.checkPlacement(mapTile);
-            this.sprite.setPosition(mapTile.getTileX() + 32, mapTile.getTileY() + 32);// Map tiles are anchor bottom-left, but scene is anchor-center
+            float newX = mapTile.getTileX() + (sprite.getWidth()/2) - ((GameTextures.BASE_TILE_WIDTH/2)*(this.spriteColumns-1));// anchor sprite center to tile center
+            float newY = mapTile.getTileY() + (sprite.getHeight()/2);// anchor sprite center half the sprite's height higher than the tile bottom
+            this.sprite.setPosition(newX, newY);// Map tiles are anchor bottom-left, but scene is anchor-center
             this.sprite.setZIndex(mapTile.getTileZ()+1);
             this.game.scene.sortChildren();
             Debug.d("New sprite Z: " + this.sprite.getZIndex());

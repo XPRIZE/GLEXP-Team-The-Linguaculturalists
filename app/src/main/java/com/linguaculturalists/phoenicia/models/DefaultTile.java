@@ -7,6 +7,7 @@ import com.linguaculturalists.phoenicia.components.MapBlockSprite;
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
 import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.Model;
 import com.orm.androrm.QuerySet;
@@ -113,10 +114,13 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
         } else {
             Debug.e("Unknown default block: "+this.item_type.get());
         }
+        final int spriteColumns = cols;
         phoeniciaGame.hudManager.push(new SpriteMoveHUD(phoeniciaGame, tmxTile, buttonSprite, cols, rows, null, new SpriteMoveHUD.SpriteMoveHandler() {
             @Override
             public void onSpriteMoveCanceled(MapBlockSprite sprite) {
-                sprite.setPosition(tmxTile.getTileX() + 32, tmxTile.getTileY() + 32);
+                float newX = tmxTile.getTileX() + (sprite.getWidth()/2) - ((GameTextures.BASE_TILE_WIDTH/2)*(spriteColumns-1));// anchor sprite center to tile center
+                float newY = tmxTile.getTileY() + (sprite.getHeight()/2);// anchor sprite center half the sprite's height higher than the tile bottom
+                sprite.setPosition(newX, newY);
                 sprite.setZIndex(tmxTile.getTileZ());
                 phoeniciaGame.scene.sortChildren();
             }
