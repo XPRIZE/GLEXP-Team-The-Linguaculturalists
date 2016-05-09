@@ -56,16 +56,14 @@ import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.models.LetterTile;
 import com.linguaculturalists.phoenicia.models.Market;
-import com.linguaculturalists.phoenicia.models.WordBuilder;
+import com.linguaculturalists.phoenicia.models.WordTileBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
 import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
 import com.linguaculturalists.phoenicia.locale.LocaleLoader;
 import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
-import com.orm.androrm.DatabaseAdapter;
 import com.orm.androrm.Filter;
-import com.orm.androrm.Model;
 
 /**
  * The main class for managing a game.
@@ -483,10 +481,10 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             Debug.d("Restoring tile "+wordTile.item_name.get());
             wordTile.word = this.locale.word_map.get(wordTile.item_name.get());
             wordTile.phoeniciaGame = this;
-            WordBuilder builder = wordTile.getBuilder(PhoeniciaContext.context);
+            WordTileBuilder builder = wordTile.getBuilder(PhoeniciaContext.context);
             if (builder == null) {
                 Debug.d("Adding new builder for tile "+wordTile.item_name.get());
-                builder = new WordBuilder(this.session, wordTile, wordTile.item_name.get(), wordTile.word.construct);
+                builder = new WordTileBuilder(this.session, wordTile, wordTile.item_name.get(), wordTile.word.construct);
                 builder.save(PhoeniciaContext.context);
                 wordTile.setBuilder(builder);
                 wordTile.save(PhoeniciaContext.context);
@@ -536,7 +534,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         DefaultTile.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
         LetterBuilder.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
         LetterTile.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
-        WordBuilder.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
+        WordTileBuilder.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
         WordTile.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
 
         this.inventory.addUpdateListener(this);
@@ -830,7 +828,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         final PlacedBlockSprite sprite = new PlacedBlockSprite(tilePos[0], tilePos[1], tile.word.construct, 4, wordBlocks.get(tile.word), PhoeniciaContext.vboManager);
         sprite.setZIndex(tileZ);
 
-        final WordBuilder builder = tile.getBuilder(PhoeniciaContext.context);
+        final WordTileBuilder builder = tile.getBuilder(PhoeniciaContext.context);
 
         scene.attachChild(sprite);
         scene.sortChildren();

@@ -10,6 +10,7 @@ import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
+import com.orm.androrm.Filter;
 import com.orm.androrm.Model;
 import com.orm.androrm.QuerySet;
 import com.orm.androrm.field.CharField;
@@ -33,13 +34,16 @@ import org.andengine.util.modifier.IModifier;
 import org.andengine.util.modifier.ease.EaseBackOut;
 import org.andengine.util.modifier.ease.EaseLinear;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Database model representing a Word tile that has been placed on the map.
  */
 public class WordTile extends Model implements Builder.BuildStatusUpdateHandler, IOnAreaTouchListener, MapBlockSprite.OnClickListener {
 
     public ForeignKeyField<GameSession> game; /**< reference to the GameSession this tile is a part of */
-    public ForeignKeyField<WordBuilder> builder; /**< reference to the WordBuilder used by this tile */
+    public ForeignKeyField<WordTileBuilder> builder; /**< reference to the WordBuilder used by this tile */
     public IntegerField isoX; /**< isometric X coordinate for this tile */
     public IntegerField isoY; /**< isometric Y coordinate for this tile */
     public CharField item_name; /**< name of the InventoryItem this tile produces */
@@ -52,13 +56,18 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
     private WordTileListener eventListener;
     private boolean isCompleted = false;
 
+    private int queue_size = 1;
+    private List<WordBuilder> queue;
+    private boolean isActive = false;
+
     public WordTile() {
         super();
         this.game = new ForeignKeyField<GameSession>(GameSession.class);
-        this.builder = new ForeignKeyField<WordBuilder>(WordBuilder.class);
+        this.builder = new ForeignKeyField<WordTileBuilder>(WordTileBuilder.class);
         this.isoX = new IntegerField();
         this.isoY = new IntegerField();
         this.item_name = new CharField(32);
+
     }
 
     /**
@@ -76,6 +85,20 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
 
     public static final QuerySet<WordTile> objects(Context context) {
         return objects(context, WordTile.class);
+    }
+
+    public List<WordBuilder> getQueue() {
+        Filter queueBuilders = new Filter();
+        queueBuilders.is("tile", this);
+        queueBuilders.is("status", Builder.SCHEDULED);
+        return WordBuilder.objects(PhoeniciaContext.context).filter(queueBuilders).toList();
+    }
+
+    public WordBuilder createWord() {
+        WordBuilder newBuilder = new WordBuilder(this.phoeniciaGame.session, this, this.word.name, this.word.time);
+        newBuilder.save(PhoeniciaContext.context);
+        next();
+        return newBuilder;
     }
 
     /**
@@ -100,8 +123,8 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
      * @param context ApplicationContext for use in database calls
      * @return the builder instance, or null if it does not have one
      */
-    public WordBuilder getBuilder(Context context) {
-        WordBuilder builder = this.builder.get(context);
+    public WordTileBuilder getBuilder(Context context) {
+        WordTileBuilder builder = this.builder.get(context);
         if (builder != null) {
             builder.setUpdateHandler(this);
             this.onProgressChanged(builder);
@@ -110,11 +133,66 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
         return builder;
     }
 
+    private void next() {
+        if (this.isActive) return;
+        List<WordBuilder> queue = this.getQueue();
+        if (queue.size() < 1) return;
+        this.setActiveBuilder(queue.get(0));
+
+    }
+    public void restart(Context context) {
+        WordBuilder activeBuilder = this.getActiveBuilder(context);
+        if (activeBuilder != null) {
+            this.setActiveBuilder(activeBuilder);
+        }
+    }
+
+    public void setActiveBuilder(final WordBuilder builder) {
+        this.isActive = true;
+        this.save(PhoeniciaContext.context);
+        builder.setUpdateHandler(new Builder.BuildStatusUpdateHandler() {
+            @Override
+            public void onCompleted(Builder buildItem) {
+                // TODO: Make the player collect it rather than auto-adding it to the inventory
+                Inventory.getInstance().add(word.name);
+                next();
+            }
+
+            @Override
+            public void onProgressChanged(Builder builtItem) {
+
+            }
+
+            @Override
+            public void onScheduled(Builder buildItem) {
+
+            }
+
+            @Override
+            public void onStarted(Builder buildItem) {
+
+            }
+        });
+        builder.start();
+        builder.save(PhoeniciaContext.context);
+    }
+
+    public WordBuilder getActiveBuilder(Context context) {
+        Filter activeBuilders = new Filter();
+        activeBuilders.is("tile", this);
+        activeBuilders.is("status", Builder.BUILDING);
+        try {
+            return WordBuilder.objects(context).filter(activeBuilders).toList().get(0);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     /**
      * Attach a WordBuilder to this tile
      * @param builder used by this tile
      */
-    public void setBuilder(WordBuilder builder) {
+    public void setBuilder(WordTileBuilder builder) {
         builder.setUpdateHandler(this);
         this.builder.set(builder);
         this.onProgressChanged(builder);
@@ -153,7 +231,7 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
         if (this.sprite != null) {
             this.sprite.setProgress(0, word.construct);
         }
-        WordBuilder builder = this.getBuilder(context);
+        WordTileBuilder builder = this.getBuilder(context);
         if (builder != null) {
             Debug.d("Resetting WordTile builder");
             builder.progress.set(0);
@@ -199,11 +277,16 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
      */
     public void onClick(MapBlockSprite buttonSprite, float v, float v2) {
         Debug.d("Clicked block: "+String.valueOf(this.word.chars));
-        WordBuilder builder = this.getBuilder(PhoeniciaContext.context);
+        Builder builder;
+        if (!this.isCompleted) {
+            builder = this.getBuilder(PhoeniciaContext.context);
+        } else {
+            builder = this.getActiveBuilder(PhoeniciaContext.context);
+        }
         if (builder != null) {
-            if (builder.status.get() == LetterBuilder.COMPLETE) {
+            if (builder.status.get() == Builder.COMPLETE) {
                 Debug.d("Clicked block was completed");
-                phoeniciaGame.hudManager.showWordBuilder(phoeniciaGame.locale.level_map.get(phoeniciaGame.current_level), this.word);
+                phoeniciaGame.hudManager.showWordBuilder(phoeniciaGame.locale.level_map.get(phoeniciaGame.current_level), this);
             } else {
                 Debug.d("Clicked block was NOT completed");
                 // Don't run another modifier animation if one is still running

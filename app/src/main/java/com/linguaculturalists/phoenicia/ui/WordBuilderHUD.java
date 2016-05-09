@@ -9,6 +9,8 @@ import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
+import com.linguaculturalists.phoenicia.models.WordBuilder;
+import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.primitive.Rectangle;
@@ -37,6 +39,7 @@ import java.util.Map;
 public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryUpdateListener, IOnSceneTouchListener {
 
     private PhoeniciaGame game;
+    private WordTile tile;
     private Word buildWord;
     private char spelling[];
     private int charBlocksX[];
@@ -53,22 +56,23 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
      * A HUD for allowing the player to combine letters from their inventory to build a word
      * @param game A reference to the current PhoeniciaGame the HUD is running in
      * @param level The current level, used to display only available letters
-     * @param word The word which the player is attempting to build
+     * @param tile The word tile which the player clicked
      */
-    public WordBuilderHUD(final PhoeniciaGame game, final Level level, final Word word) {
+    public WordBuilderHUD(final PhoeniciaGame game, final Level level, final WordTile tile) {
         super(game.camera);
         this.setBackgroundEnabled(false);
         Inventory.getInstance().addUpdateListener(this);
         this.game = game;
-        this.buildWord = word;
+        this.tile = tile;
+        this.buildWord = tile.word;
         this.setOnSceneTouchListener(this);
         Inventory.getInstance().addUpdateListener(this);
 
-        this.spelling = new char[word.chars.length];
+        this.spelling = new char[tile.word.chars.length];
         this.eraseSpelling();
-        this.charBlocksX = new int[word.chars.length];
-        this.charBlocksY = new int[word.chars.length];
-        this.charSprites = new Sprite[word.chars.length];
+        this.charBlocksX = new int[tile.word.chars.length];
+        this.charBlocksY = new int[tile.word.chars.length];
+        this.charSprites = new Sprite[tile.word.chars.length];
         this.inventoryCounts = new HashMap<String, Text>();
         this.usedCounts = new HashMap<String, Integer>();
 
@@ -78,7 +82,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
         whiteRect.setColor(Color.WHITE);
         this.attachChild(whiteRect);
 
-        ITextureRegion wordSpriteRegion = game.wordSprites.get(word).getTextureRegion(0);
+        ITextureRegion wordSpriteRegion = game.wordSprites.get(tile.word).getTextureRegion(0);
         ButtonSprite wordSprite = new ButtonSprite((whiteRect.getWidth()/2), whiteRect.getHeight()-50, wordSpriteRegion, PhoeniciaContext.vboManager);
         wordSprite.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
@@ -90,8 +94,8 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
         this.registerTouchArea(wordSprite);
         whiteRect.attachChild(wordSprite);
 
-        int startX = (int)(whiteRect.getWidth()/2) - (word.chars.length * 35) + 35;
-        for (int i = 0; i < word.chars.length; i++) {
+        int startX = (int)(whiteRect.getWidth()/2) - (tile.word.chars.length * 35) + 35;
+        for (int i = 0; i < tile.word.chars.length; i++) {
             this.charBlocksX[i] = startX+(64*i);
             this.charBlocksY[i] = (int)whiteRect.getHeight()/2+50;
             Rectangle borderRect = new Rectangle(startX+(64*i), whiteRect.getHeight()/2+50, 60, 100, PhoeniciaContext.vboManager);
@@ -211,7 +215,9 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
                                         Inventory.getInstance().subtract(letter);
                                     }
                                     that.game.hudManager.pop();
-                                    Inventory.getInstance().add(that.buildWord.name);
+                                    WordBuilder builder = tile.createWord();
+                                    game.addBuilder(builder);
+                                    tile.restart();
                                 } catch (Exception e) {
                                     Debug.e("Error subtracting letter: "+e.getMessage());
                                     e.printStackTrace();
