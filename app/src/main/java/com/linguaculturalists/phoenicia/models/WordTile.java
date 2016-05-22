@@ -47,6 +47,7 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
     public IntegerField isoX; /**< isometric X coordinate for this tile */
     public IntegerField isoY; /**< isometric Y coordinate for this tile */
     public CharField item_name; /**< name of the InventoryItem this tile produces */
+    public IntegerField stock; /**< number of these words that have been built and are ready for collection */
 
     public PhoeniciaGame phoeniciaGame; /**< active game instance this tile is a part of */
     public Word word; /**< locale Word this tile represents */
@@ -57,7 +58,6 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
     private boolean isCompleted = false;
 
     private int queue_size = 1;
-    private List<WordBuilder> queue;
     private boolean isActive = false;
 
     public WordTile() {
@@ -67,7 +67,7 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
         this.isoX = new IntegerField();
         this.isoY = new IntegerField();
         this.item_name = new CharField(32);
-
+        this.stock = new IntegerField();
     }
 
     /**
@@ -96,9 +96,19 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
 
     public WordBuilder createWord() {
         WordBuilder newBuilder = new WordBuilder(this.phoeniciaGame.session, this, this.word.name, this.word.time);
+        newBuilder.schedule();
         newBuilder.save(PhoeniciaContext.context);
         next();
         return newBuilder;
+    }
+
+    /**
+     * Add a given number of this word to this tile's stock
+     * @param amount to add
+     */
+    public void addToStock(int amount) {
+        this.stock.set(this.stock.get() + amount);
+        this.save(PhoeniciaContext.context);
     }
 
     /**
@@ -133,18 +143,36 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
         return builder;
     }
 
-    private void next() {
+    public void next() {
+        Debug.d("Checking for next word builder for "+this.word.name);
         if (this.isActive) return;
+        Debug.d("Word Tile is not active, checking the build queue");
         List<WordBuilder> queue = this.getQueue();
         if (queue.size() < 1) return;
+        Debug.d("Word builder queue is not empty, start the next in line");
         this.setActiveBuilder(queue.get(0));
-
+        Debug.d("Starting word builder: " + queue.get(0).getId());
     }
+
     public void restart(Context context) {
+        Debug.d("Restarting active word builder for tile: "+this.word.name);
         WordBuilder activeBuilder = this.getActiveBuilder(context);
         if (activeBuilder != null) {
+            Debug.d("Restarting active word builder: " + activeBuilder.getId());
             this.setActiveBuilder(activeBuilder);
+        } else {
+            Debug.d("No active builder found, moving on to the next one");
+            this.isActive = false;
+            this.next();
         }
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public int getQueueSize() {
+        return queue_size;
     }
 
     public void setActiveBuilder(final WordBuilder builder) {
@@ -153,14 +181,16 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
         builder.setUpdateHandler(new Builder.BuildStatusUpdateHandler() {
             @Override
             public void onCompleted(Builder buildItem) {
+                Debug.d("WordBuilder for "+buildItem.item_name.get()+" has completed");
+                Inventory.getInstance().add(buildItem.item_name.get());
                 // TODO: Make the player collect it rather than auto-adding it to the inventory
-                Inventory.getInstance().add(word.name);
+                //addToStock(1);
                 next();
             }
 
             @Override
-            public void onProgressChanged(Builder builtItem) {
-
+            public void onProgressChanged(Builder buildItem) {
+                Debug.d("WordBuilder updated "+buildItem.item_name.get()+" is at: "+buildItem.progress.get());
             }
 
             @Override
@@ -170,11 +200,12 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
 
             @Override
             public void onStarted(Builder buildItem) {
-
+                Debug.d("WordBuilder for "+buildItem.item_name.get()+" has been started");
             }
         });
         builder.start();
         builder.save(PhoeniciaContext.context);
+        this.phoeniciaGame.addBuilder(builder);
     }
 
     public WordBuilder getActiveBuilder(Context context) {
@@ -196,6 +227,9 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
         builder.setUpdateHandler(this);
         this.builder.set(builder);
         this.onProgressChanged(builder);
+        if (builder.status.get() == Builder.COMPLETE) {
+            this.isCompleted = true;
+        }
     }
 
     public void onScheduled(Builder buildItem) { Debug.d("WordTile.onScheduled"); this.isCompleted = false; return; }
@@ -247,6 +281,8 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
     protected void migrate(Context context) {
         Migrator<WordTile> migrator = new Migrator<WordTile>(WordTile.class);
 
+        migrator.addField("stock", new IntegerField());
+
         // roll out all migrations
         migrator.migrate(context);
         return;
@@ -277,12 +313,7 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
      */
     public void onClick(MapBlockSprite buttonSprite, float v, float v2) {
         Debug.d("Clicked block: "+String.valueOf(this.word.chars));
-        Builder builder;
-        if (!this.isCompleted) {
-            builder = this.getBuilder(PhoeniciaContext.context);
-        } else {
-            builder = this.getActiveBuilder(PhoeniciaContext.context);
-        }
+        Builder builder = this.getBuilder(PhoeniciaContext.context);
         if (builder != null) {
             if (builder.status.get() == Builder.COMPLETE) {
                 Debug.d("Clicked block was completed");

@@ -49,6 +49,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
     private Map<String, Text> inventoryCounts;
 
     private int cursorAt;
+    private int readyToCollect;
 
     private Rectangle whiteRect;
 
@@ -208,16 +209,16 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
                         game.activity.runOnUpdateThread(new Runnable() {
                             @Override
                             public void run() {
+                                Debug.d("Preparing to build word: "+tile.word.name);
                                 try {
                                     for (int i = 0; i < that.spelling.length; i++) {
                                         final String letter = new String(spelling, i, 1);
                                         usedCounts.put(letter, usedCounts.get(letter)-1);
                                         Inventory.getInstance().subtract(letter);
                                     }
+                                    Debug.d("Creating new WordBuilder for " + tile.word.name);
+                                    tile.createWord();
                                     that.game.hudManager.pop();
-                                    WordBuilder builder = tile.createWord();
-                                    game.addBuilder(builder);
-                                    tile.restart();
                                 } catch (Exception e) {
                                     Debug.e("Error subtracting letter: "+e.getMessage());
                                     e.printStackTrace();
@@ -270,9 +271,9 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
      * @param items The items which have changed
      */
     public void onInventoryUpdated(final InventoryItem[] items) {
-        Debug.d("Updating BlockPlacementHUD inventory");
+        Debug.d("Updating WordBuilderHUD inventory");
         for (int i = 0; i < items.length; i++) {
-            Debug.d("Updating BlockPlacementHUD count for "+items[i].item_name.get());
+            Debug.d("Updating WordBuilderHUD count for "+items[i].item_name.get());
             if (this.inventoryCounts.containsKey(items[i].item_name.get())) {
                 Debug.d("New HUD count: "+items[i].quantity.get().toString());
                 final Text countText = this.inventoryCounts.get(items[i].item_name.get());
