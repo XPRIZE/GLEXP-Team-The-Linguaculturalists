@@ -7,6 +7,11 @@ import com.orm.androrm.QuerySet;
 import com.orm.androrm.field.CharField;
 import com.orm.androrm.field.IntegerField;
 
+import org.andengine.util.debug.Debug;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Class for maintaining the build status and progress for \link Letter Letters \endlink and \link Word Words \endlink.
  */
@@ -15,13 +20,17 @@ public abstract class Builder extends Model {
     public static final int SCHEDULED = 1; /**< Builder has been set to start, but has not started yet */
     public static final int BUILDING = 2; /**< Builder is actively running */
     public static final int COMPLETE = 3; /**< Builder has run through to completion */
-    public BuildStatusUpdateHandler updateHandler;
+    protected List<BuildStatusUpdateHandler> updateHandlers;
 
     public CharField item_name; /**< name of the InventoryItem this builder is creating */
     public IntegerField time; /**< time (in seconds) that it takes for this build to finish */
     public IntegerField progress; /**< time (in seconds) this build has been running */
     public IntegerField status; /**< current status of this build */
 
+    public Builder() {
+        super();
+        this.updateHandlers = new ArrayList<BuildStatusUpdateHandler>();
+    }
     /**
      * Increment the progress by one second.
      * @return percentage complete
@@ -52,7 +61,9 @@ public abstract class Builder extends Model {
      */
     public void schedule() {
         this.status.set(Builder.SCHEDULED);
-        this.updateHandler.onScheduled(this);
+        for (BuildStatusUpdateHandler handler : new ArrayList<BuildStatusUpdateHandler>(this.updateHandlers)) {
+            handler.onScheduled(this);
+        }
     }
 
     /**
@@ -60,7 +71,9 @@ public abstract class Builder extends Model {
      */
     public void start() {
         this.status.set(Builder.BUILDING);
-        this.updateHandler.onStarted(this);
+        for (BuildStatusUpdateHandler handler : new ArrayList<BuildStatusUpdateHandler>(this.updateHandlers)) {
+            handler.onStarted(this);
+        }
     }
 
     /**
@@ -68,11 +81,16 @@ public abstract class Builder extends Model {
      */
     public void complete() {
         this.status.set(Builder.COMPLETE);
-        this.updateHandler.onCompleted(this);
+        for (BuildStatusUpdateHandler handler : new ArrayList<BuildStatusUpdateHandler>(this.updateHandlers)) {
+            handler.onCompleted(this);
+        }
     }
 
     private void progressChanged() {
-        this.updateHandler.onProgressChanged(this);
+        Debug.d("Builder progress changed: " + this.progress.get());
+        for (BuildStatusUpdateHandler handler : new ArrayList<BuildStatusUpdateHandler>(this.updateHandlers)) {
+            handler.onProgressChanged(this);
+        }
     }
 
     /**
@@ -84,15 +102,13 @@ public abstract class Builder extends Model {
         public void onCompleted(Builder buildItem);
         public void onProgressChanged(Builder builtItem);
     }
-    public abstract class AbstractBuildStatusUpdateHandler implements BuildStatusUpdateHandler {
-        public void onScheduled(Builder buildItem) { return; }
-        public void onStarted(Builder buildItem) { return; }
-        public void onCompleted(Builder buildItem) { return; }
-        public void onProgressChanged(Builder builtItem) { return; }
+
+    public void addUpdateHandler(BuildStatusUpdateHandler handler) {
+        this.updateHandlers.add(handler);
     }
 
-    public void setUpdateHandler(BuildStatusUpdateHandler handler) {
-        this.updateHandler = handler;
+    public void removeUpdateHandler(BuildStatusUpdateHandler handler) {
+        this.updateHandlers.remove(handler);
     }
 
 

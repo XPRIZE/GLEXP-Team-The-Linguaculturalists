@@ -7,23 +7,29 @@ import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
+import com.linguaculturalists.phoenicia.models.Builder;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.models.WordBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
+import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
+import org.andengine.entity.Entity;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.CameraScene;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
+import org.andengine.entity.sprite.TiledSprite;
 import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
@@ -36,7 +42,7 @@ import java.util.Map;
 /**
  * HUD for constructing a new Word out of \link Letter Letters \endlink in the player's Inventory..
  */
-public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryUpdateListener, IOnSceneTouchListener {
+public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryUpdateListener {
 
     private PhoeniciaGame game;
     private WordTile tile;
@@ -52,7 +58,13 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
     private int readyToCollect;
 
     private Rectangle whiteRect;
+    private Entity queuePane;
+    private Entity buildPane;
+    private Entity lettersPane;
+    private ClickDetector clickDetector;
 
+    private Builder.BuildStatusUpdateHandler queueUpdateHandler;
+    private List<WordBuilder> buildQueue;
     /**
      * A HUD for allowing the player to combine letters from their inventory to build a word
      * @param game A reference to the current PhoeniciaGame the HUD is running in
@@ -62,11 +74,12 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
     public WordBuilderHUD(final PhoeniciaGame game, final Level level, final WordTile tile) {
         super(game.camera);
         this.setBackgroundEnabled(false);
+        this.setOnAreaTouchTraversalFrontToBack();
         Inventory.getInstance().addUpdateListener(this);
         this.game = game;
         this.tile = tile;
         this.buildWord = tile.word;
-        this.setOnSceneTouchListener(this);
+
         Inventory.getInstance().addUpdateListener(this);
 
         this.spelling = new char[tile.word.chars.length];
@@ -79,12 +92,126 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
 
         this.cursorAt = 0;
 
-        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 400, PhoeniciaContext.vboManager);
+        this.clickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
+            @Override
+            public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
+                game.hudManager.pop();
+            }
+        });
+
+        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 600, 350, PhoeniciaContext.vboManager) {
+            @Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                //Debug.d("Word builder dialog touched");
+                super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+                return true;
+            }
+        };
         whiteRect.setColor(Color.WHITE);
         this.attachChild(whiteRect);
+        this.registerTouchArea(whiteRect);
+
+        /**
+         * Start build queue area
+         */
+        this.queuePane = new Entity(whiteRect.getWidth()/2, whiteRect.getHeight()-50, whiteRect.getWidth(), 100);
+        whiteRect.attachChild(queuePane);
+
+        final Map<Builder, TiledSprite> queueSpriteMap = new HashMap<Builder, TiledSprite>();
+        final Map<Builder, Text> queueProgressMap = new HashMap<Builder, Text>();
+        this.buildQueue = tile.getQueue();
+        this.queueUpdateHandler = new Builder.BuildStatusUpdateHandler() {
+            @Override
+            public void onScheduled(Builder buildItem) {
+                if (queueSpriteMap.containsKey(buildItem)) {
+                    queueSpriteMap.get(buildItem).setCurrentTileIndex(2);
+                }
+                queueProgressMap.get(buildItem).setVisible(false);
+            }
+
+            @Override
+            public void onStarted(Builder buildItem) {
+                if (queueSpriteMap.containsKey(buildItem)) {
+                    queueSpriteMap.get(buildItem).setCurrentTileIndex(0);
+                }
+                queueProgressMap.get(buildItem).setVisible(true);
+            }
+
+            @Override
+            public void onCompleted(Builder buildItem) {
+                if (queueSpriteMap.containsKey(buildItem)) {
+                    queueSpriteMap.get(buildItem).setCurrentTileIndex(1);
+                    buildItem.removeUpdateHandler(this);
+                } else {
+                    Debug.d("No sprite found for build item: "+buildItem);
+                }
+                if (queueProgressMap.containsKey(buildItem)) {
+                    queueProgressMap.get(buildItem).setVisible(false);
+                }
+            }
+
+            @Override
+            public void onProgressChanged(Builder builtItem) {
+                int remaining = builtItem.time.get() - builtItem.progress.get();
+                if (remaining > 60) {
+                    remaining = (remaining / 60);
+                    queueProgressMap.get(builtItem).setText("" + remaining + "m");
+                } else if (remaining < 1) {
+                    queueProgressMap.get(builtItem).setVisible(false);
+                } else {
+                    queueProgressMap.get(builtItem).setText(""+remaining+"s");
+                }
+            }
+        };
+
+        int startX = 50;
+        for(final WordBuilder builder : this.buildQueue) {
+            final ITiledTextureRegion wordSpriteRegion = game.wordSprites.get(tile.word);
+            TiledSprite wordSprite = new TiledSprite(startX, this.queuePane.getHeight()-48, wordSpriteRegion, PhoeniciaContext.vboManager);
+            queueSpriteMap.put(builder, wordSprite);
+            /*
+            wordSprite.setOnClickListener(new ButtonSprite.OnClickListener() {
+                @Override
+                public void onClick(ButtonSprite buttonSprite, float v, float v2) {
+                    Debug.d("Activated block: " + builder.getId());
+                    game.playBlockSound(buildWord.sound);
+                }
+            });
+            this.registerTouchArea(wordSprite);
+            */
+            this.queuePane.attachChild(wordSprite);
+
+            final Text builderProgress = new Text(startX, this.queuePane.getHeight()-90, GameFonts.inventoryCount(), "", 5, PhoeniciaContext.vboManager);
+            this.queuePane.attachChild(builderProgress);
+
+            queueProgressMap.put(builder, builderProgress);
+            builder.addUpdateHandler(this.queueUpdateHandler);
+
+            switch (builder.status.get()) {
+                case Builder.SCHEDULED:
+                    this.queueUpdateHandler.onScheduled(builder);
+                    break;
+                case Builder.BUILDING:
+                    this.queueUpdateHandler.onStarted(builder);
+                    break;
+                case Builder.COMPLETE:
+                    this.queueUpdateHandler.onCompleted(builder);
+                    break;
+                default:
+                    wordSprite.setCurrentTileIndex(3);
+            }
+            this.queueUpdateHandler.onProgressChanged(builder);
+            startX += 64;
+        }
+
+        /**
+         * Start word building area
+         */
+        this.buildPane = new Entity(whiteRect.getWidth()/2, whiteRect.getHeight()-175, whiteRect.getWidth(), 100);
+        whiteRect.attachChild(buildPane);
 
         ITextureRegion wordSpriteRegion = game.wordSprites.get(tile.word).getTextureRegion(0);
-        ButtonSprite wordSprite = new ButtonSprite((whiteRect.getWidth()/2), whiteRect.getHeight()-50, wordSpriteRegion, PhoeniciaContext.vboManager);
+        ButtonSprite wordSprite = new ButtonSprite(50, this.buildPane.getHeight()-50, wordSpriteRegion, PhoeniciaContext.vboManager);
         wordSprite.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -93,30 +220,32 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
             }
         });
         this.registerTouchArea(wordSprite);
-        whiteRect.attachChild(wordSprite);
+        this.buildPane.attachChild(wordSprite);
 
-        int startX = (int)(whiteRect.getWidth()/2) - (tile.word.chars.length * 35) + 35;
+        startX = (int)(wordSprite.getX() + 64);
         for (int i = 0; i < tile.word.chars.length; i++) {
             this.charBlocksX[i] = startX+(64*i);
-            this.charBlocksY[i] = (int)whiteRect.getHeight()/2+50;
-            Rectangle borderRect = new Rectangle(startX+(64*i), whiteRect.getHeight()/2+50, 60, 100, PhoeniciaContext.vboManager);
+            this.charBlocksY[i] = (int)wordSprite.getY();
+            Rectangle borderRect = new Rectangle(startX+(64*i), this.buildPane.getHeight()-50, 60, 100, PhoeniciaContext.vboManager);
             borderRect.setColor(Color.RED);
-            whiteRect.attachChild(borderRect);
+            this.buildPane.attachChild(borderRect);
 
-            Rectangle innerRect = new Rectangle(startX+(64*i), whiteRect.getHeight()/2+50, 55, 95, PhoeniciaContext.vboManager);
+            Rectangle innerRect = new Rectangle(startX+(64*i), this.buildPane.getHeight()-50, 55, 95, PhoeniciaContext.vboManager);
             innerRect.setColor(Color.WHITE);
-            whiteRect.attachChild(innerRect);
+            this.buildPane.attachChild(innerRect);
 
         }
 
-        final Font inventoryCountFont = FontFactory.create(PhoeniciaContext.fontManager, PhoeniciaContext.textureManager, 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 16, Color.RED_ARGB_PACKED_INT);
-        inventoryCountFont.load();
-
-        final int columns = 4;
-        startX = (int)(whiteRect.getWidth()/2) - (columns * 32) - 16;
+        /**
+         * Start available letters area
+         */
+        this.lettersPane = new Entity(whiteRect.getWidth()/2, whiteRect.getHeight()-225, whiteRect.getWidth(), 150);
+        whiteRect.attachChild(this.lettersPane);
+        final int columns = 6;
+        startX = 50;
 
         int offsetX = 0;
-        int offsetY = (int) whiteRect.getHeight()/2-50;
+        int offsetY = (int) this.lettersPane.getHeight()/2-50;
 
         for (int i = 0; i < level.letters.size(); i++) {
             if (offsetX >= columns) {
@@ -149,12 +278,12 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
                 }
             });
             this.registerTouchArea(block);
-            whiteRect.attachChild(block);
+            this.lettersPane.attachChild(block);
 
             Debug.d("Checking inventory for "+currentLetter.name);
             Debug.d("Inventory says: "+this.game.inventory.getCount(currentLetter.name));
-            final Text inventoryCount = new Text(startX + (96 * offsetX) + 24, offsetY-40, inventoryCountFont, ""+this.game.inventory.getCount(currentLetter.name), 4, PhoeniciaContext.vboManager);
-            whiteRect.attachChild(inventoryCount);
+            final Text inventoryCount = new Text(startX + (96 * offsetX) + 24, offsetY-40, GameFonts.inventoryCount(), ""+this.game.inventory.getCount(currentLetter.name), 4, PhoeniciaContext.vboManager);
+            this.lettersPane.attachChild(inventoryCount);
             this.inventoryCounts.put(currentLetter.name, inventoryCount);
             this.usedCounts.put(currentLetter.name, 0);
 
@@ -177,6 +306,9 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
      */
     public void close() {
         Inventory.getInstance().removeUpdateListener(this);
+        for (WordBuilder builder : this.buildQueue) {
+            builder.removeUpdateHandler(this.queueUpdateHandler);
+        }
     }
 
     /**
@@ -191,7 +323,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
         final int startX = 200 - (this.buildWord.chars.length * 35) + 35; // TODO: replace magic numbers
         final ITextureRegion blockRegion = game.letterSprites.get(letter).getTextureRegion(0);
         final Sprite character = new Sprite(this.charBlocksX[cursorAt], this.charBlocksY[cursorAt], blockRegion, PhoeniciaContext.vboManager);
-        this.whiteRect.attachChild(character);
+        this.buildPane.attachChild(character);
         this.charSprites[this.cursorAt] = character;
         this.spelling[cursorAt] = letter.chars[0];
         this.cursorAt++;
@@ -251,7 +383,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
                 cursorAt = 0;
                 for (int i = 0; i < buildWord.chars.length; i++) {
                     if (charSprites[i] != null) {
-                        whiteRect.detachChild(charSprites[i]);
+                        buildPane.detachChild(charSprites[i]);
                         charSprites[i] = null;
                     }
                     if (spelling[i] != ' ') {
@@ -288,12 +420,14 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
 
     /**
      * Capture scene touch events without passing them through
-     * @param pScene
      * @param pSceneTouchEvent
      * @return
      */
-    public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {
-        // TODO: instead of ignoring touch events outside the HUD, make them trigger closing the HUD
-        return true;
+    public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
+        // Block touch events
+        final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
+        //Debug.d("Inventory HUD touched, handled? "+handled);
+        if (handled) return true;
+        return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
     }
 }

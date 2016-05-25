@@ -33,6 +33,7 @@ import org.andengine.util.debug.Debug;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -669,7 +670,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.updateTime += v;
         if (this.updateTime > 1) {
             this.updateTime = 0;
-            for (Builder builder : this.builders) {
+            // Copy builders set to avoid concurrency conflicts
+            final Set<Builder> currentBuilders = new HashSet(this.builders);
+            for (Builder builder : currentBuilders) {
                 if (builder.status.get() == Builder.BUILDING) {
                     builder.update();
                     builder.save(PhoeniciaContext.context);
@@ -684,9 +687,16 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      * @param builder to be added
      */
     public void addBuilder(Builder builder) {
-        if (!this.builders.contains(builder)) {
-            this.builders.add(builder);
-        }
+        this.builders.remove(builder);
+        this.builders.add(builder);
+    }
+
+    /**
+     * Remove a Builder instance from the list of builders updated every second
+     * @param builder to be removed
+     */
+    public void removeBuilder(Builder builder) {
+        this.builders.remove(builder);
     }
 
     /**

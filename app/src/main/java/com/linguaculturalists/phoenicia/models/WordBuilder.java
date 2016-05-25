@@ -2,6 +2,7 @@ package com.linguaculturalists.phoenicia.models;
 
 import android.content.Context;
 
+import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.QuerySet;
 import com.orm.androrm.field.CharField;
 import com.orm.androrm.field.ForeignKeyField;
@@ -33,7 +34,6 @@ public class WordBuilder extends Builder {
         this.progress.set(0);
         this.status.set(NONE);
 
-        this.setUpdateHandler(new AbstractBuildStatusUpdateHandler() { });
     }
 
     /**
@@ -63,10 +63,15 @@ public class WordBuilder extends Builder {
         this.time.set(time);
 
         if (updateHandler != null) {
-            this.updateHandler = updateHandler;
-        } else {
-            this.updateHandler = new AbstractBuildStatusUpdateHandler() { };
+            this.addUpdateHandler(updateHandler);
         }
+    }
+
+    @Override
+    public void complete() {
+        super.complete();
+        this.delete(PhoeniciaContext.context);
+
     }
 
     @Override
