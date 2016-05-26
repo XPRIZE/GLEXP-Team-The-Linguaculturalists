@@ -128,6 +128,8 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
         if (this.eventListener != null) {
             this.eventListener.onLetterTileBuildCompleted(this);
         }
+        // TODO: Find cause of redundant calls to this block and re-introduce phoneme playback
+        //phoeniciaGame.playBlockSound(letter.phoneme);
         return;
     }
 
@@ -140,7 +142,7 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
         if (sprite != null) {
             sprite.setProgress(builtItem.progress.get(), letter.time);
         }
-        if (builtItem.progress.get() >= letter.time) {
+        if (builtItem.progress.get() >= letter.time && !this.isCompleted) {
             builtItem.complete();
         }
         return;

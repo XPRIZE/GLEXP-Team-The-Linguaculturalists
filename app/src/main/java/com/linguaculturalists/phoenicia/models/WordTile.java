@@ -148,10 +148,13 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
         if (this.isActive) return;
         Debug.d("Word Tile is not active, checking the build queue");
         List<WordBuilder> queue = this.getQueue();
-        if (queue.size() < 1) return;
-        Debug.d("Word builder queue is not empty, start the next in line");
-        this.setActiveBuilder(queue.get(0));
-        Debug.d("Starting word builder: " + queue.get(0).getId());
+        for (WordBuilder builder : queue) {
+            if (builder.status.get() == Builder.SCHEDULED) {
+                this.setActiveBuilder(builder);
+                Debug.d("Starting word builder: " + builder.getId());
+                break;
+            }
+        }
     }
 
     public void restart(Context context) {
@@ -187,13 +190,9 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
             @Override
             public void onCompleted(Builder buildItem) {
                 Debug.d("WordBuilder for " + buildItem.item_name.get() + " has completed");
-                Inventory.getInstance().add(buildItem.item_name.get());
-                // TODO: Make the player collect it rather than auto-adding it to the inventory
-                //addToStock(1);
-
+                phoeniciaGame.playBlockSound(word.sound);
                 isActive = false;
                 builder.removeUpdateHandler(tile);
-                tile.buildQueue.remove(builder);
                 phoeniciaGame.removeBuilder(builder);
                 next();
             }

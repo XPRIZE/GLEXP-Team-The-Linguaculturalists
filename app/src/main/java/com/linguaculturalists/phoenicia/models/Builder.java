@@ -2,6 +2,7 @@ package com.linguaculturalists.phoenicia.models;
 
 import android.content.Context;
 
+import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.Model;
 import com.orm.androrm.QuerySet;
 import com.orm.androrm.field.CharField;
@@ -46,6 +47,7 @@ public abstract class Builder extends Model {
         // Increment progress
         int newProgress = this.progress.get() + 1;
         this.progress.set(newProgress);
+        this.save(PhoeniciaContext.context);
         this.progressChanged();
 
         // Check for completeness
@@ -61,6 +63,7 @@ public abstract class Builder extends Model {
      */
     public void schedule() {
         this.status.set(Builder.SCHEDULED);
+        this.save(PhoeniciaContext.context);
         for (BuildStatusUpdateHandler handler : new ArrayList<BuildStatusUpdateHandler>(this.updateHandlers)) {
             handler.onScheduled(this);
         }
@@ -71,6 +74,7 @@ public abstract class Builder extends Model {
      */
     public void start() {
         this.status.set(Builder.BUILDING);
+        this.save(PhoeniciaContext.context);
         for (BuildStatusUpdateHandler handler : new ArrayList<BuildStatusUpdateHandler>(this.updateHandlers)) {
             handler.onStarted(this);
         }
@@ -81,6 +85,7 @@ public abstract class Builder extends Model {
      */
     public void complete() {
         this.status.set(Builder.COMPLETE);
+        this.save(PhoeniciaContext.context);
         for (BuildStatusUpdateHandler handler : new ArrayList<BuildStatusUpdateHandler>(this.updateHandlers)) {
             handler.onCompleted(this);
         }
@@ -104,6 +109,7 @@ public abstract class Builder extends Model {
     }
 
     public void addUpdateHandler(BuildStatusUpdateHandler handler) {
+        this.updateHandlers.remove(handler);
         this.updateHandlers.add(handler);
     }
 

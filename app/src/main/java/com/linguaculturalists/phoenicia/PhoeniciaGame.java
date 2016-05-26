@@ -675,7 +675,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             for (Builder builder : currentBuilders) {
                 if (builder.status.get() == Builder.BUILDING) {
                     builder.update();
-                    builder.save(PhoeniciaContext.context);
+                    //builder.save(PhoeniciaContext.context);
                     //Debug.d("Builder "+builder.item_name.get()+" saved");
                 }
             }

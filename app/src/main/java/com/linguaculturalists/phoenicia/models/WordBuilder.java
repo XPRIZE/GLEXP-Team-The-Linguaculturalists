@@ -68,13 +68,6 @@ public class WordBuilder extends Builder {
     }
 
     @Override
-    public void complete() {
-        super.complete();
-        this.delete(PhoeniciaContext.context);
-
-    }
-
-    @Override
     protected void migrate(Context context) {
         return;
     }

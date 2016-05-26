@@ -167,19 +167,31 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
         int startX = 50;
         for(final WordBuilder builder : this.buildQueue) {
             final ITiledTextureRegion wordSpriteRegion = game.wordSprites.get(tile.word);
-            TiledSprite wordSprite = new TiledSprite(startX, this.queuePane.getHeight()-48, wordSpriteRegion, PhoeniciaContext.vboManager);
+            final TiledSprite wordSprite = new TiledSprite(startX, this.queuePane.getHeight()-48, wordSpriteRegion, PhoeniciaContext.vboManager);
+            this.queuePane.attachChild(wordSprite);
             queueSpriteMap.put(builder, wordSprite);
-            /*
-            wordSprite.setOnClickListener(new ButtonSprite.OnClickListener() {
+            final ClickDetector builderClickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
                 @Override
-                public void onClick(ButtonSprite buttonSprite, float v, float v2) {
+                public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
                     Debug.d("Activated block: " + builder.getId());
-                    game.playBlockSound(buildWord.sound);
+                    if (builder.status.get() == Builder.COMPLETE) {
+                        game.playBlockSound(buildWord.sound);
+                        Inventory.getInstance().add(builder.item_name.get());
+                        tile.getQueue().remove(builder);
+                        builder.delete(PhoeniciaContext.context);
+                        wordSprite.setVisible(false);
+                    }
                 }
             });
-            this.registerTouchArea(wordSprite);
-            */
-            this.queuePane.attachChild(wordSprite);
+            Entity clickArea = new Entity(wordSprite.getX(), wordSprite.getY(), wordSprite.getWidth(), wordSprite.getHeight()) {
+                @Override
+                public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                    return builderClickDetector.onManagedTouchEvent(pSceneTouchEvent);
+                }
+            };
+            this.queuePane.attachChild(clickArea);
+            this.registerTouchArea(clickArea);
+
 
             final Text builderProgress = new Text(startX, this.queuePane.getHeight()-90, GameFonts.inventoryCount(), "", 5, PhoeniciaContext.vboManager);
             this.queuePane.attachChild(builderProgress);
