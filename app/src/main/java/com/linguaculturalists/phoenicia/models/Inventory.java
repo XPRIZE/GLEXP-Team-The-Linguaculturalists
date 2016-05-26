@@ -220,7 +220,7 @@ public class Inventory {
      * Callback listener for changes to item quantities in the inventory.
      */
     public interface InventoryUpdateListener {
-        public void onInventoryUpdated(final InventoryItem[] item);
+        void onInventoryUpdated(final InventoryItem[] item);
     }
 
 }

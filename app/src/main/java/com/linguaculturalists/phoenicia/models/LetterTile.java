@@ -23,7 +23,6 @@ import org.andengine.entity.modifier.IEntityModifier;
 import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.modifier.ParallelEntityModifier;
 import org.andengine.entity.modifier.ScaleAtModifier;
-import org.andengine.entity.modifier.SequenceEntityModifier;
 import org.andengine.entity.scene.IOnAreaTouchListener;
 import org.andengine.entity.scene.ITouchArea;
 import org.andengine.entity.text.Text;
@@ -104,7 +103,7 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
     public LetterBuilder getBuilder(Context context) {
         LetterBuilder builder = this.builder.get(context);
         if (builder != null) {
-            builder.setUpdateHandler(this);
+            builder.addUpdateHandler(this);
             this.onProgressChanged(builder);
             phoeniciaGame.addBuilder(builder);
         }
@@ -116,7 +115,7 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
      * @param builder used by this tile
      */
     public void setBuilder(LetterBuilder builder) {
-        builder.setUpdateHandler(this);
+        builder.addUpdateHandler(this);
         this.builder.set(builder);
         this.onProgressChanged(builder);
     }
@@ -129,6 +128,8 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
         if (this.eventListener != null) {
             this.eventListener.onLetterTileBuildCompleted(this);
         }
+        // TODO: Find cause of redundant calls to this block and re-introduce phoneme playback
+        //phoeniciaGame.playBlockSound(letter.phoneme);
         return;
     }
 
@@ -137,10 +138,11 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
      * @param builtItem
      */
     public void onProgressChanged(Builder builtItem) {
+        Debug.d("LetterTile builder progress changed: "+builtItem.progress.get());
         if (sprite != null) {
             sprite.setProgress(builtItem.progress.get(), letter.time);
         }
-        if (builtItem.progress.get() >= letter.time) {
+        if (builtItem.progress.get() >= letter.time && !this.isCompleted) {
             builtItem.complete();
         }
         return;

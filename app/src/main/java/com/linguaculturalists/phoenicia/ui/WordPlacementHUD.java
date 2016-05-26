@@ -9,10 +9,7 @@ import com.linguaculturalists.phoenicia.components.Scrollable;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.Bank;
-import com.linguaculturalists.phoenicia.models.LetterBuilder;
-import com.linguaculturalists.phoenicia.models.Inventory;
-import com.linguaculturalists.phoenicia.models.InventoryItem;
-import com.linguaculturalists.phoenicia.models.WordBuilder;
+import com.linguaculturalists.phoenicia.models.WordTileBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
@@ -25,7 +22,6 @@ import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.extension.tmx.TMXTile;
 import org.andengine.input.touch.TouchEvent;
-import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.region.ITextureRegion;
@@ -35,9 +31,7 @@ import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
 import org.andengine.util.modifier.ease.EaseBackOut;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * HUD for selecting \link Word Words \endlink to be placed as tiles onto the map.
@@ -168,7 +162,7 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
         game.createWordSprite(wordTile, new PhoeniciaGame.CreateWordSpriteCallback() {
             @Override
             public void onWordSpriteCreated(WordTile tile) {
-                WordBuilder builder = new WordBuilder(game.session, wordTile, wordTile.item_name.get(), word.construct);
+                WordTileBuilder builder = new WordTileBuilder(game.session, wordTile, wordTile.item_name.get(), word.construct);
                 builder.start();
                 builder.save(PhoeniciaContext.context);
                 game.addBuilder(builder);

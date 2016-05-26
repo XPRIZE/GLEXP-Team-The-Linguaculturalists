@@ -33,6 +33,7 @@ import org.andengine.util.debug.Debug;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -57,15 +58,14 @@ import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.models.LetterTile;
 import com.linguaculturalists.phoenicia.models.Market;
 import com.linguaculturalists.phoenicia.models.WordBuilder;
+import com.linguaculturalists.phoenicia.models.WordTileBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
 import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
 import com.linguaculturalists.phoenicia.locale.LocaleLoader;
 import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
-import com.orm.androrm.DatabaseAdapter;
 import com.orm.androrm.Filter;
-import com.orm.androrm.Model;
 
 /**
  * The main class for managing a game.
@@ -483,21 +483,23 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             Debug.d("Restoring tile "+wordTile.item_name.get());
             wordTile.word = this.locale.word_map.get(wordTile.item_name.get());
             wordTile.phoeniciaGame = this;
-            WordBuilder builder = wordTile.getBuilder(PhoeniciaContext.context);
+            WordTileBuilder builder = wordTile.getBuilder(PhoeniciaContext.context);
             if (builder == null) {
-                Debug.d("Adding new builder for tile "+wordTile.item_name.get());
-                builder = new WordBuilder(this.session, wordTile, wordTile.item_name.get(), wordTile.word.construct);
+                Debug.d("Adding new builder for tile " + wordTile.item_name.get());
+                builder = new WordTileBuilder(this.session, wordTile, wordTile.item_name.get(), wordTile.word.construct);
                 builder.save(PhoeniciaContext.context);
-                wordTile.setBuilder(builder);
-                wordTile.save(PhoeniciaContext.context);
                 builder.start();
             } else {
                 builder.time.set(wordTile.word.construct);
                 builder.save(PhoeniciaContext.context);
                 Debug.d("Found builder with "+builder.progress.get()+"/"+builder.time.get()+" and status "+builder.status.get());
             }
+            wordTile.setBuilder(builder);
+            wordTile.save(PhoeniciaContext.context);
             this.addBuilder(builder);
+
             this.createWordSprite(wordTile);
+            wordTile.restart(PhoeniciaContext.context);
         }
 
         this.current_level = this.session.current_level.get();
@@ -513,7 +515,6 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public void restart() {
         // Stop build queues
         this.builders.clear();
-
         // Detach sprites
         if (placedSprites != null) {
             for (int c = 0; c < placedSprites.length; c++) {
@@ -537,6 +538,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         LetterBuilder.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
         LetterTile.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
         WordBuilder.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
+        WordTileBuilder.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
         WordTile.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
 
         this.inventory.addUpdateListener(this);
@@ -561,6 +563,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         inventoryDefaultTile.isoX.set(locale.inventoryBlock.mapCol);
         inventoryDefaultTile.isoY.set(locale.inventoryBlock.mapRow);
         this.createInventorySprite(inventoryDefaultTile);
+        this.startCenterX = inventoryDefaultTile.sprite.getX();
+        this.startCenterY = inventoryDefaultTile.sprite.getY();
         inventoryDefaultTile.save(PhoeniciaContext.context);
     }
 
@@ -666,10 +670,12 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.updateTime += v;
         if (this.updateTime > 1) {
             this.updateTime = 0;
-            for (Builder builder : this.builders) {
+            // Copy builders set to avoid concurrency conflicts
+            final Set<Builder> currentBuilders = new HashSet(this.builders);
+            for (Builder builder : currentBuilders) {
                 if (builder.status.get() == Builder.BUILDING) {
                     builder.update();
-                    builder.save(PhoeniciaContext.context);
+                    //builder.save(PhoeniciaContext.context);
                     //Debug.d("Builder "+builder.item_name.get()+" saved");
                 }
             }
@@ -683,6 +689,14 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public void addBuilder(Builder builder) {
         this.builders.remove(builder);
         this.builders.add(builder);
+    }
+
+    /**
+     * Remove a Builder instance from the list of builders updated every second
+     * @param builder to be removed
+     */
+    public void removeBuilder(Builder builder) {
+        this.builders.remove(builder);
     }
 
     /**
@@ -830,7 +844,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         final PlacedBlockSprite sprite = new PlacedBlockSprite(tilePos[0], tilePos[1], tile.word.construct, 4, wordBlocks.get(tile.word), PhoeniciaContext.vboManager);
         sprite.setZIndex(tileZ);
 
-        final WordBuilder builder = tile.getBuilder(PhoeniciaContext.context);
+        final WordTileBuilder builder = tile.getBuilder(PhoeniciaContext.context);
 
         scene.attachChild(sprite);
         scene.sortChildren();

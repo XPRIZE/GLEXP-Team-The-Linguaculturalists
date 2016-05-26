@@ -2,7 +2,6 @@ package com.linguaculturalists.phoenicia.models;
 
 import android.content.Context;
 
-import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.QuerySet;
 import com.orm.androrm.field.CharField;
 import com.orm.androrm.field.ForeignKeyField;
@@ -11,19 +10,19 @@ import com.orm.androrm.field.IntegerField;
 /**
  * Builder for creating new Word items.
  */
-public class WordBuilder extends Builder {
+public class WordTileBuilder extends Builder {
 
     public ForeignKeyField<GameSession> game; /**< reference to the GameSession this item is a part of */
     public ForeignKeyField<WordTile> tile; /**< reference to the WordTile the builder is attached to */
 
-    public static final QuerySet<WordBuilder> objects(Context context) {
-        return objects(context, WordBuilder.class);
+    public static final QuerySet<WordTileBuilder> objects(Context context) {
+        return objects(context, WordTileBuilder.class);
     }
 
     /**
      * Create empty WordBuilder.
      */
-    public WordBuilder() {
+    public WordTileBuilder() {
         super();
         this.game = new ForeignKeyField<GameSession>(GameSession.class);
         this.tile = new ForeignKeyField<WordTile>(WordTile.class);
@@ -43,7 +42,7 @@ public class WordBuilder extends Builder {
      * @param item_name InventoryItem for what the builder is creating
      * @param time time (in seconds) the build will take to finish
      */
-    public WordBuilder(GameSession session, WordTile tile, String item_name, int time) {
+    public WordTileBuilder(GameSession session, WordTile tile, String item_name, int time) {
         this(session, tile, item_name, time, null);
     }
 
@@ -55,7 +54,7 @@ public class WordBuilder extends Builder {
      * @param time time (in seconds) the build will take to finish
      * @param updateHandler callback to notify when the build status changes
      */
-    public WordBuilder(GameSession session, WordTile tile, String item_name, int time, BuildStatusUpdateHandler updateHandler) {
+    public WordTileBuilder(GameSession session, WordTile tile, String item_name, int time, BuildStatusUpdateHandler updateHandler) {
         this();
         this.game.set(session);
         this.tile.set(tile);

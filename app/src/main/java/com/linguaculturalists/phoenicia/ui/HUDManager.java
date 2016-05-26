@@ -3,6 +3,7 @@ package com.linguaculturalists.phoenicia.ui;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
+import com.linguaculturalists.phoenicia.models.WordTile;
 
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.engine.handler.IUpdateHandler;
@@ -99,8 +100,8 @@ public class HUDManager extends HUD {
     /**
      * Create a new instance of the word building HUD for the specified word
      */
-    public void showWordBuilder(final Level level, final Word word) {
-        WordBuilderHUD hud = new WordBuilderHUD(this.game, level, word);
+    public void showWordBuilder(final Level level, final WordTile tile) {
+        WordBuilderHUD hud = new WordBuilderHUD(this.game, level, tile);
         this.push(hud);
     }
 

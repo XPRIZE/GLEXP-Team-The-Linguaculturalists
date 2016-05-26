@@ -1,7 +1,5 @@
 package com.linguaculturalists.phoenicia;
 
-import android.view.MotionEvent;
-
 import com.linguaculturalists.phoenicia.models.DefaultTile;
 import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
@@ -10,31 +8,21 @@ import com.linguaculturalists.phoenicia.models.LetterTile;
 import com.linguaculturalists.phoenicia.models.MarketRequest;
 import com.linguaculturalists.phoenicia.models.RequestItem;
 import com.linguaculturalists.phoenicia.models.WordBuilder;
+import com.linguaculturalists.phoenicia.models.WordTileBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
-import com.linguaculturalists.phoenicia.util.SystemUiHider;
 import com.orm.androrm.DatabaseAdapter;
 import com.orm.androrm.Model;
 
-import org.andengine.engine.Engine;
-import org.andengine.engine.camera.Camera;
-import org.andengine.engine.camera.SmoothCamera;
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
-import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
-import org.andengine.entity.scene.background.Background;
-import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.controller.MultiTouchController;
-import org.andengine.input.touch.detector.PinchZoomDetector;
-import org.andengine.ui.IGameInterface;
 import org.andengine.ui.activity.BaseGameActivity;
-import org.andengine.util.adt.color.Color;
-import org.andengine.util.debug.Debug;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -120,6 +108,7 @@ public class GameActivity extends BaseGameActivity {
         models.add(LetterTile.class);
         models.add(WordTile.class);
         models.add(LetterBuilder.class);
+        models.add(WordTileBuilder.class);
         models.add(WordBuilder.class);
 
         DatabaseAdapter.setDatabaseName("game_db");
