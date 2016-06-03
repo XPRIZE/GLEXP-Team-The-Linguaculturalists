@@ -4,11 +4,12 @@
     <map src="locales/sw_tz_village/map.tmx" />
 
     <!-- default blocks -->
-    <inventory name="Barn" col="37" row="43" texture="locales/en_us_rural/textures/inventory.png" />
-    <market name="Market" col="41" row="41" texture="locales/sw_tz_village/textures/market.png" />
+    <inventory name="Barn" col="37" row="43" block="locales/en_us_rural/textures/inventory.png" />
+    <market name="Market" col="41" row="41" block="locales/sw_tz_village/textures/market.png" />
 
     <people>
         <person name="Konqi" texture="locales/common/textures/persons/konqi.png" />
+        <person name="Roxanne" texture="locales/common/textures/persons/Roxanne.png" />
         <person name="Tux" texture="locales/common/textures/persons/tux.png" />
     </people>
 

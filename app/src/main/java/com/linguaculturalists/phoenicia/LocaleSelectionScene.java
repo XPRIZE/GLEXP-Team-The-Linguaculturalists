@@ -94,14 +94,7 @@ public class LocaleSelectionScene extends Scene {
         final LocaleSelectionScene that = this;
         game.activity.getEngine().registerUpdateHandler(new TimerHandler(0.5f, new ITimerCallback() {
             public void onTimePassed(final TimerHandler pTimerHandler) {
-                GameSession session;
-                try {
-                    Filter byLocale = new Filter();
-                    byLocale.is("locale_pack", locale_src);
-                    session = GameSession.objects(PhoeniciaContext.context).filter(byLocale).toList().get(0);
-                } catch (IndexOutOfBoundsException e) {
-                    session = GameSession.start(locale_src);
-                }
+                GameSession session = GameSession.start(locale_src);
                 session.save(PhoeniciaContext.context);
                 try {
                     game.load(session);

@@ -87,7 +87,7 @@ public class GameActivity extends BaseGameActivity {
                 mEngine.setTouchController(new MultiTouchController());
                 // Load phoeniciaGame session
                 splash.detachSelf();
-                mEngine.setScene(new LocaleSelectionScene(game, splash));
+                mEngine.setScene(new SessionSelectionScene(game, splash));
             }
         }));
 

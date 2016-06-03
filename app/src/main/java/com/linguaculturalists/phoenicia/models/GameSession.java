@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class GameSession extends Model {
 
     public CharField session_name; /**< user defined name for this session */
+    public CharField person_name; /**< locale person representing this player */
     public CharField locale_pack; /**< path to the locale pack used by this session */
     public DoubleField start_timestamp; /**< time when this session was created (in seconds from epoch) */
     public DoubleField last_timestamp; /**< last time this session was used (in seconds from epoch) */
@@ -38,6 +39,7 @@ public class GameSession extends Model {
     public GameSession(){
         super();
         this.session_name = new CharField(32);
+        this.person_name = new CharField(32);
         this.locale_pack = new CharField(32);
         this.start_timestamp = new DoubleField();
         this.last_timestamp = new DoubleField();
@@ -130,6 +132,7 @@ public class GameSession extends Model {
         migrator.addField("points", new IntegerField());
         migrator.addField("account_balance", new IntegerField());
         migrator.addField("gross_income", new IntegerField());
+        migrator.addField("person_name", new CharField());
 
         // roll out all migrations
         migrator.migrate(context);

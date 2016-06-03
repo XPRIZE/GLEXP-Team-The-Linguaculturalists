@@ -87,6 +87,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     private float startCenterX;
     private float startCenterY;
     public GameActivity activity;
+    private boolean isStarted;
 
     private float mPinchZoomStartedCameraZoomFactor;
     private PinchZoomDetector mPinchZoomDetector;
@@ -141,6 +142,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         this.activity = activity;
         this.camera = camera;
+        this.isStarted = false;
 
         this.levelListeners = new ArrayList<LevelChangeListener>();
 
@@ -649,6 +651,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         if (this.current_level != this.session.current_level.get()) {
             this.changeLevel(this.locale.level_map.get(this.session.current_level.get()));
         }
+        this.isStarted = true;
     }
 
     /**
@@ -964,7 +967,10 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public void playBlockSound(String soundFile) {
 
         Debug.d("Playing sound: "+soundFile);
-
+        if (!this.isStarted) {
+            Debug.d("Game hasn't started yet, not playing any sound");
+            return;
+        }
         if (this.blockSounds.containsKey(soundFile)) {
             this.blockSounds.get(soundFile).play();
         } else {
