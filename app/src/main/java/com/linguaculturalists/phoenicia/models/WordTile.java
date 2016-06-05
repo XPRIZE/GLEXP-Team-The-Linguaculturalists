@@ -69,7 +69,7 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
         this.isoY = new IntegerField();
         this.item_name = new CharField(32);
         this.stock = new IntegerField();
-
+        this.buildQueue = new ArrayList<WordBuilder>();
     }
 
     /**

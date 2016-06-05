@@ -87,6 +87,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     private float startCenterX;
     private float startCenterY;
     public GameActivity activity;
+    private boolean isStarted;
 
     private float mPinchZoomStartedCameraZoomFactor;
     private PinchZoomDetector mPinchZoomDetector;
@@ -141,6 +142,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         this.activity = activity;
         this.camera = camera;
+        this.isStarted = false;
 
         this.levelListeners = new ArrayList<LevelChangeListener>();
 
@@ -230,6 +232,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      */
     public void load(final GameSession session) throws IOException {
         this.session = session;
+        this.current_level = this.session.current_level.get();
+        if (this.current_level == null) this.current_level = "";
 
         // Load locale pack
         LocaleLoader localeLoader = new LocaleLoader();
@@ -282,7 +286,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                                 if (props == null) continue;
                                 for (TMXTileProperty prop : props) {
                                     if (prop.getName().equals("class")) {
-                                        Debug.d("Found map restriction '"+prop.getValue()+"' at "+r+"x"+c);
+                                        //Debug.d("Found map restriction '"+prop.getValue()+"' at "+r+"x"+c);
                                         mapTileClass.put(tile.getGlobalTileID(), prop.getValue());
                                     }
                                 }
@@ -291,7 +295,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                             }
                         }
                         if (mapTileClass.get(tile.getGlobalTileID()) != null) {
-                            Debug.d("Tile at "+r+"x"+c+" restriction: "+mapTileClass.get(tile.getGlobalTileID()));
+                            //Debug.d("Tile at "+r+"x"+c+" restriction: "+mapTileClass.get(tile.getGlobalTileID()));
                             mapRestrictions[r][c] = mapTileClass.get(tile.getGlobalTileID());
                         }
                     }
@@ -502,11 +506,6 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             wordTile.restart(PhoeniciaContext.context);
         }
 
-        this.current_level = this.session.current_level.get();
-        if (this.current_level == null || this.current_level == "") {
-            this.changeLevel( this.locale.levels.get(0));
-        }
-
     }
 
     /**
@@ -646,7 +645,12 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.camera.setZoomFactor(2.0f);
         this.camera.setHUD(this.hudManager);
         this.hudManager.showDefault();
-        if (this.current_level != this.session.current_level.get()) {
+
+        this.isStarted = true;
+
+        if (this.current_level == null || this.current_level == "") {
+            this.changeLevel( this.locale.levels.get(0));
+        } else if (this.current_level != this.session.current_level.get()) {
             this.changeLevel(this.locale.level_map.get(this.session.current_level.get()));
         }
     }
@@ -964,7 +968,10 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public void playBlockSound(String soundFile) {
 
         Debug.d("Playing sound: "+soundFile);
-
+        if (!this.isStarted) {
+            Debug.d("Game hasn't started yet, not playing any sound");
+            return;
+        }
         if (this.blockSounds.containsKey(soundFile)) {
             this.blockSounds.get(soundFile).play();
         } else {

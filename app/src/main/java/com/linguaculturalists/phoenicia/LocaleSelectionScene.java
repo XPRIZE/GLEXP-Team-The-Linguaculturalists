@@ -70,6 +70,7 @@ public class LocaleSelectionScene extends Scene {
             Map<String, String> locales = lm.scan("locales");
 
             for (final String locale_src : locales.keySet()) {
+                if (locale_src.equals("locales/en_us_test/manifest.xml")) continue;
                 final String locale_display = locales.get(locale_src);
                 Button locale_button = new Button(game.camera.getWidth()/2, startY, game.camera.getWidth()/2, 100, locale_display, PhoeniciaContext.vboManager, new Button.OnClickListener() {
                     @Override
@@ -94,14 +95,7 @@ public class LocaleSelectionScene extends Scene {
         final LocaleSelectionScene that = this;
         game.activity.getEngine().registerUpdateHandler(new TimerHandler(0.5f, new ITimerCallback() {
             public void onTimePassed(final TimerHandler pTimerHandler) {
-                GameSession session;
-                try {
-                    Filter byLocale = new Filter();
-                    byLocale.is("locale_pack", locale_src);
-                    session = GameSession.objects(PhoeniciaContext.context).filter(byLocale).toList().get(0);
-                } catch (IndexOutOfBoundsException e) {
-                    session = GameSession.start(locale_src);
-                }
+                GameSession session = GameSession.start(locale_src);
                 session.save(PhoeniciaContext.context);
                 try {
                     game.load(session);
