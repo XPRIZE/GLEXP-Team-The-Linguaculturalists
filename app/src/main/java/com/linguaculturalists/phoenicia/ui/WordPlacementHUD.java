@@ -169,6 +169,7 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
 
                 wordTile.setBuilder(builder);
                 wordTile.save(PhoeniciaContext.context);
+                wordTile.restart(PhoeniciaContext.context);
                 Bank.getInstance().debit(word.buy);
             }
 

@@ -70,6 +70,7 @@ public class LocaleSelectionScene extends Scene {
             Map<String, String> locales = lm.scan("locales");
 
             for (final String locale_src : locales.keySet()) {
+                if (locale_src.equals("locales/en_us_test/manifest.xml")) continue;
                 final String locale_display = locales.get(locale_src);
                 Button locale_button = new Button(game.camera.getWidth()/2, startY, game.camera.getWidth()/2, 100, locale_display, PhoeniciaContext.vboManager, new Button.OnClickListener() {
                     @Override

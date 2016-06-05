@@ -63,6 +63,7 @@ public class SessionSelectionScene extends Scene {
 
         List<GameSession> sessions = GameSession.objects(PhoeniciaContext.context).all().toList();
         Debug.d("Number of Sessions: "+sessions.size());
+
         float startY = GameActivity.CAMERA_HEIGHT * 0.5f + 100;
         float startX = (GameActivity.CAMERA_WIDTH / 2) - ((sessions.size()-1) * 136);
 
@@ -85,6 +86,8 @@ public class SessionSelectionScene extends Scene {
                 Debug.w("Game Session without person!");
                 // TODO: use an "unknown user" image instead
                 currentPerson = session_locale.people.get(i);
+                session.person_name.set(currentPerson.name);
+                session.save(PhoeniciaContext.context);
             }
             Debug.d("Adding Game session: " + session.session_name.get());
             try {

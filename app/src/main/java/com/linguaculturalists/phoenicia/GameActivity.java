@@ -23,6 +23,7 @@ import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
 import org.andengine.input.touch.controller.MultiTouchController;
 import org.andengine.ui.activity.BaseGameActivity;
+import org.andengine.util.debug.Debug;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -86,8 +87,15 @@ public class GameActivity extends BaseGameActivity {
                 mEngine.unregisterUpdateHandler(pTimerHandler);
                 mEngine.setTouchController(new MultiTouchController());
                 // Load phoeniciaGame session
+                List<GameSession> sessions = GameSession.objects(PhoeniciaContext.context).all().toList();
+                Debug.d("Number of Sessions: " + sessions.size());
+                // If no sessions exist, go start a new one first
                 splash.detachSelf();
-                mEngine.setScene(new SessionSelectionScene(game, splash));
+                if (sessions.size() < 1) {
+                    mEngine.setScene(new LocaleSelectionScene(game, splash));
+                } else {
+                    mEngine.setScene(new SessionSelectionScene(game, splash));
+                }
             }
         }));
 
