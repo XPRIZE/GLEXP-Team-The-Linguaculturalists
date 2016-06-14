@@ -7,12 +7,16 @@ import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
+import com.linguaculturalists.phoenicia.util.RepeatedClickDetectorListener;
 
+import org.andengine.entity.Entity;
 import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
+import org.andengine.input.touch.TouchEvent;
+import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.debug.Debug;
@@ -34,6 +38,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
     private ButtonSprite letterBlock;
     private ButtonSprite wordBlock;
 
+    private ClickDetector debugClickDetector;
     /**
      * Displays the current level, bank account balance, and buttons for adding letter or work tiles
      * @param game Reference to the PhoeniciaGame this HUD is running in
@@ -58,6 +63,24 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         this.attachChild(balanceDisplay);
         balanceDisplay.setPosition(64 + (balanceDisplay.getWidth() / 2), balanceDisplay.getY());
 
+
+        this.debugClickDetector = new ClickDetector(new RepeatedClickDetectorListener(10, 5*1000) {
+
+            @Override
+            public void onRepeatedClick(ClickDetector clickDetector, int i, float v, float v1) {
+                game.hudManager.showDebugMode();
+            }
+
+        });
+        Entity debugTouchArea = new Entity(50, GameActivity.CAMERA_HEIGHT - 50, 100, 100) {
+            @Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                return debugClickDetector.onManagedTouchEvent(pSceneTouchEvent);
+            }
+        };
+        this.attachChild(debugTouchArea);
+        this.registerTouchArea(debugTouchArea);
+
         ITextureRegion letterRegion = game.shellTiles.getTextureRegion(GameTextures.LETTER_PLACEMENT);
         this.letterBlock = new ButtonSprite(GameActivity.CAMERA_WIDTH-(64*3), 64, letterRegion, PhoeniciaContext.vboManager);
         letterBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
@@ -80,16 +103,18 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         this.registerTouchArea(wordBlock);
         this.attachChild(wordBlock);
 
+        /** Replace with (?) to repeat level into
         ITextureRegion clearRegion = game.shellTiles.getTextureRegion(GameTextures.CANCEL);
         ButtonSprite clearBlock = new ButtonSprite(GameActivity.CAMERA_WIDTH-32, GameActivity.CAMERA_HEIGHT-48, clearRegion, PhoeniciaContext.vboManager);
         clearBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                game.restart();
+                game.hudManager.showDebugMode();
             }
         });
         this.registerTouchArea(clearBlock);
         this.attachChild(clearBlock);
+         */
 
         Bank.getInstance().addUpdateListener(this);
     }

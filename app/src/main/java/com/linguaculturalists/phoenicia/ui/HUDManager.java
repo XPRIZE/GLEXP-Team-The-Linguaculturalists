@@ -105,6 +105,10 @@ public class HUDManager extends HUD {
         this.push(hud);
     }
 
+    public void showDebugMode() {
+        DebugHUD hud = new DebugHUD(this.game);
+        this.push(hud);
+    }
     /**
      * Remove everything except the DefaultHUD from the stack
      */
