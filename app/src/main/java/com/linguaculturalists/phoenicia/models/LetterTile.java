@@ -138,7 +138,7 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
      * @param builtItem
      */
     public void onProgressChanged(Builder builtItem) {
-        Debug.d("LetterTile builder progress changed: "+builtItem.progress.get());
+        //Debug.d("LetterTile builder progress changed: "+builtItem.progress.get());
         if (sprite != null) {
             sprite.setProgress(builtItem.progress.get(), letter.time);
         }
@@ -158,7 +158,7 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
         }
         LetterBuilder builder = this.getBuilder(context);
         if (builder != null) {
-            Debug.d("Resetting LetterTile builder");
+            //Debug.d("Resetting LetterTile builder");
             builder.progress.set(0);
             builder.start();
             builder.save(context);

@@ -92,7 +92,7 @@ public abstract class Builder extends Model {
     }
 
     private void progressChanged() {
-        Debug.d("Builder progress changed: " + this.progress.get());
+        //Debug.d("Builder progress changed: " + this.progress.get());
         for (BuildStatusUpdateHandler handler : new ArrayList<BuildStatusUpdateHandler>(this.updateHandlers)) {
             handler.onProgressChanged(this);
         }

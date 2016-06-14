@@ -199,7 +199,7 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
 
             @Override
             public void onProgressChanged(Builder buildItem) {
-                Debug.d("WordBuilder updated " + buildItem.item_name.get() + " is at: " + buildItem.progress.get());
+                //Debug.d("WordBuilder updated " + buildItem.item_name.get() + " is at: " + buildItem.progress.get());
             }
 
             @Override
