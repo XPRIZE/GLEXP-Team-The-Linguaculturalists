@@ -28,12 +28,15 @@ public class Button extends Entity implements ClickDetector.IClickDetectorListen
     private Text buttonText;
 
     public Button(float x, float y, float w, float h, String text, VertexBufferObjectManager pVertexBufferObjectManager, OnClickListener pOnClickListener) {
+        this(x, y, w, h, text, Color.BLUE, pVertexBufferObjectManager, pOnClickListener);
+    }
+    public Button(float x, float y, float w, float h, String text, Color color, VertexBufferObjectManager pVertexBufferObjectManager, OnClickListener pOnClickListener) {
         super(x, y, w, h);
         this.clickDetector = new ClickDetector(this);
         this.clickListener = pOnClickListener;
 
         this.background = new Rectangle(this.getWidth()/2, this.getHeight()/2, w, h, pVertexBufferObjectManager);
-        this.background.setColor(Color.BLUE);
+        this.background.setColor(color);
         this.attachChild(this.background);
 
         final Font buttonFont = GameFonts.buttonText();

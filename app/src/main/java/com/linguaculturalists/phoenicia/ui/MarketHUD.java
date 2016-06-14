@@ -35,7 +35,9 @@ import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A HUD used to display a list of Marketplace requests and facilitate those sales
@@ -46,6 +48,8 @@ public class MarketHUD extends PhoeniciaHUD {
     private Entity requestItemsPane;
     private ClickDetector clickDetector;
 
+    private Map<MarketRequest, Sprite> requestPerson;
+    private Map<MarketRequest, Text> requestName;
     /**
      * A HUD used to display a list of Marketplace requests and facilitate those sales
      * @param game Reference to the current PhoeniciaGame this HUD is running in
@@ -55,6 +59,9 @@ public class MarketHUD extends PhoeniciaHUD {
         this.setBackgroundEnabled(false);
         this.setOnAreaTouchTraversalFrontToBack();
         this.game = game;
+        this.requestPerson = new HashMap<MarketRequest, Sprite>();
+        this.requestName = new HashMap<MarketRequest, Text>();
+
         // Close the HUD if the user clicks outside the whiteRect
         this.clickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
             @Override
@@ -117,9 +124,11 @@ public class MarketHUD extends PhoeniciaHUD {
             });
             this.registerTouchArea(block);
             requestsPane.attachChild(block);
+            this.requestPerson.put(request, block);
 
             Text personName = new Text(startX + (272 * offsetX), offsetY-128-16, GameFonts.dialogText(), currentPerson.name, currentPerson.name.length(),  new TextOptions(AutoWrap.WORDS, 256, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
             requestsPane.attachChild(personName);
+            this.requestName.put(request, personName);
             offsetX++;
 
         }
@@ -158,32 +167,21 @@ public class MarketHUD extends PhoeniciaHUD {
             startX += 96;
         }
 
-        ButtonSprite cancelSprite = new ButtonSprite(requestItemsPane.getWidth()-32, requestItemsPane.getHeight()+32, game.shellTiles.getTextureRegion(GameTextures.CANCEL), PhoeniciaContext.vboManager);
-        cancelSprite.setOnClickListener(new ButtonSprite.OnClickListener() {
-            @Override
-            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                Market.getInstance().cancelRequest(request);
-                requestItemsPane.detachChildren();
-            }
-        });
-        this.registerTouchArea(cancelSprite);
-        requestItemsPane.attachChild(cancelSprite);
-
         ITextureRegion coinRegion = game.shellTiles.getTextureRegion(GameTextures.COIN_ICON);
-        Sprite coinIcon = new Sprite(32, 92, coinRegion, PhoeniciaContext.vboManager);
-        Text iconDisplay = new Text(32, 92, GameFonts.dialogText(), request.coins.get().toString(), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        Sprite coinIcon = new Sprite(32, 162, coinRegion, PhoeniciaContext.vboManager);
+        Text iconDisplay = new Text(32, 162, GameFonts.dialogText(), request.coins.get().toString(), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
         iconDisplay.setPosition(64 + (iconDisplay.getWidth() / 2), iconDisplay.getY());
         this.requestItemsPane.attachChild(iconDisplay);
         this.requestItemsPane.attachChild(coinIcon);
 
         ITextureRegion pointsRegion = game.shellTiles.getTextureRegion(GameTextures.XP_ICON);
-        Sprite pointsIcon = new Sprite((this.requestItemsPane.getWidth() / 2)+32, 92, pointsRegion, PhoeniciaContext.vboManager);
-        Text pointsDisplay = new Text((this.requestItemsPane.getWidth() / 2)+32, 92, GameFonts.dialogText(), request.points.get().toString(), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        Sprite pointsIcon = new Sprite((this.requestItemsPane.getWidth() / 2)+32, 162, pointsRegion, PhoeniciaContext.vboManager);
+        Text pointsDisplay = new Text((this.requestItemsPane.getWidth() / 2)+32, 162, GameFonts.dialogText(), request.points.get().toString(), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
         pointsDisplay.setPosition((this.requestItemsPane.getWidth() / 2) + 64 + (pointsDisplay.getWidth() / 2), pointsDisplay.getY());
         this.requestItemsPane.attachChild(pointsDisplay);
         this.requestItemsPane.attachChild(pointsIcon);
 
-        Button sellButton = new Button(this.requestItemsPane.getWidth() / 2, 32, this.requestItemsPane.getWidth(), 64, "Sell", PhoeniciaContext.vboManager, new Button.OnClickListener() {
+        Button sellButton = new Button(this.requestItemsPane.getWidth() / 2, 102, this.requestItemsPane.getWidth(), 64, "Sell", new Color(0.12f, 0.72f, 0.02f), PhoeniciaContext.vboManager, new Button.OnClickListener() {
             @Override
             public void onClicked(Button button) {
                 attemptSale(request);
@@ -191,6 +189,29 @@ public class MarketHUD extends PhoeniciaHUD {
         });
         this.requestItemsPane.attachChild(sellButton);
         this.registerTouchArea(sellButton);
+
+        Button cancelButton = new Button(this.requestItemsPane.getWidth() / 2, 32, this.requestItemsPane.getWidth(), 64, "Decline", new Color(0.80f, 0.04f, 0.04f), PhoeniciaContext.vboManager, new Button.OnClickListener() {
+            @Override
+            public void onClicked(Button button) {
+                Market.getInstance().cancelRequest(request);
+                requestItemsPane.detachChildren();
+                Sprite personSprite = requestPerson.get(request);
+                unregisterTouchArea(personSprite);
+                personSprite.detachSelf();
+                requestPerson.remove(request);
+
+                Text personName = requestName.get(request);
+                personName.detachSelf();
+                requestName.remove(request);
+
+                Debug.d("Remaining requests: "+requestPerson.size());
+                if (requestPerson.size() < 1) {
+                    game.hudManager.pop();
+                }
+            }
+        });
+        this.requestItemsPane.attachChild(cancelButton);
+        this.registerTouchArea(cancelButton);
     }
 
     /**
