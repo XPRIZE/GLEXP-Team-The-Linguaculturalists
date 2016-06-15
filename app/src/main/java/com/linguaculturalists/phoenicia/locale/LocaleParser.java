@@ -7,6 +7,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Read the locale XML and build it into a Locale object.
@@ -274,6 +275,7 @@ public class LocaleParser extends DefaultHandler {
 
     private void parseLevel(Attributes attributes) throws SAXException {
         Debug.v("Parsing locale level");
+        Level lastLevel = this.currentLevel;
         this.currentLevel = new Level();
         this.currentLevel.name = attributes.getValue("name");
         if (attributes.getValue("market") != null) {
@@ -286,8 +288,17 @@ public class LocaleParser extends DefaultHandler {
         } else {
             this.currentLevel.coinsEarned = 0;
         }
-        this.currentLevel.letters = new ArrayList<Letter>();
-        this.currentLevel.words = new ArrayList<Word>();
+        if (lastLevel != null) {
+            this.currentLevel.letters = new ArrayList<Letter>(lastLevel.letters);
+            this.currentLevel.letter_count = new HashMap<Letter, Integer>(lastLevel.letter_count);
+            this.currentLevel.words = new ArrayList<Word>(lastLevel.words);
+            this.currentLevel.word_count = new HashMap<Word, Integer>(lastLevel.word_count);
+        } else {
+            this.currentLevel.letters = new ArrayList<Letter>();
+            this.currentLevel.letter_count = new HashMap<Letter, Integer>();
+            this.currentLevel.words = new ArrayList<Word>();
+            this.currentLevel.word_count = new HashMap<Word, Integer>();
+        }
         this.currentLevel.help_letters = new ArrayList<Letter>();
         this.currentLevel.help_words = new ArrayList<Word>();
         this.currentLevel.intro = new ArrayList<IntroPage>();
@@ -339,7 +350,6 @@ public class LocaleParser extends DefaultHandler {
         } else if (this.inLocale && this.inLevelDefinition && localName.equals(LocaleParser.TAG_LEVEL)) {
             this.locale.levels.add(this.currentLevel);
             this.locale.level_map.put(this.currentLevel.name, this.currentLevel);
-            this.currentLevel = null;
             this.inLevelDefinition = false;
         } else if (this.inLocale && this.inLevelIntroPage && localName.equals(LocaleParser.TAG_INTRO)) {
             this.inLevelIntro = false;
@@ -384,14 +394,26 @@ public class LocaleParser extends DefaultHandler {
         } else if (this.inLocale && this.inLevelDefinition && !this.inLevelHelp && this.inLevelLetters) {
             String[] letters =  StringUtils.split(text, ",");
             for (int i = 0; i < letters.length; i++) {
-                Debug.v("Adding Letter "+letters[i]+" to Level "+this.currentLevel.name);
-                this.currentLevel.letters.add(this.locale.letter_map.get(letters[i]));
+                Letter letter = this.locale.letter_map.get(letters[i]);
+                if (!this.currentLevel.letter_count.containsKey(letter)) {
+                    Debug.v("Adding Letter "+letters[i]+" to Level "+this.currentLevel.name);
+                    this.currentLevel.letters.add(letter);
+                    this.currentLevel.letter_count.put(letter, 1);
+                } else {
+                    this.currentLevel.letter_count.put(letter, this.currentLevel.letter_count.get(letter));
+                }
             }
         } else if (this.inLocale && this.inLevelDefinition && !this.inLevelHelp && this.inLevelWords) {
             String[] words =  StringUtils.split(text, ",");
             for (int i = 0; i < words.length; i++) {
-                Debug.v("Adding Word "+words[i]+" to Level "+this.currentLevel.name);
-                this.currentLevel.words.add(this.locale.word_map.get(words[i]));
+                Word word = this.locale.word_map.get(words[i]);
+                if (!this.currentLevel.word_count.containsKey(word)) {
+                    Debug.v("Adding Word "+words[i]+" to Level "+this.currentLevel.name);
+                    this.currentLevel.words.add(word);
+                    this.currentLevel.word_count.put(word, 1);
+                } else {
+                    this.currentLevel.word_count.put(word, this.currentLevel.word_count.get(word));
+                }
             }
         } else if (this.inLocale && this.inLevelDefinition && this.inLevelHelp && this.inLevelHelpLetters) {
             String[] letters =  StringUtils.split(text, ",");

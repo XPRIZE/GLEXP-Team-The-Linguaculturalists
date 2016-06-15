@@ -68,7 +68,7 @@
                 <page sound="locales/en_us_rural/sounds/intro2p1.ogg">Great job!
                 Now that you've grown some 'A's, lets try planting some 'T's</page>
             </intro>
-            <letters>a,t</letters>
+            <letters>t</letters>
             <words></words>
             <help>
                 <letters>a,t</letters>
@@ -83,8 +83,7 @@
                 <page sound="locales/en_us_rural/sounds/intro3p1.ogg">Now you're getting it! Lets grow some 'C's and you'll have enough letters to start building something</page>
                 <page sound="locales/en_us_rural/sounds/intro3p2.ogg" texture="locales/en_us_rural/textures/levels/intro3p2.png">Use the Word images to build a 'cat' factory</page>
             </intro>
-            <letters>a,t,c</letters>
-            <help>a,t,c</help>
+            <letters>c</letters>
             <words>cat</words>
             <help>
                 <letters>t,c</letters>
@@ -99,8 +98,8 @@
                 <page sound="locales/en_us_rural/sounds/intro4p1.ogg">Yay! Building words from letters is what Phoenicia is all about!</page>
                 <page sound="locales/en_us_rural/sounds/intro4p2.ogg">Here's a new letter: 'H', you can use it with your other letters to build the word 'hat'</page>
             </intro>
-            <letters>a,t,h,c</letters>
-            <words>hat,cat</words>
+            <letters>h</letters>
+            <words>hat</words>
             <help>
                 <letters>t,h,c</letters>
                 <words>hat,cat</words>
@@ -114,8 +113,8 @@
                 <page sound="locales/en_us_rural/sounds/intro5p1.ogg">You're doing great! Now that you have the hang of it, here's some more letters and words that you can grown and build.</page>
                 <page sound="locales/en_us_rural/sounds/intro5p2.ogg">Keeping building words and you'll reach new levels, each new level will open up new letters and words for you to use.</page>
             </intro>
-            <letters>a,t,h,c,b</letters>
-            <words>hat,cat,bat</words>
+            <letters>b</letters>
+            <words>bat</words>
             <help>
                 <letters>h,b</letters>
                 <words>hat,bat</words>

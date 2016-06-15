@@ -30,13 +30,14 @@
                 <page sound="locales/sw_tz_village/sounds/intro1p1.ogg">Jambo!</page>
                 <page sound="locales/sw_tz_village/sounds/intro1p2.ogg">This is an example locale pack. It will show you how Phoenicia can be adapted to different languages and locations without needing to write any code or generate lots of new content</page>
             </intro>
-            <letters>k,t,i,u</letters>
+            <letters>k,u</letters>
+            <words>kuku</words>
             <help>
-                <letters>k,t,i,u</letters>
+                <letters>k,u</letters>
+                <words>kuku</words>
             </help>
-            <words></words>
             <req>
-                <gather_letter count="1">k,t,i,u</gather_letter>
+                <gather_letter count="1">k,u</gather_letter>
             </req>
         </level>
         <level name="5" market="3" coins="100">
@@ -44,8 +45,8 @@
                 <page sound="locales/sw_tz_village/sounds/intro5p1.ogg">Every locale pack contains it's own set of words specific to it's language</page>
                 <page sound="locales/sw_tz_village/sounds/intro5p2.ogg">This works for any language with a phonetic or even semi-phonetic alphabet</page>
             </intro>
-            <letters>k,t,i,u</letters>
-            <words>kiti,kuku</words>
+            <letters>t,i</letters>
+            <words>kiti</words>
             <help>
                 <letters>k,t</letters>
                 <words>kiti,kuku</words>
