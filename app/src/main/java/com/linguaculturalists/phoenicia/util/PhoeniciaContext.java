@@ -5,6 +5,7 @@ import android.content.res.AssetManager;
 
 import com.linguaculturalists.phoenicia.GameActivity;
 
+import org.andengine.audio.music.MusicManager;
 import org.andengine.audio.sound.SoundManager;
 import org.andengine.entity.scene.Scene;
 import org.andengine.opengl.font.FontManager;
@@ -24,5 +25,5 @@ public class PhoeniciaContext {
     public static VertexBufferObjectManager vboManager; /**< Common AndEngine VBO used throughout the game */
     public static SoundManager soundManager; /**< Common AndEngine SoundManager used throughout the game */
     public static FontManager fontManager; /**< Common AndEngine FontManager used throughout the game */
-
+    public static MusicManager musicManager; /**< Commont AndEngine MusicManager used throughout the game */
 }

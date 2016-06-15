@@ -134,7 +134,7 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
             textPanel.attachChild(introImage);
             introImage.animate(500);
         }
-        game.playBlockSound(level.intro.get(page_index).sound);
+        game.playLevelSound(level.intro.get(page_index).sound);
     }
 
     /**

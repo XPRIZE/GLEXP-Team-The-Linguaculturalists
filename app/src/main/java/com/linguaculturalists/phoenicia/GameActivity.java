@@ -46,6 +46,7 @@ public class GameActivity extends BaseGameActivity {
         EngineOptions engineOptions = new EngineOptions(true, ScreenOrientation.LANDSCAPE_FIXED,
                 new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), main_camera);
         engineOptions.getAudioOptions().setNeedsSound(true);
+        engineOptions.getAudioOptions().setNeedsMusic(true);
         return engineOptions;
     }
 
@@ -76,6 +77,7 @@ public class GameActivity extends BaseGameActivity {
         PhoeniciaContext.vboManager = this.getVertexBufferObjectManager();
         PhoeniciaContext.soundManager = this.getSoundManager();
         PhoeniciaContext.fontManager = this.getFontManager();
+        PhoeniciaContext.musicManager = this.getMusicManager();
 
         this.syncDB();
         game = new PhoeniciaGame(this, main_camera);

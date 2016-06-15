@@ -2,6 +2,7 @@
 <locale name="en_us_rural" lang="en_us" display_name="US English, Rural Setting">
     <shell src="locales/common/textures/gameui.png" />
     <map src="locales/en_us_rural/map.tmx" />
+    <music src="locales/en_us_rural/sounds/background.mp3" />
 
     <!-- default blocks -->
     <inventory size="1x2" name="Barn" col="37" row="43" block="locales/en_us_rural/textures/biginventory.png" />

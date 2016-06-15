@@ -15,11 +15,12 @@ public class LocaleParser extends DefaultHandler {
 
     private static final String TAG_LOCALE = "locale";
     private static final String TAG_MAP = "map";
+    private static final String TAG_SHELL = "shell";
+    private static final String TAG_MUSIC = "music";
     private static final String TAG_INVENTORY = "inventory";
     private static final String TAG_MARKET = "market";
     private static final String TAG_PEOPLE= "people";
     private static final String TAG_PERSON = "person";
-    private static final String TAG_SHELL = "shell";
     private static final String TAG_LETTERS = "letters";
     private static final String TAG_LETTER = "letter";
     private static final String TAG_WORDS = "words";
@@ -79,6 +80,8 @@ public class LocaleParser extends DefaultHandler {
             this.parseMap(attributes);
         } else if (this.inLocale && localName.equals(LocaleParser.TAG_SHELL)) {
             this.parseShell(attributes);
+        } else if (this.inLocale && localName.equals(LocaleParser.TAG_MUSIC)) {
+            this.parseMusic(attributes);
         } else if (this.inLocale && localName.equals(LocaleParser.TAG_INVENTORY)) {
             this.parseInventory(attributes);
         } else if (this.inLocale && localName.equals(LocaleParser.TAG_MARKET)) {
@@ -149,6 +152,11 @@ public class LocaleParser extends DefaultHandler {
     private void parseShell(Attributes attributes) throws SAXException {
         Debug.v("Parsing locale shell");
         this.locale.shell_src = attributes.getValue("src");
+    }
+
+    private void parseMusic(Attributes attributes) throws SAXException {
+        Debug.v("Parsing locale music");
+        this.locale.music_src = attributes.getValue("src");
     }
 
     private void parseInventory(Attributes attributes) throws SAXException {

@@ -3,6 +3,8 @@ package com.linguaculturalists.phoenicia;
 import android.graphics.Typeface;
 import android.view.MotionEvent;
 
+import org.andengine.audio.music.Music;
+import org.andengine.audio.music.MusicFactory;
 import org.andengine.audio.sound.Sound;
 import org.andengine.audio.sound.SoundFactory;
 import org.andengine.engine.camera.ZoomCamera;
@@ -95,6 +97,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public ITexture fontTexture;
     public Font defaultFont;
 
+    private Music music;
+
     public AssetBitmapTexture shellTexture;
     public ITiledTextureRegion shellTiles; /**< Tile regions for building the game shell */
 
@@ -123,6 +127,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
     private TMXTiledMap mTMXTiledMap;
 
+    private Map<String, Music> levelSounds;
     private Map<String, Sound> blockSounds;
 
     public HUDManager hudManager; /**< The HUD stack manager for this game */
@@ -149,6 +154,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         scene = new Scene();
         scene.setBackground(new Background(new Color(0, 0, 0)));
 
+        this.levelSounds = new HashMap<String, Music>();
         this.blockSounds = new HashMap<String, Sound>();
         this.builders = new HashSet<Builder>();
         this.updateTime = 0;
@@ -261,6 +267,14 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.defaultFont = FontFactory.create(PhoeniciaContext.fontManager, PhoeniciaContext.textureManager, 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 32, Color.RED_ARGB_PACKED_INT);
         this.defaultFont.load();
 
+        // Load background music
+        try {
+            this.music = MusicFactory.createMusicFromAsset(PhoeniciaContext.musicManager, PhoeniciaContext.context, locale.music_src);
+            this.music.setLooping(true);
+            this.music.setVolume(0.5f);
+        } catch (Exception e) {
+            Debug.e("Failed to load background music asset: "+locale.music_src);
+        }
         // Load map assets
         try {
             final TMXLoader tmxLoader = new TMXLoader(PhoeniciaContext.assetManager, PhoeniciaContext.textureManager, TextureOptions.BILINEAR_PREMULTIPLYALPHA, PhoeniciaContext.vboManager);
@@ -402,14 +416,14 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             for (int i = 0; i < blockLetters.size(); i++) {
                 Letter letter = blockLetters.get(i);
                 Debug.d("Loading sound file "+i+": "+letter.sound);
-                blockSounds.put(letter.sound, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.activity, letter.sound));
-                blockSounds.put(letter.phoneme, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.activity, letter.phoneme));
+                blockSounds.put(letter.sound, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.context, letter.sound));
+                blockSounds.put(letter.phoneme, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.context, letter.phoneme));
             }
             Debug.d("Loading words");
             for (int i = 0; i < blockWords.size(); i++) {
                 Word word = blockWords.get(i);
                 Debug.d("Loading sound file "+i+": "+word.sound);
-                blockSounds.put(word.sound, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.activity, word.sound));
+                blockSounds.put(word.sound, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.context, word.sound));
             }
             // Load level assets
             // TODO: Loading all level intros now is wasteful, need to hack SoundFactory to take a callback when loading finishes
@@ -421,7 +435,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                     IntroPage page = level.intro.get(j);
                     Debug.d("Loading intro sound file " + page.sound);
                     try {
-                        blockSounds.put(page.sound, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.activity, page.sound));
+                        levelSounds.put(page.sound, MusicFactory.createMusicFromAsset(PhoeniciaContext.musicManager, PhoeniciaContext.context, page.sound));
                     } catch (IOException e) {
                         Debug.w("Failed to load level intro sound: "+page.sound);
                     }
@@ -645,6 +659,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.camera.setZoomFactor(2.0f);
         this.camera.setHUD(this.hudManager);
         this.hudManager.showDefault();
+        if (this.music != null) {
+            this.music.play();
+        }
 
         this.isStarted = true;
 
@@ -976,6 +993,24 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             this.blockSounds.get(soundFile).play();
         } else {
             Debug.d("No blockSounds: " + soundFile + "");
+        }
+    }
+
+    /**
+     * Play the given audio file
+     * @param soundFile
+     */
+    public void playLevelSound(String soundFile) {
+
+        Debug.d("Playing sound: "+soundFile);
+        if (!this.isStarted) {
+            Debug.d("Game hasn't started yet, not playing any sound");
+            return;
+        }
+        if (this.levelSounds.containsKey(soundFile)) {
+            this.levelSounds.get(soundFile).play();
+        } else {
+            Debug.d("No levelSounds: " + soundFile + "");
         }
     }
 

@@ -21,6 +21,8 @@ public class Locale {
     public String map_src;
     public String shell_src;
 
+    public String music_src;
+
     public InventoryBlock inventoryBlock;
     public MarketBlock marketBlock;
 

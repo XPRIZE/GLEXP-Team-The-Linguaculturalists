@@ -2,6 +2,7 @@
 <locale name="en_us_test" lang="en_us" display_name="US English, Testing">
     <shell src="locales/en_us_test/textures/gameui.png" />
     <map src="locales/en_us_test/map.tmx" />
+    <music src="locales/en_us_rural/sounds/background.mp3" />
 
     <inventory name="InventoryTest" col="1" row="2" block="locales/en_us_test/textures/inventory.png" />
 

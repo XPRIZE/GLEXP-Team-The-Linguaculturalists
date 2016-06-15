@@ -2,6 +2,7 @@
 <locale name="sw_tz_village" lang="en_us" display_name="Kiswahili, Tanzania Village">
     <shell src="locales/common/textures/gameui.png" />
     <map src="locales/sw_tz_village/map.tmx" />
+    <music src="locales/sw_tz_village/sounds/background.ogg" />
 
     <!-- default blocks -->
     <inventory name="Barn" col="37" row="43" block="locales/en_us_rural/textures/inventory.png" />
