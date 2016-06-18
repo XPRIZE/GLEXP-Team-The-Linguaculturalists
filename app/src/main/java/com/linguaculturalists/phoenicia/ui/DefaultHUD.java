@@ -37,6 +37,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
     //private ButtonSprite inventoryBlock;
     private ButtonSprite letterBlock;
     private ButtonSprite wordBlock;
+    private ButtonSprite helpButton;
 
     private ClickDetector debugClickDetector;
     /**
@@ -103,18 +104,17 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         this.registerTouchArea(wordBlock);
         this.attachChild(wordBlock);
 
-        /** Replace with (?) to repeat level into
-        ITextureRegion clearRegion = game.shellTiles.getTextureRegion(GameTextures.CANCEL);
-        ButtonSprite clearBlock = new ButtonSprite(GameActivity.CAMERA_WIDTH-32, GameActivity.CAMERA_HEIGHT-48, clearRegion, PhoeniciaContext.vboManager);
-        clearBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
+        ITextureRegion helpRegion = game.shellTiles.getTextureRegion(GameTextures.HELP);
+        this.helpButton = new ButtonSprite(GameActivity.CAMERA_WIDTH-32, GameActivity.CAMERA_HEIGHT-48, helpRegion, PhoeniciaContext.vboManager);
+        helpButton.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                game.hudManager.showDebugMode();
+                game.hudManager.showLevelIntro(game.locale.level_map.get(game.current_level));
             }
         });
-        this.registerTouchArea(clearBlock);
-        this.attachChild(clearBlock);
-         */
+        this.registerTouchArea(helpButton);
+        this.attachChild(helpButton);
+
 
         Bank.getInstance().addUpdateListener(this);
     }
@@ -127,6 +127,8 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         //inventoryBlock.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
         letterBlock.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
         wordBlock.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
+
+        helpButton.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT + 32, GameActivity.CAMERA_HEIGHT - 48, EaseBackOut.getInstance()));
 
         levelIcon.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT + 48, GameActivity.CAMERA_HEIGHT - 24, EaseBackOut.getInstance()));
         levelDisplay.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT + 48, GameActivity.CAMERA_HEIGHT - 24, EaseBackOut.getInstance()));

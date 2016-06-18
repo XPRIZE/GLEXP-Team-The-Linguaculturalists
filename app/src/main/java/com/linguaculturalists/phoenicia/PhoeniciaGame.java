@@ -409,41 +409,47 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         }
 
         // Load sound data
-        try {
-            //SoundFactory.setAssetBasePath("locales/en_us_rural/");
-            blockSounds = new HashMap<String, Sound>();
-            Debug.d("Loading  letters");
-            for (int i = 0; i < blockLetters.size(); i++) {
-                Letter letter = blockLetters.get(i);
-                Debug.d("Loading sound file "+i+": "+letter.sound);
+        //SoundFactory.setAssetBasePath("locales/en_us_rural/");
+        blockSounds = new HashMap<String, Sound>();
+        Debug.d("Loading  letters");
+        for (int i = 0; i < blockLetters.size(); i++) {
+            Letter letter = blockLetters.get(i);
+            Debug.d("Loading sound file "+i+": "+letter.sound);
+            try {
                 blockSounds.put(letter.sound, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.context, letter.sound));
                 blockSounds.put(letter.phoneme, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.context, letter.phoneme));
+            } catch (IOException e) {
+                Debug.e("Failed to load letter sound file: "+letter.sound);
+                e.printStackTrace();
             }
-            Debug.d("Loading words");
-            for (int i = 0; i < blockWords.size(); i++) {
-                Word word = blockWords.get(i);
-                Debug.d("Loading sound file "+i+": "+word.sound);
+        }
+        Debug.d("Loading words");
+        for (int i = 0; i < blockWords.size(); i++) {
+            Word word = blockWords.get(i);
+            Debug.d("Loading sound file "+i+": "+word.sound);
+            try {
                 blockSounds.put(word.sound, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.context, word.sound));
+            } catch (IOException e) {
+                Debug.e("Failed to load letter sound file: "+word.sound);
+                e.printStackTrace();
             }
-            // Load level assets
-            // TODO: Loading all level intros now is wasteful, need to hack SoundFactory to take a callback when loading finishes
-            Debug.d("Loading intros");
-            for (int i = 0; i < locale.levels.size(); i++) {
-                Level level = locale.levels.get(i);
-                Debug.d("Loading intros for level " + level.name);
-                for (int j = 0; j < level.intro.size(); j++) {
-                    IntroPage page = level.intro.get(j);
-                    Debug.d("Loading intro sound file " + page.sound);
-                    try {
-                        levelSounds.put(page.sound, MusicFactory.createMusicFromAsset(PhoeniciaContext.musicManager, PhoeniciaContext.context, page.sound));
-                    } catch (IOException e) {
-                        Debug.w("Failed to load level intro sound: "+page.sound);
-                    }
+        }
+        // Load level assets
+        // TODO: Loading all level intros now is wasteful, need to hack SoundFactory to take a callback when loading finishes
+        Debug.d("Loading intros");
+        for (int i = 0; i < locale.levels.size(); i++) {
+            Level level = locale.levels.get(i);
+            Debug.d("Loading intros for level " + level.name);
+            for (int j = 0; j < level.intro.size(); j++) {
+                IntroPage page = level.intro.get(j);
+                Debug.d("Loading level intro sound file " + page.sound);
+                try {
+                    levelSounds.put(page.sound, MusicFactory.createMusicFromAsset(PhoeniciaContext.musicManager, PhoeniciaContext.context, page.sound));
+                } catch (IOException e) {
+                    Debug.w("Failed to load level intro sound: "+page.sound);
+                    e.printStackTrace();
                 }
             }
-        } catch (IOException e)
-        {
-            e.printStackTrace();
         }
 
         Debug.d("Loading inventory tile");
@@ -487,8 +493,12 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 builder.start();
             } else {
                 builder.time.set(letterTile.letter.time);
+                // If builder is market complete, set the progress to the build time in case it was changed in the locale3
+                if (builder.status.get() == Builder.COMPLETE) {
+                    builder.progress.set(letterTile.letter.time);
+                }
                 builder.save(PhoeniciaContext.context);
-                Debug.d("Found builder with "+builder.progress.get()+"/"+builder.time.get()+" and status "+builder.status.get());
+                Debug.d("Found builder with " + builder.progress.get() + "/" + builder.time.get() + " and status " + builder.status.get());
             }
             this.addBuilder(builder);
             this.createLetterSprite(letterTile);
@@ -509,6 +519,10 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 builder.start();
             } else {
                 builder.time.set(wordTile.word.construct);
+                // If builder is market complete, set the progress to the build time in case it was changed in the locale
+                if (builder.status.get() == Builder.COMPLETE) {
+                    builder.progress.set(wordTile.word.time);
+                }
                 builder.save(PhoeniciaContext.context);
                 Debug.d("Found builder with "+builder.progress.get()+"/"+builder.time.get()+" and status "+builder.status.get());
             }
