@@ -62,6 +62,7 @@ import com.linguaculturalists.phoenicia.models.Market;
 import com.linguaculturalists.phoenicia.models.WordBuilder;
 import com.linguaculturalists.phoenicia.models.WordTileBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
+import com.linguaculturalists.phoenicia.models.WorkshopBuilder;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
 import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
 import com.linguaculturalists.phoenicia.locale.LocaleLoader;
@@ -491,8 +492,10 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             final DefaultTile workshopDefaultTile = DefaultTile.objects(PhoeniciaContext.context).filter(session.filter).filter(workshopFilter).toList().get(0);
             workshopDefaultTile.phoeniciaGame = this;
             this.createWorkshopSprite(workshopDefaultTile);
-            WordBuilder workshopBuilder = workshopDefaultTile.getBuilder(PhoeniciaContext.context);
-            if (workshopBuilder != null) {
+            Filter forWorkshopTile = new Filter();
+            forWorkshopTile.is("tile", workshopDefaultTile);
+            try {
+                WorkshopBuilder workshopBuilder = WorkshopBuilder.objects(PhoeniciaContext.context).filter(forWorkshopTile).toList().get(0);
                 Word workshopWord = locale.word_map.get(workshopBuilder.item_name.get());
                 workshopBuilder.time.set(workshopWord.construct);
                 // If builder is market complete, set the progress to the build time in case it was changed in the locale
@@ -500,8 +503,11 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                     workshopBuilder.progress.set(workshopWord.time);
                 }
                 workshopBuilder.save(PhoeniciaContext.context);
-                Debug.d("Found workshop builder with "+workshopBuilder.progress.get()+"/"+workshopBuilder.time.get()+" and status "+workshopBuilder.status.get());
+                Debug.d("Found workshop builder with " + workshopBuilder.progress.get() + "/" + workshopBuilder.time.get() + " and status " + workshopBuilder.status.get());
                 workshopDefaultTile.setBuilder(workshopBuilder);
+                this.addBuilder(workshopBuilder);
+            } catch (IndexOutOfBoundsException e) {
+                // No WorkshopBuilder found
             }
         } catch (IndexOutOfBoundsException e) {
             this.createWorkshopTile();

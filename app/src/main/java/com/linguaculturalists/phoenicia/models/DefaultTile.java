@@ -39,7 +39,7 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
     public IntegerField isoX; /**< isometric X coordinate for this tile */
     public IntegerField isoY; /**< isometric Y coordinate for this tile */
     public CharField item_type; /**< type of default tile (inventory, market) */
-    public ForeignKeyField<WordBuilder> builder; /**< builder for this tile's activity */
+    public WorkshopBuilder builder; /**< builder for this tile's activity */
 
     public PhoeniciaGame phoeniciaGame; /**< active game instance this tile is a part of */
     public MapBlockSprite sprite; /**< sprite that has been placed on the map for this tile */
@@ -51,7 +51,6 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
         this.isoX = new IntegerField();
         this.isoY = new IntegerField();
         this.item_type = new CharField(32);
-        this.builder = new ForeignKeyField<WordBuilder>(WordBuilder.class);
     }
 
     public static final QuerySet<DefaultTile> objects(Context context) {
@@ -67,12 +66,12 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
         return this.sprite;
     }
 
-    public WordBuilder getBuilder(Context context) {
-        return this.builder.get(context);
+    public WorkshopBuilder getBuilder(Context context) {
+        return this.builder;
     }
 
-    public void setBuilder(WordBuilder builder) {
-        this.builder.set(builder);
+    public void setBuilder(WorkshopBuilder builder) {
+        this.builder = builder;
     }
 
     /**
@@ -87,7 +86,6 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
     protected void migrate(Context context) {
         Migrator<DefaultTile> migrator = new Migrator<DefaultTile>(DefaultTile.class);
 
-        migrator.addField("builder", new ForeignKeyField<WordBuilder>(WordBuilder.class));
         // roll out all migrations
         migrator.migrate(context);
         return;

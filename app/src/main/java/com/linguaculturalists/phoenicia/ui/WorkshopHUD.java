@@ -11,6 +11,7 @@ import com.linguaculturalists.phoenicia.models.DefaultTile;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.models.WordBuilder;
+import com.linguaculturalists.phoenicia.models.WorkshopBuilder;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
@@ -57,9 +58,10 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
     private ClickDetector clickDetector;
 
     private Builder.BuildStatusUpdateHandler buildUpdateHandler;
-    private WordBuilder builder;
+    private WorkshopBuilder builder;
     private TiledSprite buildSprite;
     private Text buildProgress;
+    private ButtonSprite tryButton;
 
     /**
      * A HUD for allowing the player to combine letters from their inventory to build a word
@@ -156,8 +158,9 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
         };
 
         if(this.builder != null && this.builder.status.get() != Builder.NONE) {
+            Debug.d("Preparing to display active builder for: "+this.builder.item_name.get());
             final Word buildWord = game.locale.word_map.get(this.builder.item_name.get());
-            final ITiledTextureRegion wordSpriteRegion = game.wordSprites.get(this.builder.item_name.get());
+            final ITiledTextureRegion wordSpriteRegion = game.wordSprites.get(buildWord);
             this.buildSprite = new TiledSprite(whiteRect.getWidth()/2, this.queuePane.getHeight()-48, wordSpriteRegion, PhoeniciaContext.vboManager);
             this.queuePane.attachChild(this.buildSprite);
             final ClickDetector builderClickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
@@ -171,6 +174,7 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
                         builder.status.set(Builder.NONE);
                         builder.save(PhoeniciaContext.context);
                         buildSprite.setVisible(false);
+                        tryButton.setVisible(true);
                     }
                 }
             });
@@ -225,13 +229,16 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
 
         }
         ITextureRegion tryRegion = game.shellTiles.getTextureRegion(GameTextures.OK);
-        ButtonSprite tryButton = new ButtonSprite(startX+(64*MAX_WORD_SIZE), this.buildPane.getHeight()-50, tryRegion, PhoeniciaContext.vboManager);
+        this.tryButton = new ButtonSprite(startX+(64*MAX_WORD_SIZE), this.buildPane.getHeight()-50, tryRegion, PhoeniciaContext.vboManager);
         tryButton.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
                 checkSpelling();
             }
         });
+        if (this.builder != null && this.builder.status.get() != Builder.NONE) {
+            tryButton.setVisible(false);
+        }
         this.registerTouchArea(tryButton);
         this.buildPane.attachChild(tryButton);
 
@@ -378,7 +385,7 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
                                     Inventory.getInstance().subtract(letter);
                                 }
                                 Debug.d("Creating new WordBuilder for " + tryWord.name);
-                                that.createWord(that.tile);
+                                that.createWord(tryWord, that.tile);
                                 that.game.hudManager.pop();
                             } catch (Exception e) {
                                 Debug.e("Error subtracting letter: "+e.getMessage());
@@ -401,9 +408,43 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
         checker.start();
     }
 
-    public WordBuilder createWord(DefaultTile tile) {
+    public WorkshopBuilder createWord(final Word word, DefaultTile tile) {
         // TODO: Setup and start WordBuilder for the target tile
-        return null;
+        WorkshopBuilder builder = tile.getBuilder(PhoeniciaContext.context);
+        if (builder == null) {
+            builder = new WorkshopBuilder(game.session, tile);
+        }
+        builder.item_name.set(word.name);
+        builder.time.set(word.time);
+        builder.progress.set(0);
+        builder.status.set(Builder.SCHEDULED);
+        builder.save(PhoeniciaContext.context);
+        builder.addUpdateHandler(new Builder.BuildStatusUpdateHandler() {
+            @Override
+            public void onCompleted(Builder buildItem) {
+                Debug.d("WordBuilder for " + buildItem.item_name.get() + " has completed");
+                game.playBlockSound(word.sound);
+            }
+
+            @Override
+            public void onProgressChanged(Builder buildItem) {
+                //Debug.d("WordBuilder updated " + buildItem.item_name.get() + " is at: " + buildItem.progress.get());
+            }
+
+            @Override
+            public void onScheduled(Builder buildItem) {
+
+            }
+
+            @Override
+            public void onStarted(Builder buildItem) {
+                Debug.d("WordBuilder for " + buildItem.item_name.get() + " has been started");
+            }
+        });
+        game.addBuilder(builder);
+        builder.start();
+        tile.setBuilder(builder);
+        return builder;
     }
     /**
      * Aport spelling attempt and return used letters to the player's Inventory
