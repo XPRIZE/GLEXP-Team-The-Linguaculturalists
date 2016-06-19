@@ -491,6 +491,18 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             final DefaultTile workshopDefaultTile = DefaultTile.objects(PhoeniciaContext.context).filter(session.filter).filter(workshopFilter).toList().get(0);
             workshopDefaultTile.phoeniciaGame = this;
             this.createWorkshopSprite(workshopDefaultTile);
+            WordBuilder workshopBuilder = workshopDefaultTile.getBuilder(PhoeniciaContext.context);
+            if (workshopBuilder != null) {
+                Word workshopWord = locale.word_map.get(workshopBuilder.item_name.get());
+                workshopBuilder.time.set(workshopWord.construct);
+                // If builder is market complete, set the progress to the build time in case it was changed in the locale
+                if (workshopBuilder.status.get() == Builder.COMPLETE) {
+                    workshopBuilder.progress.set(workshopWord.time);
+                }
+                workshopBuilder.save(PhoeniciaContext.context);
+                Debug.d("Found workshop builder with "+workshopBuilder.progress.get()+"/"+workshopBuilder.time.get()+" and status "+workshopBuilder.status.get());
+                workshopDefaultTile.setBuilder(workshopBuilder);
+            }
         } catch (IndexOutOfBoundsException e) {
             this.createWorkshopTile();
         }

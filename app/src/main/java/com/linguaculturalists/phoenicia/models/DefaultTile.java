@@ -39,9 +39,11 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
     public IntegerField isoX; /**< isometric X coordinate for this tile */
     public IntegerField isoY; /**< isometric Y coordinate for this tile */
     public CharField item_type; /**< type of default tile (inventory, market) */
+    public ForeignKeyField<WordBuilder> builder; /**< builder for this tile's activity */
 
     public PhoeniciaGame phoeniciaGame; /**< active game instance this tile is a part of */
     public MapBlockSprite sprite; /**< sprite that has been placed on the map for this tile */
+
 
     public DefaultTile() {
         super();
@@ -49,6 +51,7 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
         this.isoX = new IntegerField();
         this.isoY = new IntegerField();
         this.item_type = new CharField(32);
+        this.builder = new ForeignKeyField<WordBuilder>(WordBuilder.class);
     }
 
     public static final QuerySet<DefaultTile> objects(Context context) {
@@ -64,6 +67,14 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
         return this.sprite;
     }
 
+    public WordBuilder getBuilder(Context context) {
+        return this.builder.get(context);
+    }
+
+    public void setBuilder(WordBuilder builder) {
+        this.builder.set(builder);
+    }
+
     /**
      * Attach a Sprite from the map to this tile
      * @param sprite sprite that represents this tile on the map
@@ -76,6 +87,7 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
     protected void migrate(Context context) {
         Migrator<DefaultTile> migrator = new Migrator<DefaultTile>(DefaultTile.class);
 
+        migrator.addField("builder", new ForeignKeyField<WordBuilder>(WordBuilder.class));
         // roll out all migrations
         migrator.migrate(context);
         return;
@@ -93,7 +105,7 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
         } else if (this.item_type.get().equals("market")) {
             phoeniciaGame.hudManager.showMarket();
         } else if (this.item_type.get().equals("workshop")) {
-            phoeniciaGame.hudManager.showWorkshop();
+            phoeniciaGame.hudManager.showWorkshop(this);
         } else {
             Debug.e("Unknown default block: "+this.item_type.get());
         }
