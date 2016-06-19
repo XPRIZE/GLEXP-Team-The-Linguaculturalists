@@ -267,7 +267,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
             final Letter currentLetter = level.letters.get(i);
             Debug.d("Adding Builder letter: "+currentLetter.name+" (tile: "+currentLetter.tile+")");
             final int tile_id = currentLetter.sprite;
-            final ITextureRegion blockRegion = new TiledTextureRegion(game.letterTextures.get(currentLetter),
+            final ITiledTextureRegion blockRegion = new TiledTextureRegion(game.letterTextures.get(currentLetter),
                     game.letterSprites.get(currentLetter).getTextureRegion(0),
                     game.letterSprites.get(currentLetter).getTextureRegion(1),
                     game.letterSprites.get(currentLetter).getTextureRegion(2));

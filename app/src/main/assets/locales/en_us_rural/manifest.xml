@@ -6,7 +6,8 @@
 
     <!-- default blocks -->
     <inventory size="1x2" name="Barn" col="37" row="43" block="locales/en_us_rural/textures/biginventory.png" />
-    <market size="2x1" name="Market" col="41" row="41" block="locales/en_us_rural/textures/bigmarket.png" />
+    <market size="2x1" name="Market" col="42" row="40" block="locales/en_us_rural/textures/bigmarket.png" />
+    <workshop name="Workshop" col="38" row="40" block="locales/en_us_rural/textures/workshop.png" />
 
     <people>
         <person name="Dave" texture="locales/common/textures/persons/Dave.png" />

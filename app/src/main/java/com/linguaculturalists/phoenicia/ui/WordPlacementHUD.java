@@ -25,6 +25,7 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
@@ -74,7 +75,7 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
             final Word currentWord = words.get(i);
             Debug.d("Adding HUD word: " + currentWord.name + " (tile: " + currentWord.tile + ")");
             final int tile_id = currentWord.sprite;
-            ITextureRegion blockRegion = new TiledTextureRegion(game.wordTextures.get(currentWord),
+            ITiledTextureRegion blockRegion = new TiledTextureRegion(game.wordTextures.get(currentWord),
                     game.wordSprites.get(currentWord).getTextureRegion(0),
                     game.wordSprites.get(currentWord).getTextureRegion(1),
                     game.wordSprites.get(currentWord).getTextureRegion(2));

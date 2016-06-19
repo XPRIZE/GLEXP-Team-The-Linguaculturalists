@@ -10,6 +10,7 @@ import com.linguaculturalists.phoenicia.models.RequestItem;
 import com.linguaculturalists.phoenicia.models.WordBuilder;
 import com.linguaculturalists.phoenicia.models.WordTileBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
+import com.linguaculturalists.phoenicia.models.WorkshopBuilder;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.DatabaseAdapter;
 import com.orm.androrm.Model;
@@ -120,6 +121,7 @@ public class GameActivity extends BaseGameActivity {
         models.add(LetterBuilder.class);
         models.add(WordTileBuilder.class);
         models.add(WordBuilder.class);
+        models.add(WorkshopBuilder.class);
 
         DatabaseAdapter.setDatabaseName("game_db");
         DatabaseAdapter adapter = DatabaseAdapter.getInstance(PhoeniciaContext.context);

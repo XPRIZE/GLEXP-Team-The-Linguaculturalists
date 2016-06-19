@@ -3,6 +3,7 @@ package com.linguaculturalists.phoenicia.ui;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
+import com.linguaculturalists.phoenicia.models.DefaultTile;
 import com.linguaculturalists.phoenicia.models.WordTile;
 
 import org.andengine.engine.camera.hud.HUD;
@@ -68,6 +69,14 @@ public class HUDManager extends HUD {
     public void showMarket() {
         MarketHUD marketHUD = new MarketHUD(this.game);
         this.push(marketHUD);
+    }
+
+    /**
+     * Create a new instance of the workshop HUD and display it
+     */
+    public void showWorkshop(final DefaultTile tile) {
+        WorkshopHUD workshopHUD = new WorkshopHUD (this.game, this.game.locale.level_map.get(this.game.current_level), tile);
+        this.push(workshopHUD);
     }
 
     /**

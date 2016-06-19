@@ -25,6 +25,7 @@ public class Locale {
 
     public InventoryBlock inventoryBlock;
     public MarketBlock marketBlock;
+    public WorkshopBlock workshopBlock;
 
     public List<Person> people;
     public Map<String, Person> person_map;
