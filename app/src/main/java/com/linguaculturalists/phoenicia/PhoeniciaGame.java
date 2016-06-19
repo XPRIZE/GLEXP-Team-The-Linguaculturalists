@@ -111,6 +111,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public AssetBitmapTexture marketTexture;
     public ITiledTextureRegion marketTiles; /**< Tile regions for the market block */
 
+    public AssetBitmapTexture workshopTexture;
+    public ITiledTextureRegion workshopTiles; /**< Tile regions for the workshop block */
+
     public Map<Letter, AssetBitmapTexture> letterTextures;
     public Map<Letter, ITiledTextureRegion> letterSprites; /**< Tile regions depicting letter sprites */
     public Map<Letter, ITiledTextureRegion> letterBlocks; /**< Tile regions depicting letter blocks */
@@ -360,6 +363,11 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             int[] marketTileSize = GameTextures.calculateTileSize(locale.marketBlock.columns, locale.marketBlock.rows);
             marketTiles = TextureRegionFactory.extractTiledFromTexture(marketTexture, 0, 0, marketTileSize[0] * 4, marketTileSize[1] * 5, 4, 5);
 
+            workshopTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.workshopBlock.block_texture);
+            workshopTexture.load();
+            int[] workshopTileSize = GameTextures.calculateTileSize(locale.workshopBlock.columns, locale.workshopBlock.rows);
+            workshopTiles = TextureRegionFactory.extractTiledFromTexture(workshopTexture, 0, 0, workshopTileSize[0] * 4, workshopTileSize[1] * 5, 4, 5);
+
         } catch (final IOException e) {
             e.printStackTrace();
             throw e;
@@ -476,6 +484,17 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             this.createMarketTile();
         }
 
+        Debug.d("Loading workshop tile");
+        try {
+            final Filter workshopFilter = new Filter();
+            workshopFilter.is("item_type", "workshop");
+            final DefaultTile workshopDefaultTile = DefaultTile.objects(PhoeniciaContext.context).filter(session.filter).filter(workshopFilter).toList().get(0);
+            workshopDefaultTile.phoeniciaGame = this;
+            this.createWorkshopSprite(workshopDefaultTile);
+        } catch (IndexOutOfBoundsException e) {
+            this.createWorkshopTile();
+        }
+
         Debug.d("Loading letter tiles");
         List<LetterTile> letterTiles = LetterTile.objects(PhoeniciaContext.context).filter(session.filter).toList();
         for (int i = 0; i < letterTiles.size(); i++) {
@@ -559,6 +578,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.bank.removeUpdateListener(this);
 
         // Delete DB records
+        Market.getInstance().clear();
         Bank.getInstance().clear();
         InventoryItem.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
         DefaultTile.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
@@ -576,6 +596,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.current_level = this.locale.levels.get(0).name;
         this.createInventoryTile();
         this.createMarketTile();
+        this.createWorkshopTile();
         this.changeLevel(this.locale.levels.get(0));
 
     }
@@ -660,6 +681,48 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         scene.registerTouchArea(marketSprite);
 
         marketDefaultTile.setSprite(marketSprite);
+
+        scene.sortChildren();
+    }
+
+    private void createWorkshopTile() {
+        // Create Workshop tile
+        Debug.d("Creating DefaultTile for Workshop");
+        final DefaultTile workshopDefaultTile = new DefaultTile();
+        workshopDefaultTile.phoeniciaGame = this;
+        workshopDefaultTile.item_type.set("workshop");
+        workshopDefaultTile.game.set(this.session);
+        workshopDefaultTile.isoX.set(locale.workshopBlock.mapCol);
+        workshopDefaultTile.isoY.set(locale.workshopBlock.mapRow);
+        this.createWorkshopSprite(workshopDefaultTile);
+        workshopDefaultTile.save(PhoeniciaContext.context);
+    }
+
+    private void createWorkshopSprite(DefaultTile workshopDefaultTile) {
+        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(0);
+
+        final TMXTile workshopTile = tmxLayer.getTMXTile(workshopDefaultTile.isoX.get(), workshopDefaultTile.isoY.get());
+
+        int[] tileSize = GameTextures.calculateTileSize(locale.workshopBlock.columns, locale.workshopBlock.rows);
+        float[] tilePos = GameTextures.calculateTilePosition(workshopTile, tileSize, locale.workshopBlock.columns, locale.workshopBlock.rows);
+        int workshopZ = workshopTile.getTileZ();
+
+        Debug.d("Creating Sprite for workshop");
+        final MapBlockSprite workshopSprite = new MapBlockSprite(tilePos[0], tilePos[1], 4, workshopTiles, PhoeniciaContext.vboManager);
+        workshopSprite.setZIndex(workshopZ);
+
+        scene.attachChild(workshopSprite);
+
+        for (int c = 0; c < locale.workshopBlock.columns; c++) {
+            for (int r = 0; r < locale.workshopBlock.rows; r++) {
+                placedSprites[workshopDefaultTile.isoX.get()-c][workshopDefaultTile.isoY.get()-r] = workshopSprite;
+            }
+        }
+        workshopSprite.setOnClickListener(workshopDefaultTile);
+        workshopSprite.animate();
+        scene.registerTouchArea(workshopSprite);
+
+        workshopDefaultTile.setSprite(workshopSprite);
 
         scene.sortChildren();
     }

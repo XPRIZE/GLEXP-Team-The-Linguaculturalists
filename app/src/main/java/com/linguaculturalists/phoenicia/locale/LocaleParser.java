@@ -20,6 +20,7 @@ public class LocaleParser extends DefaultHandler {
     private static final String TAG_MUSIC = "music";
     private static final String TAG_INVENTORY = "inventory";
     private static final String TAG_MARKET = "market";
+    private static final String TAG_WORKSHOP = "workshop";
     private static final String TAG_PEOPLE= "people";
     private static final String TAG_PERSON = "person";
     private static final String TAG_LETTERS = "letters";
@@ -87,6 +88,8 @@ public class LocaleParser extends DefaultHandler {
             this.parseInventory(attributes);
         } else if (this.inLocale && localName.equals(LocaleParser.TAG_MARKET)) {
             this.parseMarket(attributes);
+        } else if (this.inLocale && localName.equals(LocaleParser.TAG_WORKSHOP)) {
+            this.parseWorkshop(attributes);
         } else if (this.inLocale && localName.equals(LocaleParser.TAG_PEOPLE)) {
             this.inPeople = true;
         } else if (this.inLocale && this.inPeople && localName.equals(LocaleParser.TAG_PERSON)) {
@@ -204,6 +207,29 @@ public class LocaleParser extends DefaultHandler {
         this.locale.marketBlock.block_texture = attributes.getValue("block");
         this.locale.marketBlock.mapCol = Integer.parseInt(attributes.getValue("col"));
         this.locale.marketBlock.mapRow = Integer.parseInt(attributes.getValue("row"));
+    }
+
+    private void parseWorkshop(Attributes attributes) throws SAXException {
+        Debug.v("Parsing locale workshop");
+        this.locale.workshopBlock = new WorkshopBlock();
+        this.locale.workshopBlock.name = attributes.getValue("name");
+        String size = attributes.getValue("size");
+        if (size == null || size == "" || size == "1x1") {
+            this.locale.workshopBlock.columns = 1;
+            this.locale.workshopBlock.rows = 1;
+        } else {
+            try {
+                String[] dimensions = size.split("x");
+                this.locale.workshopBlock.columns = Integer.parseInt(dimensions[0]);
+                this.locale.workshopBlock.rows = Integer.parseInt(dimensions[1]);
+            } catch (Exception e) {
+                Debug.e("Failed to parse size for: "+this.locale.workshopBlock.name);
+                e.printStackTrace();
+            }
+        }
+        this.locale.workshopBlock.block_texture = attributes.getValue("block");
+        this.locale.workshopBlock.mapCol = Integer.parseInt(attributes.getValue("col"));
+        this.locale.workshopBlock.mapRow = Integer.parseInt(attributes.getValue("row"));
     }
 
     private void parsePerson(Attributes attributes) throws SAXException {

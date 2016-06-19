@@ -71,6 +71,14 @@ public class HUDManager extends HUD {
     }
 
     /**
+     * Create a new instance of the workshop HUD and display it
+     */
+    public void showWorkshop() {
+        InventoryHUD workshopHUD = new InventoryHUD(this.game);
+        this.push(workshopHUD);
+    }
+
+    /**
      * Create a new instance of the letter placement HUD for the current game level
      */
     public void showLetterPlacement() {

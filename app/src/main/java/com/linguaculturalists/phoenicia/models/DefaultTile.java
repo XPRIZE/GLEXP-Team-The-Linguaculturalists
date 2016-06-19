@@ -92,6 +92,8 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
             phoeniciaGame.hudManager.showInventory();
         } else if (this.item_type.get().equals("market")) {
             phoeniciaGame.hudManager.showMarket();
+        } else if (this.item_type.get().equals("workshop")) {
+            phoeniciaGame.hudManager.showWorkshop();
         } else {
             Debug.e("Unknown default block: "+this.item_type.get());
         }
@@ -111,6 +113,9 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
         } else if (this.item_type.get().equals("market")) {
             cols = phoeniciaGame.locale.marketBlock.columns;
             rows = phoeniciaGame.locale.marketBlock.rows;
+        } else if (this.item_type.get().equals("workshop")) {
+            cols = phoeniciaGame.locale.workshopBlock.columns;
+            rows = phoeniciaGame.locale.workshopBlock.rows;
         } else {
             Debug.e("Unknown default block: "+this.item_type.get());
         }
@@ -137,6 +142,9 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
                 } else if (item_type.get().equals("market")) {
                     cols = phoeniciaGame.locale.marketBlock.columns;
                     rows = phoeniciaGame.locale.marketBlock.rows;
+                } else if (item_type.get().equals("workshop")) {
+                    cols = phoeniciaGame.locale.workshopBlock.columns;
+                    rows = phoeniciaGame.locale.workshopBlock.rows;
                 } else {
                     Debug.e("Unknown default block: " + item_type.get());
                 }
