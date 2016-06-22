@@ -4,11 +4,12 @@
     <map src="locales/en_us_rural/map.tmx" />
     <music src="locales/en_us_rural/sounds/background.mp3" />
 
-    <!-- default blocks -->
+    <!-- Default blocks -->
     <inventory size="1x2" name="Barn" col="37" row="43" block="locales/en_us_rural/textures/biginventory.png" />
     <market size="2x1" name="Market" col="42" row="40" block="locales/en_us_rural/textures/bigmarket.png" />
     <workshop name="Workshop" col="38" row="40" block="locales/en_us_rural/textures/workshop.png" />
 
+    <!-- People used in the marketplace and player's avatar -->
     <people>
         <person name="Dave" texture="locales/common/textures/persons/Dave.png" />
         <person name="Roxanne" texture="locales/common/textures/persons/Roxanne.png" />
@@ -16,6 +17,13 @@
         <person name="Laura" texture="locales/common/textures/persons/Laura.png" />
     </people>
 
+    <!-- Mini-games -->
+    <games>
+        <game name="Blue Tent"  type="wordmatch"  points="100" buy="300" construct="120" time="300" reward="1.5" block="locales/en_us_rural/textures/minigame1.png" />
+        <game name="Green Tent" type="imagematch" points="500" buy="500" construct="300" time="600" reward="2.0" block="locales/en_us_rural/textures/minigame2.png" />
+    </games>
+
+    <!-- English alphabet -->
     <letters>
         <letter name="a" buy="0"  sell="1"  points="1" time="10" sprite="locales/common/textures/letters/sprites/a.png" block="locales/common/textures/letters/blocks/a.png" sound="locales/en_us_rural/sounds/a-name.ogg" phoneme="locales/en_us_rural/sounds/a-phoneme.ogg">a</letter>
         <letter name="b" buy="5"  sell="4"  points="1" time="90" sprite="locales/common/textures/letters/sprites/b.png" block="locales/common/textures/letters/blocks/b.png" sound="locales/en_us_rural/sounds/b-name.ogg" phoneme="locales/en_us_rural/sounds/b-phoneme.ogg">b</letter>
@@ -44,11 +52,15 @@
         <letter name="y" buy="10" sell="10" points="1" time="30" sprite="locales/common/textures/letters/sprites/y.png" block="locales/common/textures/letters/blocks/y.png" sound="locales/en_us_rural/sounds/y-name.ogg" phoneme="locales/en_us_rural/sounds/y-phoneme.ogg">y</letter>
         <letter name="z" buy="10" sell="10" points="1" time="30" sprite="locales/common/textures/letters/sprites/z.png" block="locales/common/textures/letters/blocks/z.png" sound="locales/en_us_rural/sounds/z-name.ogg" phoneme="locales/en_us_rural/sounds/z-phoneme.ogg">z</letter>
     </letters>
+
+    <!-- Locale words -->
     <words>
         <word name="cat" size="2x2" buy="100" sell="10" points="10" construct="60" time="60" sprite="locales/en_us_rural/textures/words/sprites/cat.png" block="locales/en_us_rural/textures/words/blocks/cat.png" sound="locales/en_us_rural/sounds/cat.ogg">cat</word>
         <word name="hat" buy="200" sell="20" points="20" construct="90" time="75" sprite="locales/en_us_rural/textures/words/sprites/hat.png" block="locales/en_us_rural/textures/words/blocks/hat.png" sound="locales/en_us_rural/sounds/hat.ogg">hat</word>
         <word name="bat" buy="300" sell="30" points="30" construct="120" time="90" sprite="locales/en_us_rural/textures/words/sprites/bat.png" block="locales/en_us_rural/textures/words/blocks/bat.png" sound="locales/en_us_rural/sounds/bat.ogg">bat</word>
     </words>
+
+    <!-- Locale levels -->
     <levels>
         <level name="1" market="0" coins="0">
             <intro>
@@ -56,10 +68,10 @@
                 <page sound="locales/en_us_rural/sounds/intro1p2.ogg" texture="locales/en_us_rural/textures/levels/intro1p2.png">Use the Letter images at the bottom of your screen to start planting with the letter 'A'</page>
             </intro>
             <letters>a</letters>
+            <words></words>
             <help>
                 <letters>a</letters>
             </help>
-            <words></words>
             <req>
                 <gather_letter count="1">a</gather_letter>
             </req>

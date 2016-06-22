@@ -30,6 +30,9 @@ public class Locale {
     public List<Person> people;
     public Map<String, Person> person_map;
 
+    public List<Game> games;
+    public Map<String, Game> game_map;
+
     public String letters_texture;
     public List<Letter> letters;
     public Map<String, Letter> letter_map;
@@ -44,6 +47,9 @@ public class Locale {
     public Locale() {
         this.people = new ArrayList<Person>();
         this.person_map = new HashMap<String, Person>();
+
+        this.games = new ArrayList<Game>();
+        this.game_map = new HashMap<String, Game>();
 
         this.letters = new ArrayList<Letter>();
         this.letter_map = new HashMap<String, Letter>();

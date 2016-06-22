@@ -23,6 +23,8 @@ public class LocaleParser extends DefaultHandler {
     private static final String TAG_WORKSHOP = "workshop";
     private static final String TAG_PEOPLE= "people";
     private static final String TAG_PERSON = "person";
+    private static final String TAG_GAMES = "games";
+    private static final String TAG_GAME = "game";
     private static final String TAG_LETTERS = "letters";
     private static final String TAG_LETTER = "letter";
     private static final String TAG_WORDS = "words";
@@ -37,6 +39,7 @@ public class LocaleParser extends DefaultHandler {
     private static final String TAG_REQWORD = "gather_word";
     private boolean inLocale = false;
     private boolean inPeople = false;
+    private boolean inGames = false;
     private boolean inLettersList = false;
     private boolean inLetterDefinition = false;
     private boolean inWordsList = false;
@@ -94,6 +97,10 @@ public class LocaleParser extends DefaultHandler {
             this.inPeople = true;
         } else if (this.inLocale && this.inPeople && localName.equals(LocaleParser.TAG_PERSON)) {
             this.parsePerson(attributes);
+        } else if (this.inLocale && localName.equals(LocaleParser.TAG_GAMES)) {
+            this.inGames = true;
+        } else if (this.inLocale && this.inGames && localName.equals(LocaleParser.TAG_GAME)) {
+            this.parseGame(attributes);
         } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
             if (!this.inLevelDefinition) {
                 this.inLettersList = true;
@@ -241,6 +248,22 @@ public class LocaleParser extends DefaultHandler {
         this.locale.person_map.put(newPerson.name, newPerson);
     }
 
+    private void parseGame(Attributes attributes) throws SAXException {
+        Debug.v("Parsing locale game");
+        Game newGame = new Game();
+        newGame.name = attributes.getValue("name");
+        newGame.restriction = attributes.getValue("restrict");
+        newGame.type = attributes.getValue("type");
+        newGame.block_texture = attributes.getValue("block");
+        newGame.points = Integer.parseInt(attributes.getValue("points"));
+        newGame.buy = Integer.parseInt(attributes.getValue("buy"));
+        newGame.construct = Integer.parseInt(attributes.getValue("construct"));
+        newGame.time = Integer.parseInt(attributes.getValue("time"));
+        newGame.reward = Float.parseFloat(attributes.getValue("reward"));
+        this.locale.games.add(newGame);
+        this.locale.game_map.put(newGame.name, newGame);
+    }
+
     private void parseLetterDefinition(Attributes attributes) throws SAXException {
         Debug.v("Parsing locale letter");
         this.currentLetter = new Letter();
@@ -355,6 +378,8 @@ public class LocaleParser extends DefaultHandler {
             this.inLocale = false;
         } else if (this.inLocale && this.inPeople && localName.equals(LocaleParser.TAG_PEOPLE)) {
             this.inPeople = false;
+        } else if (this.inLocale && this.inGames && localName.equals(LocaleParser.TAG_GAMES)) {
+            this.inGames = false;
         } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
             if (!this.inLevelDefinition) {
                 this.inLettersList = false;
