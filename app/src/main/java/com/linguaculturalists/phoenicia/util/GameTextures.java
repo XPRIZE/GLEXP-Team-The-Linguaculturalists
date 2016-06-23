@@ -14,7 +14,7 @@ public class GameTextures {
 
     public static final int LETTER_PLACEMENT = 0; /**< Tile for activating the LetterPlacementHUD */
     public static final int WORD_PLACEMENT = 1; /**< Tile for activating the WordPlacementHUD */
-    public static final int INVENTORY_ICON = 2; /**< Tile for representing the Inventory */
+    public static final int GAME_PLACEMENT = 2; /**< Tile for activating the GamePlacementHUD */
 
     public static final int HELP = 5; /**< Common image for help */
     public static final int OK = 6; /**< Common image for Ok, Yes, or positive response */

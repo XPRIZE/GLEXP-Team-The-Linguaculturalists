@@ -409,7 +409,6 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
     }
 
     public WorkshopBuilder createWord(final Word word, DefaultTile tile) {
-        // TODO: Setup and start WordBuilder for the target tile
         WorkshopBuilder builder = tile.getBuilder(PhoeniciaContext.context);
         if (builder == null) {
             builder = new WorkshopBuilder(game.session, tile);

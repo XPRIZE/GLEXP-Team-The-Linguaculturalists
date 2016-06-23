@@ -210,6 +210,7 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
                 Debug.d("Clicked block was completed");
                 phoeniciaGame.playBlockSound(this.letter.sound);
                 Inventory.getInstance().add(this.letter.name);
+                phoeniciaGame.session.addExperience(this.letter.points);
                 this.reset(PhoeniciaContext.context);
             } else {
                 Debug.d("Clicked block was NOT completed");

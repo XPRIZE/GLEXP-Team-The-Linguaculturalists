@@ -496,14 +496,19 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             forWorkshopTile.is("tile", workshopDefaultTile);
             try {
                 WorkshopBuilder workshopBuilder = WorkshopBuilder.objects(PhoeniciaContext.context).filter(forWorkshopTile).toList().get(0);
-                Word workshopWord = locale.word_map.get(workshopBuilder.item_name.get());
-                workshopBuilder.time.set(workshopWord.construct);
-                // If builder is market complete, set the progress to the build time in case it was changed in the locale
-                if (workshopBuilder.status.get() == Builder.COMPLETE) {
-                    workshopBuilder.progress.set(workshopWord.time);
+                if (workshopBuilder.status.get() != Builder.NONE) {
+                    Debug.d("Workshop building word: " + workshopBuilder.item_name.get());
+                    Word workshopWord = locale.word_map.get(workshopBuilder.item_name.get());
+                    if (workshopWord != null) {
+                        workshopBuilder.time.set(workshopWord.time);
+                        // If builder is market complete, set the progress to the build time in case it was changed in the locale
+                        if (workshopBuilder.status.get() == Builder.COMPLETE) {
+                            workshopBuilder.progress.set(workshopWord.time);
+                        }
+                        workshopBuilder.save(PhoeniciaContext.context);
+                        Debug.d("Found workshop builder with " + workshopBuilder.progress.get() + "/" + workshopBuilder.time.get() + " and status " + workshopBuilder.status.get());
+                    }
                 }
-                workshopBuilder.save(PhoeniciaContext.context);
-                Debug.d("Found workshop builder with " + workshopBuilder.progress.get() + "/" + workshopBuilder.time.get() + " and status " + workshopBuilder.status.get());
                 workshopDefaultTile.setBuilder(workshopBuilder);
                 this.addBuilder(workshopBuilder);
             } catch (IndexOutOfBoundsException e) {
