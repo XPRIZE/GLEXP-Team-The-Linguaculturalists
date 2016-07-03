@@ -6,7 +6,10 @@ package com.linguaculturalists.phoenicia.locale;
 public class Game {
     public String name; /**< display name for this game */
     public String type; /**< type of mini-game this block will be */
+    public int columns; /**< number of map columns this game block occupies. Default is 1 */
+    public int rows; /**< number of map rows this game block occupies. Default is 1 */
     public String restriction; /**< tile class this block can be placed on */
+    public String sprite_texture;/**< path to texture file for this game's sprite */
     public String block_texture;/**< path to texture file for this game's block */
 
     public int points;/**< number of experience points needed to unlock this game */

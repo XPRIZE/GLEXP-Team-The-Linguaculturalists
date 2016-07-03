@@ -252,8 +252,23 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale game");
         Game newGame = new Game();
         newGame.name = attributes.getValue("name");
+        String size = attributes.getValue("size");
+        if (size == null || size == "" || size == "1x1") {
+            newGame.columns = 1;
+            newGame.rows = 1;
+        } else {
+            try {
+                String[] dimensions = size.split("x");
+                newGame.columns = Integer.parseInt(dimensions[0]);
+                newGame.rows = Integer.parseInt(dimensions[1]);
+            } catch (Exception e) {
+                Debug.e("Failed to parse size for: "+newGame.name);
+                e.printStackTrace();
+            }
+        }
         newGame.restriction = attributes.getValue("restrict");
         newGame.type = attributes.getValue("type");
+        newGame.sprite_texture = attributes.getValue("sprite");
         newGame.block_texture = attributes.getValue("block");
         newGame.points = Integer.parseInt(attributes.getValue("points"));
         newGame.buy = Integer.parseInt(attributes.getValue("buy"));

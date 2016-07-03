@@ -133,8 +133,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         gameBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                // TODO: showGamePlacement()
-                // game.hudManager.showWordPlacement();
+                game.hudManager.showGamePlacement();
             }
         });
         this.registerTouchArea(gameBlock);

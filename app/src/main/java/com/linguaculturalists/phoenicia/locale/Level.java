@@ -18,6 +18,7 @@ public class Level {
     public Map<Letter, Integer> letter_count; /**< number of times this letter has been introduced */
     public List<Word> words; /**< list of \link Word Words \endlink available in this level */
     public Map<Word, Integer> word_count; /**< number of times this word has been introduced */
+    public List<Game> games; /**< list of \link Game Games \endlink available in this level */
     public List<Letter> help_letters; /**< list of \link Letter Letters \endlink to give extra help with on this level */
     public List<Word> help_words; /**< list of \link Word Words \endlink to give extra help with on this level */
     public List<IntroPage> intro; /**< list of \link IntroPage IntroPages \endlink to be displayed at the start of this level */

@@ -53,6 +53,8 @@ import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.Builder;
 import com.linguaculturalists.phoenicia.models.DefaultTile;
+import com.linguaculturalists.phoenicia.models.GameTile;
+import com.linguaculturalists.phoenicia.models.GameTileBuilder;
 import com.linguaculturalists.phoenicia.models.LetterBuilder;
 import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.Inventory;
@@ -122,6 +124,10 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public Map<Word, AssetBitmapTexture> wordTextures;
     public Map<Word, ITiledTextureRegion> wordSprites; /**< Tile regions depicting word sprites */
     public Map<Word, ITiledTextureRegion> wordBlocks; /**< Tile regions depicting word blocks */
+
+    public Map<Word, AssetBitmapTexture> gameTextures;
+    public Map<Word, ITiledTextureRegion> gameSprites; /**< Tile regions depicting session sprites */
+    public Map<Word, ITiledTextureRegion> gameBlocks; /**< Tile regions depicting session blocks */
 
     public Sprite[][] placedSprites; /**< active map tiles arranged according to the ISO map grid */
     public String[][] mapRestrictions; /**< map tile class types arranged according to the ISO map grid */
@@ -1018,6 +1024,99 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public interface CreateWordSpriteCallback {
         public void onWordSpriteCreated(WordTile tile);
         public void onWordSpriteCreationFailed(WordTile tile);
+    }
+
+    /**
+     * Create a new sprite for the given WordTile, without waiting for user confirmation
+     * @param tile source for the PlacedBlockSprite to create
+     */
+    public void createGameSprite(GameTile tile) {
+        this.createGameSprite(tile, null);
+    }
+
+    /**
+     * Create a new sprite for the given WordTile, waiting for user confirmation
+     * @param tile source for the PlacedBlockSprite to create
+     * @param callback handler to inform the calling code if the user completes or cancels placement
+     */
+    public void createGameSprite(final GameTile tile, final CreateGameSpriteCallback callback) {
+        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(0);
+        final TMXTile tmxTile = tmxLayer.getTMXTile(tile.isoX.get(), tile.isoY.get());
+        if (tmxTile == null) {
+            Debug.d("Can't place blocks outside of map");
+            return;
+        }
+
+        int[] tileSize = GameTextures.calculateTileSize(tile.game.columns, tile.game.rows);
+        float[] tilePos = GameTextures.calculateTilePosition(tmxTile, tileSize, tile.game.columns, tile.game.rows);
+        int tileZ = tmxTile.getTileZ();
+
+        for (int c = 0; c < tile.game.columns; c++) {
+            for (int r = 0; r < tile.game.rows; r++) {
+                if (placedSprites[tmxTile.getTileColumn()-c][tmxTile.getTileRow()-r] != null && callback == null) {
+                    Debug.d("Can't place blocks over existing blocks");
+                    return;
+                }
+            }
+        }
+
+        Debug.d("Creating GameSprite for " + tile.game.name + " at " +tilePos[0]+"x"+tilePos[1]);
+        final PlacedBlockSprite sprite = new PlacedBlockSprite(tilePos[0], tilePos[1], tile.game.construct, 4, gameBlocks.get(tile.game), PhoeniciaContext.vboManager);
+        sprite.setZIndex(tileZ);
+
+        final GameTileBuilder builder = tile.getBuilder(PhoeniciaContext.context);
+
+        scene.attachChild(sprite);
+        scene.sortChildren();
+
+        if (callback != null) {
+            this.hudManager.push(new SpriteMoveHUD(this, tmxTile, sprite, tile.game.columns, tile.game.rows, tile.game.restriction, new SpriteMoveHUD.SpriteMoveHandler() {
+                @Override
+                public void onSpriteMoveCanceled(MapBlockSprite sprite) {
+                    scene.detachChild(sprite);
+                    callback.onGameSpriteCreationFailed(tile);
+                }
+
+                @Override
+                public void onSpriteMoveFinished(MapBlockSprite pSprite, TMXTile newlocation) {
+                    tile.isoX.set(newlocation.getTileColumn());
+                    tile.isoY.set(newlocation.getTileRow());
+                    for (int c = 0; c < tile.game.columns; c++) {
+                        for (int r = 0; r < tile.game.rows; r++) {
+                            placedSprites[newlocation.getTileColumn()-c][newlocation.getTileRow()-r] = sprite;
+                        }
+                    }
+
+                    if (builder != null) {
+                        sprite.setProgress(builder.progress.get(), tile.game.construct);
+                    }
+                    tile.setSprite(sprite);
+                    sprite.setOnClickListener(tile);
+                    sprite.animate();
+                    scene.registerTouchArea(sprite);
+                    callback.onGameSpriteCreated(tile);
+                }
+            }));
+        } else {
+            for (int c = 0; c < tile.game.columns; c++) {
+                for (int r = 0; r < tile.game.rows; r++) {
+                    placedSprites[tmxTile.getTileColumn()-c][tmxTile.getTileRow()-r] = sprite;
+                }
+            }
+
+            if (builder != null) {
+                sprite.setProgress(builder.progress.get(), tile.game.construct);
+            }
+            tile.setSprite(sprite);
+            sprite.setOnClickListener(tile);
+            sprite.animate();
+            scene.registerTouchArea(sprite);
+        }
+    }
+
+    public interface CreateGameSpriteCallback {
+        public void onGameSpriteCreated(GameTile tile);
+        public void onGameSpriteCreationFailed(GameTile tile);
     }
 
     /**
