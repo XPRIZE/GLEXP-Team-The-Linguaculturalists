@@ -47,9 +47,8 @@ public class GamePlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
      * A HUD which allows the selection of new phoeniciaGame blocks to be placed on the map
      *
      * @param phoeniciaGame Refernece to the current PhoeniciaGame the HUD is running in
-     * @param level The level whos games will be displayed in the HUD
      */
-    public GamePlacementHUD(final PhoeniciaGame phoeniciaGame, final Level level) {
+    public GamePlacementHUD(final PhoeniciaGame phoeniciaGame) {
         super(phoeniciaGame.camera);
         this.setBackgroundEnabled(false);
         this.setOnAreaTouchTraversalFrontToBack();
@@ -68,7 +67,7 @@ public class GamePlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
 
         final Font inventoryCountFont = FontFactory.create(PhoeniciaContext.fontManager, PhoeniciaContext.textureManager, 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 16, Color.RED_ARGB_PACKED_INT);
         inventoryCountFont.load();
-        final List<Game> games = level.games;
+        final List<Game> games = phoeniciaGame.locale.games;
         final int tile_start = 130;
         final int startX = (int)(blockPanel.getWidth()/2);
         for (int i = 0; i < games.size(); i++) {
@@ -84,6 +83,9 @@ public class GamePlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
                     addGameTile(currentGame, mapTile);
                 }
             });
+            if (phoeniciaGame.session.points.get() < currentGame.points) {
+                block.setEnabled(false);
+            }
             this.registerTouchArea(block);
             blockPanel.attachChild(block);
 

@@ -118,8 +118,8 @@ public class HUDManager extends HUD {
     /**
      * Create a new instance of the game placement HUD for the specified game level
      */
-    public void showGamePlacement(final Level level) {
-        this.push(new GamePlacementHUD(this.game, level));
+    public void showGamePlacement() {
+        this.push(new GamePlacementHUD(this.game));
     }
     /**
      * Create a new instance of the game building HUD for the specified game
