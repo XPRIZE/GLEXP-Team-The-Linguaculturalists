@@ -109,6 +109,11 @@ public class GameSession extends Model {
         this.experienceChanged(this.points.get());
         return this.points.get();
     }
+    public int removeExperience(int points) {
+        this.points.set(this.points.get()-points);
+        this.experienceChanged(this.points.get());
+        return this.points.get();
+    }
     private void experienceChanged(int new_xp) {
         Debug.d("Experience points changed");
         for (int i = 0; i < this.listeners.size(); i++) {

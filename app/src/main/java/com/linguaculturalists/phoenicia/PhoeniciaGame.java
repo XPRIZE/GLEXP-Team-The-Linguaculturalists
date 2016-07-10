@@ -44,6 +44,7 @@ import java.util.Set;
 
 import com.linguaculturalists.phoenicia.components.MapBlockSprite;
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
+import com.linguaculturalists.phoenicia.locale.Game;
 import com.linguaculturalists.phoenicia.locale.IntroPage;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
@@ -86,6 +87,12 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public static final int WORD_SPRITE_HEIGHT = 64;
     public static final int WORD_TEXTURE_COLS = 4;
     public static final int WORD_TEXTURE_ROWS = 6;
+    public static final int GAME_SPRITE_WIDTH = 64;
+    public static final int GAME_SPRITE_HEIGHT = 64;
+    public static final int GAME_SPRITE_COLS = 3;
+    public static final int GAME_SPRITE_ROWS = 1;
+    public static final int GAME_TEXTURE_COLS = 4;
+    public static final int GAME_TEXTURE_ROWS = 6;
     public Locale locale; /**< the locale used by the game session */
     public Scene scene;
     public ZoomCamera camera;
@@ -125,9 +132,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public Map<Word, ITiledTextureRegion> wordSprites; /**< Tile regions depicting word sprites */
     public Map<Word, ITiledTextureRegion> wordBlocks; /**< Tile regions depicting word blocks */
 
-    public Map<Word, AssetBitmapTexture> gameTextures;
-    public Map<Word, ITiledTextureRegion> gameSprites; /**< Tile regions depicting session sprites */
-    public Map<Word, ITiledTextureRegion> gameBlocks; /**< Tile regions depicting session blocks */
+    public Map<Game, AssetBitmapTexture> gameTextures;
+    public Map<Game, ITiledTextureRegion> gameSprites; /**< Tile regions depicting session sprites */
+    public Map<Game, ITiledTextureRegion> gameBlocks; /**< Tile regions depicting session blocks */
 
     public Sprite[][] placedSprites; /**< active map tiles arranged according to the ISO map grid */
     public String[][] mapRestrictions; /**< map tile class types arranged according to the ISO map grid */
@@ -179,6 +186,10 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.wordTextures = new HashMap<Word, AssetBitmapTexture>();
         this.wordSprites = new HashMap<Word, ITiledTextureRegion>();
         this.wordBlocks = new HashMap<Word, ITiledTextureRegion>();
+
+        this.gameTextures = new HashMap<Game, AssetBitmapTexture>();
+        this.gameSprites = new HashMap<Game, ITiledTextureRegion>();
+        this.gameBlocks = new HashMap<Game, ITiledTextureRegion>();
 
         final float minZoomFactor = 1.0f;
         final float maxZoomFactor = 5.0f;
@@ -277,6 +288,14 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.defaultFont = FontFactory.create(PhoeniciaContext.fontManager, PhoeniciaContext.textureManager, 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 32, Color.RED_ARGB_PACKED_INT);
         this.defaultFont.load();
 
+        this.loadLocale();
+        this.loadSession();
+    }
+
+    private void loadLocale() throws IOException {
+        // For storing sound data
+        blockSounds = new HashMap<String, Sound>();
+
         // Load background music
         try {
             this.music = MusicFactory.createMusicFromAsset(PhoeniciaContext.musicManager, PhoeniciaContext.context, locale.music_src);
@@ -285,6 +304,17 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         } catch (Exception e) {
             Debug.e("Failed to load background music asset: "+locale.music_src);
         }
+
+        this.loadLocaleMap();
+        this.loadLocaleDefaults();
+        this.loadLocalePeople();
+        this.loadLocaleLetters();
+        this.loadLocaleWords();
+        this.loadLocaleGames();
+        this.loadLocaleLevels();
+    }
+
+    private void loadLocaleMap() {
         // Load map assets
         try {
             final TMXLoader tmxLoader = new TMXLoader(PhoeniciaContext.assetManager, PhoeniciaContext.textureManager, TextureOptions.BILINEAR_PREMULTIPLYALPHA, PhoeniciaContext.vboManager);
@@ -337,29 +367,14 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             Debug.e("Error loading map at " + this.locale.map_src, e);
         }
 
+    }
+
+    private void loadLocaleDefaults() throws IOException {
         try {
             shellTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.shell_src);
             shellTexture.load();
             shellTiles = TextureRegionFactory.extractTiledFromTexture(shellTexture, 0, 0, 64 * 8, 64 * 8, 8, 8);
 
-        } catch (final IOException e) {
-            e.printStackTrace();
-            throw e;
-        }
-
-        for (Person person : this.locale.people) {
-            try {
-                AssetBitmapTexture texture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, person.texture_src);
-                texture.load();
-                this.personTextures.put(person, texture);
-                this.personTiles.put(person, TextureRegionFactory.extractFromTexture(texture, 0, 0, PERSON_TILE_WIDTH, PERSON_TILE_HEIGHT));
-            } catch (final IOException e) {
-                e.printStackTrace();
-                throw e;
-            }
-        }
-
-        try {
             inventoryTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.inventoryBlock.block_texture);
             inventoryTexture.load();
             int[] inventoryTileSize = GameTextures.calculateTileSize(locale.inventoryBlock.columns, locale.inventoryBlock.rows);
@@ -380,9 +395,24 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             throw e;
         }
 
+    }
+
+    private void loadLocalePeople() throws IOException {
+        for (Person person : this.locale.people) {
+            try {
+                AssetBitmapTexture texture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, person.texture_src);
+                texture.load();
+                this.personTextures.put(person, texture);
+                this.personTiles.put(person, TextureRegionFactory.extractFromTexture(texture, 0, 0, PERSON_TILE_WIDTH, PERSON_TILE_HEIGHT));
+            } catch (final IOException e) {
+                e.printStackTrace();
+                throw e;
+            }
+        }
+    }
+
+    private void loadLocaleLetters() throws IOException {
         List<Letter> blockLetters = locale.letters;
-        List<Word> blockWords = locale.words;
-        //SoundFactory.setAssetBasePath("locales/en_us_rural/");
         try {
             // Load letter assets
             for (int i = 0; i < blockLetters.size(); i++) {
@@ -400,6 +430,29 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 this.letterBlocks.put(letter, TextureRegionFactory.extractTiledFromTexture(letterBlockTexture, 0, 0, letterTileSize[0] * LETTER_TEXTURE_COLS, letterTileSize[1] * LETTER_TEXTURE_ROWS, LETTER_TEXTURE_COLS, LETTER_TEXTURE_ROWS));
             }
 
+        } catch (final IOException e)
+        {
+            e.printStackTrace();
+            throw e;
+        }
+
+        Debug.d("Loading letter sounds");
+        for (int i = 0; i < blockLetters.size(); i++) {
+            Letter letter = blockLetters.get(i);
+            Debug.d("Loading sound file "+i+": "+letter.sound);
+            try {
+                blockSounds.put(letter.sound, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.context, letter.sound));
+                blockSounds.put(letter.phoneme, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.context, letter.phoneme));
+            } catch (IOException e) {
+                Debug.e("Failed to load letter sound file: "+letter.sound);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void loadLocaleWords() throws IOException {
+        List<Word> blockWords = locale.words;
+        try {
             // Load word assets
             for (int i = 0; i < blockWords.size(); i++) {
                 Word word = blockWords.get(i);
@@ -423,22 +476,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             throw e;
         }
 
-        // Load sound data
-        //SoundFactory.setAssetBasePath("locales/en_us_rural/");
-        blockSounds = new HashMap<String, Sound>();
-        Debug.d("Loading  letters");
-        for (int i = 0; i < blockLetters.size(); i++) {
-            Letter letter = blockLetters.get(i);
-            Debug.d("Loading sound file "+i+": "+letter.sound);
-            try {
-                blockSounds.put(letter.sound, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.context, letter.sound));
-                blockSounds.put(letter.phoneme, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.context, letter.phoneme));
-            } catch (IOException e) {
-                Debug.e("Failed to load letter sound file: "+letter.sound);
-                e.printStackTrace();
-            }
-        }
-        Debug.d("Loading words");
+        Debug.d("Loading word sounds");
         for (int i = 0; i < blockWords.size(); i++) {
             Word word = blockWords.get(i);
             Debug.d("Loading sound file "+i+": "+word.sound);
@@ -449,6 +487,36 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 e.printStackTrace();
             }
         }
+    }
+
+    private void loadLocaleGames() throws IOException {
+        List<Game> blockGames = locale.games;
+        try {
+            // Load game assets
+            for (int i = 0; i < blockGames.size(); i++) {
+                Game game = blockGames.get(i);
+                Debug.d("Loading game sprite texture from " + game.sprite_texture);
+                final AssetBitmapTexture gameSpriteTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, game.sprite_texture);
+                gameSpriteTexture.load();
+                this.gameTextures.put(game, gameSpriteTexture);
+                this.gameSprites.put(game, TextureRegionFactory.extractTiledFromTexture(gameSpriteTexture, 0, 0, GAME_SPRITE_WIDTH * GAME_SPRITE_COLS, GAME_SPRITE_HEIGHT * GAME_SPRITE_ROWS, GAME_SPRITE_COLS, GAME_SPRITE_ROWS));
+
+                Debug.d("Loading game block texture from " + game.block_texture);
+                final AssetBitmapTexture gameTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, game.block_texture);
+                gameTexture.load();
+                int[] gameTileSize = GameTextures.calculateTileSize(game.columns, game.rows);
+                Debug.d("Word "+game.name+" has size "+game.columns+"x"+game.rows+" and sprite size "+gameTileSize[0]+"x"+gameTileSize[1]);
+                this.gameBlocks.put(game, TextureRegionFactory.extractTiledFromTexture(gameTexture, 0, 0, gameTileSize[0] * GAME_TEXTURE_COLS, gameTileSize[1] * GAME_TEXTURE_ROWS, GAME_TEXTURE_COLS, GAME_TEXTURE_ROWS));
+            }
+
+        } catch (final IOException e)
+        {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    private void loadLocaleLevels() {
         // Load level assets
         // TODO: Loading all level intros now is wasteful, need to hack SoundFactory to take a callback when loading finishes
         Debug.d("Loading intros");
@@ -467,6 +535,15 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             }
         }
 
+    }
+    private void loadSession() {
+        this.loadSessionDefaultTiles();
+        this.loadSessionLetters();
+        this.loadSessionWords();
+        this.loadSessionGames();
+    }
+
+    private void loadSessionDefaultTiles() {
         Debug.d("Loading inventory tile");
         try {
             final Filter inventoryFilter = new Filter();
@@ -490,7 +567,6 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         } catch (IndexOutOfBoundsException e) {
             this.createMarketTile();
         }
-
         Debug.d("Loading workshop tile");
         try {
             final Filter workshopFilter = new Filter();
@@ -523,7 +599,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         } catch (IndexOutOfBoundsException e) {
             this.createWorkshopTile();
         }
+    }
 
+    private void loadSessionLetters() {
         Debug.d("Loading letter tiles");
         List<LetterTile> letterTiles = LetterTile.objects(PhoeniciaContext.context).filter(session.filter).toList();
         for (int i = 0; i < letterTiles.size(); i++) {
@@ -551,7 +629,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             this.addBuilder(builder);
             this.createLetterSprite(letterTile);
         }
+    }
 
+    private void loadSessionWords() {
         Debug.d("Loading word tiles");
         List<WordTile> wordTiles = WordTile.objects(PhoeniciaContext.context).filter(session.filter).toList();
         for (int i = 0; i < wordTiles.size(); i++) {
@@ -581,9 +661,41 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             this.createWordSprite(wordTile);
             wordTile.restart(PhoeniciaContext.context);
         }
-
     }
 
+    private void loadSessionGames() {
+        Debug.d("Loading game tiles");
+        Filter session_filter = new Filter();
+        session_filter.is("session", session);
+        List<GameTile> gameTiles = GameTile.objects(PhoeniciaContext.context).filter(session_filter).toList();
+        for (int i = 0; i < gameTiles.size(); i++) {
+            GameTile gameTile = gameTiles.get(i);
+            Debug.d("Restoring tile "+gameTile.item_name.get());
+            gameTile.game = this.locale.game_map.get(gameTile.item_name.get());
+            gameTile.phoeniciaGame = this;
+            GameTileBuilder builder = gameTile.getBuilder(PhoeniciaContext.context);
+            if (builder == null) {
+                Debug.d("Adding new builder for tile " + gameTile.item_name.get());
+                builder = new GameTileBuilder(this.session, gameTile, gameTile.item_name.get(), gameTile.game.construct);
+                builder.save(PhoeniciaContext.context);
+                builder.start();
+            } else {
+                builder.time.set(gameTile.game.construct);
+                // If builder is market complete, set the progress to the build time in case it was changed in the locale
+                if (builder.status.get() == Builder.COMPLETE) {
+                    builder.progress.set(gameTile.game.time);
+                }
+                builder.save(PhoeniciaContext.context);
+                Debug.d("Found builder with "+builder.progress.get()+"/"+builder.time.get()+" and status "+builder.status.get());
+            }
+            gameTile.setBuilder(builder);
+            gameTile.save(PhoeniciaContext.context);
+            this.addBuilder(builder);
+
+            this.createGameSprite(gameTile);
+            gameTile.restart(PhoeniciaContext.context);
+        }
+    }
     /**
      * Completely restarts a GameSession, deleting any and all saved and state data.
      */

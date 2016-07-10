@@ -19,8 +19,8 @@
 
     <!-- Mini-games -->
     <games>
-        <game name="Blue Tent"  type="wordmatch"  points="100" buy="300" construct="120" time="300" reward="1.5" block="locales/en_us_rural/textures/minigame1.png" />
-        <game name="Green Tent" type="imagematch" points="500" buy="500" construct="300" time="600" reward="2.0" block="locales/en_us_rural/textures/minigame2.png" />
+        <game name="Blue Tent"  type="wordmatch"  points="100" buy="300" construct="120" time="300" reward="1.5" sprite="locales/en_us_rural/textures/games/sprites/minigame1.png" block="locales/en_us_rural/textures/games/blocks/minigame1.png" />
+        <game name="Green Tent" type="imagematch" points="500" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
     </games>
 
     <!-- English alphabet -->
