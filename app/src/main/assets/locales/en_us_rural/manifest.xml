@@ -199,7 +199,7 @@
                 <page sound="locales/en_us_rural/sounds/intro5p2.ogg">Keeping building words and you'll reach new levels, each new level will open up new letters and words for you to use.</page>
             </intro>
             <letters>b</letters>
-            <words>bat,apple</words>
+            <words>bat</words>
             <help>
                 <letters>h,b</letters>
                 <words>hat,bat</words>
