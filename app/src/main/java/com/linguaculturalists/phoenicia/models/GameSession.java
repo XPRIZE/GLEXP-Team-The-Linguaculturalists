@@ -11,7 +11,11 @@ import com.orm.androrm.field.DoubleField;
 import com.orm.androrm.field.IntegerField;
 import com.orm.androrm.migration.Migrator;
 
+import org.andengine.util.debug.Debug;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -32,6 +36,8 @@ public class GameSession extends Model {
     public IntegerField gross_income; /**< cumulative total of in-game currency earned over the course of this session */
     public Filter filter;
 
+    private List<ExperienceChangeListener> listeners;
+
     public static final QuerySet<GameSession> objects(Context context) {
         return objects(context, GameSession.class);
     }
@@ -49,6 +55,8 @@ public class GameSession extends Model {
         this.points = new IntegerField();
         this.account_balance = new IntegerField();
         this.gross_income = new IntegerField();
+
+        this.listeners = new ArrayList<ExperienceChangeListener>();
     }
 
     /**
@@ -96,6 +104,29 @@ public class GameSession extends Model {
         this.gross_income.set(0);
     }
 
+    public int addExperience(int points) {
+        this.points.set(this.points.get()+points);
+        this.experienceChanged(this.points.get());
+        return this.points.get();
+    }
+    public int removeExperience(int points) {
+        this.points.set(this.points.get()-points);
+        this.experienceChanged(this.points.get());
+        return this.points.get();
+    }
+    private void experienceChanged(int new_xp) {
+        Debug.d("Experience points changed");
+        for (int i = 0; i < this.listeners.size(); i++) {
+            Debug.d("Calling update listener: "+this.listeners.get(i).getClass());
+            this.listeners.get(i).onExperienceChanged(new_xp);
+        }
+    }
+    public void addExperienceChangeListener(ExperienceChangeListener listener) {
+        this.listeners.add(listener);
+    }
+    public void removeUpdateListener(ExperienceChangeListener listener) {
+        this.listeners.remove(listener);
+    }
     @Override
     public boolean save(Context context) {
         final boolean retval = super.save(context);
@@ -121,6 +152,7 @@ public class GameSession extends Model {
         this.sessions_played.set(this.sessions_played.get() + 1);
         this.last_timestamp.set((double)now.getTime());
     }
+
     @Override
     protected void migrate(Context context) {
         Migrator<GameSession> migrator = new Migrator<GameSession>(GameSession.class);
@@ -137,5 +169,12 @@ public class GameSession extends Model {
         // roll out all migrations
         migrator.migrate(context);
         return;
+    }
+
+    /**
+     * Called by the GameSession class whenever the player's experience points changes
+     */
+    public interface ExperienceChangeListener {
+        public void onExperienceChanged(int new_xp);
     }
 }

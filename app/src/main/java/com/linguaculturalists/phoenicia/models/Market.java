@@ -174,7 +174,7 @@ public class Market {
             }
         }
         Bank.getInstance().credit(request.coins.get());
-        this.game.session.points.set(this.game.session.points.get() + request.points.get());
+        this.game.session.addExperience(request.points.get());
         request.status.set(MarketRequest.FULFILLED);
         request.save(PhoeniciaContext.context);
         this.requestFulfilled(request);

@@ -177,6 +177,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
                     if (builder.status.get() == Builder.COMPLETE) {
                         game.playBlockSound(buildWord.sound);
                         Inventory.getInstance().add(builder.item_name.get());
+                        game.session.addExperience(buildWord.points);
                         tile.getQueue().remove(builder);
                         builder.delete(PhoeniciaContext.context);
                         wordSprite.setVisible(false);

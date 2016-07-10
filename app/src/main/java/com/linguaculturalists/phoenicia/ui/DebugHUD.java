@@ -48,7 +48,7 @@ public class DebugHUD extends PhoeniciaHUD {
             }
         });
 
-        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 600, 500, PhoeniciaContext.vboManager) {
+        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 600, 600, PhoeniciaContext.vboManager) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
@@ -103,6 +103,24 @@ public class DebugHUD extends PhoeniciaHUD {
         });
         whiteRect.attachChild(debitBank);
         this.registerTouchArea(debitBank);
+
+        Button creditXP = new Button(150, whiteRect.getHeight() - 475, 200, 80, "+10 XP", PhoeniciaContext.vboManager, new Button.OnClickListener() {
+            @Override
+            public void onClicked(Button button) {
+                game.session.addExperience(10);
+            }
+        });
+        whiteRect.attachChild(creditXP);
+        this.registerTouchArea(creditXP);
+
+        Button debitXP = new Button(450, whiteRect.getHeight() - 475, 200, 80, "-10 XP", PhoeniciaContext.vboManager, new Button.OnClickListener() {
+            @Override
+            public void onClicked(Button button) {
+                game.session.removeExperience(10);
+            }
+        });
+        whiteRect.attachChild(debitXP);
+        this.registerTouchArea(debitXP);
     }
 
     /**
