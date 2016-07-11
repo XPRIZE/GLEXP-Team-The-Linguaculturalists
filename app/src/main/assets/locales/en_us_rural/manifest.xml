@@ -208,6 +208,23 @@
                 <gather_word count="2">cat</gather_word>
                 <gather_word count="2">hat</gather_word>
                 <gather_word count="2">bat</gather_word>
+                <gather_word count="1">apple</gather_word>
+            </req>
+        </level>
+        <level name="impossible" market="4"  coins="0">
+            <intro>
+                <page sound="locales/en_us_rural/sounds/intro5p1.ogg">You should never see this level.</page>
+            </intro>
+            <letters>e,n,p</letters>
+            <words>can,pen,pan</words>
+            <help>
+                <letters>e,n,p</letters>
+                <words>can,pen,pan</words>
+            </help>
+            <req>
+                <gather_word count="2">can</gather_word>
+                <gather_word count="2">pan</gather_word>
+                <gather_word count="2">pen</gather_word>
             </req>
         </level>
     </levels>

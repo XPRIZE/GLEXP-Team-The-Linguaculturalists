@@ -68,7 +68,13 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
 
         final Font inventoryCountFont = FontFactory.create(PhoeniciaContext.fontManager, PhoeniciaContext.textureManager, 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 16, Color.RED_ARGB_PACKED_INT);
         inventoryCountFont.load();
-        final List<Word> words = level.words;
+
+        Debug.d("Loading words for level: " + level.name);
+        // We actually use the next level's words to hint at things to come
+        int next_available_level = game.locale.levels.indexOf(level)+1;
+        if (game.locale.levels.size() <= next_available_level) next_available_level--;
+        final Level next = game.locale.levels.get(next_available_level);
+        final List<Word> words = next.words;
         final int tile_start = 130;
         final int startX = (int)(blockPanel.getWidth()/2);
         for (int i = 0; i < words.size(); i++) {
@@ -88,6 +94,9 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
                     addWordTile(currentWord, mapTile);
                 }
             });
+            if (!level.words.contains(currentWord)) {
+                block.setEnabled(false);
+            }
             this.registerTouchArea(block);
             blockPanel.attachChild(block);
 
