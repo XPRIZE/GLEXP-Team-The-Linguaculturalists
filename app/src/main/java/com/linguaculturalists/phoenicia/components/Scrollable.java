@@ -34,6 +34,7 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
     private boolean is_scrolling = false;
     private boolean isInHUD = false;
     private boolean clip = true;
+    private float padding = 0;
 
     private boolean print_debug = false;
 
@@ -82,6 +83,15 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
      */
     public void setClip(boolean clip) {
         this.clip = clip;
+    }
+
+
+    public float getPadding() {
+        return padding;
+    }
+
+    public void setPadding(float padding) {
+        this.padding = padding;
     }
 
     /**
@@ -138,14 +148,14 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
         for(int i = 0; i < this.contents.getChildCount(); i++) {
             IEntity child = this.contents.getChildByIndex(i);
             //Debug.d("Scrollable Recalculating with child: "+child);
-            final float childLeft = child.getX()-(child.getWidth()/2);
-            final float childRight = child.getX()+(child.getWidth()/2);
-            final float childBottom = child.getY()-(child.getHeight()/2);
-            final float childTop = child.getY()+(child.getHeight()/2);
-            if (childLeft   < this.childRect.left)   { Debug.d("Scrollable New left: "+childLeft); this.childRect.left = childLeft; }
-            if (childRight  > this.childRect.right)  { Debug.d("Scrollable New right: "+childRight); this.childRect.right = childRight; }
-            if (childTop    > this.childRect.top)    { Debug.d("Scrollable New top: "+childTop); this.childRect.top = childTop; }
-            if (childBottom < this.childRect.bottom) { Debug.d("Scrollable New bottom: "+childBottom); this.childRect.bottom = childBottom; }
+            final float childLeft = child.getX()-(child.getWidth()/2)-this.padding;
+            final float childRight = child.getX()+(child.getWidth()/2)+this.padding;
+            final float childBottom = child.getY()-(child.getHeight()/2)-this.padding;
+            final float childTop = child.getY()+(child.getHeight()/2)+this.padding;
+            if (childLeft   < this.childRect.left)   { this.childRect.left = childLeft; }
+            if (childRight  > this.childRect.right)  { this.childRect.right = childRight; }
+            if (childTop    > this.childRect.top)    { this.childRect.top = childTop; }
+            if (childBottom < this.childRect.bottom) { this.childRect.bottom = childBottom; }
 
         }
         //Debug.d("Scrollable childRect: x(" + this.childRect.left + "," + this.childRect.right + ") y(" + this.childRect.bottom + "," + this.childRect.top + ")");

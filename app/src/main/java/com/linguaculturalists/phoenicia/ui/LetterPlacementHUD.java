@@ -68,6 +68,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
         this.attachChild(whiteRect);
 
         this.blockPanel = new Scrollable(GameActivity.CAMERA_WIDTH/2, 64, 600, 96, Scrollable.SCROLL_HORIZONTAL);
+        this.blockPanel.setPadding(16);
 
         this.registerTouchArea(blockPanel);
         this.registerTouchArea(blockPanel.contents);
