@@ -25,6 +25,8 @@ public class LocaleParser extends DefaultHandler {
     private static final String TAG_PERSON = "person";
     private static final String TAG_GAMES = "games";
     private static final String TAG_GAME = "game";
+    private static final String TAG_DECORATIONS = "decorations";
+    private static final String TAG_DECORATION = "decoration";
     private static final String TAG_LETTERS = "letters";
     private static final String TAG_LETTER = "letter";
     private static final String TAG_WORDS = "words";
@@ -40,6 +42,7 @@ public class LocaleParser extends DefaultHandler {
     private boolean inLocale = false;
     private boolean inPeople = false;
     private boolean inGames = false;
+    private boolean inDecorations = false;
     private boolean inLettersList = false;
     private boolean inLetterDefinition = false;
     private boolean inWordsList = false;
@@ -99,8 +102,12 @@ public class LocaleParser extends DefaultHandler {
             this.parsePerson(attributes);
         } else if (this.inLocale && localName.equals(LocaleParser.TAG_GAMES)) {
             this.inGames = true;
+        } else if (this.inLocale && localName.equals(LocaleParser.TAG_DECORATIONS)) {
+            this.inDecorations = true;
         } else if (this.inLocale && this.inGames && localName.equals(LocaleParser.TAG_GAME)) {
             this.parseGame(attributes);
+        } else if (this.inLocale && this.inDecorations && localName.equals(LocaleParser.TAG_DECORATION)) {
+            this.parseDecoration(attributes);
         } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
             if (!this.inLevelDefinition) {
                 this.inLettersList = true;
@@ -279,6 +286,33 @@ public class LocaleParser extends DefaultHandler {
         this.locale.game_map.put(newGame.name, newGame);
     }
 
+    private void parseDecoration(Attributes attributes) throws SAXException {
+        Debug.v("Parsing locale decoration");
+        Decoration newDecoration = new Decoration();
+        newDecoration.name = attributes.getValue("name");
+        String size = attributes.getValue("size");
+        if (size == null || size == "" || size == "1x1") {
+            newDecoration.columns = 1;
+            newDecoration.rows = 1;
+        } else {
+            try {
+                String[] dimensions = size.split("x");
+                newDecoration.columns = Integer.parseInt(dimensions[0]);
+                newDecoration.rows = Integer.parseInt(dimensions[1]);
+            } catch (Exception e) {
+                Debug.e("Failed to parse size for: "+newDecoration.name);
+                e.printStackTrace();
+            }
+        }
+        newDecoration.restriction = attributes.getValue("restrict");
+        newDecoration.sprite_texture = attributes.getValue("sprite");
+        newDecoration.block_texture = attributes.getValue("block");
+        newDecoration.points = Integer.parseInt(attributes.getValue("points"));
+        newDecoration.buy = Integer.parseInt(attributes.getValue("buy"));
+        this.locale.decorations.add(newDecoration);
+        this.locale.decoration_map.put(newDecoration.name, newDecoration);
+    }
+
     private void parseLetterDefinition(Attributes attributes) throws SAXException {
         Debug.v("Parsing locale letter");
         this.currentLetter = new Letter();
@@ -395,6 +429,8 @@ public class LocaleParser extends DefaultHandler {
             this.inPeople = false;
         } else if (this.inLocale && this.inGames && localName.equals(LocaleParser.TAG_GAMES)) {
             this.inGames = false;
+        } else if (this.inLocale && this.inGames && localName.equals(LocaleParser.TAG_DECORATIONS)) {
+            this.inDecorations = false;
         } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
             if (!this.inLevelDefinition) {
                 this.inLettersList = false;
