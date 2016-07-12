@@ -44,6 +44,7 @@ import java.util.Set;
 
 import com.linguaculturalists.phoenicia.components.MapBlockSprite;
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
+import com.linguaculturalists.phoenicia.locale.Decoration;
 import com.linguaculturalists.phoenicia.locale.Game;
 import com.linguaculturalists.phoenicia.locale.IntroPage;
 import com.linguaculturalists.phoenicia.locale.Letter;
@@ -53,6 +54,7 @@ import com.linguaculturalists.phoenicia.locale.Person;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.Builder;
+import com.linguaculturalists.phoenicia.models.DecorationTile;
 import com.linguaculturalists.phoenicia.models.DefaultTile;
 import com.linguaculturalists.phoenicia.models.GameTile;
 import com.linguaculturalists.phoenicia.models.GameTileBuilder;
@@ -93,6 +95,12 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public static final int GAME_SPRITE_ROWS = 1;
     public static final int GAME_TEXTURE_COLS = 4;
     public static final int GAME_TEXTURE_ROWS = 6;
+    public static final int DECORATION_SPRITE_WIDTH = 64;
+    public static final int DECORATION_SPRITE_HEIGHT = 64;
+    public static final int DECORATION_SPRITE_COLS = 3;
+    public static final int DECORATION_SPRITE_ROWS = 1;
+    public static final int DECORATION_TEXTURE_COLS = 4;
+    public static final int DECORATION_TEXTURE_ROWS = 2;
     public Locale locale; /**< the locale used by the game session */
     public Scene scene;
     public ZoomCamera camera;
@@ -135,6 +143,10 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public Map<Game, AssetBitmapTexture> gameTextures;
     public Map<Game, ITiledTextureRegion> gameSprites; /**< Tile regions depicting session sprites */
     public Map<Game, ITiledTextureRegion> gameBlocks; /**< Tile regions depicting session blocks */
+
+    public Map<Decoration, AssetBitmapTexture> decorationTextures;
+    public Map<Decoration, ITiledTextureRegion> decorationSprites; /**< Tile regions depicting session sprites */
+    public Map<Decoration, ITiledTextureRegion> decorationBlocks; /**< Tile regions depicting session blocks */
 
     public Sprite[][] placedSprites; /**< active map tiles arranged according to the ISO map grid */
     public String[][] mapRestrictions; /**< map tile class types arranged according to the ISO map grid */
@@ -190,6 +202,10 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.gameTextures = new HashMap<Game, AssetBitmapTexture>();
         this.gameSprites = new HashMap<Game, ITiledTextureRegion>();
         this.gameBlocks = new HashMap<Game, ITiledTextureRegion>();
+
+        this.decorationTextures = new HashMap<Decoration, AssetBitmapTexture>();
+        this.decorationSprites = new HashMap<Decoration, ITiledTextureRegion>();
+        this.decorationBlocks = new HashMap<Decoration, ITiledTextureRegion>();
 
         final float minZoomFactor = 1.0f;
         final float maxZoomFactor = 5.0f;
@@ -311,6 +327,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.loadLocaleLetters();
         this.loadLocaleWords();
         this.loadLocaleGames();
+        this.loadLocaleDecorations();
         this.loadLocaleLevels();
     }
 
@@ -516,6 +533,33 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         }
     }
 
+    private void loadLocaleDecorations() throws IOException {
+        List<Decoration> blockDecorations = locale.decorations;
+        try {
+            // Load game assets
+            for (int i = 0; i < blockDecorations.size(); i++) {
+                Decoration decoration = blockDecorations.get(i);
+                Debug.d("Loading decoration sprite texture from " + decoration.sprite_texture);
+                final AssetBitmapTexture decorationSpriteTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, decoration.sprite_texture);
+                decorationSpriteTexture.load();
+                this.decorationTextures.put(decoration, decorationSpriteTexture);
+                this.decorationSprites.put(decoration, TextureRegionFactory.extractTiledFromTexture(decorationSpriteTexture, 0, 0, DECORATION_SPRITE_WIDTH * DECORATION_SPRITE_COLS, DECORATION_SPRITE_HEIGHT * DECORATION_SPRITE_ROWS, DECORATION_SPRITE_COLS, DECORATION_SPRITE_ROWS));
+
+                Debug.d("Loading decoration block texture from " + decoration.block_texture);
+                final AssetBitmapTexture decorationTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, decoration.block_texture);
+                decorationTexture.load();
+                int[] decorationTileSize = GameTextures.calculateTileSize(decoration.columns, decoration.rows);
+                Debug.d("Word "+decoration.name+" has size "+decoration.columns+"x"+decoration.rows+" and sprite size "+decorationTileSize[0]+"x"+decorationTileSize[1]);
+                this.decorationBlocks.put(decoration, TextureRegionFactory.extractTiledFromTexture(decorationTexture, 0, 0, decorationTileSize[0] * DECORATION_TEXTURE_COLS, decorationTileSize[1] * DECORATION_TEXTURE_ROWS, DECORATION_TEXTURE_COLS, DECORATION_TEXTURE_ROWS));
+            }
+
+        } catch (final IOException e)
+        {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
     private void loadLocaleLevels() {
         // Load level assets
         // TODO: Loading all level intros now is wasteful, need to hack SoundFactory to take a callback when loading finishes
@@ -541,6 +585,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.loadSessionLetters();
         this.loadSessionWords();
         this.loadSessionGames();
+        this.loadSessionDecorations();
     }
 
     private void loadSessionDefaultTiles() {
@@ -696,6 +741,23 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             gameTile.restart(PhoeniciaContext.context);
         }
     }
+
+    private void loadSessionDecorations() {
+        Debug.d("Loading decoration tiles");
+        Filter session_filter = new Filter();
+        session_filter.is("session", session);
+        List<DecorationTile> decorationTiles = DecorationTile.objects(PhoeniciaContext.context).filter(session_filter).toList();
+        for (int i = 0; i < decorationTiles.size(); i++) {
+            DecorationTile decorationTile = decorationTiles.get(i);
+            Debug.d("Restoring tile "+decorationTile.item_name.get());
+            decorationTile.decoration = this.locale.decoration_map.get(decorationTile.item_name.get());
+            decorationTile.phoeniciaGame = this;
+            decorationTile.save(PhoeniciaContext.context);
+
+            this.createDecorationSprite(decorationTile);
+        }
+    }
+
     /**
      * Completely restarts a GameSession, deleting any and all saved and state data.
      */
@@ -1229,6 +1291,91 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public interface CreateGameSpriteCallback {
         public void onGameSpriteCreated(GameTile tile);
         public void onGameSpriteCreationFailed(GameTile tile);
+    }
+
+    /**
+     * Create a new sprite for the given WordTile, without waiting for user confirmation
+     * @param tile source for the PlacedBlockSprite to create
+     */
+    public void createDecorationSprite(DecorationTile tile) {
+        this.createDecorationSprite(tile, null);
+    }
+
+    /**
+     * Create a new sprite for the given WordTile, waiting for user confirmation
+     * @param tile source for the PlacedBlockSprite to create
+     * @param callback handler to inform the calling code if the user completes or cancels placement
+     */
+    public void createDecorationSprite(final DecorationTile tile, final CreateDecorationSpriteCallback callback) {
+        final TMXLayer tmxLayer = this.mTMXTiledMap.getTMXLayers().get(0);
+        final TMXTile tmxTile = tmxLayer.getTMXTile(tile.isoX.get(), tile.isoY.get());
+        if (tmxTile == null) {
+            Debug.d("Can't place blocks outside of map");
+            return;
+        }
+
+        int[] tileSize = GameTextures.calculateTileSize(tile.decoration.columns, tile.decoration.rows);
+        float[] tilePos = GameTextures.calculateTilePosition(tmxTile, tileSize, tile.decoration.columns, tile.decoration.rows);
+        int tileZ = tmxTile.getTileZ();
+
+        for (int c = 0; c < tile.decoration.columns; c++) {
+            for (int r = 0; r < tile.decoration.rows; r++) {
+                if (placedSprites[tmxTile.getTileColumn()-c][tmxTile.getTileRow()-r] != null && callback == null) {
+                    Debug.d("Can't place blocks over existing blocks");
+                    return;
+                }
+            }
+        }
+
+        Debug.d("Creating Decoration sprite for " + tile.decoration.name + " at " + tilePos[0] + "x" + tilePos[1]);
+        final PlacedBlockSprite sprite = new PlacedBlockSprite(tilePos[0], tilePos[1], 0, 4, decorationBlocks.get(tile.decoration), PhoeniciaContext.vboManager);
+        sprite.setZIndex(tileZ);
+
+        scene.attachChild(sprite);
+        scene.sortChildren();
+
+        if (callback != null) {
+            this.hudManager.push(new SpriteMoveHUD(this, tmxTile, sprite, tile.decoration.columns, tile.decoration.rows, tile.decoration.restriction, new SpriteMoveHUD.SpriteMoveHandler() {
+                @Override
+                public void onSpriteMoveCanceled(MapBlockSprite sprite) {
+                    scene.detachChild(sprite);
+                    callback.onDecorationSpriteCreationFailed(tile);
+                }
+
+                @Override
+                public void onSpriteMoveFinished(MapBlockSprite pSprite, TMXTile newlocation) {
+                    tile.isoX.set(newlocation.getTileColumn());
+                    tile.isoY.set(newlocation.getTileRow());
+                    for (int c = 0; c < tile.decoration.columns; c++) {
+                        for (int r = 0; r < tile.decoration.rows; r++) {
+                            placedSprites[newlocation.getTileColumn()-c][newlocation.getTileRow()-r] = sprite;
+                        }
+                    }
+
+                    tile.setSprite(sprite);
+                    sprite.setOnClickListener(tile);
+                    sprite.animate();
+                    scene.registerTouchArea(sprite);
+                    callback.onDecorationSpriteCreated(tile);
+                }
+            }));
+        } else {
+            for (int c = 0; c < tile.decoration.columns; c++) {
+                for (int r = 0; r < tile.decoration.rows; r++) {
+                    placedSprites[tmxTile.getTileColumn()-c][tmxTile.getTileRow()-r] = sprite;
+                }
+            }
+
+            tile.setSprite(sprite);
+            sprite.setOnClickListener(tile);
+            sprite.animate();
+            scene.registerTouchArea(sprite);
+        }
+    }
+
+    public interface CreateDecorationSpriteCallback {
+        public void onDecorationSpriteCreated(DecorationTile tile);
+        public void onDecorationSpriteCreationFailed(DecorationTile tile);
     }
 
     /**

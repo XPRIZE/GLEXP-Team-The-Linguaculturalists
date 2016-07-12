@@ -1,5 +1,6 @@
 package com.linguaculturalists.phoenicia;
 
+import com.linguaculturalists.phoenicia.models.DecorationTile;
 import com.linguaculturalists.phoenicia.models.DefaultTile;
 import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.GameTile;
@@ -126,6 +127,7 @@ public class GameActivity extends BaseGameActivity {
         models.add(WorkshopBuilder.class);
         models.add(GameTile.class);
         models.add(GameTileBuilder.class);
+        models.add(DecorationTile.class);
 
         DatabaseAdapter.setDatabaseName("game_db");
         DatabaseAdapter adapter = DatabaseAdapter.getInstance(PhoeniciaContext.context);

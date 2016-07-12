@@ -81,6 +81,13 @@ public class HUDManager extends HUD {
     }
 
     /**
+     * Create a new instance of the game placement HUD for the specified game level
+     */
+    public void showDecorationPlacement() {
+        this.push(new DecorationPlacementHUD(this.game));
+    }
+
+    /**
      * Create a new instance of the letter placement HUD for the current game level
      */
     public void showLetterPlacement() {
@@ -121,6 +128,7 @@ public class HUDManager extends HUD {
     public void showGamePlacement() {
         this.push(new GamePlacementHUD(this.game));
     }
+
     /**
      * Create a new instance of the game building HUD for the specified game
      */

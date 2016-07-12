@@ -23,6 +23,13 @@
         <game name="Green Tent" type="imagematch" points="500" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
     </games>
 
+    <!-- Decorations -->
+    <decorations>
+        <decoration size="1x1" name="Lamp Post"  points="100" buy="200" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
+        <decoration size="1x1" name="Small Tree" points="300" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
+        <decoration size="2x2" name="Fountaion"  points="500" buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
+    </decorations>
+
     <!-- English alphabet -->
     <letters>
         <letter name="a" buy="0"  sell="1"  points="1" time="10" sprite="locales/common/textures/letters/sprites/a.png" block="locales/common/textures/letters/blocks/a.png" sound="locales/en_us_rural/sounds/a-name.ogg" phoneme="locales/en_us_rural/sounds/a-phoneme.ogg">a</letter>

@@ -42,6 +42,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
     private ButtonSprite letterBlock;
     private ButtonSprite wordBlock;
     private ButtonSprite gameBlock;
+    private ButtonSprite decorationBlock;
 
     private ClickDetector debugClickDetector;
     /**
@@ -106,6 +107,17 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         this.registerTouchArea(helpButton);
         this.attachChild(helpButton);
 
+        ITextureRegion decorationRegion = game.shellTiles.getTextureRegion(GameTextures.DECORATION_PLACEMENT);
+        this.decorationBlock = new ButtonSprite(64, 64, decorationRegion, PhoeniciaContext.vboManager);
+        decorationBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
+                game.hudManager.showDecorationPlacement();
+            }
+        });
+        this.registerTouchArea(decorationBlock);
+        this.attachChild(decorationBlock);
+
         ITextureRegion letterRegion = game.shellTiles.getTextureRegion(GameTextures.LETTER_PLACEMENT);
         this.letterBlock = new ButtonSprite(GameActivity.CAMERA_WIDTH-(64*5), 64, letterRegion, PhoeniciaContext.vboManager);
         letterBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
@@ -150,6 +162,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         letterBlock.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
         wordBlock.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
         gameBlock.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
+        decorationBlock.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
 
         helpButton.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT + 32, GameActivity.CAMERA_HEIGHT - 48, EaseBackOut.getInstance()));
 
