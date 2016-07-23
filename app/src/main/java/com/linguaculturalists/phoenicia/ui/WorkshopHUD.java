@@ -175,6 +175,7 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
                         builder.save(PhoeniciaContext.context);
                         buildSprite.setVisible(false);
                         tryButton.setVisible(true);
+                        tile.setAttention(false);
                     }
                 }
             });
@@ -408,7 +409,7 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
         checker.start();
     }
 
-    public WorkshopBuilder createWord(final Word word, DefaultTile tile) {
+    public WorkshopBuilder createWord(final Word word, final DefaultTile tile) {
         WorkshopBuilder builder = tile.getBuilder(PhoeniciaContext.context);
         if (builder == null) {
             builder = new WorkshopBuilder(game.session, tile);
@@ -424,6 +425,7 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
                 Debug.d("WordBuilder for " + buildItem.item_name.get() + " has completed");
                 game.playBlockSound(word.sound);
                 buildItem.removeUpdateHandler(this);
+                tile.setAttention(true);
             }
 
             @Override

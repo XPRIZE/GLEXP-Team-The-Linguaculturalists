@@ -14,6 +14,7 @@ public class Level {
     public String name; /**< reference name for this level */
     public int marketRequests; /**< number of market requests available */
     public int coinsEarned; /**< number coins gained by reaching this level */
+    public int pointsEarned; /**< experience points gained by reaching this level */
     public List<Letter> letters; /**< list of \link Letter Letters \endlink available in this level */
     public Map<Letter, Integer> letter_count; /**< number of times this letter has been introduced */
     public List<Word> words; /**< list of \link Word Words \endlink available in this level */
@@ -22,6 +23,8 @@ public class Level {
     public List<Word> help_words; /**< list of \link Word Words \endlink to give extra help with on this level */
     public List<IntroPage> intro; /**< list of \link IntroPage IntroPages \endlink to be displayed at the start of this level */
     public List<Requirement> requirements; /**< list of \link Requirement Requirements \endlink that must be fulfilled to move on to the next level */
+    public Level next;
+    public Level prev;
 
     /**
      * See if all #requirements for this level have been fulfilled

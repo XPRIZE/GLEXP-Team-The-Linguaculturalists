@@ -2,9 +2,11 @@ package com.linguaculturalists.phoenicia.ui;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 
 import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
+import com.linguaculturalists.phoenicia.components.Button;
 import com.linguaculturalists.phoenicia.components.Scrollable;
 import com.linguaculturalists.phoenicia.locale.IntroPage;
 import com.linguaculturalists.phoenicia.locale.Letter;
@@ -49,7 +51,7 @@ import java.util.Map;
 /**
  * Display level transition text pages, images and sound.
  */
-public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener, ClickDetector.IClickDetectorListener {
+public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener, ClickDetector.IClickDetectorListener, MediaPlayer.OnCompletionListener {
     private PhoeniciaGame game;
     private Scrollable textPanel;
     private Level level;
@@ -58,6 +60,7 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
     private ITiledTextureRegion[] introPageImages;
 
     private ClickDetector clickDetector;
+    private Button nextButton;
 
     /**
      * Display level transition text pages, images and sound.
@@ -101,6 +104,18 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
                 }
             }
         }
+
+        this.nextButton = new Button(textPanel.getWidth() - 150, 50, 200, 80, "Next", PhoeniciaContext.vboManager, new Button.OnClickListener() {
+            @Override
+            public void onClicked(Button button) {
+                if (current_page+1 < level.intro.size()) {
+                    showPage(current_page + 1);
+                } else {
+                    game.hudManager.pop();
+                }
+            }
+        });
+        nextButton.setVisible(false);
         Debug.d("Finished instantiating LevelIntroHUD");
 
         this.clickDetector = new ClickDetector(this);
@@ -134,11 +149,17 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
             textPanel.attachChild(introImage);
             introImage.animate(500);
         }
-        game.playLevelSound(level.intro.get(page_index).sound);
+        game.playLevelSound(level.intro.get(page_index).sound, this);
     }
 
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        nextButton.setVisible(true);
+    }
+
+
     /**
-     * Capture click events to advance to the next page, or close the HUD when all pages have been shown
+     * Capture click events to close the HUD if the last intro page has finished playing
      * @param clickDetector
      * @param pointerId
      * @param sceneX
@@ -146,11 +167,7 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
      */
     @Override
     public void onClick(ClickDetector clickDetector, int pointerId, float sceneX, float sceneY) {
-        Debug.d("Intro page size: " + this.level.intro.size());
-        Debug.d("Current page: " + this.current_page);
-        if (this.current_page+1 < this.level.intro.size()) {
-            this.showPage(this.current_page + 1);
-        } else {
+        if (this.current_page+1 >= this.level.intro.size() && nextButton.isVisible()) {
             this.game.hudManager.pop();
         }
 

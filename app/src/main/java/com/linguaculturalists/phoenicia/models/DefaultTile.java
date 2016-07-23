@@ -23,8 +23,10 @@ import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.modifier.ParallelEntityModifier;
 import org.andengine.entity.modifier.ScaleAtModifier;
 import org.andengine.entity.scene.IOnAreaTouchListener;
+import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.extension.tmx.TMXTile;
+import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.util.debug.Debug;
 import org.andengine.util.modifier.IModifier;
 import org.andengine.util.modifier.ease.EaseBackOut;
@@ -44,6 +46,7 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
     public PhoeniciaGame phoeniciaGame; /**< active game instance this tile is a part of */
     public MapBlockSprite sprite; /**< sprite that has been placed on the map for this tile */
 
+    private boolean attention = false;
 
     public DefaultTile() {
         super();
@@ -80,6 +83,20 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
      */
     public void setSprite(MapBlockSprite sprite) {
         this.sprite = sprite;
+    }
+
+    public void setAttention(boolean attention) {
+        if (this.attention == attention) return;
+        Debug.d("Setting attention for workshop tile "+builder.item_name.get()+" to "+attention);
+        this.attention = attention;
+        if (this.attention && phoeniciaGame.locale.word_map.containsKey(builder.item_name.get())) {
+            final ITiledTextureRegion wordSpriteRegion = phoeniciaGame.wordSprites.get(phoeniciaGame.locale.word_map.get(builder.item_name.get()));
+            if (wordSpriteRegion == null) return;
+            final Sprite wordSprite = new Sprite(0, 0, wordSpriteRegion.getTextureRegion(1), PhoeniciaContext.vboManager);
+            this.sprite.setEmblem(wordSprite);
+        } else {
+            this.sprite.clearEmblem();
+        }
     }
 
     @Override

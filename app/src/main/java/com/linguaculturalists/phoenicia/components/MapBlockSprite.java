@@ -6,10 +6,13 @@ import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.IEntityModifier;
+import org.andengine.entity.modifier.LoopEntityModifier;
 import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.modifier.ScaleAtModifier;
+import org.andengine.entity.modifier.SequenceEntityModifier;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.ButtonSprite;
+import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.extension.tmx.TMXTile;
 import org.andengine.input.touch.TouchEvent;
@@ -37,6 +40,8 @@ public class MapBlockSprite extends AnimatedSprite implements ClickDetector.ICli
     protected ClickDetector clickDetector;
     protected HoldDetector holdDetector;
 
+    protected Sprite emblem;
+
     /**
      * Create a new PlacedBlockSprite.
      * @param pX the X coordinate of the scene to place this PlacedBlockSprite
@@ -59,6 +64,33 @@ public class MapBlockSprite extends AnimatedSprite implements ClickDetector.ICli
     public String getRestriction() {
         return this.restriction;
     }
+
+    public void setEmblem(Sprite emblem) {
+        Debug.d("Setting emblem to "+emblem);
+        this.emblem = emblem;
+        this.emblem.setPosition(this.getWidth()*0.70f, this.getHeight()-10);
+        this.emblem.setZIndex(this.getZIndex() + 1);
+        this.emblem.setScale(0.2f);
+        this.emblem.registerEntityModifier(
+                new LoopEntityModifier(
+                        new SequenceEntityModifier(
+                            new MoveYModifier(1f, this.emblem.getY(), this.emblem.getY() + 5),
+                            new MoveYModifier(1f, this.emblem.getY()+5, this.emblem.getY())
+                        )
+                )
+        );
+        this.attachChild(emblem);
+    }
+
+    public void clearEmblem() {
+        if (this.emblem == null) return;
+        Debug.d("Clearing emblem from "+this);
+
+        this.emblem.clearEntityModifiers();
+        this.detachChild(this.emblem);
+        this.emblem = null;
+    }
+
     /**
      * Start the animation of this sprite.
      * AnimatedSprites do not begin their animation sequence at the time they are created, they must

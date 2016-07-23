@@ -26,9 +26,13 @@ import org.andengine.entity.modifier.ParallelEntityModifier;
 import org.andengine.entity.modifier.ScaleAtModifier;
 import org.andengine.entity.scene.IOnAreaTouchListener;
 import org.andengine.entity.scene.ITouchArea;
+import org.andengine.entity.sprite.ButtonSprite;
+import org.andengine.entity.sprite.Sprite;
+import org.andengine.entity.sprite.TiledSprite;
 import org.andengine.entity.text.Text;
 import org.andengine.extension.tmx.TMXTile;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.util.debug.Debug;
 import org.andengine.util.modifier.IModifier;
 import org.andengine.util.modifier.ease.EaseBackOut;
@@ -60,6 +64,8 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
     private int queue_size = 1;
     private boolean isActive = false;
     private List<WordBuilder> buildQueue;
+
+    private boolean attention = false;
 
     public WordTile() {
         super();
@@ -143,6 +149,28 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
         return builder;
     }
 
+    public void setAttention(boolean attention) {
+        if (this.attention == attention) return;
+        Debug.d("Setting attention for word tile "+this.word.name+" to "+attention);
+        this.attention = attention;
+        if (this.attention) {
+            final ITiledTextureRegion wordSpriteRegion = phoeniciaGame.wordSprites.get(this.word);
+            final Sprite wordSprite = new Sprite(0, 0, wordSpriteRegion.getTextureRegion(1), PhoeniciaContext.vboManager);
+            this.sprite.setEmblem(wordSprite);
+        } else {
+            this.sprite.clearEmblem();
+        }
+    }
+
+    public void checkAttention() {
+        for (Builder b : this.getQueue()) {
+            if (b.status.get() == Builder.COMPLETE) {
+                this.setAttention(true);
+                return;
+            }
+        }
+        this.setAttention(false);
+    }
     public void next() {
         Debug.d("Checking for next word builder for "+this.word.name);
         if (this.isActive) return;
@@ -173,6 +201,7 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
             this.isActive = false;
             this.next();
         }
+        this.checkAttention();
     }
 
     public boolean isActive() {
@@ -194,6 +223,7 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
                 isActive = false;
                 builder.removeUpdateHandler(tile);
                 phoeniciaGame.removeBuilder(builder);
+                setAttention(true);
                 next();
             }
 

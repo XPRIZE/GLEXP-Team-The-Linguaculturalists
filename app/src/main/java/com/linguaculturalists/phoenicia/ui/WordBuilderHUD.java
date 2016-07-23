@@ -181,6 +181,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
                         tile.getQueue().remove(builder);
                         builder.delete(PhoeniciaContext.context);
                         wordSprite.setVisible(false);
+                        tile.checkAttention();
                     }
                 }
             });

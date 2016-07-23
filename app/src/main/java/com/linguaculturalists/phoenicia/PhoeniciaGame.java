@@ -1,6 +1,7 @@
 package com.linguaculturalists.phoenicia;
 
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 
 import org.andengine.audio.music.Music;
@@ -78,7 +79,7 @@ import com.orm.androrm.Filter;
 /**
  * The main class for managing a game.
  */
-public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateListener, Bank.BankUpdateListener {
+public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateListener, Bank.BankUpdateListener, GameSession.ExperienceChangeListener {
     public static final int PERSON_TILE_WIDTH = 256;
     public static final int PERSON_TILE_HEIGHT = 256;
     public static final int LETTER_SPRITE_WIDTH = 64;
@@ -623,6 +624,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             forWorkshopTile.is("tile", workshopDefaultTile);
             try {
                 WorkshopBuilder workshopBuilder = WorkshopBuilder.objects(PhoeniciaContext.context).filter(forWorkshopTile).toList().get(0);
+                workshopDefaultTile.setBuilder(workshopBuilder);
                 if (workshopBuilder.status.get() != Builder.NONE) {
                     Debug.d("Workshop building word: " + workshopBuilder.item_name.get());
                     Word workshopWord = locale.word_map.get(workshopBuilder.item_name.get());
@@ -631,12 +633,12 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                         // If builder is market complete, set the progress to the build time in case it was changed in the locale
                         if (workshopBuilder.status.get() == Builder.COMPLETE) {
                             workshopBuilder.progress.set(workshopWord.time);
+                            workshopDefaultTile.setAttention(true);
                         }
                         workshopBuilder.save(PhoeniciaContext.context);
                         Debug.d("Found workshop builder with " + workshopBuilder.progress.get() + "/" + workshopBuilder.time.get() + " and status " + workshopBuilder.status.get());
                     }
                 }
-                workshopDefaultTile.setBuilder(workshopBuilder);
                 this.addBuilder(workshopBuilder);
             } catch (IndexOutOfBoundsException e) {
                 // No WorkshopBuilder found
@@ -749,7 +751,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         List<DecorationTile> decorationTiles = DecorationTile.objects(PhoeniciaContext.context).filter(session_filter).toList();
         for (int i = 0; i < decorationTiles.size(); i++) {
             DecorationTile decorationTile = decorationTiles.get(i);
-            Debug.d("Restoring tile "+decorationTile.item_name.get());
+            Debug.d("Restoring tile " + decorationTile.item_name.get());
             decorationTile.decoration = this.locale.decoration_map.get(decorationTile.item_name.get());
             decorationTile.phoeniciaGame = this;
             decorationTile.save(PhoeniciaContext.context);
@@ -1442,7 +1444,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      */
     public void playBlockSound(String soundFile) {
 
-        Debug.d("Playing sound: "+soundFile);
+        Debug.d("Playing sound: " + soundFile);
         if (!this.isStarted) {
             Debug.d("Game hasn't started yet, not playing any sound");
             return;
@@ -1458,7 +1460,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      * Play the given audio file
      * @param soundFile
      */
-    public void playLevelSound(String soundFile) {
+    public void playLevelSound(String soundFile, MediaPlayer.OnCompletionListener callback) {
 
         Debug.d("Playing sound: "+soundFile);
         if (!this.isStarted) {
@@ -1466,26 +1468,35 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             return;
         }
         if (this.levelSounds.containsKey(soundFile)) {
-            this.levelSounds.get(soundFile).play();
+            Music sound = this.levelSounds.get(soundFile);
+            sound.setOnCompletionListener(callback);
+            sound.play();
         } else {
             Debug.d("No levelSounds: " + soundFile + "");
         }
     }
 
+    private void checkLevelRequirements() {
+        Level current = this.locale.level_map.get(current_level);
+        while (current.check(PhoeniciaContext.context) && current.next != null) {
+            this.changeLevel(current.next);
+            current = current.next;
+        }
+    }
     @Override
     public void onInventoryUpdated(InventoryItem[] item) {
-        final Level current = this.locale.level_map.get(current_level);
-        if (current.check(PhoeniciaContext.context) && this.locale.levels.size() > this.locale.levels.indexOf(current)+1) {
-            final Level next = this.locale.levels.get(this.locale.levels.indexOf(current)+1);
-            this.changeLevel(next);
-        }
+        this.checkLevelRequirements();
     }
 
     @Override
     public void onBankAccountUpdated(int new_balance) {
-        // TODO: do something
+        this.checkLevelRequirements();
     }
 
+    @Override
+    public void onExperienceChanged(int new_xp) {
+        this.checkLevelRequirements();
+    }
     /**
      * Called whenever the player advances to the next level.
      * @param next
@@ -1494,6 +1505,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.current_level = next.name;
         this.session.current_level.set(current_level);
         Bank.getInstance().credit(next.coinsEarned);
+        this.session.addExperience(next.pointsEarned);
         this.session.save(PhoeniciaContext.context);
 
         Debug.d("Level changed to: " + current_level);
