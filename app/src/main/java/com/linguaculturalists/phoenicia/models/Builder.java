@@ -117,5 +117,7 @@ public abstract class Builder extends Model {
         this.updateHandlers.remove(handler);
     }
 
-
+    public void clearUpdateHandlers() {
+        this.updateHandlers.clear();
+    }
 }

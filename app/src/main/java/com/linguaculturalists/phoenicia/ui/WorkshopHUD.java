@@ -423,6 +423,7 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
             public void onCompleted(Builder buildItem) {
                 Debug.d("WordBuilder for " + buildItem.item_name.get() + " has completed");
                 game.playBlockSound(word.sound);
+                buildItem.removeUpdateHandler(this);
             }
 
             @Override

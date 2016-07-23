@@ -215,23 +215,845 @@
                 <gather_word count="2">cat</gather_word>
                 <gather_word count="2">hat</gather_word>
                 <gather_word count="2">bat</gather_word>
+            </req>
+        </level>
+        <level name="6" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>cat</words>
+            <help>
+                <words>cat</words>
+            </help>
+            <req>
+                <gather_word count="1">cat</gather_word>
+            </req>
+        </level>
+        <level name="7" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <letters>p</letters>
+            <words>cap</words>
+            <help>
+                <letters>p</letters>
+                <words>cap</words>
+            </help>
+            <req>
+                <gather_word count="1">cap</gather_word>
+            </req>
+        </level>
+        <level name="8" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <letters>r</letters>
+            <words>car</words>
+            <help>
+                <letters>r</letters>
+                <words>car</words>
+            </help>
+            <req>
+                <gather_word count="1">car</gather_word>
+            </req>
+        </level>
+        <level name="9" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <letters>j</letters>
+            <words>jar</words>
+            <help>
+                <letters>j</letters>
+                <words>jar</words>
+            </help>
+            <req>
+                <gather_word count="1">jar</gather_word>
+            </req>
+        </level>
+        <level name="10" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <letters>y,n</letters>
+            <words>yarn</words>
+            <help>
+                <letters>y,n</letters>
+                <words>yarn</words>
+            </help>
+            <req>
+                <gather_word count="1">yarn</gather_word>
+            </req>
+        </level>
+        <level name="11" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <letters>w,e</letters>
+            <words>water</words>
+            <help>
+                <letters>w,e</letters>
+                <words>water,yarn</words>
+            </help>
+            <req>
+                <gather_word count="1">water</gather_word>
+            </req>
+        </level>
+        <level name="12" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>can</words>
+            <help>
+                <words>can</words>
+            </help>
+            <req>
+                <gather_word count="1">can</gather_word>
+            </req>
+        </level>
+        <level name="13" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <letters>v</letters>
+            <words>van</words>
+            <help>
+                <letters>v</letters>
+                <words>van</words>
+            </help>
+            <req>
+                <gather_word count="1">van</gather_word>
+            </req>
+        </level>
+        <level name="14" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <letters>f</letters>
+            <words>fan</words>
+            <help>
+                <letters>f</letters>
+                <words>fan</words>
+            </help>
+            <req>
+                <gather_word count="1">fan</gather_word>
+            </req>
+        </level>
+        <level name="15" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>pan</words>
+            <help>
+                <words>pan</words>
+            </help>
+            <req>
+                <gather_word count="1">pan</gather_word>
+            </req>
+        </level>
+        <level name="16" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>bat</words>
+            <help>
+                <words>bat</words>
+            </help>
+            <req>
+                <gather_word count="1">bat</gather_word>
+            </req>
+        </level>
+        <level name="17" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>rat</words>
+            <help>
+                <words>rat</words>
+            </help>
+            <req>
+                <gather_word count="1">rat</gather_word>
+            </req>
+        </level>
+        <level name="18" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>banana</words>
+            <help>
+                <words>banana</words>
+            </help>
+            <req>
+                <gather_word count="1">banana</gather_word>
+            </req>
+        </level>
+        <level name="19" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>pants</words>
+            <help>
+                <words>pants</words>
+            </help>
+            <req>
+                <gather_word count="1">pants</gather_word>
+            </req>
+        </level>
+        <level name="20" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>camera</words>
+            <help>
+                <words>camera</words>
+            </help>
+            <req>
+                <gather_word count="1">camera</gather_word>
+            </req>
+        </level>
+        <level name="21" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>candle</words>
+            <help>
+                <words>candle</words>
+            </help>
+            <req>
+                <gather_word count="1">candle</gather_word>
+            </req>
+        </level>
+        <level name="22" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>table</words>
+            <help>
+                <words>table</words>
+            </help>
+            <req>
+                <gather_word count="1">table</gather_word>
+            </req>
+        </level>
+        <level name="23" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>hat</words>
+            <help>
+                <words>hat</words>
+            </help>
+            <req>
+                <gather_word count="1">hat</gather_word>
+            </req>
+        </level>
+        <level name="24" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>ham</words>
+            <help>
+                <words>ham</words>
+            </help>
+            <req>
+                <gather_word count="1">ham</gather_word>
+            </req>
+        </level>
+        <level name="25" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>jam</words>
+            <help>
+                <words>jam</words>
+            </help>
+            <req>
+                <gather_word count="1">jam</gather_word>
+            </req>
+        </level>
+        <level name="26" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>lamp</words>
+            <help>
+                <words>lamp</words>
+            </help>
+            <req>
+                <gather_word count="1">lamp</gather_word>
+            </req>
+        </level>
+        <level name="27" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>hammer</words>
+            <help>
+                <words>hammer</words>
+            </help>
+            <req>
+                <gather_word count="1">hammer</gather_word>
+            </req>
+        </level>
+        <level name="28" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>grass</words>
+            <help>
+                <words>grass</words>
+            </help>
+            <req>
+                <gather_word count="1">grass</gather_word>
+            </req>
+        </level>
+        <level name="29" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>dress</words>
+            <help>
+                <words>dress</words>
+            </help>
+            <req>
+                <gather_word count="1">dress</gather_word>
+            </req>
+        </level>
+        <level name="30" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>goat</words>
+            <help>
+                <words>goat</words>
+            </help>
+            <req>
+                <gather_word count="1">goat</gather_word>
+            </req>
+        </level>
+        <level name="31" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>boat</words>
+            <help>
+                <words>boat</words>
+            </help>
+            <req>
+                <gather_word count="1">boat</gather_word>
+            </req>
+        </level>
+        <level name="32" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>frog</words>
+            <help>
+                <words>frog</words>
+            </help>
+            <req>
+                <gather_word count="1">frog</gather_word>
+            </req>
+        </level>
+        <level name="33" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>mat</words>
+            <help>
+                <words>mat</words>
+            </help>
+            <req>
+                <gather_word count="1">mat</gather_word>
+            </req>
+        </level>
+        <level name="34" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>map</words>
+            <help>
+                <words>map</words>
+            </help>
+            <req>
+                <gather_word count="1">map</gather_word>
+            </req>
+        </level>
+        <level name="35" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>cup</words>
+            <help>
+                <words>cup</words>
+            </help>
+            <req>
+                <gather_word count="1">cup</gather_word>
+            </req>
+        </level>
+        <level name="36" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>apple</words>
+            <help>
+                <words>apple</words>
+            </help>
+            <req>
                 <gather_word count="1">apple</gather_word>
             </req>
         </level>
-        <level name="impossible" market="4"  coins="0">
+        <level name="37" market="4" coins="0" points="0">
             <intro>
-                <page sound="locales/en_us_rural/sounds/intro5p1.ogg">You should never see this level.</page>
             </intro>
-            <letters>e,n,p</letters>
-            <words>can,pen,pan</words>
+            <words>milk</words>
             <help>
-                <letters>e,n,p</letters>
-                <words>can,pen,pan</words>
+                <words>milk</words>
             </help>
             <req>
-                <gather_word count="2">can</gather_word>
-                <gather_word count="2">pan</gather_word>
-                <gather_word count="2">pen</gather_word>
+                <gather_word count="1">milk</gather_word>
+            </req>
+        </level>
+        <level name="38" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>pot</words>
+            <help>
+                <words>pot</words>
+            </help>
+            <req>
+                <gather_word count="1">pot</gather_word>
+            </req>
+        </level>
+        <level name="39" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>cot</words>
+            <help>
+                <words>cot</words>
+            </help>
+            <req>
+                <gather_word count="1">cot</gather_word>
+            </req>
+        </level>
+        <level name="40" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>cow</words>
+            <help>
+                <words>cow</words>
+            </help>
+            <req>
+                <gather_word count="1">cow</gather_word>
+            </req>
+        </level>
+        <level name="41" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>owl</words>
+            <help>
+                <words>owl</words>
+            </help>
+            <req>
+                <gather_word count="1">owl</gather_word>
+            </req>
+        </level>
+        <level name="42" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>bowl</words>
+            <help>
+                <words>bowl</words>
+            </help>
+            <req>
+                <gather_word count="1">bowl</gather_word>
+            </req>
+        </level>
+        <level name="43" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>flower</words>
+            <help>
+                <words>flower</words>
+            </help>
+            <req>
+                <gather_word count="1">flower</gather_word>
+            </req>
+        </level>
+        <level name="44" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>tower</words>
+            <help>
+                <words>tower</words>
+            </help>
+            <req>
+                <gather_word count="1">tower</gather_word>
+            </req>
+        </level>
+        <level name="45" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>horse</words>
+            <help>
+                <words>horse</words>
+            </help>
+            <req>
+                <gather_word count="1">horse</gather_word>
+            </req>
+        </level>
+        <level name="46" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>doll</words>
+            <help>
+                <words>doll</words>
+            </help>
+            <req>
+                <gather_word count="1">doll</gather_word>
+            </req>
+        </level>
+        <level name="47" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>dog</words>
+            <help>
+                <words>dog</words>
+            </help>
+            <req>
+                <gather_word count="1">dog</gather_word>
+            </req>
+        </level>
+        <level name="48" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>sock</words>
+            <help>
+                <words>sock</words>
+            </help>
+            <req>
+                <gather_word count="1">sock</gather_word>
+            </req>
+        </level>
+        <level name="49" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>pen</words>
+            <help>
+                <words>pen</words>
+            </help>
+            <req>
+                <gather_word count="1">pen</gather_word>
+            </req>
+        </level>
+        <level name="50" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>tent</words>
+            <help>
+                <words>tent</words>
+            </help>
+            <req>
+                <gather_word count="1">tent</gather_word>
+            </req>
+        </level>
+        <level name="51" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>pencil</words>
+            <help>
+                <words>pencil</words>
+            </help>
+            <req>
+                <gather_word count="1">pencil</gather_word>
+            </req>
+        </level>
+        <level name="52" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>bed</words>
+            <help>
+                <words>bed</words>
+            </help>
+            <req>
+                <gather_word count="1">bed</gather_word>
+            </req>
+        </level>
+        <level name="53" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>zebra</words>
+            <help>
+                <words>zebra</words>
+            </help>
+            <req>
+                <gather_word count="1">zebra</gather_word>
+            </req>
+        </level>
+        <level name="54" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>brush</words>
+            <help>
+                <words>brush</words>
+            </help>
+            <req>
+                <gather_word count="1">brush</gather_word>
+            </req>
+        </level>
+        <level name="55" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>bread</words>
+            <help>
+                <words>bread</words>
+            </help>
+            <req>
+                <gather_word count="1">bread</gather_word>
+            </req>
+        </level>
+        <level name="56" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>broom</words>
+            <help>
+                <words>broom</words>
+            </help>
+            <req>
+                <gather_word count="1">broom</gather_word>
+            </req>
+        </level>
+        <level name="57" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>fish</words>
+            <help>
+                <words>fish</words>
+            </help>
+            <req>
+                <gather_word count="1">fish</gather_word>
+            </req>
+        </level>
+        <level name="58" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>log</words>
+            <help>
+                <words>log</words>
+            </help>
+            <req>
+                <gather_word count="1">log</gather_word>
+            </req>
+        </level>
+        <level name="59" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>lock</words>
+            <help>
+                <words>lock</words>
+            </help>
+            <req>
+                <gather_word count="1">lock</gather_word>
+            </req>
+        </level>
+        <level name="60" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>sock</words>
+            <help>
+                <words>sock</words>
+            </help>
+            <req>
+                <gather_word count="1">sock</gather_word>
+            </req>
+        </level>
+        <level name="61" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>pig</words>
+            <help>
+                <words>pig</words>
+            </help>
+            <req>
+                <gather_word count="1">pig</gather_word>
+            </req>
+        </level>
+        <level name="62" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>pie</words>
+            <help>
+                <words>pie</words>
+            </help>
+            <req>
+                <gather_word count="1">pie</gather_word>
+            </req>
+        </level>
+        <level name="63" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>egg</words>
+            <help>
+                <words>egg</words>
+            </help>
+            <req>
+                <gather_word count="1">egg</gather_word>
+            </req>
+        </level>
+        <level name="64" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>ring</words>
+            <help>
+                <words>ring</words>
+            </help>
+            <req>
+                <gather_word count="1">ring</gather_word>
+            </req>
+        </level>
+        <level name="65" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>spring</words>
+            <help>
+                <words>spring</words>
+            </help>
+            <req>
+                <gather_word count="1">spring</gather_word>
+            </req>
+        </level>
+        <level name="66" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>swing</words>
+            <help>
+                <words>swing</words>
+            </help>
+            <req>
+                <gather_word count="1">swing</gather_word>
+            </req>
+        </level>
+        <level name="67" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>string</words>
+            <help>
+                <words>string</words>
+            </help>
+            <req>
+                <gather_word count="1">string</gather_word>
+            </req>
+        </level>
+        <level name="68" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>pail</words>
+            <help>
+                <words>pail</words>
+            </help>
+            <req>
+                <gather_word count="1">pail</gather_word>
+            </req>
+        </level>
+        <level name="69" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>mail</words>
+            <help>
+                <words>mail</words>
+            </help>
+            <req>
+                <gather_word count="1">mail</gather_word>
+            </req>
+        </level>
+        <level name="70" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>sail</words>
+            <help>
+                <words>sail</words>
+            </help>
+            <req>
+                <gather_word count="1">sail</gather_word>
+            </req>
+        </level>
+        <level name="71" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>nail</words>
+            <help>
+                <words>nail</words>
+            </help>
+            <req>
+                <gather_word count="1">nail</gather_word>
+            </req>
+        </level>
+        <level name="72" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>trail</words>
+            <help>
+                <words>trail</words>
+            </help>
+            <req>
+                <gather_word count="1">trail</gather_word>
+            </req>
+        </level>
+        <level name="73" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>tree</words>
+            <help>
+                <words>tree</words>
+            </help>
+            <req>
+                <gather_word count="1">tree</gather_word>
+            </req>
+        </level>
+        <level name="74" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>seed</words>
+            <help>
+                <words>seed</words>
+            </help>
+            <req>
+                <gather_word count="1">seed</gather_word>
+            </req>
+        </level>
+        <level name="75" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>needle</words>
+            <help>
+                <words>needle</words>
+            </help>
+            <req>
+                <gather_word count="1">needle</gather_word>
+            </req>
+        </level>
+        <level name="76" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>hut</words>
+            <help>
+                <words>hut</words>
+            </help>
+            <req>
+                <gather_word count="1">hut</gather_word>
+            </req>
+        </level>
+        <level name="77" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>mud</words>
+            <help>
+                <words>mud</words>
+            </help>
+            <req>
+                <gather_word count="1">mud</gather_word>
+            </req>
+        </level>
+        <level name="78" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>bucket</words>
+            <help>
+                <words>bucket</words>
+            </help>
+            <req>
+                <gather_word count="1">bucket</gather_word>
+            </req>
+        </level>
+        <level name="79" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>truck</words>
+            <help>
+                <words>truck</words>
+            </help>
+            <req>
+                <gather_word count="1">truck</gather_word>
+            </req>
+        </level>
+        <level name="80" market="4" coins="0" points="0">
+            <intro>
+            </intro>
+            <words>duck</words>
+            <help>
+                <words>duck</words>
+            </help>
+            <req>
+                <gather_word count="1">duck</gather_word>
             </req>
         </level>
     </levels>

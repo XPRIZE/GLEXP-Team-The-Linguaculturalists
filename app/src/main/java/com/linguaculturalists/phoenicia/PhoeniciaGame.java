@@ -1501,7 +1501,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             Debug.d("Calling update listener: "+this.levelListeners.get(i).getClass());
             this.levelListeners.get(i).onLevelChanged(next);
         }
-        this.hudManager.showLevelIntro(this.locale.level_map.get(current_level));
+        if (this.locale.level_map.get(current_level).intro.size() > 0) {
+            this.hudManager.showLevelIntro(this.locale.level_map.get(current_level));
+        }
         return;
     }
 

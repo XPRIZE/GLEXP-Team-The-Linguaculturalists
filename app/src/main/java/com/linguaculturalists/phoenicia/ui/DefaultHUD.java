@@ -198,6 +198,11 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
     public void onLevelChanged(Level next) {
         this.levelDisplay.setText(next.name);
         this.levelDisplay.setPosition(64 + (this.levelDisplay.getWidth() / 2), this.levelDisplay.getY());
+        if (next.intro.size() > 0) {
+            this.helpButton.setVisible(true);
+        } else {
+            this.helpButton.setVisible(false);
+        }
     }
 
     public void onExperienceChanged(int points) {
