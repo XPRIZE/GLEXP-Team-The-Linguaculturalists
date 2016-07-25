@@ -105,7 +105,7 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
             }
         }
 
-        this.nextButton = new Button(whiteRect.getWidth() - 150, 50, 150, 80, "Next", PhoeniciaContext.vboManager, new Button.OnClickListener() {
+        this.nextButton = new Button(whiteRect.getWidth() - 100, 50, 150, 60, "Next", PhoeniciaContext.vboManager, new Button.OnClickListener() {
             @Override
             public void onClicked(Button button) {
                 if (current_page+1 < level.intro.size()) {
