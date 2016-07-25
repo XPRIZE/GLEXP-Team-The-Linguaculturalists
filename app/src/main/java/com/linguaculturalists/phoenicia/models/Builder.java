@@ -37,6 +37,10 @@ public abstract class Builder extends Model {
      * @return percentage complete
      */
     public int update() {
+        return this.update(1);
+    }
+
+    public int update(double time) {
         int currentStatus = this.status.get();
         if (currentStatus == Builder.NONE) { return  0; }
         if (currentStatus == Builder.COMPLETE) { return  100; }
@@ -45,7 +49,7 @@ public abstract class Builder extends Model {
         if (currentStatus == Builder.SCHEDULED) { this.start(); }
 
         // Increment progress
-        int newProgress = this.progress.get() + 1;
+        int newProgress = this.progress.get() + (int)time;
         this.progress.set(newProgress);
         this.save(PhoeniciaContext.context);
         this.progressChanged();

@@ -72,6 +72,18 @@ public class GameActivity extends BaseGameActivity {
     }
 
     @Override
+    public synchronized void onPauseGame() {
+        super.onPauseGame();
+        game.pause();
+    }
+
+    @Override
+    public synchronized void onResumeGame() {
+        super.onResumeGame();
+        game.resume();
+    }
+
+    @Override
     public void onPopulateScene(Scene scene, OnPopulateSceneCallback onPopulateSceneCallback) throws IOException {
         // Prime the static context utility
         PhoeniciaContext.activity = this;

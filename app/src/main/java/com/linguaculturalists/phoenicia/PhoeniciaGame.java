@@ -168,6 +168,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     //public Filter sessionFilter; /**< AndrOrm query filter to limit results to this GameSession */
     private Set<Builder> builders;
     private float updateTime;
+    private long currentTime;
 
     public String current_level = ""; /**< The current level the player has reached */
     private List<LevelChangeListener> levelListeners;
@@ -936,7 +937,6 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      * Start playing the game
      */
     public void start() {
-        this.session.update();
         this.camera.setCenter(this.startCenterX, this.startCenterY);
         this.camera.setZoomFactor(2.0f);
         this.camera.setHUD(this.hudManager);
@@ -945,13 +945,38 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             this.music.play();
         }
 
-        this.isStarted = true;
-
         if (this.current_level == null || this.current_level == "") {
             this.changeLevel( this.locale.levels.get(0));
         } else if (this.current_level != this.session.current_level.get()) {
             this.changeLevel(this.locale.level_map.get(this.session.current_level.get()));
         }
+
+        double timediff = (double)System.currentTimeMillis() - session.last_timestamp.get();
+        Debug.d("Restarting after " + (timediff / 1000) + " seconds");
+        this.onUpdate((float) timediff / 1000);
+
+        this.session.update();
+        this.isStarted = true;
+
+    }
+
+    public void pause() {
+        if (!isStarted) return;
+        if (this.music != null) {
+            this.music.pause();
+        }
+        session.last_timestamp.set((double)this.currentTime);
+        session.save(PhoeniciaContext.context);
+    }
+
+    public void resume() {
+        if (!isStarted) return;
+        if (this.music != null) {
+            this.music.resume();
+        }
+        double timediff = (double)System.currentTimeMillis() - session.last_timestamp.get();
+        Debug.d("Resume after "+(timediff/1000)+" seconds");
+        this.onUpdate((float)timediff/1000);
     }
 
     /**
@@ -969,19 +994,19 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public void onUpdate(float v) {
         // update build queues
         this.hudManager.update(v);
-
+        this.currentTime = System.currentTimeMillis();
         this.updateTime += v;
         if (this.updateTime > 1) {
-            this.updateTime = 0;
             // Copy builders set to avoid concurrency conflicts
             final Set<Builder> currentBuilders = new HashSet(this.builders);
             for (Builder builder : currentBuilders) {
                 if (builder.status.get() == Builder.BUILDING) {
-                    builder.update();
+                    builder.update(this.updateTime);
                     //builder.save(PhoeniciaContext.context);
                     //Debug.d("Builder "+builder.item_name.get()+" saved");
                 }
             }
+            this.updateTime = 0;
         }
     }
 
