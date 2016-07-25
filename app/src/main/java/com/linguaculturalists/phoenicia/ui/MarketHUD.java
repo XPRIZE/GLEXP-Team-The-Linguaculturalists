@@ -145,21 +145,36 @@ public class MarketHUD extends PhoeniciaHUD {
         float startX = this.requestItemsPane.getWidth() / 2 - (columns * 32) - 16;
         int offsetX = 0;
         float startY = this.requestItemsPane.getHeight() - 48;
-        for (RequestItem item : request.getItems(PhoeniciaContext.context)) {
+        for (final RequestItem item : request.getItems(PhoeniciaContext.context)) {
             if (offsetX >= columns) {
                 startY -= 96;
                 startX = this.requestItemsPane.getWidth() / 2 - (columns * 32) - 16;
                 offsetX = 0;
-            }            final Letter currentLetter = game.locale.letter_map.get(item.item_name.get());
+            }
+            final Letter currentLetter = game.locale.letter_map.get(item.item_name.get());
             final Word currentWord = game.locale.word_map.get(item.item_name.get());
             if (currentLetter != null) {
                 Debug.d("Request Letter: " + item.item_name.get());
                 LetterSprite requestItemSprite = new LetterSprite(startX, startY, currentLetter, item.quantity.get(), game.letterSprites.get(currentLetter).getTextureRegion(0), PhoeniciaContext.vboManager);
+                requestItemSprite.setOnClickListener(new ButtonSprite.OnClickListener() {
+                    @Override
+                    public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                        game.playBlockSound(currentLetter.sound);
+                    }
+                });
                 this.requestItemsPane.attachChild(requestItemSprite);
+                this.registerTouchArea(requestItemSprite);
             } else if (currentWord != null) {
                 Debug.d("Request Word: " + item.item_name.get());
                 WordSprite requestItemSprite = new WordSprite(startX, startY, currentWord, item.quantity.get(), game.wordSprites.get(currentWord).getTextureRegion(0), PhoeniciaContext.vboManager);
+                requestItemSprite.setOnClickListener(new ButtonSprite.OnClickListener() {
+                    @Override
+                    public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                        game.playBlockSound(currentWord.sound);
+                    }
+                });
                 this.requestItemsPane.attachChild(requestItemSprite);
+                this.registerTouchArea(requestItemSprite);
             } else {
                 continue;
             }
