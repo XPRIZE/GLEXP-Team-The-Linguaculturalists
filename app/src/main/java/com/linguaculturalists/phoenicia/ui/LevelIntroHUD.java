@@ -105,10 +105,11 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
             }
         }
 
-        this.nextButton = new Button(textPanel.getWidth() - 150, 50, 200, 80, "Next", PhoeniciaContext.vboManager, new Button.OnClickListener() {
+        this.nextButton = new Button(whiteRect.getWidth() - 150, 50, 150, 80, "Next", PhoeniciaContext.vboManager, new Button.OnClickListener() {
             @Override
             public void onClicked(Button button) {
                 if (current_page+1 < level.intro.size()) {
+                    nextButton.setVisible(false);
                     showPage(current_page + 1);
                 } else {
                     game.hudManager.pop();
@@ -116,6 +117,8 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
             }
         });
         nextButton.setVisible(false);
+        this.registerTouchArea(nextButton);
+        whiteRect.attachChild(nextButton);
         Debug.d("Finished instantiating LevelIntroHUD");
 
         this.clickDetector = new ClickDetector(this);
