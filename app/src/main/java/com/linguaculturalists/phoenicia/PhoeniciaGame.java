@@ -630,6 +630,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                     Debug.d("Workshop building word: " + workshopBuilder.item_name.get());
                     Word workshopWord = locale.word_map.get(workshopBuilder.item_name.get());
                     if (workshopWord != null) {
+                        workshopBuilder.setUpdateHandler(this, workshopDefaultTile, workshopWord);
                         workshopBuilder.time.set(workshopWord.time);
                         // If builder is market complete, set the progress to the build time in case it was changed in the locale
                         if (workshopBuilder.status.get() == Builder.COMPLETE) {

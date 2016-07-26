@@ -419,30 +419,7 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
         builder.progress.set(0);
         builder.status.set(Builder.SCHEDULED);
         builder.save(PhoeniciaContext.context);
-        builder.addUpdateHandler(new Builder.BuildStatusUpdateHandler() {
-            @Override
-            public void onCompleted(Builder buildItem) {
-                Debug.d("WordBuilder for " + buildItem.item_name.get() + " has completed");
-                game.playBlockSound(word.sound);
-                buildItem.removeUpdateHandler(this);
-                tile.setAttention(true);
-            }
-
-            @Override
-            public void onProgressChanged(Builder buildItem) {
-                //Debug.d("WordBuilder updated " + buildItem.item_name.get() + " is at: " + buildItem.progress.get());
-            }
-
-            @Override
-            public void onScheduled(Builder buildItem) {
-
-            }
-
-            @Override
-            public void onStarted(Builder buildItem) {
-                Debug.d("WordBuilder for " + buildItem.item_name.get() + " has been started");
-            }
-        });
+        builder.setUpdateHandler(game, tile, word);
         game.addBuilder(builder);
         builder.start();
         tile.setBuilder(builder);

@@ -2,10 +2,14 @@ package com.linguaculturalists.phoenicia.models;
 
 import android.content.Context;
 
+import com.linguaculturalists.phoenicia.PhoeniciaGame;
+import com.linguaculturalists.phoenicia.locale.Word;
 import com.orm.androrm.QuerySet;
 import com.orm.androrm.field.CharField;
 import com.orm.androrm.field.ForeignKeyField;
 import com.orm.androrm.field.IntegerField;
+
+import org.andengine.util.debug.Debug;
 
 /**
  * Builder for creating new Word items.
@@ -77,6 +81,32 @@ public class WorkshopBuilder extends Builder {
         }
     }
 
+    public void setUpdateHandler(final PhoeniciaGame phoeniciaGame, final DefaultTile workshopTile, final Word word) {
+        this.addUpdateHandler(new Builder.BuildStatusUpdateHandler() {
+            @Override
+            public void onCompleted(Builder buildItem) {
+                Debug.d("WordBuilder for " + buildItem.item_name.get() + " has completed");
+                phoeniciaGame.playBlockSound(word.sound);
+                buildItem.removeUpdateHandler(this);
+                workshopTile.setAttention(true);
+            }
+
+            @Override
+            public void onProgressChanged(Builder buildItem) {
+
+            }
+
+            @Override
+            public void onScheduled(Builder buildItem) {
+
+            }
+
+            @Override
+            public void onStarted(Builder buildItem) {
+
+            }
+        });
+    }
 
     @Override
     protected void migrate(Context context) {
