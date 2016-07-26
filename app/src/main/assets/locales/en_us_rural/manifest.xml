@@ -30,116 +30,116 @@
         <decoration size="2x2" name="Fountaion"  points="500" buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
     </decorations>
 
-    <!-- English alphabet -->
+    <!-- alphabet -->
     <letters>
-        <letter name="a" buy="0"  sell="1"  points="10" time="10" sprite="locales/common/textures/letters/sprites/a.png" block="locales/common/textures/letters/blocks/a.png" sound="locales/en_us_rural/sounds/a-name.ogg" phoneme="locales/en_us_rural/sounds/a-phoneme.ogg">a</letter>
-        <letter name="b" buy="5"  sell="4"  points="10" time="90" sprite="locales/common/textures/letters/sprites/b.png" block="locales/common/textures/letters/blocks/b.png" sound="locales/en_us_rural/sounds/b-name.ogg" phoneme="locales/en_us_rural/sounds/b-phoneme.ogg">b</letter>
-        <letter name="c" buy="2"  sell="10"  points="10" time="45" sprite="locales/common/textures/letters/sprites/c.png" block="locales/common/textures/letters/blocks/c.png" sound="locales/en_us_rural/sounds/c-name.ogg" phoneme="locales/en_us_rural/sounds/c-phoneme.ogg">c</letter>
-        <letter name="d" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/d.png" block="locales/common/textures/letters/blocks/d.png" sound="locales/en_us_rural/sounds/d-name.ogg" phoneme="locales/en_us_rural/sounds/d-phoneme.ogg">d</letter>
-        <letter name="e" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/e.png" block="locales/common/textures/letters/blocks/e.png" sound="locales/en_us_rural/sounds/e-name.ogg" phoneme="locales/en_us_rural/sounds/e-phoneme.ogg">e</letter>
-        <letter name="f" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/f.png" block="locales/common/textures/letters/blocks/f.png" sound="locales/en_us_rural/sounds/f-name.ogg" phoneme="locales/en_us_rural/sounds/f-phoneme.ogg">f</letter>
-        <letter name="g" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/g.png" block="locales/common/textures/letters/blocks/g.png" sound="locales/en_us_rural/sounds/g-name.ogg" phoneme="locales/en_us_rural/sounds/g-phoneme.ogg">g</letter>
-        <letter name="h" buy="4"  sell="3"  points="10" time="60" sprite="locales/common/textures/letters/sprites/h.png" block="locales/common/textures/letters/blocks/h.png" sound="locales/en_us_rural/sounds/h-name.ogg" phoneme="locales/en_us_rural/sounds/h-phoneme.ogg">h</letter>
-        <letter name="i" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/i.png" block="locales/common/textures/letters/blocks/i.png" sound="locales/en_us_rural/sounds/i-name.ogg" phoneme="locales/en_us_rural/sounds/i-phoneme.ogg">i</letter>
-        <letter name="j" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/j.png" block="locales/common/textures/letters/blocks/j.png" sound="locales/en_us_rural/sounds/j-name.ogg" phoneme="locales/en_us_rural/sounds/j-phoneme.ogg">j</letter>
-        <letter name="k" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/k.png" block="locales/common/textures/letters/blocks/k.png" sound="locales/en_us_rural/sounds/k-name.ogg" phoneme="locales/en_us_rural/sounds/k-phoneme.ogg">k</letter>
-        <letter name="l" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/l.png" block="locales/common/textures/letters/blocks/l.png" sound="locales/en_us_rural/sounds/l-name.ogg" phoneme="locales/en_us_rural/sounds/l-phoneme.ogg">l</letter>
-        <letter name="m" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/m.png" block="locales/common/textures/letters/blocks/m.png" sound="locales/en_us_rural/sounds/m-name.ogg" phoneme="locales/en_us_rural/sounds/m-phoneme.ogg">m</letter>
-        <letter name="n" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/n.png" block="locales/common/textures/letters/blocks/n.png" sound="locales/en_us_rural/sounds/n-name.ogg" phoneme="locales/en_us_rural/sounds/n-phoneme.ogg">n</letter>
-        <letter name="o" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/o.png" block="locales/common/textures/letters/blocks/o.png" sound="locales/en_us_rural/sounds/o-name.ogg" phoneme="locales/en_us_rural/sounds/o-phoneme.ogg">o</letter>
-        <letter name="p" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/p.png" block="locales/common/textures/letters/blocks/p.png" sound="locales/en_us_rural/sounds/p-name.ogg" phoneme="locales/en_us_rural/sounds/p-phoneme.ogg">p</letter>
-        <letter name="q" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/q.png" block="locales/common/textures/letters/blocks/q.png" sound="locales/en_us_rural/sounds/q-name.ogg" phoneme="locales/en_us_rural/sounds/q-phoneme.ogg">q</letter>
-        <letter name="r" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/r.png" block="locales/common/textures/letters/blocks/r.png" sound="locales/en_us_rural/sounds/r-name.ogg" phoneme="locales/en_us_rural/sounds/r-phoneme.ogg">r</letter>
-        <letter name="s" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/s.png" block="locales/common/textures/letters/blocks/s.png" sound="locales/en_us_rural/sounds/s-name.ogg" phoneme="locales/en_us_rural/sounds/s-phoneme.ogg">s</letter>
-        <letter name="t" buy="3"  sell="2"  points="10" time="30" sprite="locales/common/textures/letters/sprites/t.png" block="locales/common/textures/letters/blocks/t.png" sound="locales/en_us_rural/sounds/t-name.ogg" phoneme="locales/en_us_rural/sounds/t-phoneme.ogg">t</letter>
-        <letter name="u" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/u.png" block="locales/common/textures/letters/blocks/u.png" sound="locales/en_us_rural/sounds/u-name.ogg" phoneme="locales/en_us_rural/sounds/u-phoneme.ogg">u</letter>
-        <letter name="v" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/v.png" block="locales/common/textures/letters/blocks/v.png" sound="locales/en_us_rural/sounds/v-name.ogg" phoneme="locales/en_us_rural/sounds/v-phoneme.ogg">v</letter>
-        <letter name="w" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/w.png" block="locales/common/textures/letters/blocks/w.png" sound="locales/en_us_rural/sounds/w-name.ogg" phoneme="locales/en_us_rural/sounds/w-phoneme.ogg">w</letter>
-        <letter name="x" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/x.png" block="locales/common/textures/letters/blocks/x.png" sound="locales/en_us_rural/sounds/x-name.ogg" phoneme="locales/en_us_rural/sounds/x-phoneme.ogg">x</letter>
-        <letter name="y" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/y.png" block="locales/common/textures/letters/blocks/y.png" sound="locales/en_us_rural/sounds/y-name.ogg" phoneme="locales/en_us_rural/sounds/y-phoneme.ogg">y</letter>
-        <letter name="z" buy="10" sell="10" points="10" time="30" sprite="locales/common/textures/letters/sprites/z.png" block="locales/common/textures/letters/blocks/z.png" sound="locales/en_us_rural/sounds/z-name.ogg" phoneme="locales/en_us_rural/sounds/z-phoneme.ogg">z</letter>
+        <letter name="a" buy="1" sell="2"  points="0" time="30" sprite="locales/common/textures/letters/sprites/a.png" block="locales/common/textures/letters/blocks/a.png" sound="locales/en_us_rural/sounds/a-name.ogg" phoneme="locales/en_us_rural/sounds/a-phoneme.ogg">a</letter>
+        <letter name="b" buy="4" sell="5"  points="4" time="120" sprite="locales/common/textures/letters/sprites/b.png" block="locales/common/textures/letters/blocks/b.png" sound="locales/en_us_rural/sounds/b-name.ogg" phoneme="locales/en_us_rural/sounds/b-phoneme.ogg">b</letter>
+        <letter name="c" buy="2" sell="1"  points="1" time="49" sprite="locales/common/textures/letters/sprites/c.png" block="locales/common/textures/letters/blocks/c.png" sound="locales/en_us_rural/sounds/c-name.ogg" phoneme="locales/en_us_rural/sounds/c-phoneme.ogg">c</letter>
+        <letter name="d" buy="13" sell="14"  points="13" time="390" sprite="locales/common/textures/letters/sprites/d.png" block="locales/common/textures/letters/blocks/d.png" sound="locales/en_us_rural/sounds/d-name.ogg" phoneme="locales/en_us_rural/sounds/d-phoneme.ogg">d</letter>
+        <letter name="e" buy="19" sell="20"  points="19" time="570" sprite="locales/common/textures/letters/sprites/e.png" block="locales/common/textures/letters/blocks/e.png" sound="locales/en_us_rural/sounds/e-name.ogg" phoneme="locales/en_us_rural/sounds/e-phoneme.ogg">e</letter>
+        <letter name="f" buy="10" sell="11"  points="10" time="300" sprite="locales/common/textures/letters/sprites/f.png" block="locales/common/textures/letters/blocks/f.png" sound="locales/en_us_rural/sounds/f-name.ogg" phoneme="locales/en_us_rural/sounds/f-phoneme.ogg">f</letter>
+        <letter name="g" buy="14" sell="15"  points="14" time="420" sprite="locales/common/textures/letters/sprites/g.png" block="locales/common/textures/letters/blocks/g.png" sound="locales/en_us_rural/sounds/g-name.ogg" phoneme="locales/en_us_rural/sounds/g-phoneme.ogg">g</letter>
+        <letter name="h" buy="3" sell="4"  points="3" time="90" sprite="locales/common/textures/letters/sprites/h.png" block="locales/common/textures/letters/blocks/h.png" sound="locales/en_us_rural/sounds/h-name.ogg" phoneme="locales/en_us_rural/sounds/h-phoneme.ogg">h</letter>
+        <letter name="i" buy="17" sell="18"  points="17" time="510" sprite="locales/common/textures/letters/sprites/i.png" block="locales/common/textures/letters/blocks/i.png" sound="locales/en_us_rural/sounds/i-name.ogg" phoneme="locales/en_us_rural/sounds/i-phoneme.ogg">i</letter>
+        <letter name="j" buy="11" sell="12"  points="11" time="330" sprite="locales/common/textures/letters/sprites/j.png" block="locales/common/textures/letters/blocks/j.png" sound="locales/en_us_rural/sounds/j-name.ogg" phoneme="locales/en_us_rural/sounds/j-phoneme.ogg">j</letter>
+        <letter name="k" buy="20" sell="21"  points="20" time="600" sprite="locales/common/textures/letters/sprites/k.png" block="locales/common/textures/letters/blocks/k.png" sound="locales/en_us_rural/sounds/k-name.ogg" phoneme="locales/en_us_rural/sounds/k-phoneme.ogg">k</letter>
+        <letter name="l" buy="15" sell="16"  points="15" time="450" sprite="locales/common/textures/letters/sprites/l.png" block="locales/common/textures/letters/blocks/l.png" sound="locales/en_us_rural/sounds/l-name.ogg" phoneme="locales/en_us_rural/sounds/l-phoneme.ogg">l</letter>
+        <letter name="m" buy="6" sell="7"  points="6" time="180" sprite="locales/common/textures/letters/sprites/m.png" block="locales/common/textures/letters/blocks/m.png" sound="locales/en_us_rural/sounds/m-name.ogg" phoneme="locales/en_us_rural/sounds/m-phoneme.ogg">m</letter>
+        <letter name="n" buy="8" sell="9"  points="8" time="240" sprite="locales/common/textures/letters/sprites/n.png" block="locales/common/textures/letters/blocks/n.png" sound="locales/en_us_rural/sounds/n-name.ogg" phoneme="locales/en_us_rural/sounds/n-phoneme.ogg">n</letter>
+        <letter name="o" buy="12" sell="13"  points="12" time="360" sprite="locales/common/textures/letters/sprites/o.png" block="locales/common/textures/letters/blocks/o.png" sound="locales/en_us_rural/sounds/o-name.ogg" phoneme="locales/en_us_rural/sounds/o-phoneme.ogg">o</letter>
+        <letter name="p" buy="7" sell="8"  points="7" time="210" sprite="locales/common/textures/letters/sprites/p.png" block="locales/common/textures/letters/blocks/p.png" sound="locales/en_us_rural/sounds/p-name.ogg" phoneme="locales/en_us_rural/sounds/p-phoneme.ogg">p</letter>
+        <letter name="q" buy="24" sell="25"  points="24" time="720" sprite="locales/common/textures/letters/sprites/q.png" block="locales/common/textures/letters/blocks/q.png" sound="locales/en_us_rural/sounds/q-name.ogg" phoneme="locales/en_us_rural/sounds/q-phoneme.ogg">q</letter>
+        <letter name="r" buy="5" sell="6"  points="5" time="150" sprite="locales/common/textures/letters/sprites/r.png" block="locales/common/textures/letters/blocks/r.png" sound="locales/en_us_rural/sounds/r-name.ogg" phoneme="locales/en_us_rural/sounds/r-phoneme.ogg">r</letter>
+        <letter name="s" buy="21" sell="22"  points="21" time="630" sprite="locales/common/textures/letters/sprites/s.png" block="locales/common/textures/letters/blocks/s.png" sound="locales/en_us_rural/sounds/s-name.ogg" phoneme="locales/en_us_rural/sounds/s-phoneme.ogg">s</letter>
+        <letter name="t" buy="2" sell="3"  points="2" time="60" sprite="locales/common/textures/letters/sprites/t.png" block="locales/common/textures/letters/blocks/t.png" sound="locales/en_us_rural/sounds/t-name.ogg" phoneme="locales/en_us_rural/sounds/t-phoneme.ogg">t</letter>
+        <letter name="u" buy="18" sell="19"  points="18" time="540" sprite="locales/common/textures/letters/sprites/u.png" block="locales/common/textures/letters/blocks/u.png" sound="locales/en_us_rural/sounds/u-name.ogg" phoneme="locales/en_us_rural/sounds/u-phoneme.ogg">u</letter>
+        <letter name="v" buy="9" sell="10"  points="9" time="270" sprite="locales/common/textures/letters/sprites/v.png" block="locales/common/textures/letters/blocks/v.png" sound="locales/en_us_rural/sounds/v-name.ogg" phoneme="locales/en_us_rural/sounds/v-phoneme.ogg">v</letter>
+        <letter name="w" buy="16" sell="17"  points="16" time="480" sprite="locales/common/textures/letters/sprites/w.png" block="locales/common/textures/letters/blocks/w.png" sound="locales/en_us_rural/sounds/w-name.ogg" phoneme="locales/en_us_rural/sounds/w-phoneme.ogg">w</letter>
+        <letter name="x" buy="25" sell="26"  points="25" time="750" sprite="locales/common/textures/letters/sprites/x.png" block="locales/common/textures/letters/blocks/x.png" sound="locales/en_us_rural/sounds/x-name.ogg" phoneme="locales/en_us_rural/sounds/x-phoneme.ogg">x</letter>
+        <letter name="y" buy="22" sell="23"  points="22" time="660" sprite="locales/common/textures/letters/sprites/y.png" block="locales/common/textures/letters/blocks/y.png" sound="locales/en_us_rural/sounds/y-name.ogg" phoneme="locales/en_us_rural/sounds/y-phoneme.ogg">y</letter>
+        <letter name="z" buy="23" sell="24"  points="23" time="690" sprite="locales/common/textures/letters/sprites/z.png" block="locales/common/textures/letters/blocks/z.png" sound="locales/en_us_rural/sounds/z-name.ogg" phoneme="locales/en_us_rural/sounds/z-phoneme.ogg">z</letter>
     </letters>
-
-    <!-- Locale words -->
+    
+    <!-- words -->
     <words>
-        <word name="cat" size="2x2" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/cat.png" block="locales/common/textures/words/blocks/cat.png" sound="locales/en_us_rural/sounds/cat.ogg">cat</word>
-        <word name="cap" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/cap.png" block="locales/common/textures/words/blocks/cap.png" sound="locales/en_us_rural/sounds/cap.ogg">cap</word>
-        <word name="car" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/car.png" block="locales/common/textures/words/blocks/car.png" sound="locales/en_us_rural/sounds/car.ogg">car</word>
-        <word name="jar" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/jar.png" block="locales/common/textures/words/blocks/jar.png" sound="locales/en_us_rural/sounds/jar.ogg">jar</word>
-        <word name="yarn" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/yarn.png" block="locales/common/textures/words/blocks/yarn.png" sound="locales/en_us_rural/sounds/yarn.ogg">yarn</word>
-        <word name="water" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/water.png" block="locales/common/textures/words/blocks/water.png" sound="locales/en_us_rural/sounds/water.ogg">water</word>
-        <word name="can" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/can.png" block="locales/common/textures/words/blocks/can.png" sound="locales/en_us_rural/sounds/can.ogg">can</word>
-        <word name="van" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/van.png" block="locales/common/textures/words/blocks/van.png" sound="locales/en_us_rural/sounds/van.ogg">van</word>
-        <word name="fan" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/fan.png" block="locales/common/textures/words/blocks/fan.png" sound="locales/en_us_rural/sounds/fan.ogg">fan</word>
-        <word name="pan" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/pan.png" block="locales/common/textures/words/blocks/pan.png" sound="locales/en_us_rural/sounds/pan.ogg">pan</word>
-        <word name="banana" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/banana.png" block="locales/common/textures/words/blocks/banana.png" sound="locales/en_us_rural/sounds/banana.ogg">banana</word>
-        <word name="pants" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/pants.png" block="locales/common/textures/words/blocks/pants.png" sound="locales/en_us_rural/sounds/pants.ogg">pants</word>
-        <word name="camera" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/camera.png" block="locales/common/textures/words/blocks/camera.png" sound="locales/en_us_rural/sounds/camera.ogg">camera</word>
-        <word name="candle" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/candle.png" block="locales/common/textures/words/blocks/candle.png" sound="locales/en_us_rural/sounds/candle.ogg">candle</word>
-        <word name="table" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/table.png" block="locales/common/textures/words/blocks/table.png" sound="locales/en_us_rural/sounds/table.ogg">table</word>
-        <word name="hat" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/hat.png" block="locales/common/textures/words/blocks/hat.png" sound="locales/en_us_rural/sounds/hat.ogg">hat</word>
-        <word name="ham" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/ham.png" block="locales/common/textures/words/blocks/ham.png" sound="locales/en_us_rural/sounds/ham.ogg">ham</word>
-        <word name="jam" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/jam.png" block="locales/common/textures/words/blocks/jam.png" sound="locales/en_us_rural/sounds/jam.ogg">jam</word>
-        <word name="lamp" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/lamp.png" block="locales/common/textures/words/blocks/lamp.png" sound="locales/en_us_rural/sounds/lamp.ogg">lamp</word>
-        <word name="hammer" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/hammer.png" block="locales/common/textures/words/blocks/hammer.png" sound="locales/en_us_rural/sounds/hammer.ogg">hammer</word>
-        <word name="grass" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/grass.png" block="locales/common/textures/words/blocks/grass.png" sound="locales/en_us_rural/sounds/grass.ogg">grass</word>
-        <word name="dress" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/dress.png" block="locales/common/textures/words/blocks/dress.png" sound="locales/en_us_rural/sounds/dress.ogg">dress</word>
-        <word name="goat" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/goat.png" block="locales/common/textures/words/blocks/goat.png" sound="locales/en_us_rural/sounds/goat.ogg">goat</word>
-        <word name="boat" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/boat.png" block="locales/common/textures/words/blocks/boat.png" sound="locales/en_us_rural/sounds/boat.ogg">boat</word>
-        <word name="frog" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/frog.png" block="locales/common/textures/words/blocks/frog.png" sound="locales/en_us_rural/sounds/frog.ogg">frog</word>
-        <word name="mat" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/mat.png" block="locales/common/textures/words/blocks/mat.png" sound="locales/en_us_rural/sounds/mat.ogg">mat</word>
-        <word name="map" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/map.png" block="locales/common/textures/words/blocks/map.png" sound="locales/en_us_rural/sounds/map.ogg">map</word>
-        <word name="cup" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/cup.png" block="locales/common/textures/words/blocks/cup.png" sound="locales/en_us_rural/sounds/cup.ogg">cup</word>
-        <word name="apple" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/apple.png" block="locales/common/textures/words/blocks/apple.png" sound="locales/en_us_rural/sounds/apple.ogg">apple</word>
-        <word name="milk" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/milk.png" block="locales/common/textures/words/blocks/milk.png" sound="locales/en_us_rural/sounds/milk.ogg">milk</word>
-        <word name="pot" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/pot.png" block="locales/common/textures/words/blocks/pot.png" sound="locales/en_us_rural/sounds/pot.ogg">pot</word>
-        <word name="cot" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/cot.png" block="locales/common/textures/words/blocks/cot.png" sound="locales/en_us_rural/sounds/cot.ogg">cot</word>
-        <word name="cow" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/cow.png" block="locales/common/textures/words/blocks/cow.png" sound="locales/en_us_rural/sounds/cow.ogg">cow</word>
-        <word name="owl" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/owl.png" block="locales/common/textures/words/blocks/owl.png" sound="locales/en_us_rural/sounds/owl.ogg">owl</word>
-        <word name="bowl" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/bowl.png" block="locales/common/textures/words/blocks/bowl.png" sound="locales/en_us_rural/sounds/bowl.ogg">bowl</word>
-        <word name="flower" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/flower.png" block="locales/common/textures/words/blocks/flower.png" sound="locales/en_us_rural/sounds/flower.ogg">flower</word>
-        <word name="tower" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/tower.png" block="locales/common/textures/words/blocks/tower.png" sound="locales/en_us_rural/sounds/tower.ogg">tower</word>
-        <word name="horse" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/horse.png" block="locales/common/textures/words/blocks/horse.png" sound="locales/en_us_rural/sounds/horse.ogg">horse</word>
-        <word name="doll" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/doll.png" block="locales/common/textures/words/blocks/doll.png" sound="locales/en_us_rural/sounds/doll.ogg">doll</word>
-        <word name="dog" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/dog.png" block="locales/common/textures/words/blocks/dog.png" sound="locales/en_us_rural/sounds/dog.ogg">dog</word>
-        <word name="sock" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/sock.png" block="locales/common/textures/words/blocks/sock.png" sound="locales/en_us_rural/sounds/sock.ogg">sock</word>
-        <word name="pen" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/pen.png" block="locales/common/textures/words/blocks/pen.png" sound="locales/en_us_rural/sounds/pen.ogg">pen</word>
-        <word name="tent" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/tent.png" block="locales/common/textures/words/blocks/tent.png" sound="locales/en_us_rural/sounds/tent.ogg">tent</word>
-        <word name="pencil" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/pencil.png" block="locales/common/textures/words/blocks/pencil.png" sound="locales/en_us_rural/sounds/pencil.ogg">pencil</word>
-        <word name="bed" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/bed.png" block="locales/common/textures/words/blocks/bed.png" sound="locales/en_us_rural/sounds/bed.ogg">bed</word>
-        <word name="zebra" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/zebra.png" block="locales/common/textures/words/blocks/zebra.png" sound="locales/en_us_rural/sounds/zebra.ogg">zebra</word>
-        <word name="brush" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/brush.png" block="locales/common/textures/words/blocks/brush.png" sound="locales/en_us_rural/sounds/brush.ogg">brush</word>
-        <word name="bread" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/bread.png" block="locales/common/textures/words/blocks/bread.png" sound="locales/en_us_rural/sounds/bread.ogg">bread</word>
-        <word name="broom" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/broom.png" block="locales/common/textures/words/blocks/broom.png" sound="locales/en_us_rural/sounds/broom.ogg">broom</word>
-        <word name="fish" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/fish.png" block="locales/common/textures/words/blocks/fish.png" sound="locales/en_us_rural/sounds/fish.ogg">fish</word>
-        <word name="log" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/log.png" block="locales/common/textures/words/blocks/log.png" sound="locales/en_us_rural/sounds/log.ogg">log</word>
-        <word name="lock" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/lock.png" block="locales/common/textures/words/blocks/lock.png" sound="locales/en_us_rural/sounds/lock.ogg">lock</word>
-        <word name="sock" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/sock.png" block="locales/common/textures/words/blocks/sock.png" sound="locales/en_us_rural/sounds/sock.ogg">sock</word>
-        <word name="pig" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/pig.png" block="locales/common/textures/words/blocks/pig.png" sound="locales/en_us_rural/sounds/pig.ogg">pig</word>
-        <word name="pie" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/pie.png" block="locales/common/textures/words/blocks/pie.png" sound="locales/en_us_rural/sounds/pie.ogg">pie</word>
-        <word name="egg" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/egg.png" block="locales/common/textures/words/blocks/egg.png" sound="locales/en_us_rural/sounds/egg.ogg">egg</word>
-        <word name="ring" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/ring.png" block="locales/common/textures/words/blocks/ring.png" sound="locales/en_us_rural/sounds/ring.ogg">ring</word>
-        <word name="spring" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/spring.png" block="locales/common/textures/words/blocks/spring.png" sound="locales/en_us_rural/sounds/spring.ogg">spring</word>
-        <word name="swing" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/swing.png" block="locales/common/textures/words/blocks/swing.png" sound="locales/en_us_rural/sounds/swing.ogg">swing</word>
-        <word name="string" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/string.png" block="locales/common/textures/words/blocks/string.png" sound="locales/en_us_rural/sounds/string.ogg">string</word>
-        <word name="pail" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/pail.png" block="locales/common/textures/words/blocks/pail.png" sound="locales/en_us_rural/sounds/pail.ogg">pail</word>
-        <word name="mail" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/mail.png" block="locales/common/textures/words/blocks/mail.png" sound="locales/en_us_rural/sounds/mail.ogg">mail</word>
-        <word name="sail" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/sail.png" block="locales/common/textures/words/blocks/sail.png" sound="locales/en_us_rural/sounds/sail.ogg">sail</word>
-        <word name="nail" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/nail.png" block="locales/common/textures/words/blocks/nail.png" sound="locales/en_us_rural/sounds/nail.ogg">nail</word>
-        <word name="trail" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/trail.png" block="locales/common/textures/words/blocks/trail.png" sound="locales/en_us_rural/sounds/trail.ogg">trail</word>
-        <word name="tree" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/tree.png" block="locales/common/textures/words/blocks/tree.png" sound="locales/en_us_rural/sounds/tree.ogg">tree</word>
-        <word name="seed" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/seed.png" block="locales/common/textures/words/blocks/seed.png" sound="locales/en_us_rural/sounds/seed.ogg">seed</word>
-        <word name="needle" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/needle.png" block="locales/common/textures/words/blocks/needle.png" sound="locales/en_us_rural/sounds/needle.ogg">needle</word>
-        <word name="hut" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/hut.png" block="locales/common/textures/words/blocks/hut.png" sound="locales/en_us_rural/sounds/hut.ogg">hut</word>
-        <word name="mud" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/mud.png" block="locales/common/textures/words/blocks/mud.png" sound="locales/en_us_rural/sounds/mud.ogg">mud</word>
-        <word name="bucket" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/bucket.png" block="locales/common/textures/words/blocks/bucket.png" sound="locales/en_us_rural/sounds/bucket.ogg">bucket</word>
-        <word name="rat" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/rat.png" block="locales/common/textures/words/blocks/rat.png" sound="locales/en_us_rural/sounds/rat.ogg">rat</word>
-        <word name="truck" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/truck.png" block="locales/common/textures/words/blocks/truck.png" sound="locales/en_us_rural/sounds/truck.ogg">truck</word>
-        <word name="duck" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/duck.png" block="locales/common/textures/words/blocks/duck.png" sound="locales/en_us_rural/sounds/duck.ogg">duck</word>
-        <word name="bat" size="1x1" buy="10" sell="10" points="10" construct="30" time="30" sprite="locales/common/textures/words/sprites/bat.png" block="locales/common/textures/words/blocks/bat.png" sound="locales/en_us_rural/sounds/bat.ogg">bat</word>
+        <word name="apple" size="1x1" buy="46" sell="47" points="46" construct="2760" time="1380" sprite="locales/common/textures/words/sprites/apple.png" block="locales/common/textures/words/blocks/apple.png" sound="locales/en_us_rural/sounds/apple.ogg">cat</word>
+        <word name="banana" size="1x1" buy="30" sell="31" points="30" construct="1800" time="900" sprite="locales/common/textures/words/sprites/banana.png" block="locales/common/textures/words/blocks/banana.png" sound="locales/en_us_rural/sounds/banana.ogg">cat</word>
+        <word name="bat" size="1x1" buy="2" sell="3" points="2" construct="120" time="60" sprite="locales/common/textures/words/sprites/bat.png" block="locales/common/textures/words/blocks/bat.png" sound="locales/en_us_rural/sounds/bat.ogg">cat</word>
+        <word name="bed" size="1x1" buy="28" sell="29" points="28" construct="1680" time="840" sprite="locales/common/textures/words/sprites/bed.png" block="locales/common/textures/words/blocks/bed.png" sound="locales/en_us_rural/sounds/bed.ogg">cat</word>
+        <word name="boat" size="1x1" buy="42" sell="43" points="42" construct="2520" time="1260" sprite="locales/common/textures/words/sprites/boat.png" block="locales/common/textures/words/blocks/boat.png" sound="locales/en_us_rural/sounds/boat.ogg">cat</word>
+        <word name="bowl" size="1x1" buy="21" sell="22" points="21" construct="1260" time="630" sprite="locales/common/textures/words/sprites/bowl.png" block="locales/common/textures/words/blocks/bowl.png" sound="locales/en_us_rural/sounds/bowl.ogg">cat</word>
+        <word name="bread" size="1x1" buy="51" sell="52" points="51" construct="3060" time="1530" sprite="locales/common/textures/words/sprites/bread.png" block="locales/common/textures/words/blocks/bread.png" sound="locales/en_us_rural/sounds/bread.ogg">cat</word>
+        <word name="broom" size="1x1" buy="52" sell="53" points="52" construct="3120" time="1560" sprite="locales/common/textures/words/sprites/broom.png" block="locales/common/textures/words/blocks/broom.png" sound="locales/en_us_rural/sounds/broom.ogg">cat</word>
+        <word name="brush" size="1x1" buy="53" sell="54" points="53" construct="3180" time="1590" sprite="locales/common/textures/words/sprites/brush.png" block="locales/common/textures/words/blocks/brush.png" sound="locales/en_us_rural/sounds/brush.ogg">cat</word>
+        <word name="bucket" size="1x1" buy="62" sell="63" points="62" construct="3720" time="1860" sprite="locales/common/textures/words/sprites/bucket.png" block="locales/common/textures/words/blocks/bucket.png" sound="locales/en_us_rural/sounds/bucket.ogg">cat</word>
+        <word name="camera" size="1x1" buy="34" sell="35" points="34" construct="2040" time="1020" sprite="locales/common/textures/words/sprites/camera.png" block="locales/common/textures/words/blocks/camera.png" sound="locales/en_us_rural/sounds/camera.ogg">cat</word>
+        <word name="can" size="1x1" buy="7" sell="8" points="7" construct="420" time="210" sprite="locales/common/textures/words/sprites/can.png" block="locales/common/textures/words/blocks/can.png" sound="locales/en_us_rural/sounds/can.ogg">cat</word>
+        <word name="candle" size="1x1" buy="44" sell="45" points="44" construct="2640" time="1320" sprite="locales/common/textures/words/sprites/candle.png" block="locales/common/textures/words/blocks/candle.png" sound="locales/en_us_rural/sounds/candle.ogg">cat</word>
+        <word name="cap" size="1x1" buy="5" sell="6" points="5" construct="300" time="150" sprite="locales/common/textures/words/sprites/cap.png" block="locales/common/textures/words/blocks/cap.png" sound="locales/en_us_rural/sounds/cap.ogg">cat</word>
+        <word name="car" size="1x1" buy="13" sell="14" points="13" construct="780" time="390" sprite="locales/common/textures/words/sprites/car.png" block="locales/common/textures/words/blocks/car.png" sound="locales/en_us_rural/sounds/car.ogg">cat</word>
+        <word name="cat" size="2x2" buy="0" sell="1" points="1" construct="30" time="30" sprite="locales/common/textures/words/sprites/cat.png" block="locales/common/textures/words/blocks/cat.png" sound="locales/en_us_rural/sounds/cat.ogg">cat</word>
+        <word name="cot" size="1x1" buy="16" sell="17" points="16" construct="960" time="480" sprite="locales/common/textures/words/sprites/cot.png" block="locales/common/textures/words/blocks/cot.png" sound="locales/en_us_rural/sounds/cot.ogg">cat</word>
+        <word name="cow" size="1x1" buy="19" sell="20" points="19" construct="1140" time="570" sprite="locales/common/textures/words/sprites/cow.png" block="locales/common/textures/words/blocks/cow.png" sound="locales/en_us_rural/sounds/cow.ogg">cat</word>
+        <word name="cup" size="1x1" buy="25" sell="26" points="25" construct="1500" time="750" sprite="locales/common/textures/words/sprites/cup.png" block="locales/common/textures/words/blocks/cup.png" sound="locales/en_us_rural/sounds/cup.ogg">cat</word>
+        <word name="dog" size="1x1" buy="17" sell="18" points="17" construct="1020" time="510" sprite="locales/common/textures/words/sprites/dog.png" block="locales/common/textures/words/blocks/dog.png" sound="locales/en_us_rural/sounds/dog.ogg">cat</word>
+        <word name="doll" size="1x1" buy="37" sell="38" points="37" construct="2220" time="1110" sprite="locales/common/textures/words/sprites/doll.png" block="locales/common/textures/words/blocks/doll.png" sound="locales/en_us_rural/sounds/doll.ogg">cat</word>
+        <word name="dress" size="1x1" buy="40" sell="41" points="40" construct="2400" time="1200" sprite="locales/common/textures/words/sprites/dress.png" block="locales/common/textures/words/blocks/dress.png" sound="locales/en_us_rural/sounds/dress.ogg">cat</word>
+        <word name="duck" size="1x1" buy="64" sell="65" points="64" construct="3840" time="1920" sprite="locales/common/textures/words/sprites/duck.png" block="locales/common/textures/words/blocks/duck.png" sound="locales/en_us_rural/sounds/duck.ogg">cat</word>
+        <word name="egg" size="1x1" buy="58" sell="59" points="58" construct="3480" time="1740" sprite="locales/common/textures/words/sprites/egg.png" block="locales/common/textures/words/blocks/egg.png" sound="locales/en_us_rural/sounds/egg.ogg">cat</word>
+        <word name="fan" size="1x1" buy="9" sell="10" points="9" construct="540" time="270" sprite="locales/common/textures/words/sprites/fan.png" block="locales/common/textures/words/blocks/fan.png" sound="locales/en_us_rural/sounds/fan.ogg">cat</word>
+        <word name="fish" size="1x1" buy="54" sell="55" points="54" construct="3240" time="1620" sprite="locales/common/textures/words/sprites/fish.png" block="locales/common/textures/words/blocks/fish.png" sound="locales/en_us_rural/sounds/fish.ogg">cat</word>
+        <word name="flower" size="1x1" buy="47" sell="48" points="47" construct="2820" time="1410" sprite="locales/common/textures/words/sprites/flower.png" block="locales/common/textures/words/blocks/flower.png" sound="locales/en_us_rural/sounds/flower.ogg">cat</word>
+        <word name="frog" size="1x1" buy="43" sell="44" points="43" construct="2580" time="1290" sprite="locales/common/textures/words/sprites/frog.png" block="locales/common/textures/words/blocks/frog.png" sound="locales/en_us_rural/sounds/frog.ogg">cat</word>
+        <word name="goat" size="1x1" buy="41" sell="42" points="41" construct="2460" time="1230" sprite="locales/common/textures/words/sprites/goat.png" block="locales/common/textures/words/blocks/goat.png" sound="locales/en_us_rural/sounds/goat.ogg">cat</word>
+        <word name="grass" size="1x1" buy="39" sell="40" points="39" construct="2340" time="1170" sprite="locales/common/textures/words/sprites/grass.png" block="locales/common/textures/words/blocks/grass.png" sound="locales/en_us_rural/sounds/grass.ogg">cat</word>
+        <word name="ham" size="1x1" buy="11" sell="12" points="11" construct="660" time="330" sprite="locales/common/textures/words/sprites/ham.png" block="locales/common/textures/words/blocks/ham.png" sound="locales/en_us_rural/sounds/ham.ogg">cat</word>
+        <word name="hammer" size="1x1" buy="33" sell="34" points="33" construct="1980" time="990" sprite="locales/common/textures/words/sprites/hammer.png" block="locales/common/textures/words/blocks/hammer.png" sound="locales/en_us_rural/sounds/hammer.ogg">cat</word>
+        <word name="hat" size="1x1" buy="1" sell="2" points="1" construct="60" time="30" sprite="locales/common/textures/words/sprites/hat.png" block="locales/common/textures/words/blocks/hat.png" sound="locales/en_us_rural/sounds/hat.ogg">cat</word>
+        <word name="horse" size="1x1" buy="49" sell="50" points="49" construct="2940" time="1470" sprite="locales/common/textures/words/sprites/horse.png" block="locales/common/textures/words/blocks/horse.png" sound="locales/en_us_rural/sounds/horse.ogg">cat</word>
+        <word name="hut" size="1x1" buy="23" sell="24" points="23" construct="1380" time="690" sprite="locales/common/textures/words/sprites/hut.png" block="locales/common/textures/words/blocks/hut.png" sound="locales/en_us_rural/sounds/hut.ogg">cat</word>
+        <word name="jam" size="1x1" buy="12" sell="13" points="12" construct="720" time="360" sprite="locales/common/textures/words/sprites/jam.png" block="locales/common/textures/words/blocks/jam.png" sound="locales/en_us_rural/sounds/jam.ogg">cat</word>
+        <word name="jar" size="1x1" buy="14" sell="15" points="14" construct="840" time="420" sprite="locales/common/textures/words/sprites/jar.png" block="locales/common/textures/words/blocks/jar.png" sound="locales/en_us_rural/sounds/jar.ogg">cat</word>
+        <word name="lamp" size="1x1" buy="32" sell="33" points="32" construct="1920" time="960" sprite="locales/common/textures/words/sprites/lamp.png" block="locales/common/textures/words/blocks/lamp.png" sound="locales/en_us_rural/sounds/lamp.ogg">cat</word>
+        <word name="lock" size="1x1" buy="55" sell="56" points="55" construct="3300" time="1650" sprite="locales/common/textures/words/sprites/lock.png" block="locales/common/textures/words/blocks/lock.png" sound="locales/en_us_rural/sounds/lock.ogg">cat</word>
+        <word name="log" size="1x1" buy="18" sell="19" points="18" construct="1080" time="540" sprite="locales/common/textures/words/sprites/log.png" block="locales/common/textures/words/blocks/log.png" sound="locales/en_us_rural/sounds/log.ogg">cat</word>
+        <word name="mail" size="1x1" buy="70" sell="71" points="70" construct="4200" time="2100" sprite="locales/common/textures/words/sprites/mail.png" block="locales/common/textures/words/blocks/mail.png" sound="locales/en_us_rural/sounds/mail.ogg">cat</word>
+        <word name="map" size="1x1" buy="6" sell="7" points="6" construct="360" time="180" sprite="locales/common/textures/words/sprites/map.png" block="locales/common/textures/words/blocks/map.png" sound="locales/en_us_rural/sounds/map.ogg">cat</word>
+        <word name="mat" size="1x1" buy="4" sell="5" points="4" construct="240" time="120" sprite="locales/common/textures/words/sprites/mat.png" block="locales/common/textures/words/blocks/mat.png" sound="locales/en_us_rural/sounds/mat.ogg">cat</word>
+        <word name="milk" size="1x1" buy="29" sell="30" points="29" construct="1740" time="870" sprite="locales/common/textures/words/sprites/milk.png" block="locales/common/textures/words/blocks/milk.png" sound="locales/en_us_rural/sounds/milk.ogg">cat</word>
+        <word name="mud" size="1x1" buy="24" sell="25" points="24" construct="1440" time="720" sprite="locales/common/textures/words/sprites/mud.png" block="locales/common/textures/words/blocks/mud.png" sound="locales/en_us_rural/sounds/mud.ogg">cat</word>
+        <word name="nail" size="1x1" buy="72" sell="73" points="72" construct="4320" time="2160" sprite="locales/common/textures/words/sprites/nail.png" block="locales/common/textures/words/blocks/nail.png" sound="locales/en_us_rural/sounds/nail.ogg">cat</word>
+        <word name="needle" size="1x1" buy="61" sell="62" points="61" construct="3660" time="1830" sprite="locales/common/textures/words/sprites/needle.png" block="locales/common/textures/words/blocks/needle.png" sound="locales/en_us_rural/sounds/needle.ogg">cat</word>
+        <word name="owl" size="1x1" buy="20" sell="21" points="20" construct="1200" time="600" sprite="locales/common/textures/words/sprites/owl.png" block="locales/common/textures/words/blocks/owl.png" sound="locales/en_us_rural/sounds/owl.ogg">cat</word>
+        <word name="pail" size="1x1" buy="69" sell="70" points="69" construct="4140" time="2070" sprite="locales/common/textures/words/sprites/pail.png" block="locales/common/textures/words/blocks/pail.png" sound="locales/en_us_rural/sounds/pail.ogg">cat</word>
+        <word name="pan" size="1x1" buy="10" sell="11" points="10" construct="600" time="300" sprite="locales/common/textures/words/sprites/pan.png" block="locales/common/textures/words/blocks/pan.png" sound="locales/en_us_rural/sounds/pan.ogg">cat</word>
+        <word name="pants" size="1x1" buy="31" sell="32" points="31" construct="1860" time="930" sprite="locales/common/textures/words/sprites/pants.png" block="locales/common/textures/words/blocks/pants.png" sound="locales/en_us_rural/sounds/pants.ogg">cat</word>
+        <word name="pen" size="1x1" buy="26" sell="27" points="26" construct="1560" time="780" sprite="locales/common/textures/words/sprites/pen.png" block="locales/common/textures/words/blocks/pen.png" sound="locales/en_us_rural/sounds/pen.ogg">cat</word>
+        <word name="pencil" size="1x1" buy="38" sell="39" points="38" construct="2280" time="1140" sprite="locales/common/textures/words/sprites/pencil.png" block="locales/common/textures/words/blocks/pencil.png" sound="locales/en_us_rural/sounds/pencil.ogg">cat</word>
+        <word name="pie" size="1x1" buy="57" sell="58" points="57" construct="3420" time="1710" sprite="locales/common/textures/words/sprites/pie.png" block="locales/common/textures/words/blocks/pie.png" sound="locales/en_us_rural/sounds/pie.ogg">cat</word>
+        <word name="pig" size="1x1" buy="22" sell="23" points="22" construct="1320" time="660" sprite="locales/common/textures/words/sprites/pig.png" block="locales/common/textures/words/blocks/pig.png" sound="locales/en_us_rural/sounds/pig.ogg">cat</word>
+        <word name="pot" size="1x1" buy="15" sell="16" points="15" construct="900" time="450" sprite="locales/common/textures/words/sprites/pot.png" block="locales/common/textures/words/blocks/pot.png" sound="locales/en_us_rural/sounds/pot.ogg">cat</word>
+        <word name="rat" size="1x1" buy="3" sell="4" points="3" construct="180" time="90" sprite="locales/common/textures/words/sprites/rat.png" block="locales/common/textures/words/blocks/rat.png" sound="locales/en_us_rural/sounds/rat.ogg">cat</word>
+        <word name="ring" size="1x1" buy="65" sell="66" points="65" construct="3900" time="1950" sprite="locales/common/textures/words/sprites/ring.png" block="locales/common/textures/words/blocks/ring.png" sound="locales/en_us_rural/sounds/ring.ogg">cat</word>
+        <word name="sail" size="1x1" buy="71" sell="72" points="71" construct="4260" time="2130" sprite="locales/common/textures/words/sprites/sail.png" block="locales/common/textures/words/blocks/sail.png" sound="locales/en_us_rural/sounds/sail.ogg">cat</word>
+        <word name="seed" size="1x1" buy="60" sell="61" points="60" construct="3600" time="1800" sprite="locales/common/textures/words/sprites/seed.png" block="locales/common/textures/words/blocks/seed.png" sound="locales/en_us_rural/sounds/seed.ogg">cat</word>
+        <word name="snail" size="1x1" buy="73" sell="74" points="73" construct="4380" time="2190" sprite="locales/common/textures/words/sprites/snail.png" block="locales/common/textures/words/blocks/snail.png" sound="locales/en_us_rural/sounds/snail.ogg">cat</word>
+        <word name="sock" size="1x1" buy="56" sell="57" points="56" construct="3360" time="1680" sprite="locales/common/textures/words/sprites/sock.png" block="locales/common/textures/words/blocks/sock.png" sound="locales/en_us_rural/sounds/sock.ogg">cat</word>
+        <word name="spring" size="1x1" buy="66" sell="67" points="66" construct="3960" time="1980" sprite="locales/common/textures/words/sprites/spring.png" block="locales/common/textures/words/blocks/spring.png" sound="locales/en_us_rural/sounds/spring.ogg">cat</word>
+        <word name="string" size="1x1" buy="68" sell="69" points="68" construct="4080" time="2040" sprite="locales/common/textures/words/sprites/string.png" block="locales/common/textures/words/blocks/string.png" sound="locales/en_us_rural/sounds/string.ogg">cat</word>
+        <word name="swing" size="1x1" buy="67" sell="68" points="67" construct="4020" time="2010" sprite="locales/common/textures/words/sprites/swing.png" block="locales/common/textures/words/blocks/swing.png" sound="locales/en_us_rural/sounds/swing.ogg">cat</word>
+        <word name="table" size="1x1" buy="45" sell="46" points="45" construct="2700" time="1350" sprite="locales/common/textures/words/sprites/table.png" block="locales/common/textures/words/blocks/table.png" sound="locales/en_us_rural/sounds/table.ogg">cat</word>
+        <word name="tent" size="1x1" buy="27" sell="28" points="27" construct="1620" time="810" sprite="locales/common/textures/words/sprites/tent.png" block="locales/common/textures/words/blocks/tent.png" sound="locales/en_us_rural/sounds/tent.ogg">cat</word>
+        <word name="tower" size="1x1" buy="48" sell="49" points="48" construct="2880" time="1440" sprite="locales/common/textures/words/sprites/tower.png" block="locales/common/textures/words/blocks/tower.png" sound="locales/en_us_rural/sounds/tower.ogg">cat</word>
+        <word name="trail" size="1x1" buy="74" sell="75" points="74" construct="4440" time="2220" sprite="locales/common/textures/words/sprites/trail.png" block="locales/common/textures/words/blocks/trail.png" sound="locales/en_us_rural/sounds/trail.ogg">cat</word>
+        <word name="tree" size="1x1" buy="59" sell="60" points="59" construct="3540" time="1770" sprite="locales/common/textures/words/sprites/tree.png" block="locales/common/textures/words/blocks/tree.png" sound="locales/en_us_rural/sounds/tree.ogg">cat</word>
+        <word name="truck" size="1x1" buy="63" sell="64" points="63" construct="3780" time="1890" sprite="locales/common/textures/words/sprites/truck.png" block="locales/common/textures/words/blocks/truck.png" sound="locales/en_us_rural/sounds/truck.ogg">cat</word>
+        <word name="van" size="1x1" buy="8" sell="9" points="8" construct="480" time="240" sprite="locales/common/textures/words/sprites/van.png" block="locales/common/textures/words/blocks/van.png" sound="locales/en_us_rural/sounds/van.ogg">cat</word>
+        <word name="water" size="1x1" buy="36" sell="37" points="36" construct="2160" time="1080" sprite="locales/common/textures/words/sprites/water.png" block="locales/common/textures/words/blocks/water.png" sound="locales/en_us_rural/sounds/water.ogg">cat</word>
+        <word name="yarn" size="1x1" buy="35" sell="36" points="35" construct="2100" time="1050" sprite="locales/common/textures/words/sprites/yarn.png" block="locales/common/textures/words/blocks/yarn.png" sound="locales/en_us_rural/sounds/yarn.ogg">cat</word>
+        <word name="zebra" size="1x1" buy="50" sell="51" points="50" construct="3000" time="1500" sprite="locales/common/textures/words/sprites/zebra.png" block="locales/common/textures/words/blocks/zebra.png" sound="locales/en_us_rural/sounds/zebra.ogg">cat</word>
     </words>
-
-    <!-- Locale levels -->
+    
+    <!-- levels -->
     <levels>
         <level name="1" market="0" coins="0">
             <intro>
@@ -182,879 +182,1008 @@
                 <words>cat</words>
             </help>
             <req>
+                <gather_letter count="1">c</gather_letter>
                 <gather_word count="1">cat</gather_word>
             </req>
         </level>
-        <level name="4" market="2" coins="220">
+        <level name="4" coins="220" points="10" market="4">
             <intro>
                 <page sound="locales/en_us_rural/sounds/intro4p1.ogg">Yay! Building words from letters is what Phoenicia is all about!</page>
                 <page sound="locales/en_us_rural/sounds/intro4p2.ogg">Here's a new letter: 'H', you can use it with your other letters to build the word 'hat'</page>
             </intro>
             <letters>h</letters>
-            <words>hat</words>
             <help>
-                <letters>t,h,c</letters>
-                <words>hat,cat</words>
+                <letters>h</letters>
+                <words>cat</words>
             </help>
             <req>
-                <gather_word count="1">hat</gather_word>
+                <gather_letter count="1">h</gather_letter>
             </req>
         </level>
-        <level name="5" market="3"  coins="330">
+        <level name="5" coins="10" points="10" market="4">
             <intro>
                 <page sound="locales/en_us_rural/sounds/intro5p1.ogg">You're doing great! Now that you have the hang of it, here's some more letters and words that you can grown and build.</page>
                 <page sound="locales/en_us_rural/sounds/intro5p2.ogg">Keeping building words and you'll reach new levels, each new level will open up new letters and words for you to use.</page>
             </intro>
             <letters>b</letters>
-            <words>bat</words>
+            <words>hat</words>
             <help>
-                <letters>h,b</letters>
-                <words>hat,bat</words>
+                <letters>b</letters>
+                <words>hat</words>
             </help>
             <req>
-                <gather_word count="2">cat</gather_word>
-                <gather_word count="2">hat</gather_word>
-                <gather_word count="2">bat</gather_word>
+                <gather_letter count="1">b</gather_letter>
+                <gather_word count="1">hat</gather_word>
             </req>
         </level>
-        <level name="6" market="4" coins="0" points="0">
+        <level name="6" coins="10" points="10" market="4">
             <intro>
             </intro>
-            <words>cat</words>
+            <letters>r</letters>
+            <words>bat</words>
             <help>
-                <words>cat</words>
+                <letters>r</letters>
+                <words>bat</words>
             </help>
             <req>
-                <gather_word count="1">cat</gather_word>
+                <gather_letter count="1">r</gather_letter>
+                <gather_word count="1">bat</gather_word>
             </req>
         </level>
-        <level name="7" market="4" coins="0" points="0">
+        <level name="7" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters>m</letters>
+            <words>rat</words>
+            <help>
+                <letters>m</letters>
+                <words>rat</words>
+            </help>
+            <req>
+                <gather_letter count="1">m</gather_letter>
+                <gather_word count="1">rat</gather_word>
+            </req>
+        </level>
+        <level name="8" coins="10" points="10" market="4">
             <intro>
             </intro>
             <letters>p</letters>
-            <words>cap</words>
+            <words>mat</words>
             <help>
                 <letters>p</letters>
+                <words>mat</words>
+            </help>
+            <req>
+                <gather_letter count="1">p</gather_letter>
+                <gather_word count="1">mat</gather_word>
+            </req>
+        </level>
+        <level name="9" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>cap</words>
+            <help>
+                <letters></letters>
                 <words>cap</words>
             </help>
             <req>
                 <gather_word count="1">cap</gather_word>
             </req>
         </level>
-        <level name="8" market="4" coins="0" points="0">
+        <level name="10" coins="10" points="10" market="4">
             <intro>
             </intro>
-            <letters>r</letters>
-            <words>car</words>
+            <letters>n</letters>
+            <words>map</words>
             <help>
-                <letters>r</letters>
-                <words>car</words>
+                <letters>n</letters>
+                <words>map</words>
             </help>
             <req>
-                <gather_word count="1">car</gather_word>
+                <gather_letter count="1">n</gather_letter>
+                <gather_word count="1">map</gather_word>
             </req>
         </level>
-        <level name="9" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <letters>j</letters>
-            <words>jar</words>
-            <help>
-                <letters>j</letters>
-                <words>jar</words>
-            </help>
-            <req>
-                <gather_word count="1">jar</gather_word>
-            </req>
-        </level>
-        <level name="10" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <letters>y,n</letters>
-            <words>yarn</words>
-            <help>
-                <letters>y,n</letters>
-                <words>yarn</words>
-            </help>
-            <req>
-                <gather_word count="1">yarn</gather_word>
-            </req>
-        </level>
-        <level name="11" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <letters>w,e</letters>
-            <words>water</words>
-            <help>
-                <letters>w,e</letters>
-                <words>water,yarn</words>
-            </help>
-            <req>
-                <gather_word count="1">water</gather_word>
-            </req>
-        </level>
-        <level name="12" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>can</words>
-            <help>
-                <words>can</words>
-            </help>
-            <req>
-                <gather_word count="1">can</gather_word>
-            </req>
-        </level>
-        <level name="13" market="4" coins="0" points="0">
+        <level name="11" coins="10" points="10" market="4">
             <intro>
             </intro>
             <letters>v</letters>
-            <words>van</words>
+            <words>can</words>
             <help>
                 <letters>v</letters>
-                <words>van</words>
+                <words>can</words>
             </help>
             <req>
-                <gather_word count="1">van</gather_word>
+                <gather_letter count="1">v</gather_letter>
+                <gather_word count="1">can</gather_word>
             </req>
         </level>
-        <level name="14" market="4" coins="0" points="0">
+        <level name="12" coins="10" points="10" market="4">
             <intro>
             </intro>
             <letters>f</letters>
-            <words>fan</words>
+            <words>van</words>
             <help>
                 <letters>f</letters>
+                <words>van</words>
+            </help>
+            <req>
+                <gather_letter count="1">f</gather_letter>
+                <gather_word count="1">van</gather_word>
+            </req>
+        </level>
+        <level name="13" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>fan</words>
+            <help>
+                <letters></letters>
                 <words>fan</words>
             </help>
             <req>
                 <gather_word count="1">fan</gather_word>
             </req>
         </level>
-        <level name="15" market="4" coins="0" points="0">
+        <level name="14" coins="10" points="10" market="4">
             <intro>
             </intro>
+            <letters></letters>
             <words>pan</words>
             <help>
+                <letters></letters>
                 <words>pan</words>
             </help>
             <req>
                 <gather_word count="1">pan</gather_word>
             </req>
         </level>
-        <level name="16" market="4" coins="0" points="0">
+        <level name="15" coins="10" points="10" market="4">
             <intro>
             </intro>
-            <words>bat</words>
-            <help>
-                <words>bat</words>
-            </help>
-            <req>
-                <gather_word count="1">bat</gather_word>
-            </req>
-        </level>
-        <level name="17" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>rat</words>
-            <help>
-                <words>rat</words>
-            </help>
-            <req>
-                <gather_word count="1">rat</gather_word>
-            </req>
-        </level>
-        <level name="18" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>banana</words>
-            <help>
-                <words>banana</words>
-            </help>
-            <req>
-                <gather_word count="1">banana</gather_word>
-            </req>
-        </level>
-        <level name="19" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>pants</words>
-            <help>
-                <words>pants</words>
-            </help>
-            <req>
-                <gather_word count="1">pants</gather_word>
-            </req>
-        </level>
-        <level name="20" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>camera</words>
-            <help>
-                <words>camera</words>
-            </help>
-            <req>
-                <gather_word count="1">camera</gather_word>
-            </req>
-        </level>
-        <level name="21" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>candle</words>
-            <help>
-                <words>candle</words>
-            </help>
-            <req>
-                <gather_word count="1">candle</gather_word>
-            </req>
-        </level>
-        <level name="22" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>table</words>
-            <help>
-                <words>table</words>
-            </help>
-            <req>
-                <gather_word count="1">table</gather_word>
-            </req>
-        </level>
-        <level name="23" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>hat</words>
-            <help>
-                <words>hat</words>
-            </help>
-            <req>
-                <gather_word count="1">hat</gather_word>
-            </req>
-        </level>
-        <level name="24" market="4" coins="0" points="0">
-            <intro>
-            </intro>
+            <letters>j</letters>
             <words>ham</words>
             <help>
+                <letters>j</letters>
                 <words>ham</words>
             </help>
             <req>
+                <gather_letter count="1">j</gather_letter>
                 <gather_word count="1">ham</gather_word>
             </req>
         </level>
-        <level name="25" market="4" coins="0" points="0">
+        <level name="16" coins="10" points="10" market="4">
             <intro>
             </intro>
+            <letters></letters>
             <words>jam</words>
             <help>
+                <letters></letters>
                 <words>jam</words>
             </help>
             <req>
                 <gather_word count="1">jam</gather_word>
             </req>
         </level>
-        <level name="26" market="4" coins="0" points="0">
+        <level name="17" coins="10" points="10" market="4">
             <intro>
             </intro>
-            <words>lamp</words>
+            <letters></letters>
+            <words>car</words>
             <help>
-                <words>lamp</words>
+                <letters></letters>
+                <words>car</words>
             </help>
             <req>
-                <gather_word count="1">lamp</gather_word>
+                <gather_word count="1">car</gather_word>
             </req>
         </level>
-        <level name="27" market="4" coins="0" points="0">
+        <level name="18" coins="10" points="10" market="4">
             <intro>
             </intro>
-            <words>hammer</words>
+            <letters>o</letters>
+            <words>jar</words>
             <help>
-                <words>hammer</words>
+                <letters>o</letters>
+                <words>jar</words>
             </help>
             <req>
-                <gather_word count="1">hammer</gather_word>
+                <gather_letter count="1">o</gather_letter>
+                <gather_word count="1">jar</gather_word>
             </req>
         </level>
-        <level name="28" market="4" coins="0" points="0">
+        <level name="19" coins="10" points="10" market="4">
             <intro>
             </intro>
-            <words>grass</words>
-            <help>
-                <words>grass</words>
-            </help>
-            <req>
-                <gather_word count="1">grass</gather_word>
-            </req>
-        </level>
-        <level name="29" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>dress</words>
-            <help>
-                <words>dress</words>
-            </help>
-            <req>
-                <gather_word count="1">dress</gather_word>
-            </req>
-        </level>
-        <level name="30" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>goat</words>
-            <help>
-                <words>goat</words>
-            </help>
-            <req>
-                <gather_word count="1">goat</gather_word>
-            </req>
-        </level>
-        <level name="31" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>boat</words>
-            <help>
-                <words>boat</words>
-            </help>
-            <req>
-                <gather_word count="1">boat</gather_word>
-            </req>
-        </level>
-        <level name="32" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>frog</words>
-            <help>
-                <words>frog</words>
-            </help>
-            <req>
-                <gather_word count="1">frog</gather_word>
-            </req>
-        </level>
-        <level name="33" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>mat</words>
-            <help>
-                <words>mat</words>
-            </help>
-            <req>
-                <gather_word count="1">mat</gather_word>
-            </req>
-        </level>
-        <level name="34" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>map</words>
-            <help>
-                <words>map</words>
-            </help>
-            <req>
-                <gather_word count="1">map</gather_word>
-            </req>
-        </level>
-        <level name="35" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>cup</words>
-            <help>
-                <words>cup</words>
-            </help>
-            <req>
-                <gather_word count="1">cup</gather_word>
-            </req>
-        </level>
-        <level name="36" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>apple</words>
-            <help>
-                <words>apple</words>
-            </help>
-            <req>
-                <gather_word count="1">apple</gather_word>
-            </req>
-        </level>
-        <level name="37" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>milk</words>
-            <help>
-                <words>milk</words>
-            </help>
-            <req>
-                <gather_word count="1">milk</gather_word>
-            </req>
-        </level>
-        <level name="38" market="4" coins="0" points="0">
-            <intro>
-            </intro>
+            <letters></letters>
             <words>pot</words>
             <help>
+                <letters></letters>
                 <words>pot</words>
             </help>
             <req>
                 <gather_word count="1">pot</gather_word>
             </req>
         </level>
-        <level name="39" market="4" coins="0" points="0">
+        <level name="20" coins="10" points="10" market="4">
             <intro>
             </intro>
+            <letters>d,g</letters>
             <words>cot</words>
             <help>
+                <letters>d,g</letters>
                 <words>cot</words>
             </help>
             <req>
+                <gather_letter count="1">d</gather_letter>
+                <gather_letter count="1">g</gather_letter>
                 <gather_word count="1">cot</gather_word>
             </req>
         </level>
-        <level name="40" market="4" coins="0" points="0">
+        <level name="21" coins="10" points="10" market="4">
             <intro>
             </intro>
+            <letters>l</letters>
+            <words>dog</words>
+            <help>
+                <letters>l</letters>
+                <words>dog</words>
+            </help>
+            <req>
+                <gather_letter count="1">l</gather_letter>
+                <gather_word count="1">dog</gather_word>
+            </req>
+        </level>
+        <level name="22" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters>w</letters>
+            <words>log</words>
+            <help>
+                <letters>w</letters>
+                <words>log</words>
+            </help>
+            <req>
+                <gather_letter count="1">w</gather_letter>
+                <gather_word count="1">log</gather_word>
+            </req>
+        </level>
+        <level name="23" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
             <words>cow</words>
             <help>
+                <letters></letters>
                 <words>cow</words>
             </help>
             <req>
                 <gather_word count="1">cow</gather_word>
             </req>
         </level>
-        <level name="41" market="4" coins="0" points="0">
+        <level name="24" coins="10" points="10" market="4">
             <intro>
             </intro>
+            <letters></letters>
             <words>owl</words>
             <help>
+                <letters></letters>
                 <words>owl</words>
             </help>
             <req>
                 <gather_word count="1">owl</gather_word>
             </req>
         </level>
-        <level name="42" market="4" coins="0" points="0">
+        <level name="25" coins="10" points="10" market="4">
             <intro>
             </intro>
+            <letters>i</letters>
             <words>bowl</words>
             <help>
+                <letters>i</letters>
                 <words>bowl</words>
             </help>
             <req>
+                <gather_letter count="1">i</gather_letter>
                 <gather_word count="1">bowl</gather_word>
             </req>
         </level>
-        <level name="43" market="4" coins="0" points="0">
+        <level name="26" coins="10" points="10" market="4">
             <intro>
             </intro>
-            <words>flower</words>
-            <help>
-                <words>flower</words>
-            </help>
-            <req>
-                <gather_word count="1">flower</gather_word>
-            </req>
-        </level>
-        <level name="44" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>tower</words>
-            <help>
-                <words>tower</words>
-            </help>
-            <req>
-                <gather_word count="1">tower</gather_word>
-            </req>
-        </level>
-        <level name="45" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>horse</words>
-            <help>
-                <words>horse</words>
-            </help>
-            <req>
-                <gather_word count="1">horse</gather_word>
-            </req>
-        </level>
-        <level name="46" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>doll</words>
-            <help>
-                <words>doll</words>
-            </help>
-            <req>
-                <gather_word count="1">doll</gather_word>
-            </req>
-        </level>
-        <level name="47" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>dog</words>
-            <help>
-                <words>dog</words>
-            </help>
-            <req>
-                <gather_word count="1">dog</gather_word>
-            </req>
-        </level>
-        <level name="48" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>sock</words>
-            <help>
-                <words>sock</words>
-            </help>
-            <req>
-                <gather_word count="1">sock</gather_word>
-            </req>
-        </level>
-        <level name="49" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>pen</words>
-            <help>
-                <words>pen</words>
-            </help>
-            <req>
-                <gather_word count="1">pen</gather_word>
-            </req>
-        </level>
-        <level name="50" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>tent</words>
-            <help>
-                <words>tent</words>
-            </help>
-            <req>
-                <gather_word count="1">tent</gather_word>
-            </req>
-        </level>
-        <level name="51" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>pencil</words>
-            <help>
-                <words>pencil</words>
-            </help>
-            <req>
-                <gather_word count="1">pencil</gather_word>
-            </req>
-        </level>
-        <level name="52" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>bed</words>
-            <help>
-                <words>bed</words>
-            </help>
-            <req>
-                <gather_word count="1">bed</gather_word>
-            </req>
-        </level>
-        <level name="53" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>zebra</words>
-            <help>
-                <words>zebra</words>
-            </help>
-            <req>
-                <gather_word count="1">zebra</gather_word>
-            </req>
-        </level>
-        <level name="54" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>brush</words>
-            <help>
-                <words>brush</words>
-            </help>
-            <req>
-                <gather_word count="1">brush</gather_word>
-            </req>
-        </level>
-        <level name="55" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>bread</words>
-            <help>
-                <words>bread</words>
-            </help>
-            <req>
-                <gather_word count="1">bread</gather_word>
-            </req>
-        </level>
-        <level name="56" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>broom</words>
-            <help>
-                <words>broom</words>
-            </help>
-            <req>
-                <gather_word count="1">broom</gather_word>
-            </req>
-        </level>
-        <level name="57" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>fish</words>
-            <help>
-                <words>fish</words>
-            </help>
-            <req>
-                <gather_word count="1">fish</gather_word>
-            </req>
-        </level>
-        <level name="58" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>log</words>
-            <help>
-                <words>log</words>
-            </help>
-            <req>
-                <gather_word count="1">log</gather_word>
-            </req>
-        </level>
-        <level name="59" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>lock</words>
-            <help>
-                <words>lock</words>
-            </help>
-            <req>
-                <gather_word count="1">lock</gather_word>
-            </req>
-        </level>
-        <level name="60" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>sock</words>
-            <help>
-                <words>sock</words>
-            </help>
-            <req>
-                <gather_word count="1">sock</gather_word>
-            </req>
-        </level>
-        <level name="61" market="4" coins="0" points="0">
-            <intro>
-            </intro>
+            <letters>u</letters>
             <words>pig</words>
             <help>
+                <letters>u</letters>
                 <words>pig</words>
             </help>
             <req>
+                <gather_letter count="1">u</gather_letter>
                 <gather_word count="1">pig</gather_word>
             </req>
         </level>
-        <level name="62" market="4" coins="0" points="0">
+        <level name="27" coins="10" points="10" market="4">
             <intro>
             </intro>
-            <words>pie</words>
-            <help>
-                <words>pie</words>
-            </help>
-            <req>
-                <gather_word count="1">pie</gather_word>
-            </req>
-        </level>
-        <level name="63" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>egg</words>
-            <help>
-                <words>egg</words>
-            </help>
-            <req>
-                <gather_word count="1">egg</gather_word>
-            </req>
-        </level>
-        <level name="64" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>ring</words>
-            <help>
-                <words>ring</words>
-            </help>
-            <req>
-                <gather_word count="1">ring</gather_word>
-            </req>
-        </level>
-        <level name="65" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>spring</words>
-            <help>
-                <words>spring</words>
-            </help>
-            <req>
-                <gather_word count="1">spring</gather_word>
-            </req>
-        </level>
-        <level name="66" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>swing</words>
-            <help>
-                <words>swing</words>
-            </help>
-            <req>
-                <gather_word count="1">swing</gather_word>
-            </req>
-        </level>
-        <level name="67" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>string</words>
-            <help>
-                <words>string</words>
-            </help>
-            <req>
-                <gather_word count="1">string</gather_word>
-            </req>
-        </level>
-        <level name="68" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>pail</words>
-            <help>
-                <words>pail</words>
-            </help>
-            <req>
-                <gather_word count="1">pail</gather_word>
-            </req>
-        </level>
-        <level name="69" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>mail</words>
-            <help>
-                <words>mail</words>
-            </help>
-            <req>
-                <gather_word count="1">mail</gather_word>
-            </req>
-        </level>
-        <level name="70" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>sail</words>
-            <help>
-                <words>sail</words>
-            </help>
-            <req>
-                <gather_word count="1">sail</gather_word>
-            </req>
-        </level>
-        <level name="71" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>nail</words>
-            <help>
-                <words>nail</words>
-            </help>
-            <req>
-                <gather_word count="1">nail</gather_word>
-            </req>
-        </level>
-        <level name="72" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>trail</words>
-            <help>
-                <words>trail</words>
-            </help>
-            <req>
-                <gather_word count="1">trail</gather_word>
-            </req>
-        </level>
-        <level name="73" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>tree</words>
-            <help>
-                <words>tree</words>
-            </help>
-            <req>
-                <gather_word count="1">tree</gather_word>
-            </req>
-        </level>
-        <level name="74" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>seed</words>
-            <help>
-                <words>seed</words>
-            </help>
-            <req>
-                <gather_word count="1">seed</gather_word>
-            </req>
-        </level>
-        <level name="75" market="4" coins="0" points="0">
-            <intro>
-            </intro>
-            <words>needle</words>
-            <help>
-                <words>needle</words>
-            </help>
-            <req>
-                <gather_word count="1">needle</gather_word>
-            </req>
-        </level>
-        <level name="76" market="4" coins="0" points="0">
-            <intro>
-            </intro>
+            <letters></letters>
             <words>hut</words>
             <help>
+                <letters></letters>
                 <words>hut</words>
             </help>
             <req>
                 <gather_word count="1">hut</gather_word>
             </req>
         </level>
-        <level name="77" market="4" coins="0" points="0">
+        <level name="28" coins="10" points="10" market="4">
             <intro>
             </intro>
+            <letters></letters>
             <words>mud</words>
             <help>
+                <letters></letters>
                 <words>mud</words>
             </help>
             <req>
                 <gather_word count="1">mud</gather_word>
             </req>
         </level>
-        <level name="78" market="4" coins="0" points="0">
+        <level name="29" coins="10" points="10" market="4">
             <intro>
             </intro>
+            <letters>e</letters>
+            <words>cup</words>
+            <help>
+                <letters>e</letters>
+                <words>cup</words>
+            </help>
+            <req>
+                <gather_letter count="1">e</gather_letter>
+                <gather_word count="1">cup</gather_word>
+            </req>
+        </level>
+        <level name="30" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>pen</words>
+            <help>
+                <letters></letters>
+                <words>pen</words>
+            </help>
+            <req>
+                <gather_word count="1">pen</gather_word>
+            </req>
+        </level>
+        <level name="31" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>tent</words>
+            <help>
+                <letters></letters>
+                <words>tent</words>
+            </help>
+            <req>
+                <gather_word count="1">tent</gather_word>
+            </req>
+        </level>
+        <level name="32" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters>k</letters>
+            <words>bed</words>
+            <help>
+                <letters>k</letters>
+                <words>bed</words>
+            </help>
+            <req>
+                <gather_letter count="1">k</gather_letter>
+                <gather_word count="1">bed</gather_word>
+            </req>
+        </level>
+        <level name="33" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>milk</words>
+            <help>
+                <letters></letters>
+                <words>milk</words>
+            </help>
+            <req>
+                <gather_word count="1">milk</gather_word>
+            </req>
+        </level>
+        <level name="34" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters>s</letters>
+            <words>banana</words>
+            <help>
+                <letters>s</letters>
+                <words>banana</words>
+            </help>
+            <req>
+                <gather_letter count="1">s</gather_letter>
+                <gather_word count="1">banana</gather_word>
+            </req>
+        </level>
+        <level name="35" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>pants</words>
+            <help>
+                <letters></letters>
+                <words>pants</words>
+            </help>
+            <req>
+                <gather_word count="1">pants</gather_word>
+            </req>
+        </level>
+        <level name="36" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>lamp</words>
+            <help>
+                <letters></letters>
+                <words>lamp</words>
+            </help>
+            <req>
+                <gather_word count="1">lamp</gather_word>
+            </req>
+        </level>
+        <level name="37" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>hammer</words>
+            <help>
+                <letters></letters>
+                <words>hammer</words>
+            </help>
+            <req>
+                <gather_word count="1">hammer</gather_word>
+            </req>
+        </level>
+        <level name="38" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters>y</letters>
+            <words>camera</words>
+            <help>
+                <letters>y</letters>
+                <words>camera</words>
+            </help>
+            <req>
+                <gather_letter count="1">y</gather_letter>
+                <gather_word count="1">camera</gather_word>
+            </req>
+        </level>
+        <level name="39" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>yarn</words>
+            <help>
+                <letters></letters>
+                <words>yarn</words>
+            </help>
+            <req>
+                <gather_word count="1">yarn</gather_word>
+            </req>
+        </level>
+        <level name="40" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>water</words>
+            <help>
+                <letters></letters>
+                <words>water</words>
+            </help>
+            <req>
+                <gather_word count="1">water</gather_word>
+            </req>
+        </level>
+        <level name="41" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>doll</words>
+            <help>
+                <letters></letters>
+                <words>doll</words>
+            </help>
+            <req>
+                <gather_word count="1">doll</gather_word>
+            </req>
+        </level>
+        <level name="42" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>pencil</words>
+            <help>
+                <letters></letters>
+                <words>pencil</words>
+            </help>
+            <req>
+                <gather_word count="1">pencil</gather_word>
+            </req>
+        </level>
+        <level name="43" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>grass</words>
+            <help>
+                <letters></letters>
+                <words>grass</words>
+            </help>
+            <req>
+                <gather_word count="1">grass</gather_word>
+            </req>
+        </level>
+        <level name="44" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>dress</words>
+            <help>
+                <letters></letters>
+                <words>dress</words>
+            </help>
+            <req>
+                <gather_word count="1">dress</gather_word>
+            </req>
+        </level>
+        <level name="45" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>goat</words>
+            <help>
+                <letters></letters>
+                <words>goat</words>
+            </help>
+            <req>
+                <gather_word count="1">goat</gather_word>
+            </req>
+        </level>
+        <level name="46" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>boat</words>
+            <help>
+                <letters></letters>
+                <words>boat</words>
+            </help>
+            <req>
+                <gather_word count="1">boat</gather_word>
+            </req>
+        </level>
+        <level name="47" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>frog</words>
+            <help>
+                <letters></letters>
+                <words>frog</words>
+            </help>
+            <req>
+                <gather_word count="1">frog</gather_word>
+            </req>
+        </level>
+        <level name="48" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>candle</words>
+            <help>
+                <letters></letters>
+                <words>candle</words>
+            </help>
+            <req>
+                <gather_word count="1">candle</gather_word>
+            </req>
+        </level>
+        <level name="49" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>table</words>
+            <help>
+                <letters></letters>
+                <words>table</words>
+            </help>
+            <req>
+                <gather_word count="1">table</gather_word>
+            </req>
+        </level>
+        <level name="50" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>apple</words>
+            <help>
+                <letters></letters>
+                <words>apple</words>
+            </help>
+            <req>
+                <gather_word count="1">apple</gather_word>
+            </req>
+        </level>
+        <level name="51" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>flower</words>
+            <help>
+                <letters></letters>
+                <words>flower</words>
+            </help>
+            <req>
+                <gather_word count="1">flower</gather_word>
+            </req>
+        </level>
+        <level name="52" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>tower</words>
+            <help>
+                <letters></letters>
+                <words>tower</words>
+            </help>
+            <req>
+                <gather_word count="1">tower</gather_word>
+            </req>
+        </level>
+        <level name="53" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters>z</letters>
+            <words>horse</words>
+            <help>
+                <letters>z</letters>
+                <words>horse</words>
+            </help>
+            <req>
+                <gather_letter count="1">z</gather_letter>
+                <gather_word count="1">horse</gather_word>
+            </req>
+        </level>
+        <level name="54" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>zebra</words>
+            <help>
+                <letters></letters>
+                <words>zebra</words>
+            </help>
+            <req>
+                <gather_word count="1">zebra</gather_word>
+            </req>
+        </level>
+        <level name="55" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>bread</words>
+            <help>
+                <letters></letters>
+                <words>bread</words>
+            </help>
+            <req>
+                <gather_word count="1">bread</gather_word>
+            </req>
+        </level>
+        <level name="56" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>broom</words>
+            <help>
+                <letters></letters>
+                <words>broom</words>
+            </help>
+            <req>
+                <gather_word count="1">broom</gather_word>
+            </req>
+        </level>
+        <level name="57" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>brush</words>
+            <help>
+                <letters></letters>
+                <words>brush</words>
+            </help>
+            <req>
+                <gather_word count="1">brush</gather_word>
+            </req>
+        </level>
+        <level name="58" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>fish</words>
+            <help>
+                <letters></letters>
+                <words>fish</words>
+            </help>
+            <req>
+                <gather_word count="1">fish</gather_word>
+            </req>
+        </level>
+        <level name="59" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>lock</words>
+            <help>
+                <letters></letters>
+                <words>lock</words>
+            </help>
+            <req>
+                <gather_word count="1">lock</gather_word>
+            </req>
+        </level>
+        <level name="60" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>sock</words>
+            <help>
+                <letters></letters>
+                <words>sock</words>
+            </help>
+            <req>
+                <gather_word count="1">sock</gather_word>
+            </req>
+        </level>
+        <level name="61" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>pie</words>
+            <help>
+                <letters></letters>
+                <words>pie</words>
+            </help>
+            <req>
+                <gather_word count="1">pie</gather_word>
+            </req>
+        </level>
+        <level name="62" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>egg</words>
+            <help>
+                <letters></letters>
+                <words>egg</words>
+            </help>
+            <req>
+                <gather_word count="1">egg</gather_word>
+            </req>
+        </level>
+        <level name="63" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>tree</words>
+            <help>
+                <letters></letters>
+                <words>tree</words>
+            </help>
+            <req>
+                <gather_word count="1">tree</gather_word>
+            </req>
+        </level>
+        <level name="64" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>seed</words>
+            <help>
+                <letters></letters>
+                <words>seed</words>
+            </help>
+            <req>
+                <gather_word count="1">seed</gather_word>
+            </req>
+        </level>
+        <level name="65" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>needle</words>
+            <help>
+                <letters></letters>
+                <words>needle</words>
+            </help>
+            <req>
+                <gather_word count="1">needle</gather_word>
+            </req>
+        </level>
+        <level name="66" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
             <words>bucket</words>
             <help>
+                <letters></letters>
                 <words>bucket</words>
             </help>
             <req>
                 <gather_word count="1">bucket</gather_word>
             </req>
         </level>
-        <level name="79" market="4" coins="0" points="0">
+        <level name="67" coins="10" points="10" market="4">
             <intro>
             </intro>
+            <letters></letters>
             <words>truck</words>
             <help>
+                <letters></letters>
                 <words>truck</words>
             </help>
             <req>
                 <gather_word count="1">truck</gather_word>
             </req>
         </level>
-        <level name="80" market="4" coins="0" points="0">
+        <level name="68" coins="10" points="10" market="4">
             <intro>
             </intro>
+            <letters></letters>
             <words>duck</words>
             <help>
+                <letters></letters>
                 <words>duck</words>
             </help>
             <req>
                 <gather_word count="1">duck</gather_word>
             </req>
         </level>
+        <level name="69" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>ring</words>
+            <help>
+                <letters></letters>
+                <words>ring</words>
+            </help>
+            <req>
+                <gather_word count="1">ring</gather_word>
+            </req>
+        </level>
+        <level name="70" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>spring</words>
+            <help>
+                <letters></letters>
+                <words>spring</words>
+            </help>
+            <req>
+                <gather_word count="1">spring</gather_word>
+            </req>
+        </level>
+        <level name="71" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>swing</words>
+            <help>
+                <letters></letters>
+                <words>swing</words>
+            </help>
+            <req>
+                <gather_word count="1">swing</gather_word>
+            </req>
+        </level>
+        <level name="72" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>string</words>
+            <help>
+                <letters></letters>
+                <words>string</words>
+            </help>
+            <req>
+                <gather_word count="1">string</gather_word>
+            </req>
+        </level>
+        <level name="73" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>pail</words>
+            <help>
+                <letters></letters>
+                <words>pail</words>
+            </help>
+            <req>
+                <gather_word count="1">pail</gather_word>
+            </req>
+        </level>
+        <level name="74" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>mail</words>
+            <help>
+                <letters></letters>
+                <words>mail</words>
+            </help>
+            <req>
+                <gather_word count="1">mail</gather_word>
+            </req>
+        </level>
+        <level name="75" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>sail</words>
+            <help>
+                <letters></letters>
+                <words>sail</words>
+            </help>
+            <req>
+                <gather_word count="1">sail</gather_word>
+            </req>
+        </level>
+        <level name="76" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>nail</words>
+            <help>
+                <letters></letters>
+                <words>nail</words>
+            </help>
+            <req>
+                <gather_word count="1">nail</gather_word>
+            </req>
+        </level>
+        <level name="77" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>snail</words>
+            <help>
+                <letters></letters>
+                <words>snail</words>
+            </help>
+            <req>
+                <gather_word count="1">snail</gather_word>
+            </req>
+        </level>
+        <level name="78" coins="10" points="10" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>trail</words>
+            <help>
+                <letters></letters>
+                <words>trail</words>
+            </help>
+            <req>
+                <gather_word count="1">trail</gather_word>
+            </req>
+        </level>
     </levels>
+
 </locale>
