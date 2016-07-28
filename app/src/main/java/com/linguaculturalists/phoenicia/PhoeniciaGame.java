@@ -698,7 +698,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 builder.time.set(wordTile.word.construct);
                 // If builder is market complete, set the progress to the build time in case it was changed in the locale
                 if (builder.status.get() == Builder.COMPLETE) {
-                    builder.progress.set(wordTile.word.time);
+                    builder.progress.set(wordTile.word.construct);
                 }
                 builder.save(PhoeniciaContext.context);
                 Debug.d("Found builder with "+builder.progress.get()+"/"+builder.time.get()+" and status "+builder.status.get());
