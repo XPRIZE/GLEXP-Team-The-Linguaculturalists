@@ -12,6 +12,9 @@ import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.Entity;
+import org.andengine.entity.modifier.MoveXModifier;
+import org.andengine.entity.modifier.MoveYModifier;
+import org.andengine.entity.modifier.ParallelEntityModifier;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.sprite.Sprite;
@@ -23,6 +26,7 @@ import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
@@ -45,6 +49,9 @@ public class WordMatchGameHUD extends PhoeniciaHUD {
 
     private Font choiceWordFont;
     private Entity cardPane;
+    private Entity resultsPane;
+    private int result_number;
+    private List<Word> winnings;
     private List<Entity> touchAreas;
 
     public WordMatchGameHUD(final PhoeniciaGame phoeniciaGame, final Level level, final GameTile tile) {
@@ -69,14 +76,19 @@ public class WordMatchGameHUD extends PhoeniciaHUD {
         choiceWordFont = FontFactory.create(PhoeniciaContext.fontManager, PhoeniciaContext.textureManager, 256, 256, TextureOptions.BILINEAR, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 36, Color.BLUE_ARGB_PACKED_INT);
         choiceWordFont.load();
 
-        final float dialogWidth = GameActivity.CAMERA_WIDTH * 0.6f;
-        final float dialogHeight = GameActivity.CAMERA_HEIGHT * 0.75f;
+        final float dialogWidth = 800;
+        final float dialogHeight = 600;
         Rectangle whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, dialogWidth, dialogHeight, PhoeniciaContext.vboManager);
         whiteRect.setColor(Color.WHITE);
         this.attachChild(whiteRect);
 
-        this.cardPane = new Entity(whiteRect.getWidth()/2, whiteRect.getHeight()/2, whiteRect.getWidth(), whiteRect.getHeight());
+        this.cardPane = new Entity(whiteRect.getWidth()/2, 400, whiteRect.getWidth(), 400);
         whiteRect.attachChild(cardPane);
+
+        this.resultsPane = new Entity(whiteRect.getWidth()/2, 100, whiteRect.getWidth(), 200);
+        whiteRect.attachChild(this.resultsPane);
+        this.winnings = new ArrayList<Word>();
+        this.result_number = 0;
     }
 
     @Override
@@ -84,20 +96,38 @@ public class WordMatchGameHUD extends PhoeniciaHUD {
         this.show_round(this.current_round);
     }
 
-    private void pass() {
+    private void pass(Word word) {
         //TODO: count success
         Debug.d("wordmatch: pass!");
+        this.winnings.add(word);
+        ITiledTextureRegion sprite_region = this.phoeniciaGame.wordSprites.get(word);
+        Sprite winning_sprite = new Sprite(this.cardPane.getWidth()/2, this.cardPane.getHeight() - 300, sprite_region.getTextureRegion(1), PhoeniciaContext.vboManager);
+        this.resultsPane.attachChild(winning_sprite);
+        winning_sprite.registerEntityModifier(new ParallelEntityModifier(
+                new MoveYModifier(0.5f, 300, 80),
+                new MoveXModifier(0.5f, this.resultsPane.getWidth()/2, 48+(this.result_number*80))
+                ));
+        this.result_number++;
     }
 
-    private void fail() {
+    private void fail(Word word) {
         //TODO: count failure
         Debug.d("wordmatch: fail!");
+        ITiledTextureRegion sprite_region = this.phoeniciaGame.wordSprites.get(word);
+        Sprite missed_sprite = new Sprite(this.cardPane.getWidth()/2, this.cardPane.getHeight() - 300, sprite_region.getTextureRegion(2), PhoeniciaContext.vboManager);
+        this.resultsPane.attachChild(missed_sprite);
+        missed_sprite.registerEntityModifier(new ParallelEntityModifier(
+                new MoveYModifier(0.5f, 300, 80),
+                new MoveXModifier(0.5f, this.resultsPane.getWidth()/2, 48+(this.result_number*80))
+                ));
+        this.result_number++;
     }
 
     private void next_round() {
         if (this.current_round < this.max_rounds) {
             this.show_round(++this.current_round);
         } else {
+            // TODO: Show winnings
             this.phoeniciaGame.hudManager.pop();
         }
     }
@@ -130,9 +160,9 @@ public class WordMatchGameHUD extends PhoeniciaHUD {
                 @Override
                 public void onClicked(Button button) {
                     if (word == challenge_word) {
-                        pass();
+                        pass(challenge_word);
                     } else {
-                        fail();
+                        fail(challenge_word);
                     }
                     next_round();
                 }
@@ -143,7 +173,7 @@ public class WordMatchGameHUD extends PhoeniciaHUD {
         }
 
         ITextureRegion sprite_region = this.phoeniciaGame.wordSprites.get(challenge_word);
-        Sprite challenge_sprite = new Sprite(this.cardPane.getWidth()/2, 100, sprite_region, PhoeniciaContext.vboManager);
+        Sprite challenge_sprite = new Sprite(this.cardPane.getWidth()/2, this.cardPane.getHeight() - 300, sprite_region, PhoeniciaContext.vboManager);
         this.cardPane.attachChild(challenge_sprite);
     }
 

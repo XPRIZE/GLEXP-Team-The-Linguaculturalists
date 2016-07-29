@@ -27,7 +27,7 @@
     <decorations>
         <decoration size="1x1" name="Lamp Post"  points="100" buy="200" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
         <decoration size="1x1" name="Small Tree" points="300" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
-        <decoration size="2x2" name="Fountaion"  points="500" buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
+        <decoration size="2x2" name="Fountain"   points="500" buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
     </decorations>
 
     <!-- alphabet -->
