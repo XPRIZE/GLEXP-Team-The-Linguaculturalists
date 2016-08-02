@@ -5,9 +5,15 @@ import android.graphics.Typeface;
 import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.Button;
+import com.linguaculturalists.phoenicia.components.Dialog;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
+import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.GameTile;
+import com.linguaculturalists.phoenicia.models.Inventory;
+import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.GameSounds;
+import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.engine.camera.Camera;
@@ -67,6 +73,7 @@ public class WordMatchGameHUD extends PhoeniciaHUD {
         if (this.random_word_list.size() < this.max_rounds) {
             this.max_rounds = this.random_word_list.size();
         }
+        Debug.d("WordMatchGame rounds: "+this.max_rounds);
 
         if (this.random_word_list.size() < this.max_choices) {
             this.max_choices = this.random_word_list.size();
@@ -105,7 +112,7 @@ public class WordMatchGameHUD extends PhoeniciaHUD {
         this.resultsPane.attachChild(winning_sprite);
         winning_sprite.registerEntityModifier(new ParallelEntityModifier(
                 new MoveYModifier(0.5f, 300, 80),
-                new MoveXModifier(0.5f, this.resultsPane.getWidth()/2, 48+(this.result_number*80))
+                new MoveXModifier(0.5f, this.resultsPane.getWidth()/2, 40+(this.result_number*80))
                 ));
         this.result_number++;
     }
@@ -124,20 +131,90 @@ public class WordMatchGameHUD extends PhoeniciaHUD {
     }
 
     private void next_round() {
-        if (this.current_round < this.max_rounds) {
-            this.show_round(++this.current_round);
-        } else {
-            // TODO: Show winnings
-            this.phoeniciaGame.hudManager.pop();
-        }
-    }
-    private void show_round(int round) {
+        this.current_round++;
         this.cardPane.detachChildren();
         for (Entity toucharea : this.touchAreas) {
-           this.unregisterTouchArea(toucharea);
+            this.unregisterTouchArea(toucharea);
         }
         this.touchAreas.clear();
 
+        if (this.current_round < this.max_rounds) {
+            this.show_round(this.current_round);
+        } else {
+            // TODO: Show winnings
+            this.end_game();
+        }
+    }
+
+    private void end_game() {
+        if ((this.max_rounds - this.winnings.size()) < 3) {
+            this.show_reward();
+        } else {
+            this.show_sorry();
+        }
+        this.tile.reset(PhoeniciaContext.context);
+    }
+    private void show_sorry() {
+        Dialog sorry_dialog = new Dialog(400, 150, Dialog.Buttons.OK, PhoeniciaContext.vboManager, new Dialog.DialogListener() {
+            @Override
+            public void onDialogButtonClicked(Dialog dialog, Dialog.DialogButton dialogButton) {
+                dialog.close();
+                unregisterTouchArea(dialog);
+                phoeniciaGame.hudManager.pop();
+            }
+        });
+        Text sorry_text = new Text(sorry_dialog.getWidth()/2, sorry_dialog.getHeight()-48, GameFonts.dialogText(), "Sorry, no winnings", 18,  new TextOptions(AutoWrap.WORDS, sorry_dialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+        sorry_dialog.attachChild(sorry_text);
+
+        this.registerTouchArea(sorry_dialog);
+
+        sorry_dialog.open(this);
+        GameSounds.play(GameSounds.FAILED);
+    }
+
+    private void show_reward() {
+        Collections.shuffle(this.winnings);
+        final Word reward_word = this.winnings.get(0);
+        final int reward_coins = Math.round(reward_word.sell * this.tile.game.reward);
+        final int reward_points = Math.round(reward_word.points * this.tile.game.reward);
+
+        Dialog reward_dialog = new Dialog(400, 300, Dialog.Buttons.OK, PhoeniciaContext.vboManager, new Dialog.DialogListener() {
+            @Override
+            public void onDialogButtonClicked(Dialog dialog, Dialog.DialogButton dialogButton) {
+                Inventory.getInstance().add(reward_word.name, 1);
+                Bank.getInstance().credit(reward_coins);
+                phoeniciaGame.session.addExperience(reward_points);
+                GameSounds.play(GameSounds.COLLECT);
+                dialog.close();
+                unregisterTouchArea(dialog);
+                phoeniciaGame.hudManager.pop();
+            }
+        });
+
+        ITiledTextureRegion sprite_region = this.phoeniciaGame.wordSprites.get(reward_word);
+        Sprite reward_sprite = new Sprite(reward_dialog.getWidth()/2, reward_dialog.getHeight() - 100, sprite_region.getTextureRegion(1), PhoeniciaContext.vboManager);
+        reward_dialog.attachChild(reward_sprite);
+
+        ITextureRegion coinRegion = this.phoeniciaGame.shellTiles.getTextureRegion(GameTextures.COIN_ICON);
+        Sprite coinIcon = new Sprite(64, 112, coinRegion, PhoeniciaContext.vboManager);
+        Text iconDisplay = new Text(64, 112, GameFonts.dialogText(), String.valueOf(reward_coins), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        iconDisplay.setPosition(96 + (iconDisplay.getWidth() / 2), iconDisplay.getY());
+        reward_dialog.attachChild(iconDisplay);
+        reward_dialog.attachChild(coinIcon);
+
+        ITextureRegion pointsRegion = this.phoeniciaGame.shellTiles.getTextureRegion(GameTextures.XP_ICON);
+        Sprite pointsIcon = new Sprite((reward_dialog.getWidth() / 2)+64, 112, pointsRegion, PhoeniciaContext.vboManager);
+        Text pointsDisplay = new Text((reward_dialog.getWidth() / 2)+64, 112, GameFonts.dialogText(), String.valueOf(reward_points), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        pointsDisplay.setPosition((reward_dialog.getWidth() / 2) + 96 + (pointsDisplay.getWidth() / 2), pointsDisplay.getY());
+        reward_dialog.attachChild(pointsDisplay);
+        reward_dialog.attachChild(pointsIcon);
+
+        this.registerTouchArea(reward_dialog);
+        reward_dialog.open(this);
+        GameSounds.play(GameSounds.COMPLETE);
+    }
+
+    private void show_round(int round) {
         int word_index = round % this.max_rounds;
         final Word challenge_word = this.random_word_list.get(word_index);
 
