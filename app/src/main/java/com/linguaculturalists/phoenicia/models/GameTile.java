@@ -137,11 +137,11 @@ public class GameTile extends Model implements Builder.BuildStatusUpdateHandler,
             timer.game.set(this.phoeniciaGame.session);
             timer.progress.set(0);
             timer.status.set(Builder.NONE);
-            this.phoeniciaGame.addBuilder(timer);
             this.setTimer(timer);
         }
         timer.time.set(this.game.time);
         timer.save(PhoeniciaContext.context);
+        this.phoeniciaGame.addBuilder(timer);
         return timer;
     }
 
