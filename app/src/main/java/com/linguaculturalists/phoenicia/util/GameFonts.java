@@ -20,6 +20,7 @@ import java.lang.reflect.Type;
 public class GameFonts {
     static Font dialogFont;
     static Font defaultHUDDisplayFont;
+    static Font introTextFont;
     static Font inventoryCountFont;
     static Font buttonFont;
 
@@ -61,6 +62,14 @@ public class GameFonts {
         return defaultHUDDisplayFont;
     }
 
+    public static Font introText() {
+        if (introTextFont == null) {
+            BitmapTextureAtlas texture = new BitmapTextureAtlas(PhoeniciaContext.textureManager, 1024, 1024, TextureOptions.BILINEAR);
+            introTextFont = FontFactory.create(PhoeniciaContext.fontManager, PhoeniciaContext.textureManager, 256, 256, TextureOptions.BILINEAR, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 36, Color.BLUE_ARGB_PACKED_INT);
+            introTextFont.load();
+        }
+        return introTextFont;
+    }
     /**
      * Font used for displaying text in a Button
      * @return
