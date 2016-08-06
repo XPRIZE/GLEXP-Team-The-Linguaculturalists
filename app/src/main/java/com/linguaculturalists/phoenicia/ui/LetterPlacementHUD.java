@@ -50,6 +50,8 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
     private Rectangle whiteRect;
     private Scrollable blockPanel;
 
+    private ClickDetector clickDetector;
+
     /**
      * HUD for selecting \link Letter Letters \endlink to be placed as tiles onto the map.
      * @param game Reference to the current PhoeniciaGame this HUD is running in
@@ -63,9 +65,22 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
         Bank.getInstance().addUpdateListener(this);
         this.game = game;
 
-        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH/2, 64, 600, 96, PhoeniciaContext.vboManager);
+        this.clickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
+            @Override
+            public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
+                game.hudManager.pop();
+            }
+        });
+        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH/2, 64, 600, 96, PhoeniciaContext.vboManager){
+            @Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+                return true;
+            }
+        };
         whiteRect .setColor(Color.WHITE);
         this.attachChild(whiteRect);
+        this.registerTouchArea(whiteRect);
 
         this.blockPanel = new Scrollable(GameActivity.CAMERA_WIDTH/2, 64, 600, 96, Scrollable.SCROLL_HORIZONTAL);
         this.blockPanel.setPadding(16);
@@ -150,7 +165,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
         boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
         if (handled) return true;
 
-        return false;
+        return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
     }
 
     /**

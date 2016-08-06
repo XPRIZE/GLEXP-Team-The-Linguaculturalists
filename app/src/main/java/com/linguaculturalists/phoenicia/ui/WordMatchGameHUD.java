@@ -147,7 +147,7 @@ public class WordMatchGameHUD extends PhoeniciaHUD {
     }
 
     private void end_game() {
-        if ((this.max_rounds - this.winnings.size()) < 3) {
+        if (this.winnings.size() > 0 && (this.max_rounds - this.winnings.size()) < 3) {
             this.show_reward();
         } else {
             this.show_sorry();

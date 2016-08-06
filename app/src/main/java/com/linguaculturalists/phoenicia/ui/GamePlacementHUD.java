@@ -24,6 +24,7 @@ import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.extension.tmx.TMXTile;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
@@ -43,6 +44,7 @@ public class GamePlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
     private Rectangle whiteRect; /**< Background of this HUD */
     private Scrollable blockPanel; /**< Scrollpane containing the game icons */
 
+    private ClickDetector clickDetector;
     /**
      * A HUD which allows the selection of new phoeniciaGame blocks to be placed on the map
      *
@@ -55,9 +57,23 @@ public class GamePlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
         Bank.getInstance().addUpdateListener(this);
         this.phoeniciaGame = phoeniciaGame;
 
-        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH/2, 64, 600, 96, PhoeniciaContext.vboManager);
+        this.clickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
+            @Override
+            public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
+                phoeniciaGame.hudManager.pop();
+            }
+        });
+
+        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH/2, 64, 600, 96, PhoeniciaContext.vboManager){
+            @Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+                return true;
+            }
+        };
         whiteRect.setColor(Color.WHITE);
         this.attachChild(whiteRect);
+        this.registerTouchArea(whiteRect);
 
         this.blockPanel = new Scrollable(GameActivity.CAMERA_WIDTH/2, 64, 600, 96, Scrollable.SCROLL_HORIZONTAL);
         this.blockPanel.setPadding(16);
@@ -128,7 +144,7 @@ public class GamePlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
         final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
         if (handled) return true;
 
-        return false;
+        return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
     }
 
     /**

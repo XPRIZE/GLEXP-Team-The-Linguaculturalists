@@ -30,6 +30,7 @@ public class DebugHUD extends PhoeniciaHUD {
     private PhoeniciaGame game;
     private Rectangle whiteRect;
     private ClickDetector clickDetector;
+    private long startTime;
 
     /**
      * Display the \link InventoryItem InventoryItems \endlink with a positive balance and allow selling them.
@@ -44,7 +45,9 @@ public class DebugHUD extends PhoeniciaHUD {
         this.clickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
             @Override
             public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
-                game.hudManager.pop();
+                if (System.currentTimeMillis() - startTime > 1000) {
+                    game.hudManager.pop();
+                }
             }
         });
 
@@ -139,6 +142,11 @@ public class DebugHUD extends PhoeniciaHUD {
         });
         whiteRect.attachChild(add10m);
         this.registerTouchArea(add10m);
+    }
+
+    @Override
+    public void show() {
+        this.startTime = System.currentTimeMillis();
     }
 
     /**

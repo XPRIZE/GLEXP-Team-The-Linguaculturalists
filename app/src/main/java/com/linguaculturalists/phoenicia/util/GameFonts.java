@@ -23,6 +23,7 @@ public class GameFonts {
     static Font introTextFont;
     static Font inventoryCountFont;
     static Font buttonFont;
+    static Font progressFont;
 
     /**
      * Font used for displaying text in a Button
@@ -83,4 +84,12 @@ public class GameFonts {
         return buttonFont;
     }
 
+    public static Font progressText() {
+        if (progressFont == null) {
+            BitmapTextureAtlas texture = new BitmapTextureAtlas(PhoeniciaContext.textureManager, 1024, 1024, TextureOptions.BILINEAR);
+            progressFont = FontFactory.createStroke(PhoeniciaContext.fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 24, true, Color.WHITE_ARGB_PACKED_INT, 1, Color.BLUE_ARGB_PACKED_INT);
+            progressFont.load();
+        }
+        return progressFont;
+    }
 }
