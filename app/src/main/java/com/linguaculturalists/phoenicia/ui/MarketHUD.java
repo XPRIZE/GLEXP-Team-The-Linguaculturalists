@@ -17,6 +17,7 @@ import com.linguaculturalists.phoenicia.models.Market;
 import com.linguaculturalists.phoenicia.models.MarketRequest;
 import com.linguaculturalists.phoenicia.models.RequestItem;
 import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.GameSounds;
 import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
@@ -252,6 +253,7 @@ public class MarketHUD extends PhoeniciaHUD {
      * @param request
      */
     public void completeSale(MarketRequest request) {
+        GameSounds.play(GameSounds.COLLECT);
         Market.getInstance().fulfillRequest(request);
         this.requestItemsPane.detachChildren();
         game.hudManager.clear();
@@ -301,6 +303,7 @@ public class MarketHUD extends PhoeniciaHUD {
         }
         this.registerTouchArea(confirmDialog);
         confirmDialog.open(this);
+        GameSounds.play(GameSounds.FAILED);
     }
 
     /**

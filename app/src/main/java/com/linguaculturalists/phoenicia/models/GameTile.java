@@ -44,7 +44,8 @@ import java.util.List;
 public class GameTile extends Model implements Builder.BuildStatusUpdateHandler, IOnAreaTouchListener, MapBlockSprite.OnClickListener {
 
     public ForeignKeyField<GameSession> session; /**< reference to the GameSession this tile is a part of */
-    public ForeignKeyField<GameTileBuilder> builder; /**< reference to the WordBuilder used by this tile */
+    public ForeignKeyField<GameTileBuilder> builder; /**< reference to the GameTileBuilder used by this tile */
+    public ForeignKeyField<GameTileTimer> timer; /**< the Builder used to track timeouts between game play */
     public IntegerField isoX; /**< isometric X coordinate for this tile */
     public IntegerField isoY; /**< isometric Y coordinate for this tile */
     public CharField item_name; /**< name of the InventoryItem this tile produces */
@@ -55,12 +56,13 @@ public class GameTile extends Model implements Builder.BuildStatusUpdateHandler,
 
     private boolean isTouchDown = false;
     private GameTileListener eventListener;
-    private boolean isCompleted = false;
+    private boolean isReady= false;
 
     public GameTile() {
         super();
         this.session = new ForeignKeyField<GameSession>(GameSession.class);
         this.builder = new ForeignKeyField<GameTileBuilder>(GameTileBuilder.class);
+        this.timer = new ForeignKeyField<GameTileTimer>(GameTileTimer.class);
         this.isoX = new IntegerField();
         this.isoY = new IntegerField();
         this.item_name = new CharField(32);
@@ -124,20 +126,83 @@ public class GameTile extends Model implements Builder.BuildStatusUpdateHandler,
         this.builder.set(builder);
         this.onProgressChanged(builder);
         if (builder.status.get() == Builder.COMPLETE) {
-            this.isCompleted = true;
+            this.isReady = true;
         }
     }
 
-    public void restart(Context context) {
-        Debug.d("Restarting game timout");
-        // TODO: Restart builder
+    public GameTileTimer getTimer() {
+        GameTileTimer timer = this.timer.get(PhoeniciaContext.context);
+        if (timer == null) {
+            timer = new GameTileTimer();
+            timer.game.set(this.phoeniciaGame.session);
+            timer.progress.set(0);
+            timer.status.set(Builder.NONE);
+            this.setTimer(timer);
+        }
+        timer.time.set(this.game.time);
+        timer.save(PhoeniciaContext.context);
+        this.phoeniciaGame.addBuilder(timer);
+        return timer;
     }
 
-    public void onScheduled(Builder buildItem) { Debug.d("WordTile.onScheduled"); this.isCompleted = false; return; }
-    public void onStarted(Builder buildItem) { Debug.d("WordTile.onStarted"); this.isCompleted = false; return; }
+    public void setTimer(GameTileTimer timer) {
+        this.timer.set(timer);
+        this.save(PhoeniciaContext.context);
+        timer.addUpdateHandler(new Builder.BuildStatusUpdateHandler() {
+            @Override
+            public void onScheduled(Builder buildItem) {
+
+            }
+
+            @Override
+            public void onStarted(Builder buildItem) {
+                isReady = false;
+            }
+
+            @Override
+            public void onCompleted(Builder buildItem) {
+                isReady = true;
+            }
+
+            @Override
+            public void onProgressChanged(Builder builtItem) {
+
+            }
+        });
+    }
+
+    /**
+     * Restart the build progress for this tile
+     * @param context ApplicationContext ApplicationContext for use in database calls
+     */
+    public void reset(Context context) {
+        GameTileTimer timer = this.getTimer();
+        if (timer != null) {
+            timer.progress.set(0);
+            timer.start();
+            timer.save(PhoeniciaContext.context);
+            this.phoeniciaGame.addBuilder(timer);
+        } else {
+            Debug.e("Could not reset GameTile timer, because it was missing");
+        }
+    }
+
+
+    public void restart(Context context) {
+        Debug.d("Restarting game timout");
+        GameTileTimer timer = this.getTimer();
+        if (timer.status.get() == Builder.COMPLETE) {
+            this.isReady = true;
+        } else if (timer.status.get() == Builder.BUILDING) {
+            this.isReady = false;
+        }
+    }
+
+    public void onScheduled(Builder buildItem) { Debug.d("WordTile.onScheduled"); this.isReady = false; return; }
+    public void onStarted(Builder buildItem) { Debug.d("WordTile.onStarted"); this.isReady = false; return; }
     public void onCompleted(Builder buildItem) {
         Debug.d("WordTile.onCompleted");
-        this.isCompleted = true;
+        this.isReady = true;
         if (this.eventListener != null) {
             this.eventListener.onGameTileBuildCompleted(this);
         }
@@ -158,30 +223,11 @@ public class GameTile extends Model implements Builder.BuildStatusUpdateHandler,
         return;
     }
 
-    /**
-     * Restart the build progress for this tile
-     * @param context ApplicationContext ApplicationContext for use in database calls
-     */
-    public void reset(Context context) {
-        if (this.sprite != null) {
-            this.sprite.setProgress(0, game.construct);
-        }
-        GameTileBuilder builder = this.getBuilder(context);
-        if (builder != null) {
-            Debug.d("Resetting WordTile builder");
-            builder.progress.set(0);
-            builder.start();
-            builder.save(context);
-            this.phoeniciaGame.addBuilder(builder);
-        } else {
-            Debug.e("Could not reset WordTile builder, because it was missing");
-        }
-    }
-
     @Override
     protected void migrate(Context context) {
         Migrator<GameTile> migrator = new Migrator<GameTile>(GameTile.class);
 
+        migrator.addField("timer", new ForeignKeyField<GameTileTimer>(GameTileTimer.class));
         // roll out all migrations
         migrator.migrate(context);
         return;
@@ -213,17 +259,23 @@ public class GameTile extends Model implements Builder.BuildStatusUpdateHandler,
     public void onClick(MapBlockSprite buttonSprite, float v, float v2) {
         Debug.d("Clicked block: "+String.valueOf(this.game.name));
         Builder builder = this.getBuilder(PhoeniciaContext.context);
-        if (builder != null) {
-            if (builder.status.get() == Builder.COMPLETE) {
-                Debug.d("Clicked block was completed");
+        Builder timer = this.getTimer();
+        if (builder != null && timer != null) {
+            if (builder.status.get() == Builder.COMPLETE && (timer.status.get() == Builder.COMPLETE || timer.status.get() == Builder.NONE)) {
                 phoeniciaGame.hudManager.showGame(phoeniciaGame.locale.level_map.get(phoeniciaGame.current_level), this);
             } else {
-                Debug.d("Clicked block was NOT completed");
+                Debug.d("Clicked block was NOT ready");
                 // Don't run another modifier animation if one is still running
+                String progress;
+                if (builder.status.get() != Builder.COMPLETE) {
+                    progress = String.valueOf(100 * builder.progress.get() / builder.time.get());
+                } else {
+                    progress = String.valueOf(100 * timer.progress.get() / timer.time.get());
+                }
                 if (sprite.getEntityModifierCount() <= 0) {
                     sprite.registerEntityModifier(new ScaleAtModifier(0.5f, sprite.getScaleX(), sprite.getScaleX(), sprite.getScaleY() * 0.7f, sprite.getScaleY(), sprite.getScaleCenterX(), 0, EaseBackOut.getInstance()));
 
-                    final Text progressText = new Text(32, 32, GameFonts.inventoryCount(), String.valueOf(100 * builder.progress.get() / builder.time.get()) + "%", 4, PhoeniciaContext.vboManager);
+                    final Text progressText = new Text(32, 32, GameFonts.inventoryCount(), progress + "%", 4, PhoeniciaContext.vboManager);
                     sprite.attachChild(progressText);
                     progressText.registerEntityModifier(new ParallelEntityModifier(
                             new MoveYModifier(0.8f, 32, 64, EaseLinear.getInstance()),

@@ -119,7 +119,7 @@ public class Market {
                 RequestItem requestLetter = new RequestItem();
                 requestLetter.game.set(this.session);
                 requestLetter.request.set(request);
-                int randomLetter = (int) (Math.random() * levelLetters.size());
+                int randomLetter = Math.round((float)Math.random() * (levelLetters.size()-1));
 
                 if (usedList.contains(levelLetters.get(randomLetter).name)) continue;
                 usedList.add(levelLetters.get(randomLetter).name);
@@ -136,10 +136,10 @@ public class Market {
                 RequestItem requestWord = new RequestItem();
                 requestWord.game.set(this.session);
                 requestWord.request.set(request);
-                int randomWord = (int) (Math.random() * levelWords.size());
+                int randomWord = Math.round((float) Math.random() * (levelWords.size()-1));
 
-                if (usedList.contains(levelLetters.get(randomWord).name)) continue;
-                usedList.add(levelLetters.get(randomWord).name);
+                if (usedList.contains(levelWords.get(randomWord).name)) continue;
+                usedList.add(levelWords.get(randomWord).name);
 
                 requestWord.item_name.set(levelWords.get(randomWord).name);
                 requestWord.quantity.set((int) (Math.random() * 5) + 1);

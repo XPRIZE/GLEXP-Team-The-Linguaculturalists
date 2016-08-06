@@ -134,7 +134,14 @@ public class HUDManager extends HUD {
      */
     public void showGame(final Level level, final GameTile tile) {
         //TODO: Show appropriate game hud
-        this.showInventory();
+        Debug.d("Opening game of type: "+tile.game.type);
+        if (tile.game.type.equals("wordmatch")) {
+            this.push(new WordMatchGameHUD(this.game, level, tile));
+        } else if (tile.game.type.equals("imagematch")) {
+                this.push(new ImageMatchGameHUD(this.game, level, tile));
+        } else {
+            Debug.w("Unknown game type: " + tile.game.type);
+        }
     }
 
     public void showDebugMode() {

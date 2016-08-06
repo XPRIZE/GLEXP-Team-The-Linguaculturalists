@@ -72,6 +72,7 @@ import com.linguaculturalists.phoenicia.models.WorkshopBuilder;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
 import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
 import com.linguaculturalists.phoenicia.locale.LocaleLoader;
+import com.linguaculturalists.phoenicia.util.GameSounds;
 import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.Filter;
@@ -109,6 +110,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     private float startCenterY;
     public GameActivity activity;
     private boolean isStarted;
+    private boolean isRunning;
 
     private float mPinchZoomStartedCameraZoomFactor;
     private PinchZoomDetector mPinchZoomDetector;
@@ -179,6 +181,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.activity = activity;
         this.camera = camera;
         this.isStarted = false;
+        this.isRunning = false;
 
         this.levelListeners = new ArrayList<LevelChangeListener>();
 
@@ -305,6 +308,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         // Load font assets
         this.defaultFont = FontFactory.create(PhoeniciaContext.fontManager, PhoeniciaContext.textureManager, 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 32, Color.RED_ARGB_PACKED_INT);
         this.defaultFont.load();
+
+        GameSounds.init();
 
         this.loadLocale();
         this.loadSession();
@@ -958,11 +963,12 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         this.session.update();
         this.isStarted = true;
-
+        this.isRunning = true;
     }
 
     public void pause() {
         if (!isStarted) return;
+        this.isRunning = false;
         if (this.music != null) {
             this.music.pause();
         }
@@ -972,6 +978,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
     public void resume() {
         if (!isStarted) return;
+        this.isRunning = true;
         if (this.music != null) {
             this.music.resume();
         }
@@ -1471,7 +1478,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public void playBlockSound(String soundFile) {
 
         Debug.d("Playing sound: " + soundFile);
-        if (!this.isStarted) {
+        if (!this.isStarted || !this.isRunning) {
             Debug.d("Game hasn't started yet, not playing any sound");
             return;
         }
@@ -1489,7 +1496,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public void playLevelSound(String soundFile, MediaPlayer.OnCompletionListener callback) {
 
         Debug.d("Playing sound: "+soundFile);
-        if (!this.isStarted) {
+        if (!this.isStarted || !this.isRunning) {
             Debug.d("Game hasn't started yet, not playing any sound");
             return;
         }
