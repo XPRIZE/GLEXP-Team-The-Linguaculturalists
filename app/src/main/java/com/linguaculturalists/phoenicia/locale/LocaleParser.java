@@ -496,7 +496,14 @@ public class LocaleParser extends DefaultHandler {
             this.currentLetter.chars = text.toCharArray();
         } else if (this.inLocale && this.inWordsList && this.inWordDefinition) {
             Debug.v("Adding Word chars: "+text);
-            this.currentWord.chars = text.toCharArray();
+            if (this.currentWord.chars == null) {
+                this.currentWord.chars = text.toCharArray();
+            } else {
+                char[] appended = new char[this.currentWord.chars.length + text.length()];
+                System.arraycopy(this.currentWord.chars, 0, appended, 0, this.currentWord.chars.length);
+                System.arraycopy(text.toCharArray(), 0, appended, this.currentWord.chars.length, text.length());
+                this.currentWord.chars = appended;
+            }
         } else if (this.inLevelIntroPage) {
             Debug.v("Adding Intro page chars: "+text);
             this.currentPage.text = text;

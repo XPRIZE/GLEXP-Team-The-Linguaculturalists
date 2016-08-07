@@ -35,6 +35,7 @@ public class GameSession extends Model {
     public IntegerField account_balance; /**< current amount of in-game currency held by the player */
     public IntegerField gross_income; /**< cumulative total of in-game currency earned over the course of this session */
     public Filter filter;
+    public Filter session_filter;
 
     private List<ExperienceChangeListener> listeners;
 
@@ -133,6 +134,8 @@ public class GameSession extends Model {
         if (retval && this.filter == null) {
             this.filter = new Filter();
             this.filter.is("game", this);
+            this.session_filter = new Filter();
+            this.session_filter.is("session", this);
         }
         return retval;
     }

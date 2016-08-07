@@ -233,7 +233,7 @@ public class WordMatchGameHUD extends PhoeniciaHUD {
             float available_width = (this.cardPane.getWidth()/choice_words.size());
             float wordX = i*(this.cardPane.getWidth()/choice_words.size());
             float wordY = this.cardPane.getHeight() - 150;
-            Button wordText = new Button(wordX+(available_width/2), wordY, 200, 150, word.name, PhoeniciaContext.vboManager, new Button.OnClickListener() {
+            Button wordText = new Button(wordX+(available_width/2), wordY, 200, 150, String.valueOf(word.chars), PhoeniciaContext.vboManager, new Button.OnClickListener() {
                 @Override
                 public void onClicked(Button button) {
                     if (word == challenge_word) {

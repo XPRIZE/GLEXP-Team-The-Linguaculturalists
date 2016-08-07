@@ -206,6 +206,7 @@ public class GameTile extends Model implements Builder.BuildStatusUpdateHandler,
         if (this.eventListener != null) {
             this.eventListener.onGameTileBuildCompleted(this);
         }
+        Assets.getInsance().addGameTile(this);
         return;
     }
 
@@ -275,7 +276,21 @@ public class GameTile extends Model implements Builder.BuildStatusUpdateHandler,
                 if (sprite.getEntityModifierCount() <= 0) {
                     sprite.registerEntityModifier(new ScaleAtModifier(0.5f, sprite.getScaleX(), sprite.getScaleX(), sprite.getScaleY() * 0.7f, sprite.getScaleY(), sprite.getScaleCenterX(), 0, EaseBackOut.getInstance()));
 
-                    final Text progressText = new Text(32, 32, GameFonts.inventoryCount(), progress + "%", 4, PhoeniciaContext.vboManager);
+                    int time_left;
+                    if (builder.status.get() != Builder.COMPLETE) {
+                        time_left = builder.time.get() - builder.progress.get();
+                    } else {
+                        time_left = timer.time.get() - timer.progress.get();
+                    }
+                    String time_display = String.valueOf(time_left) + "s";
+                    if (time_left > (60*60)) {
+                        time_left = time_left / (60*60);
+                        time_display = String.valueOf(time_left) + "h";
+                    } else if (time_left > 60) {
+                        time_left = time_left / 60;
+                        time_display = String.valueOf(time_left) + "m";
+                    }
+                    final Text progressText = new Text(32, 32, GameFonts.progressText(), time_display, time_display.length(), PhoeniciaContext.vboManager);
                     sprite.attachChild(progressText);
                     progressText.registerEntityModifier(new ParallelEntityModifier(
                             new MoveYModifier(0.8f, 32, 64, EaseLinear.getInstance()),

@@ -8,6 +8,7 @@ import com.linguaculturalists.phoenicia.components.Dialog;
 import com.linguaculturalists.phoenicia.components.Scrollable;
 import com.linguaculturalists.phoenicia.locale.Decoration;
 import com.linguaculturalists.phoenicia.locale.Game;
+import com.linguaculturalists.phoenicia.models.Assets;
 import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.DecorationTile;
 import com.linguaculturalists.phoenicia.models.GameTile;
@@ -44,6 +45,9 @@ public class DecorationPlacementHUD extends PhoeniciaHUD implements Bank.BankUpd
     private Scrollable blockPanel; /**< Scrollpane containing the game icons */
 
     private ClickDetector clickDetector;
+
+    private boolean placementDone = false;
+    private static final int costMultiplier = 1;
     /**
      * A HUD which allows the selection of new phoeniciaGame blocks to be placed on the map
      *
@@ -105,7 +109,8 @@ public class DecorationPlacementHUD extends PhoeniciaHUD implements Bank.BankUpd
             this.registerTouchArea(block);
             blockPanel.attachChild(block);
 
-            final Text purchaseCost = new Text((64 * ((i * 2)+1))+24, 20, inventoryCountFont, ""+currentDecoration.buy, 4, PhoeniciaContext.vboManager);
+            final int cost = currentDecoration.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getDecorationTileCount(currentDecoration));
+            final Text purchaseCost = new Text((64 * ((i * 2)+1))+24, 20, inventoryCountFont, String.valueOf(cost), 4, PhoeniciaContext.vboManager);
             blockPanel.attachChild(purchaseCost);
         }
         Debug.d("Finished loading HUD decorations");
@@ -119,6 +124,7 @@ public class DecorationPlacementHUD extends PhoeniciaHUD implements Bank.BankUpd
      */
     @Override
     public void show() {
+        if (this.placementDone) phoeniciaGame.hudManager.clear();
         whiteRect.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
         blockPanel.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
     }
@@ -152,7 +158,8 @@ public class DecorationPlacementHUD extends PhoeniciaHUD implements Bank.BankUpd
      * @param onTile Map tile to place the new tile on
      */
     private void addDecorationTile(final Decoration decoration, final TMXTile onTile) {
-        if (phoeniciaGame.session.account_balance.get() < decoration.buy) {
+        final int cost = decoration.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getDecorationTileCount(decoration));
+        if (phoeniciaGame.session.account_balance.get() < cost) {
             Dialog lowBalanceDialog = new Dialog(500, 300, Dialog.Buttons.OK, PhoeniciaContext.vboManager, new Dialog.DialogListener() {
                 @Override
                 public void onDialogButtonClicked(Dialog dialog, Dialog.DialogButton dialogButton) {
@@ -160,7 +167,7 @@ public class DecorationPlacementHUD extends PhoeniciaHUD implements Bank.BankUpd
                     unregisterTouchArea(dialog);
                 }
             });
-            int difference = decoration.buy - phoeniciaGame.session.account_balance.get();
+            int difference = cost - phoeniciaGame.session.account_balance.get();
             Text confirmText = new Text(lowBalanceDialog.getWidth()/2, lowBalanceDialog.getHeight()-48, GameFonts.dialogText(), "You need "+difference+" more coins", 30,  new TextOptions(AutoWrap.WORDS, lowBalanceDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
             lowBalanceDialog.attachChild(confirmText);
 
@@ -178,7 +185,9 @@ public class DecorationPlacementHUD extends PhoeniciaHUD implements Bank.BankUpd
             @Override
             public void onDecorationSpriteCreated(DecorationTile tile) {
                 decorationTile.save(PhoeniciaContext.context);
-                Bank.getInstance().debit(decoration.buy);
+                Bank.getInstance().debit(cost);
+                Assets.getInsance().addDecorationTile(tile);
+                placementDone = true;
             }
 
             @Override

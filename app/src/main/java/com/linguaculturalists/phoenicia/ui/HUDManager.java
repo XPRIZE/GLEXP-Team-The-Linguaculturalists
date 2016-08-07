@@ -151,7 +151,7 @@ public class HUDManager extends HUD {
     /**
      * Remove everything except the DefaultHUD from the stack
      */
-    public void clear() {
+    public synchronized void clear() {
         while (this.hudStack.size() >= 1) {
             this.pop();
         }
@@ -160,7 +160,7 @@ public class HUDManager extends HUD {
     /**
      * Hide the currently displayed HUD, and show the one below it on the stack
      */
-    public void pop() {
+    public synchronized void pop() {
         Debug.d("Popping one off the HUD stack");
         try {
             PhoeniciaHUD previousHUD = this.hudStack.pop();
@@ -168,8 +168,8 @@ public class HUDManager extends HUD {
                 this.currentHUD.hide();
                 this.currentHUD.close();
                 this.setChildScene(previousHUD);
-                previousHUD.show();
                 this.currentHUD = previousHUD;
+                previousHUD.show();
             }
         } catch (EmptyStackException e) {
             Debug.d("Nothing to pop off the stack");

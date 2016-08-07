@@ -8,6 +8,7 @@ import com.linguaculturalists.phoenicia.components.Dialog;
 import com.linguaculturalists.phoenicia.components.Scrollable;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
+import com.linguaculturalists.phoenicia.models.Assets;
 import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.LetterBuilder;
 import com.linguaculturalists.phoenicia.models.Inventory;
@@ -51,6 +52,9 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
     private Scrollable blockPanel;
 
     private ClickDetector clickDetector;
+
+    private boolean placementDone = false;
+    private static final int costMultiplier = 5;
 
     /**
      * HUD for selecting \link Letter Letters \endlink to be placed as tiles onto the map.
@@ -123,7 +127,8 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
             this.registerTouchArea(block);
             blockPanel.attachChild(block);
 
-            final Text inventoryCount = new Text((64 * ((i * 2)+1))+24, 20, inventoryCountFont, ""+currentLetter.buy, 4, PhoeniciaContext.vboManager);
+            int cost = currentLetter.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getLetterTileCount(currentLetter));
+            final Text inventoryCount = new Text((64 * ((i * 2)+1))+24, 20, inventoryCountFont, String.valueOf(cost), 4, PhoeniciaContext.vboManager);
             blockPanel.attachChild(inventoryCount);
             this.inventoryCounts.put(currentLetter.name, inventoryCount);
         }
@@ -141,6 +146,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
      */
     @Override
     public void show() {
+        if (placementDone) game.hudManager.clear();
         whiteRect.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
         blockPanel.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
     }
@@ -174,7 +180,9 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
      * @param onTile Map tile to place the new tile on
      */
     private void addLetterTile(final Letter letter, final TMXTile onTile) {
-        if (game.session.account_balance.get() < letter.buy) {
+        final int cost = letter.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getLetterTileCount(letter));
+
+        if (game.session.account_balance.get() < cost) {
             Dialog lowBalanceDialog = new Dialog(500, 300, Dialog.Buttons.OK, PhoeniciaContext.vboManager, new Dialog.DialogListener() {
                 @Override
                 public void onDialogButtonClicked(Dialog dialog, Dialog.DialogButton dialogButton) {
@@ -182,7 +190,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
                     unregisterTouchArea(dialog);
                 }
             });
-            int difference = letter.buy - game.session.account_balance.get();
+            int difference = cost - game.session.account_balance.get();
             Text confirmText = new Text(lowBalanceDialog.getWidth()/2, lowBalanceDialog.getHeight()-48, GameFonts.dialogText(), "You need "+difference+" more coins", 30,  new TextOptions(AutoWrap.WORDS, lowBalanceDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
             lowBalanceDialog.attachChild(confirmText);
 
@@ -206,7 +214,8 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
 
                 letterTile.setBuilder(builder);
                 letterTile.save(PhoeniciaContext.context);
-                Bank.getInstance().debit(letter.buy);
+                Bank.getInstance().debit(cost);
+                placementDone = true;
             }
 
             @Override

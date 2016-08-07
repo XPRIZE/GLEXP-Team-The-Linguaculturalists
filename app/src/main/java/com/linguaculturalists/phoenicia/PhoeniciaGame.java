@@ -53,12 +53,14 @@ import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Locale;
 import com.linguaculturalists.phoenicia.locale.Person;
 import com.linguaculturalists.phoenicia.locale.Word;
+import com.linguaculturalists.phoenicia.models.Assets;
 import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.Builder;
 import com.linguaculturalists.phoenicia.models.DecorationTile;
 import com.linguaculturalists.phoenicia.models.DefaultTile;
 import com.linguaculturalists.phoenicia.models.GameTile;
 import com.linguaculturalists.phoenicia.models.GameTileBuilder;
+import com.linguaculturalists.phoenicia.models.GameTileTimer;
 import com.linguaculturalists.phoenicia.models.LetterBuilder;
 import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.Inventory;
@@ -80,7 +82,7 @@ import com.orm.androrm.Filter;
 /**
  * The main class for managing a game.
  */
-public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateListener, Bank.BankUpdateListener, GameSession.ExperienceChangeListener {
+public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateListener, Bank.BankUpdateListener, GameSession.ExperienceChangeListener, Assets.AssetsUpdateListener {
     public static final int PERSON_TILE_WIDTH = 256;
     public static final int PERSON_TILE_HEIGHT = 256;
     public static final int LETTER_SPRITE_WIDTH = 64;
@@ -296,6 +298,10 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         Inventory.init(this.session);
         this.inventory = Inventory.getInstance();
         this.inventory.addUpdateListener(this);
+
+        // Start the Assets (tile) manager for this session
+        Assets.init(this.session);
+        Assets.getInsance().addUpdateListener(this);
 
         // Start the Market for this session
         Market.init(this);
@@ -799,6 +805,10 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         WordBuilder.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
         WordTileBuilder.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
         WordTile.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
+        GameTile.objects(PhoeniciaContext.context).filter(this.session.session_filter).delete(PhoeniciaContext.context);
+        GameTileBuilder.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
+        GameTileTimer.objects(PhoeniciaContext.context).filter(this.session.filter).delete(PhoeniciaContext.context);
+        DecorationTile.objects(PhoeniciaContext.context).filter(this.session.session_filter).delete(PhoeniciaContext.context);
 
         this.inventory.addUpdateListener(this);
         this.bank.addUpdateListener(this);
@@ -1530,6 +1540,10 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public void onExperienceChanged(int new_xp) {
         this.checkLevelRequirements();
     }
+
+    @Override
+    public void onAssetsUpdated() { this.checkLevelRequirements(); }
+
     /**
      * Called whenever the player advances to the next level.
      * @param next

@@ -278,6 +278,7 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
         if (this.eventListener != null) {
             this.eventListener.onWordTileBuildCompleted(this);
         }
+        Assets.getInsance().addWordTile(this);
         return;
     }
 
@@ -371,7 +372,7 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
                         time_left = time_left / 60;
                         time_display = String.valueOf(time_left) + "m";
                     }
-                    final Text progressText = new Text(sprite.getWidth()/2, 16, GameFonts.progressText(), time_display, 4, PhoeniciaContext.vboManager);
+                    final Text progressText = new Text(sprite.getWidth()/2, 16, GameFonts.progressText(), time_display, time_display.length(), PhoeniciaContext.vboManager);
                     sprite.attachChild(progressText);
                     progressText.registerEntityModifier(new ParallelEntityModifier(
                             new ScaleModifier(0.4f, 0.3f, 0.8f, EaseLinear.getInstance()),
