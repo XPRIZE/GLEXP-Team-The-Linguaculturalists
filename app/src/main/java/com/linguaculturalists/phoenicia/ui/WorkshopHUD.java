@@ -77,8 +77,6 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
         this.tile = tile;
         this.level = level;
 
-        Inventory.getInstance().addUpdateListener(this);
-
         this.spelling = new char[MAX_WORD_SIZE];
         this.eraseSpelling();
         this.charBlocksX = new int[MAX_WORD_SIZE];

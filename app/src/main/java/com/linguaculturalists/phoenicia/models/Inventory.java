@@ -210,6 +210,7 @@ public class Inventory {
         }
     }
     public void addUpdateListener(InventoryUpdateListener listener) {
+        this.listeners.remove(listener);
         this.listeners.add(listener);
     }
     public void removeUpdateListener(InventoryUpdateListener listener) {

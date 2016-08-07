@@ -25,6 +25,7 @@ import org.andengine.entity.modifier.IEntityModifier;
 import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.modifier.ParallelEntityModifier;
 import org.andengine.entity.modifier.ScaleAtModifier;
+import org.andengine.entity.modifier.ScaleModifier;
 import org.andengine.entity.scene.IOnAreaTouchListener;
 import org.andengine.entity.scene.ITouchArea;
 import org.andengine.entity.text.Text;
@@ -290,11 +291,11 @@ public class GameTile extends Model implements Builder.BuildStatusUpdateHandler,
                         time_left = time_left / 60;
                         time_display = String.valueOf(time_left) + "m";
                     }
-                    final Text progressText = new Text(32, 32, GameFonts.progressText(), time_display, time_display.length(), PhoeniciaContext.vboManager);
+                    final Text progressText = new Text(sprite.getWidth()/2, 16, GameFonts.progressText(), time_display, time_display.length(), PhoeniciaContext.vboManager);
                     sprite.attachChild(progressText);
                     progressText.registerEntityModifier(new ParallelEntityModifier(
-                            new MoveYModifier(0.8f, 32, 64, EaseLinear.getInstance()),
-                            new FadeOutModifier(1.0f, new IEntityModifier.IEntityModifierListener() {
+                            new ScaleModifier(0.4f, 0.3f, 0.8f, EaseLinear.getInstance()),
+                            new FadeOutModifier(3.0f, new IEntityModifier.IEntityModifierListener() {
                                 @Override
                                 public void onModifierStarted(IModifier<IEntity> iModifier, IEntity iEntity) {
                                 }
