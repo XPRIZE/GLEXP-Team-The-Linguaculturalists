@@ -128,7 +128,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
             blockPanel.attachChild(block);
 
             int cost = currentLetter.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getLetterTileCount(currentLetter));
-            final Text inventoryCount = new Text((64 * ((i * 2)+1))+24, 20, inventoryCountFont, String.valueOf(cost), 4, PhoeniciaContext.vboManager);
+            final Text inventoryCount = new Text((64 * ((i * 2)+1))+24, 20, inventoryCountFont, String.valueOf(cost), String.valueOf(cost).length(), PhoeniciaContext.vboManager);
             blockPanel.attachChild(inventoryCount);
             this.inventoryCounts.put(currentLetter.name, inventoryCount);
         }

@@ -122,7 +122,7 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
             blockPanel.attachChild(block);
 
             int cost = currentWord.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getWordTileCount(currentWord));
-            final Text purchaseCost = new Text((64 * ((i * 2)+1))+24, 20, inventoryCountFont, String.valueOf(cost), 4, PhoeniciaContext.vboManager);
+            final Text purchaseCost = new Text((64 * ((i * 2)+1))+24, 20, inventoryCountFont, String.valueOf(cost), String.valueOf(cost).length(), PhoeniciaContext.vboManager);
             blockPanel.attachChild(purchaseCost);
         }
         Debug.d("Finished loading HUD letters");

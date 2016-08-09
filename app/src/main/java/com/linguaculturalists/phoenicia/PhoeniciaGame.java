@@ -667,6 +667,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         for (int i = 0; i < letterTiles.size(); i++) {
             LetterTile letterTile = letterTiles.get(i);
             Debug.d("Restoring tile "+letterTile.item_name.get());
+            // In case a letter was removed from the locale
+            if (!this.locale.letter_map.containsKey(letterTile.item_name.get())) continue;
             letterTile.letter = this.locale.letter_map.get(letterTile.item_name.get());
             letterTile.phoeniciaGame = this;
             LetterBuilder builder = letterTile.getBuilder(PhoeniciaContext.context);
@@ -698,6 +700,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             WordTile wordTile = wordTiles.get(i);
             Debug.d("Restoring tile "+wordTile.item_name.get());
             wordTile.word = this.locale.word_map.get(wordTile.item_name.get());
+            // In case a word was removed from the locale
+            if (!this.locale.word_map.containsKey(wordTile.item_name.get())) continue;
             wordTile.phoeniciaGame = this;
             WordTileBuilder builder = wordTile.getBuilder(PhoeniciaContext.context);
             if (builder == null) {
@@ -731,6 +735,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         for (int i = 0; i < gameTiles.size(); i++) {
             GameTile gameTile = gameTiles.get(i);
             Debug.d("Restoring tile "+gameTile.item_name.get());
+            // In case a game was removed from the locale
+            if (!this.locale.game_map.containsKey(gameTile.item_name.get())) continue;
             gameTile.game = this.locale.game_map.get(gameTile.item_name.get());
             gameTile.phoeniciaGame = this;
             GameTileBuilder builder = gameTile.getBuilder(PhoeniciaContext.context);
@@ -765,6 +771,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         for (int i = 0; i < decorationTiles.size(); i++) {
             DecorationTile decorationTile = decorationTiles.get(i);
             Debug.d("Restoring tile " + decorationTile.item_name.get());
+            // In case a decoration was removed from the locale
+            if (!this.locale.decoration_map.containsKey(decorationTile.item_name.get())) continue;
             decorationTile.decoration = this.locale.decoration_map.get(decorationTile.item_name.get());
             decorationTile.phoeniciaGame = this;
             decorationTile.save(PhoeniciaContext.context);

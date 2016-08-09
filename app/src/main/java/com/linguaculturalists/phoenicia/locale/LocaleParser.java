@@ -375,8 +375,14 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale level");
         Level lastLevel = this.currentLevel;
         this.currentLevel = new Level();
-        this.currentLevel.prev = lastLevel;
-        if (lastLevel != null) lastLevel.next = this.currentLevel;
+        if (lastLevel == null) {
+            this.currentLevel.prev = this.currentLevel;
+        } else {
+            this.currentLevel.prev = lastLevel;
+            lastLevel.next = this.currentLevel;
+        }
+        this.currentLevel.next = this.currentLevel;
+
         this.currentLevel.name = attributes.getValue("name");
         if (attributes.getValue("market") != null) {
             this.currentLevel.marketRequests = Integer.parseInt(attributes.getValue("market"));

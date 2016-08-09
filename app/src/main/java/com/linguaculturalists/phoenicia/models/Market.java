@@ -2,6 +2,7 @@ package com.linguaculturalists.phoenicia.models;
 
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.locale.Letter;
+import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Locale;
 import com.linguaculturalists.phoenicia.locale.Person;
 import com.linguaculturalists.phoenicia.locale.Word;
@@ -11,6 +12,7 @@ import com.orm.androrm.Filter;
 import org.andengine.util.debug.Debug;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -105,7 +107,87 @@ public class Market {
         request.requested.set((double) now.getTime());
         request.save(PhoeniciaContext.context);
 
-        int num_items = Math.round((float)Math.random() * (this.game.locale.level_map.get(this.game.current_level).marketRequests-1)) + 1;
+        double requestType = Math.random() * 10;
+        if (requestType < 3) { // 0-3
+            Debug.d("Creating current level random request for "+available_persons.get(person_id));
+            this.populateCurrentLevelRandom(request);
+        } else if (requestType < 6) { // 3-6
+            Debug.d("Creating inventory reduction request for "+available_persons.get(person_id));
+            this.populateInventoryReduction(request);
+        } else if (requestType < 9) { // 6-9
+            Debug.d("Creating word practice request for "+available_persons.get(person_id));
+            this.populateWordPractice(request);
+        } else { // 9-10
+            Debug.d("Creating next level pusher request for "+available_persons.get(person_id));
+            this.populateNextLevelPusher(request);
+        }
+        request.save(PhoeniciaContext.context);
+
+        this.requestAdded(request);
+        return request;
+    }
+
+    private RequestItem createRandomRequestLetter(List<Letter> choiceLetters) {
+        return null;
+    }
+
+    private RequestItem createRandomRequestWord() {
+        return null;
+    }
+
+    private void populateInventoryReduction(final MarketRequest request) {
+        int num_items = Math.round((float) Math.random() * (this.game.locale.level_map.get(this.game.current_level).marketRequests - 1)) + 1;
+
+        Filter positiveQuantity = new Filter();
+        positiveQuantity.is("quantity", ">", 0);
+
+        final List<InventoryItem> inventoryItems = InventoryItem.objects(PhoeniciaContext.context).filter(this.game.session.filter).filter(positiveQuantity).orderBy("-quantity").limit(5).toList();
+        int requestCoins = 0;
+        int requestPoints = 0;
+        List<String> usedList = new ArrayList<String>();
+        for (int i = 0; i < num_items; ) {
+
+            int randomItem = Math.round((float) Math.random() * (inventoryItems.size()-1));
+            String item_name = inventoryItems.get(randomItem).item_name.get();
+
+            // TODO: pick letters and words based on inventory, history and level
+            if (this.game.locale.letter_map.containsKey(item_name)) {
+                RequestItem requestLetter = new RequestItem();
+                requestLetter.game.set(this.session);
+                requestLetter.request.set(request);
+
+                if (usedList.contains(item_name)) continue;
+                usedList.add(item_name);
+
+                requestLetter.item_name.set(item_name);
+                requestLetter.quantity.set(Math.round((float) Math.random() * 5)+1);
+                requestLetter.save(PhoeniciaContext.context);
+                requestCoins += (this.game.locale.letter_map.get(item_name).sell * requestLetter.quantity.get());
+                requestPoints += (this.game.locale.letter_map.get(item_name).points * requestLetter.quantity.get());
+                i += 1;
+            } else if (this.game.locale.word_map.containsKey(item_name)) {
+                RequestItem requestWord = new RequestItem();
+                requestWord.game.set(this.session);
+                requestWord.request.set(request);
+
+                if (usedList.contains(item_name)) continue;
+                usedList.add(item_name);
+
+                requestWord.item_name.set(item_name);
+                requestWord.quantity.set(Math.round((float) Math.random() * 3)+1);
+                requestWord.save(PhoeniciaContext.context);
+                requestCoins += (this.game.locale.word_map.get(item_name).sell * requestWord.quantity.get());
+                requestPoints += (this.game.locale.word_map.get(item_name).points * requestWord.quantity.get());
+                i += 1;
+            }
+
+        }
+        request.coins.set(requestCoins);
+        request.points.set(requestPoints);
+    }
+
+    private void populateCurrentLevelRandom(final MarketRequest request) {
+        int num_items = Math.round((float) Math.random() * (this.game.locale.level_map.get(this.game.current_level).marketRequests - 1)) + 1;
 
         final List<Letter> levelLetters = this.game.locale.level_map.get(this.game.current_level).letters;
         final List<Word> levelWords = this.game.locale.level_map.get(this.game.current_level).words;
@@ -119,13 +201,13 @@ public class Market {
                 RequestItem requestLetter = new RequestItem();
                 requestLetter.game.set(this.session);
                 requestLetter.request.set(request);
-                int randomLetter = Math.round((float)Math.random() * (levelLetters.size()-1));
+                int randomLetter = Math.round((float) Math.random() * (levelLetters.size() - 1));
 
                 if (usedList.contains(levelLetters.get(randomLetter).name)) continue;
                 usedList.add(levelLetters.get(randomLetter).name);
 
                 requestLetter.item_name.set(levelLetters.get(randomLetter).name);
-                requestLetter.quantity.set((int) (Math.random() * 5) + 1);
+                requestLetter.quantity.set(Math.round((float) Math.random() * 5)+1);
                 requestLetter.save(PhoeniciaContext.context);
                 requestCoins += (levelLetters.get(randomLetter).sell * requestLetter.quantity.get());
                 requestPoints += (levelLetters.get(randomLetter).points * requestLetter.quantity.get());
@@ -136,13 +218,13 @@ public class Market {
                 RequestItem requestWord = new RequestItem();
                 requestWord.game.set(this.session);
                 requestWord.request.set(request);
-                int randomWord = Math.round((float) Math.random() * (levelWords.size()-1));
+                int randomWord = Math.round((float) Math.random() * (levelWords.size() - 1));
 
                 if (usedList.contains(levelWords.get(randomWord).name)) continue;
                 usedList.add(levelWords.get(randomWord).name);
 
                 requestWord.item_name.set(levelWords.get(randomWord).name);
-                requestWord.quantity.set((int) (Math.random() * 5) + 1);
+                requestWord.quantity.set(Math.round((float) Math.random() * 3)+1);
                 requestWord.save(PhoeniciaContext.context);
                 requestCoins += (levelWords.get(randomWord).sell * requestWord.quantity.get());
                 requestPoints += (levelWords.get(randomWord).points * requestWord.quantity.get());
@@ -152,9 +234,110 @@ public class Market {
         }
         request.coins.set(requestCoins);
         request.points.set(requestPoints);
-        request.save(PhoeniciaContext.context);
-        this.requestAdded(request);
-        return request;
+    }
+
+    private void populateNextLevelPusher(final MarketRequest request) {
+        Level prev_level = this.game.locale.level_map.get(this.game.current_level).prev;
+        Level next_level = this.game.locale.level_map.get(this.game.current_level).next;
+
+        List<Letter> next_letters = new ArrayList<Letter>(next_level.letters);
+        next_letters.removeAll(prev_level.letters);
+
+        List<Word> next_words = new ArrayList<Word>(next_level.words);
+        next_words.removeAll(prev_level.words);
+
+        int num_items = Math.round((float) Math.random() * (this.game.locale.level_map.get(this.game.current_level).marketRequests - 1)) + 1;
+
+        int requestCoins = 0;
+        int requestPoints = 0;
+        List<String> usedList = new ArrayList<String>();
+        for (int i = 0; i < num_items; ) {
+
+            // TODO: pick letters and words based on inventory, history and level
+            if (next_letters.size() > 0) {
+                RequestItem requestLetter = new RequestItem();
+                requestLetter.game.set(this.session);
+                requestLetter.request.set(request);
+                int randomLetter = Math.round((float) Math.random() * (next_letters.size() - 1));
+
+                if (usedList.contains(next_letters.get(randomLetter).name)) continue;
+                usedList.add(next_letters.get(randomLetter).name);
+
+                requestLetter.item_name.set(next_letters.get(randomLetter).name);
+                requestLetter.quantity.set(Math.round((float) Math.random() * 5)+1);
+                requestLetter.save(PhoeniciaContext.context);
+                requestCoins += (next_letters.get(randomLetter).sell * requestLetter.quantity.get());
+                requestPoints += (next_letters.get(randomLetter).points * requestLetter.quantity.get());
+                i += 1;
+            }
+            if (next_words.size() > 0) {
+                RequestItem requestWord = new RequestItem();
+                requestWord.game.set(this.session);
+                requestWord.request.set(request);
+                int randomWord = Math.round((float) Math.random() * (next_words.size() - 1));
+
+                if (usedList.contains(next_words.get(randomWord).name)) continue;
+                usedList.add(next_words.get(randomWord).name);
+
+                requestWord.item_name.set(next_words.get(randomWord).name);
+                requestWord.quantity.set(Math.round((float) Math.random() * 3)+1);
+                requestWord.save(PhoeniciaContext.context);
+                requestCoins += (next_words.get(randomWord).sell * requestWord.quantity.get());
+                requestPoints += (next_words.get(randomWord).points * requestWord.quantity.get());
+                i += 1;
+            }
+
+        }
+        request.coins.set(requestCoins);
+        request.points.set(requestPoints);
+    }
+
+    private void populateWordPractice(final MarketRequest request) {
+        int num_items = Math.round((float) Math.random() * (this.game.locale.level_map.get(this.game.current_level).marketRequests - 1)) + 1;
+
+        final List<InventoryItem> inventoryItems = InventoryItem.objects(PhoeniciaContext.context).filter(this.game.session.filter).orderBy("history").limit(10).toList();
+        int requestCoins = 0;
+        int requestPoints = 0;
+        List<String> usedList = new ArrayList<String>();
+        for (int i = 0; i < num_items; ) {
+
+            int randomItem = Math.round((float) Math.random() * (inventoryItems.size()-1));
+            String item_name = inventoryItems.get(randomItem).item_name.get();
+
+            // TODO: pick letters and words based on inventory, history and level
+            if (this.game.locale.letter_map.containsKey(item_name)) {
+                RequestItem requestLetter = new RequestItem();
+                requestLetter.game.set(this.session);
+                requestLetter.request.set(request);
+
+                if (usedList.contains(item_name)) continue;
+                usedList.add(item_name);
+
+                requestLetter.item_name.set(item_name);
+                requestLetter.quantity.set(Math.round((float) Math.random() * 5)+1);
+                requestLetter.save(PhoeniciaContext.context);
+                requestCoins += (this.game.locale.letter_map.get(item_name).sell * requestLetter.quantity.get());
+                requestPoints += (this.game.locale.letter_map.get(item_name).points * requestLetter.quantity.get());
+                i += 1;
+            } else if (this.game.locale.word_map.containsKey(item_name)) {
+                RequestItem requestWord = new RequestItem();
+                requestWord.game.set(this.session);
+                requestWord.request.set(request);
+
+                if (usedList.contains(item_name)) continue;
+                usedList.add(item_name);
+
+                requestWord.item_name.set(item_name);
+                requestWord.quantity.set(Math.round((float) Math.random() * 3)+1);
+                requestWord.save(PhoeniciaContext.context);
+                requestCoins += (this.game.locale.word_map.get(item_name).sell * requestWord.quantity.get());
+                requestPoints += (this.game.locale.word_map.get(item_name).points * requestWord.quantity.get());
+                i += 1;
+            }
+
+        }
+        request.coins.set(requestCoins);
+        request.points.set(requestPoints);
     }
 
     /**

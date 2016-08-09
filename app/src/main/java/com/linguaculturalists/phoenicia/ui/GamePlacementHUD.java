@@ -111,7 +111,7 @@ public class GamePlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
             blockPanel.attachChild(block);
 
             final int cost = currentGame.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getGameTileCount(currentGame));
-            final Text purchaseCost = new Text((64 * ((i * 2)+1))+24, 20, inventoryCountFont, String.valueOf(cost), 4, PhoeniciaContext.vboManager);
+            final Text purchaseCost = new Text((64 * ((i * 2)+1))+24, 20, inventoryCountFont, String.valueOf(cost), String.valueOf(cost).length(), PhoeniciaContext.vboManager);
             blockPanel.attachChild(purchaseCost);
         }
         Debug.d("Finished loading HUD letters");
