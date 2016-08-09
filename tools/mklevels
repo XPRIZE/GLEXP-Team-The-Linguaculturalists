@@ -1,0 +1,17 @@
+#!/bin/sh
+
+i=6
+while read WORD; do
+echo "        <level name=\"${i}\" market=\"4\" coins=\"0\" points=\"0\">
+            <intro>
+            </intro>
+            <words>${WORD}</words>
+            <help>
+                <words>${WORD}</words>
+            </help>
+            <req>
+                <gather_word count=\"1\">${WORD}</gather_word>
+            </req>
+        </level>"
+i=$((i+1))
+done

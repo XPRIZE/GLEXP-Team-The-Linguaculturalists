@@ -1,0 +1,40 @@
+#!/bin/sh
+
+lower=$1
+upper=`echo $lower | tr '[:lower:]' '[:upper:]'`
+block=./blocks/${lower}.png
+
+echo "Creating ${block}"
+cp letter_template.png ${block}
+
+length=`echo ${lower} | wc -m`
+offsetx=9
+x1=`echo 32-${offsetx}|bc`
+x2=`echo 96-${offsetx}|bc`
+x3=`echo 160-${offsetx}|bc`
+x4=`echo 224-${offsetx}|bc`
+
+convert ${block} -font Ubuntu -pointsize 48 -fill yellow -draw "text 17,48 '${upper}'" ${block}
+convert ${block} -font Ubuntu -pointsize 48 -fill red    -draw "text 81,48 '${upper}'" ${block}
+convert ${block} -font Ubuntu -pointsize 48 -fill green  -draw "text 145,48 '${upper}'" ${block}
+convert ${block} -font Ubuntu -pointsize 48 -fill gray   -draw "text 209,48 '${upper}'" ${block}
+
+convert ${block} -font Ubuntu -pointsize 12 -fill yellow -draw "text 28,115 '${lower}'" ${block}
+convert ${block} -font Ubuntu -pointsize 12 -fill yellow -draw "text 92,120 '${lower}'" ${block}
+convert ${block} -font Ubuntu -pointsize 12 -fill yellow -draw "text 156,115 '${lower}'" ${block}
+convert ${block} -font Ubuntu -pointsize 12 -fill yellow -draw "text 220,120 '${lower}'" ${block}
+
+convert ${block} -font Ubuntu -pointsize 18 -fill yellow -draw "text ${x1},165 '${lower}'" ${block}
+convert ${block} -font Ubuntu -pointsize 18 -fill yellow -draw "text ${x2},160 '${lower}'" ${block}
+convert ${block} -font Ubuntu -pointsize 18 -fill yellow -draw "text ${x3},165 '${lower}'" ${block}
+convert ${block} -font Ubuntu -pointsize 18 -fill yellow -draw "text ${x4},160 '${lower}'" ${block}
+
+convert ${block} -font Ubuntu -pointsize 24 -fill yellow -draw "text ${x1},240 '${upper}'" ${block}
+convert ${block} -font Ubuntu -pointsize 24 -fill yellow -draw "text ${x2},235 '${upper}'" ${block}
+convert ${block} -font Ubuntu -pointsize 24 -fill yellow -draw "text ${x3},240 '${upper}'" ${block}
+convert ${block} -font Ubuntu -pointsize 24 -fill yellow -draw "text ${x4},235 '${upper}'" ${block}
+
+convert ${block} -font Ubuntu -pointsize 32 -fill yellow -draw "text ${x1},297 '${upper}'" ${block}
+convert ${block} -font Ubuntu -pointsize 32 -fill yellow -draw "text ${x2},292 '${upper}'" ${block}
+convert ${block} -font Ubuntu -pointsize 32 -fill yellow -draw "text ${x3},297 '${upper}'" ${block}
+convert ${block} -font Ubuntu -pointsize 32 -fill yellow -draw "text ${x4},292 '${upper}'" ${block}

@@ -1,0 +1,49 @@
+#!/bin/sh
+
+word=$1
+block=./blocks/${word}.png
+sprite=./sprites/${word}.png
+
+echo "Creating ${block}"
+cp word_template.png ${block}
+
+length=`echo ${word} | wc -m`
+offsetx=`echo "${length}*3" | bc`
+x1=`echo 32-${offsetx}|bc`
+x2=`echo 96-${offsetx}|bc`
+x3=`echo 160-${offsetx}|bc`
+x4=`echo 224-${offsetx}|bc`
+
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x1},25 '${word}'" ${block}
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x2},25 '${word}'" ${block}
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x3},25 '${word}'" ${block}
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x4},25 '${word}'" ${block}
+
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x1},115 '${word}'" ${block}
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x2},120 '${word}'" ${block}
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x3},115 '${word}'" ${block}
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x4},120 '${word}'" ${block}
+
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x1},175 '${word}'" ${block}
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x2},170 '${word}'" ${block}
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x3},175 '${word}'" ${block}
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x4},170 '${word}'" ${block}
+
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x1},240 '${word}'" ${block}
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x2},235 '${word}'" ${block}
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x3},240 '${word}'" ${block}
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x4},235 '${word}'" ${block}
+
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x1},281 '${word}'" ${block}
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x2},276 '${word}'" ${block}
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x3},281 '${word}'" ${block}
+convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x4},276 '${word}'" ${block}
+
+echo "Creating ${sprite}"
+convert -size 256x64 xc:transparent ${sprite}
+convert ${sprite} -font Ubuntu-Bold -pointsize 12 -fill white -stroke black -draw "rectangle 2,2 62,62 " ${sprite}
+convert ${sprite} -font Ubuntu-Bold -pointsize 12 -fill white -stroke red -draw "rectangle 66,2 126,62 " ${sprite}
+convert ${sprite} -font Ubuntu-Bold -pointsize 12 -fill lightgrey -stroke grey -draw "rectangle 130,2 190,62 " ${sprite}
+convert ${sprite} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x1},25 '${word}'" ${sprite}
+convert ${sprite} -font Ubuntu-Bold -pointsize 12 -fill red -draw "text ${x2},25 '${word}'" ${sprite}
+convert ${sprite} -font Ubuntu-Bold -pointsize 12 -fill grey -draw "text ${x3},25 '${word}'" ${sprite}
