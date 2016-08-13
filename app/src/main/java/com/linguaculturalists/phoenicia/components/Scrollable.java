@@ -198,7 +198,7 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
         float new_height = this.getHeight() * (this.getHeight() / this.contents.getHeight());
         this.vertical_scrollbar.setSize(scrollbar_size, new_height);
         this.vertical_scrollbar.setPosition(this.vertical_scrollbar.getX(), this.getHeight()-(this.vertical_scrollbar.getHeight()/2)-this.scroll_y);
-        if (this.vertical_scrollbar.getHeight() >= this.getHeight()) {
+        if (this.vertical_scrollbar.getHeight() >= this.getHeight() || this.scroll_lock == SCROLL_HORIZONTAL) {
             this.vertical_scrollbar.setVisible(false);
         } else {
             this.vertical_scrollbar.setVisible(true);
@@ -207,7 +207,7 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
         float new_width = this.getWidth() * (this.getWidth() / this.contents.getWidth());
         this.horizontal_scrollbar.setSize(new_width, scrollbar_size);
         this.horizontal_scrollbar.setPosition((this.horizontal_scrollbar.getWidth()/2)+scroll_x, this.horizontal_scrollbar.getY());
-        if (this.horizontal_scrollbar.getWidth() >= this.getWidth()) {
+        if (this.horizontal_scrollbar.getWidth() >= this.getWidth() || this.scroll_lock == SCROLL_VERTICAL) {
             this.horizontal_scrollbar.setVisible(false);
         } else {
             this.horizontal_scrollbar.setVisible(true);
