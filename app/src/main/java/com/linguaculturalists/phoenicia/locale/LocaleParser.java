@@ -512,7 +512,11 @@ public class LocaleParser extends DefaultHandler {
             }
         } else if (this.inLevelIntroPage) {
             Debug.v("Adding Intro page chars: "+text);
-            this.currentPage.text = text;
+            if (this.currentPage.text == null) {
+                this.currentPage.text = text;
+            } else {
+                this.currentPage.text += text;
+            }
         } else if (this.inLocale && this.inLevelDefinition && !this.inLevelHelp && this.inLevelLetters) {
             String[] letters =  StringUtils.split(text, ",");
             for (int i = 0; i < letters.length; i++) {

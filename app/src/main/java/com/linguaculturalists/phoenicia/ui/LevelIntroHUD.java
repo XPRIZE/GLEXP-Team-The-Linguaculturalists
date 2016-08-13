@@ -160,7 +160,6 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
         nextButton.setVisible(true);
     }
 
-
     /**
      * Capture click events to close the HUD if the last intro page has finished playing
      * @param clickDetector

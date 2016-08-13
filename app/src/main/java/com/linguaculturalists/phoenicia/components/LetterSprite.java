@@ -40,7 +40,7 @@ public class LetterSprite extends ButtonSprite {
         this.letter = letter;
         this.count = count;
 
-        this.count_text = new Text(32, -8, GameFonts.inventoryCount(), String.valueOf(count), 4, vbo);
+        this.count_text = new Text(32, -8, GameFonts.inventoryCount(), String.valueOf(count), 8, vbo);
         this.attachChild(count_text);
 
     }

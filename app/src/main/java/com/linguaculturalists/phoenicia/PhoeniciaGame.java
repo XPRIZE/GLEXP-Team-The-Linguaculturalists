@@ -996,13 +996,15 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
     public void resume() {
         if (!isStarted) return;
+
+        double timediff = (double)System.currentTimeMillis() - session.last_timestamp.get();
+        Debug.d("Resume after "+(timediff/1000)+" seconds");
+        this.onUpdate((float)timediff/1000);
+
         this.isRunning = true;
         if (this.music != null) {
             this.music.resume();
         }
-        double timediff = (double)System.currentTimeMillis() - session.last_timestamp.get();
-        Debug.d("Resume after "+(timediff/1000)+" seconds");
-        this.onUpdate((float)timediff/1000);
     }
 
     /**
@@ -1568,9 +1570,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             Debug.d("Calling update listener: "+this.levelListeners.get(i).getClass());
             this.levelListeners.get(i).onLevelChanged(next);
         }
-        if (this.locale.level_map.get(current_level).intro.size() > 0) {
-            this.hudManager.showLevelIntro(this.locale.level_map.get(current_level));
-        }
+        this.hudManager.showNewLevel(this.locale.level_map.get(current_level));
         return;
     }
 
