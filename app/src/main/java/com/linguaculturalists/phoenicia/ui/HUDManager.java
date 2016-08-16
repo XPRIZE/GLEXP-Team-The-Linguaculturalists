@@ -49,6 +49,24 @@ public class HUDManager extends HUD {
     }
 
     /**
+     * Create a new instance of the new level items HUD and display it
+     * @param level
+     */
+    public void showNewLevel(final Level level) {
+        this.clear();
+        // Place the intro HUD just below the new level HUD so the player sees it next
+        if (level.intro.size() > 0) {
+            if (this.currentHUD != null) {
+                this.hudStack.push(this.currentHUD);
+                this.currentHUD.hide();
+            }
+            this.currentHUD = new LevelIntroHUD(this.game, level);
+            this.currentHUD.open();
+        }
+        this.push(new NewLevelHUD(this.game, level));
+    }
+
+    /**
      * Create a new instance of the inter-level introduction HUD and display it
      * @param level
      */

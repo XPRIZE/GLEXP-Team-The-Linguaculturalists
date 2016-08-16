@@ -2,11 +2,14 @@ package com.linguaculturalists.phoenicia.components;
 
 import android.opengl.GLES20;
 
+import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
+
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.Entity;
 import org.andengine.entity.IEntity;
+import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.CameraScene;
 import org.andengine.entity.scene.ITouchArea;
 import org.andengine.input.touch.TouchEvent;
@@ -14,6 +17,7 @@ import org.andengine.input.touch.detector.ScrollDetector;
 import org.andengine.input.touch.detector.SurfaceScrollDetector;
 import org.andengine.opengl.util.GLState;
 import org.andengine.util.Constants;
+import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
 import org.andengine.util.math.MathUtils;
 
@@ -35,6 +39,13 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
     private boolean isInHUD = false;
     private boolean clip = true;
     private float padding = 0;
+    private boolean show_scrollbars;
+    private Color scrollbar_color;
+    private Rectangle vertical_scrollbar;
+    private Rectangle horizontal_scrollbar;
+    private static final int scrollbar_size = 8;
+    private float scroll_x = 0;
+    private float scroll_y = 0;
 
     private boolean print_debug = false;
 
@@ -73,6 +84,19 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
 
         super.attachChild(this.contents);
 
+        this.scrollbar_color = new Color(0.0f, 0.0f, 0.0f, 0.25f);
+        this.vertical_scrollbar = new Rectangle(this.getWidth()-(this.scrollbar_size /2)-2, this.getHeight()/2, scrollbar_size, this.getHeight(), PhoeniciaContext.vboManager);
+        this.vertical_scrollbar.setColor(this.scrollbar_color);
+        if (this.scroll_lock == SCROLL_HORIZONTAL) this.vertical_scrollbar.setVisible(false);
+        this.scroll_y = 0;
+        super.attachChild(this.vertical_scrollbar);
+
+        this.horizontal_scrollbar = new Rectangle(this.getWidth()/2, (scrollbar_size/2)+2, this.getWidth(), scrollbar_size, PhoeniciaContext.vboManager);
+        this.horizontal_scrollbar.setColor(this.scrollbar_color);
+        if (this.scroll_lock == SCROLL_VERTICAL) this.horizontal_scrollbar.setVisible(false);
+        this.scroll_x = 0;
+        super.attachChild(this.horizontal_scrollbar);
+
     }
 
     /**
@@ -92,6 +116,14 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
 
     public void setPadding(float padding) {
         this.padding = padding;
+    }
+
+    public void showScrollbars(boolean show) {
+        this.show_scrollbars = show;
+    }
+
+    public boolean showScrollbars() {
+        return this.show_scrollbars;
     }
 
     /**
@@ -162,12 +194,34 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
         this.contents.setWidth(this.childRect.getWidth());
         this.contents.setHeight(this.childRect.getHeight());
         this.contents.setPosition(this.childRect.getWidth() / 2, this.childRect.getHeight() / 2);
+
+        float new_height = this.getHeight() * (this.getHeight() / this.contents.getHeight());
+        this.vertical_scrollbar.setSize(scrollbar_size, new_height);
+        this.vertical_scrollbar.setPosition(this.vertical_scrollbar.getX(), this.getHeight()-(this.vertical_scrollbar.getHeight()/2)-this.scroll_y);
+        if (this.vertical_scrollbar.getHeight() >= this.getHeight() || this.scroll_lock == SCROLL_HORIZONTAL) {
+            this.vertical_scrollbar.setVisible(false);
+        } else {
+            this.vertical_scrollbar.setVisible(true);
+        }
+
+        float new_width = this.getWidth() * (this.getWidth() / this.contents.getWidth());
+        this.horizontal_scrollbar.setSize(new_width, scrollbar_size);
+        this.horizontal_scrollbar.setPosition((this.horizontal_scrollbar.getWidth()/2)+scroll_x, this.horizontal_scrollbar.getY());
+        if (this.horizontal_scrollbar.getWidth() >= this.getWidth() || this.scroll_lock == SCROLL_VERTICAL) {
+            this.horizontal_scrollbar.setVisible(false);
+        } else {
+            this.horizontal_scrollbar.setVisible(true);
+        }
     }
 
     /**
      * \todo Implement code to snap the Scrollable's contents back into view when they change
      */
     private void returnToBounds() {
+
+    }
+
+    private void positionScrollbars() {
 
     }
 
@@ -206,6 +260,8 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
             //Debug.d("Scrollable Checking X bounds ["+this.childRect.left+", "+this.getWidth()+"] contains ("+newLeft+", "+newRight+")");
             if (newLeft+this.childRect.left <= 0 && newRight >= this.getWidth()) {
                 newX = currentX + dx;
+                float scrollX = (dx / this.childRect.getWidth()) * this.getWidth();
+                this.horizontal_scrollbar.setPosition(this.horizontal_scrollbar.getX()-scrollX, this.horizontal_scrollbar.getY());
             }
         }
         if (this.scroll_lock != SCROLL_HORIZONTAL) {
@@ -214,6 +270,8 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
             //Debug.d("Scrollable Checking Y bounds ["+this.childRect.bottom+ ", "+this.getHeight()+"] contains ("+newBottom+", "+newTop+")");
             if (newBottom+this.childRect.bottom <= 0 && newTop-this.contents.getHeight() >= 0) {
                 newY = currentY - dy;
+                float scrollY = (dy / this.childRect.getHeight()) * this.getHeight();
+                this.vertical_scrollbar.setPosition(this.vertical_scrollbar.getX(), this.vertical_scrollbar.getY()+scrollY);
             }
         }
         // Stop at bounds

@@ -83,7 +83,7 @@ public class MarketHUD extends PhoeniciaHUD {
         this.attachChild(whiteRect);
         this.registerTouchArea(whiteRect);
 
-        Scrollable requestsPane = new Scrollable((int)(this.whiteRect.getWidth()*0.3), (int)(this.whiteRect.getHeight()*0.55), (int)(this. whiteRect.getWidth()*0.6), (int)(this.whiteRect.getHeight()*0.9));
+        Scrollable requestsPane = new Scrollable((int)(this.whiteRect.getWidth()*0.3), (int)(this.whiteRect.getHeight()*0.55), (int)(this. whiteRect.getWidth()*0.6), (int)(this.whiteRect.getHeight()*0.9), Scrollable.SCROLL_VERTICAL);
         whiteRect.attachChild(requestsPane);
         this.registerTouchArea(requestsPane);
 

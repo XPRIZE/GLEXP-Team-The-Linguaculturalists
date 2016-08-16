@@ -55,14 +55,17 @@ def print_footer():
 def print_letters():
     print "    <!-- Alphabet -->"
     print "    <letters>"
+    value_order = sorted(letter_values, key=letter_values.get, reverse=True)
     for letter in characters:
-        if letter not in letter_values:
-            letter_values[letter] = len(letter_values)
+        try:
+            letter_value = value_order.index(letter)
+        except:
+            letter_value = len(value_order)+1
         #round(math.pow(x+1, 2), -1)
-        buy = round(math.pow(letter_values[letter]+1, 2), -1) or 1
-        sell = buy * 2
-        points = round(math.log(letter_values[letter]+1)*5, 1) or 1
-        time = round(math.log(letter_values[letter]+1, 1.6)*120, -1) or 60
+        buy = round(math.pow(letter_value+1, 1.5), -1) or round(math.pow(letter_value+1, 1.5)) or 1
+        sell = round(buy / (math.log(letter_value+1)+1), -1) or round(buy / (math.log(letter_value+1)+1)) or 1
+        points = round(math.log(letter_value+1)*5, 1) or 1
+        time = round(math.log(letter_value+1, 1.2)*60, -1) or 60
         context = {
             'name': letter, 
             "buy": buy, 
@@ -80,8 +83,8 @@ def print_words():
     for word in sorted(words):
         if word not in word_values:
             word_values[word] = len(word_values)
-        sell = round(math.pow(word_values[word]+1, 1.2)*20, -1) or 20
-        buy = sell * 5
+        buy = round(math.pow(word_values[word]+1, 1.1)*100, -1) or 100
+        sell = round(math.pow(word_values[word]+1, 1.001)*10, -1) or 10
         points = round(math.log(word_values[word]+1)*50, 1) or 10
         time = round(math.pow(word_values[word]+1, 1.5), -1)*60 or 120
         construct = round(math.pow(word_values[word]+1, 1.8), -1)*90 or 180
@@ -160,14 +163,17 @@ for word in words:
                 level_words.insert(0, [])
                 level_letters.append(add_letters)
                 add_letters = list()
+        if letter not in letter_values:
+            letter_values[letter] = 1
+        else:
+            letter_values[letter] += 1;
     if len(word_values) > 1:
         level_letters.append(add_letters)
 level_letters.append([])
 
-value = 0
-for letter in character_order:
-    letter_values[letter] = value
-    value += 1
+for letter in characters:
+    if letter not in letter_values:
+        letter_values[letter] = 0
     
 print_header()
 print_letters()
