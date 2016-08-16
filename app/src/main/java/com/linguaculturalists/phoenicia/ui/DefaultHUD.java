@@ -31,7 +31,7 @@ import org.andengine.util.modifier.ease.EaseBackOut;
 public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChangeListener, Bank.BankUpdateListener, GameSession.ExperienceChangeListener {
 
     private PhoeniciaGame game;
-    private Sprite levelIcon;
+    private ButtonSprite levelIcon;
     private Text levelDisplay;
     private Sprite coinIcon;
     private Text balanceDisplay;
@@ -58,9 +58,17 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         Bank.getInstance().addUpdateListener(this);
 
         ITextureRegion levelRegion = game.shellTiles.getTextureRegion(GameTextures.LEVEL_ICON);
-        levelIcon = new Sprite(32, GameActivity.CAMERA_HEIGHT - 24, levelRegion, PhoeniciaContext.vboManager);
+        levelIcon = new ButtonSprite(32, GameActivity.CAMERA_HEIGHT - 24, levelRegion, PhoeniciaContext.vboManager);
+        levelIcon.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                Level level = game.locale.level_map.get(game.current_level);
+                game.hudManager.showNextLevelReq(level);
+            }
+        });
         levelDisplay = new Text(160, GameActivity.CAMERA_HEIGHT - 24, GameFonts.defaultHUDDisplay(), game.current_level, 20, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
         this.attachChild(levelIcon);
+        this.registerTouchArea(levelIcon);
         this.attachChild(levelDisplay);
         levelDisplay.setPosition(64 + (levelDisplay.getWidth() / 2), levelDisplay.getY());
 
@@ -87,7 +95,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
             }
 
         });
-        Entity debugTouchArea = new Entity(50, GameActivity.CAMERA_HEIGHT - 50, 100, 100) {
+        Entity debugTouchArea = new Entity(50, this.levelIcon.getY() - 50, 100, 100) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 return debugClickDetector.onManagedTouchEvent(pSceneTouchEvent);

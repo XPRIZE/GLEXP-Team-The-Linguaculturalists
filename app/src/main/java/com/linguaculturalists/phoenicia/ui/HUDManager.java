@@ -74,6 +74,9 @@ public class HUDManager extends HUD {
         this.set(new LevelIntroHUD(this.game, level));
     }
 
+    public void showNextLevelReq(final Level level) {
+        this.set(new NextLevelRequirementsHUD(this.game, level));
+    }
     /**
      * Create a new instance of the inventory management HUD and display it
      */

@@ -169,4 +169,5 @@ public class NewLevelHUD extends PhoeniciaHUD {
         if (handled) return true;
         return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
         // TODO: Fix inventory selling
-    }}
+    }
+}

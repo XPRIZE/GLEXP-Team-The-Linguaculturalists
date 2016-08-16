@@ -156,7 +156,7 @@ public class MarketHUD extends PhoeniciaHUD {
             final Word currentWord = game.locale.word_map.get(item.item_name.get());
             if (currentLetter != null) {
                 Debug.d("Request Letter: " + item.item_name.get());
-                LetterSprite requestItemSprite = new LetterSprite(startX, startY, currentLetter, item.quantity.get(), game.letterSprites.get(currentLetter).getTextureRegion(0), PhoeniciaContext.vboManager);
+                LetterSprite requestItemSprite = new LetterSprite(startX, startY, currentLetter, Inventory.getInstance().getCount(item.item_name.get()), item.quantity.get(), game.letterSprites.get(currentLetter).getTextureRegion(0), PhoeniciaContext.vboManager);
                 requestItemSprite.setOnClickListener(new ButtonSprite.OnClickListener() {
                     @Override
                     public void onClick(ButtonSprite buttonSprite, float v, float v1) {
@@ -167,7 +167,7 @@ public class MarketHUD extends PhoeniciaHUD {
                 this.registerTouchArea(requestItemSprite);
             } else if (currentWord != null) {
                 Debug.d("Request Word: " + item.item_name.get());
-                WordSprite requestItemSprite = new WordSprite(startX, startY, currentWord, item.quantity.get(), game.wordSprites.get(currentWord).getTextureRegion(0), PhoeniciaContext.vboManager);
+                WordSprite requestItemSprite = new WordSprite(startX, startY, currentWord, Inventory.getInstance().getCount(item.item_name.get()), item.quantity.get(), game.wordSprites.get(currentWord).getTextureRegion(0), PhoeniciaContext.vboManager);
                 requestItemSprite.setOnClickListener(new ButtonSprite.OnClickListener() {
                     @Override
                     public void onClick(ButtonSprite buttonSprite, float v, float v1) {
