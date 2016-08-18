@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 
 import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
+import com.linguaculturalists.phoenicia.components.Scrollable;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
@@ -99,7 +100,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
             }
         });
 
-        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 600, 350, PhoeniciaContext.vboManager) {
+        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 600, 450, PhoeniciaContext.vboManager) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 //Debug.d("Word builder dialog touched");
@@ -253,13 +254,14 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
         /**
          * Start available letters area
          */
-        this.lettersPane = new Entity(whiteRect.getWidth()/2, whiteRect.getHeight()-225, whiteRect.getWidth(), 150);
-        whiteRect.attachChild(this.lettersPane);
+        this.lettersPane = new Scrollable(GameActivity.CAMERA_WIDTH/2, (GameActivity.CAMERA_HEIGHT/2) - (whiteRect.getHeight()/2)+100, whiteRect.getWidth(), 200, Scrollable.SCROLL_VERTICAL);
+        this.attachChild(this.lettersPane);
+        this.registerTouchArea(this.lettersPane);
         final int columns = 6;
         startX = 50;
 
         int offsetX = 0;
-        int offsetY = (int) this.lettersPane.getHeight()/2-50;
+        int offsetY = (int) this.lettersPane.getHeight()-50;
 
         for (int i = 0; i < level.letters.size(); i++) {
             if (offsetX >= columns) {

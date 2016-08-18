@@ -3,6 +3,7 @@ package com.linguaculturalists.phoenicia.ui;
 import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.LetterSprite;
+import com.linguaculturalists.phoenicia.components.Scrollable;
 import com.linguaculturalists.phoenicia.components.WordSprite;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Word;
@@ -54,7 +55,6 @@ public class InventoryHUD extends PhoeniciaHUD {
         this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 400, PhoeniciaContext.vboManager) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
-                Debug.d("Inventory dialog touched");
                 super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
                 return true;
             }
@@ -63,9 +63,14 @@ public class InventoryHUD extends PhoeniciaHUD {
         this.attachChild(whiteRect);
         this.registerTouchArea(whiteRect);
 
+        Scrollable itemsPane = new Scrollable(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 400, Scrollable.SCROLL_VERTICAL);
+        itemsPane.setPadding(32);
+        this.attachChild(itemsPane);
+        this.registerTouchArea(itemsPane);
+
         final int columns = 4;
-        int startX = (int) (whiteRect.getWidth() / 2) - (columns * 32) - 16;
-        int startY = (int) whiteRect.getHeight() - 50;
+        int startX = (int) (itemsPane.getWidth() / 2) - (columns * 32) - 16;
+        int startY = (int) itemsPane.getHeight() - 50;
 
         int offsetX = 0;
         int offsetY = startY;
@@ -104,7 +109,7 @@ public class InventoryHUD extends PhoeniciaHUD {
                 }
             });
             this.registerTouchArea(block);
-            whiteRect.attachChild(block);
+            itemsPane.attachChild(block);
             offsetX++;
 
         }
@@ -142,7 +147,7 @@ public class InventoryHUD extends PhoeniciaHUD {
                 }
             });
             this.registerTouchArea(block);
-            whiteRect.attachChild(block);
+            itemsPane.attachChild(block);
             offsetX++;
 
         }
@@ -156,7 +161,6 @@ public class InventoryHUD extends PhoeniciaHUD {
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
         // Block touch events
         final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
-        Debug.d("Inventory HUD touched, handled? "+handled);
         if (handled) return true;
         return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
         // TODO: Fix inventory selling
