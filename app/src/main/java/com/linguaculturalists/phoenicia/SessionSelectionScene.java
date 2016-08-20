@@ -1,6 +1,7 @@
 package com.linguaculturalists.phoenicia;
 
 import com.linguaculturalists.phoenicia.components.Button;
+import com.linguaculturalists.phoenicia.components.Scrollable;
 import com.linguaculturalists.phoenicia.locale.Locale;
 import com.linguaculturalists.phoenicia.locale.LocaleLoader;
 import com.linguaculturalists.phoenicia.locale.LocaleManager;
@@ -64,8 +65,16 @@ public class SessionSelectionScene extends Scene {
         List<GameSession> sessions = GameSession.objects(PhoeniciaContext.context).all().toList();
         Debug.d("Number of Sessions: "+sessions.size());
 
-        float startY = GameActivity.CAMERA_HEIGHT * 0.5f + 100;
-        float startX = (GameActivity.CAMERA_WIDTH / 2) - ((sessions.size()-1) * 136);
+        Scrollable sessions_pane = new Scrollable(GameActivity.CAMERA_WIDTH/2, (GameActivity.CAMERA_HEIGHT/2)+100, GameActivity.CAMERA_WIDTH, 350, Scrollable.SCROLL_HORIZONTAL);
+        sessions_pane.setPadding(16);
+        this.attachChild(sessions_pane);
+        this.registerTouchArea(sessions_pane);
+
+        float startY = sessions_pane.getHeight() / 2;
+        float startX = (sessions_pane.getWidth() / 2) - ((sessions.size()-1) * 136);
+        if (startX < 136) {
+            startX = 136f;
+        }
 
         float offsetX = 0;
         for (int i = 0; i < sessions.size(); i++) {
@@ -85,7 +94,8 @@ public class SessionSelectionScene extends Scene {
             if (currentPerson == null) {
                 Debug.w("Game Session without person!");
                 // TODO: use an "unknown user" image instead
-                currentPerson = session_locale.people.get(i);
+                int person_index = i % session_locale.people.size();
+                currentPerson = session_locale.people.get(person_index);
                 session.person_name.set(currentPerson.name);
                 session.save(PhoeniciaContext.context);
             }
@@ -104,11 +114,11 @@ public class SessionSelectionScene extends Scene {
                     }
                 });
                 this.registerTouchArea(block);
-                this.attachChild(block);
+                sessions_pane.attachChild(block);
 
                 Text personName = new Text(startX + (272 * offsetX), startY-128-16, GameFonts.dialogText(), session.session_name.get(), session.session_name.get().length(),  new TextOptions(AutoWrap.WORDS, 256, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
-                this.attachChild(personName);
-            } catch (final IOException e) {
+                sessions_pane.attachChild(personName);
+            } catch (final Exception e) {
                 Debug.e("Error loading person sprite texture", e);
                 continue;
             }

@@ -36,7 +36,8 @@ public class SplashScene extends Scene {
             splashTexture.load();
             splash = new Sprite(0, 0, splashTextureRegion, vbo);
 
-            //splash.setScale(1.5f);
+            final float scale_factor = GameActivity.CAMERA_HEIGHT / splashTextureRegion.getHeight();
+            splash.setScale(scale_factor+0.1f);
             splash.setPosition((camera.getWidth()) * 0.5f, (camera.getHeight()) * 0.5f);
             this.attachChild(splash);
         } catch (final IOException e) {
