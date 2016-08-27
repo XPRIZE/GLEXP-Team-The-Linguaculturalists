@@ -2,6 +2,7 @@ package com.linguaculturalists.phoenicia.components;
 
 import android.opengl.GLES20;
 
+import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.engine.camera.Camera;
@@ -249,6 +250,8 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
     public void onScroll(ScrollDetector scrollDetector, int pointerId, float dx, float dy) {
         //Debug.d("Scrollable.onScroll(scrollDetector, "+pointerId+", "+dx+", "+dy+")");
         this.touch_was_scroll = true;
+        dx = dx / 2;
+        dy = dy / 2;
 
         final float currentX = this.contents.getX();
         final float currentY = this.contents.getY();

@@ -5,6 +5,7 @@ package com.linguaculturalists.phoenicia.locale;
  */
 public class Decoration {
     public String name; /**< display name for this decoration */
+    public String level; /**< level where this decoration is unlcoked */
     public int columns; /**< number of map columns this block occupies. Default is 1 */
     public int rows; /**< number of map rows this block occupies. Default is 1 */
     public String restriction; /**< tile class this block can be placed on */

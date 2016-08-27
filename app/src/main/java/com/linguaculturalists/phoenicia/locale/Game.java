@@ -5,6 +5,7 @@ package com.linguaculturalists.phoenicia.locale;
  */
 public class Game {
     public String name; /**< display name for this game */
+    public String level; /**< level where this game is unlocked */
     public String type; /**< type of mini-game this block will be */
     public int columns; /**< number of map columns this game block occupies. Default is 1 */
     public int rows; /**< number of map rows this game block occupies. Default is 1 */

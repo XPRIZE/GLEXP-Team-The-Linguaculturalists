@@ -87,10 +87,14 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public static final int PERSON_TILE_HEIGHT = 256;
     public static final int LETTER_SPRITE_WIDTH = 64;
     public static final int LETTER_SPRITE_HEIGHT = 64;
+    public static final int LETTER_SPRITE_COLS = 3;
+    public static final int LETTER_SPRITE_ROWS = 1;
     public static final int LETTER_TEXTURE_COLS = 4;
     public static final int LETTER_TEXTURE_ROWS = 6;
     public static final int WORD_SPRITE_WIDTH = 64;
     public static final int WORD_SPRITE_HEIGHT = 64;
+    public static final int WORD_SPRITE_COLS = 3;
+    public static final int WORD_SPRITE_ROWS = 1;
     public static final int WORD_TEXTURE_COLS = 4;
     public static final int WORD_TEXTURE_ROWS = 6;
     public static final int GAME_SPRITE_WIDTH = 64;
@@ -215,7 +219,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.decorationBlocks = new HashMap<Decoration, ITiledTextureRegion>();
 
         final float minZoomFactor = 1.0f;
-        final float maxZoomFactor = 5.0f;
+        final float maxZoomFactor = 3.0f;
         mPinchZoomDetector = new PinchZoomDetector(new PinchZoomDetector.IPinchZoomDetectorListener() {
             @Override
             public void onPinchZoomStarted(final PinchZoomDetector pPinchZoomDetector, final TouchEvent pTouchEvent) {
@@ -258,10 +262,13 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                         MotionEvent motion = pSceneTouchEvent.getMotionEvent();
                         if (motion.getHistorySize() > 0) {
                             for (int i = 1, n = motion.getHistorySize(); i < n; i++) {
-                                int calcX = (int) motion.getHistoricalX(i) - (int) motion.getHistoricalX(i - 1);
-                                int calcY = (int) motion.getHistoricalY(i) - (int) motion.getHistoricalY(i - 1);
-                                //Debug.d("diffX: "+calcX+", diffY: "+calcY);
-                                final float zoom = camera.getZoomFactor();
+                                float calcX = motion.getHistoricalX(i) -  motion.getHistoricalX(i - 1);
+                                float calcY = motion.getHistoricalY(i) -  motion.getHistoricalY(i - 1);
+                                final float zoom = camera.getZoomFactor() + 1.0f;
+                                Debug.d("diffX: "+calcX+", diffY: "+calcY);
+                                //calcX = calcX/2;
+                                //calcY = calcY/2;
+                                Debug.d("Zoom factor: "+zoom);
 
                                 camera.setCenter(camera.getCenterX() - (calcX / zoom), camera.getCenterY() + (calcY / zoom));
                             }
@@ -490,7 +497,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 final AssetBitmapTexture wordSpriteTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, word.sprite_texture);
                 wordSpriteTexture.load();
                 this.wordTextures.put(word, wordSpriteTexture);
-                this.wordSprites.put(word, TextureRegionFactory.extractTiledFromTexture(wordSpriteTexture, 0, 0, WORD_SPRITE_WIDTH * WORD_TEXTURE_COLS, WORD_SPRITE_HEIGHT * WORD_TEXTURE_ROWS, WORD_TEXTURE_COLS, WORD_TEXTURE_ROWS));
+                this.wordSprites.put(word, TextureRegionFactory.extractTiledFromTexture(wordSpriteTexture, 0, 0, WORD_SPRITE_WIDTH * WORD_SPRITE_COLS, WORD_SPRITE_HEIGHT * WORD_SPRITE_ROWS, WORD_SPRITE_COLS, WORD_SPRITE_ROWS));
 
                 Debug.d("Loading word block texture from " + word.block_texture);
                 final AssetBitmapTexture wordTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, word.block_texture);

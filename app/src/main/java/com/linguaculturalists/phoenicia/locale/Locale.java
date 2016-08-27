@@ -66,4 +66,21 @@ public class Locale {
         this.levels = new ArrayList<Level>();
         this.level_map = new HashMap<String, Level>();
     }
+
+    public boolean isLevelReached(String check_level_name, String current_level_name) {
+        Level check_level = this.level_map.get(check_level_name);
+        Level current_level = this.level_map.get(current_level_name);
+        return this.isLevelReached(check_level, current_level);
+    }
+    public boolean isLevelReached(String check_level_name, Level current_level) {
+        Level check_level = this.level_map.get(check_level_name);
+        return this.isLevelReached(check_level, current_level);
+    }
+    public boolean isLevelReached(Level check_level, String current_level_name) {
+        Level current_level = this.level_map.get(current_level_name);
+        return this.isLevelReached(check_level, current_level);
+    }
+    public boolean isLevelReached(Level check_level, Level current_level) {
+        return this.levels.indexOf(check_level) >= this.levels.indexOf(current_level);
+    }
 }

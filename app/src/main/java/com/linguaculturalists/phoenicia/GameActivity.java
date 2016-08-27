@@ -99,7 +99,7 @@ public class GameActivity extends BaseGameActivity {
         this.syncDB();
         game = new PhoeniciaGame(this, main_camera);
 
-        mEngine.registerUpdateHandler(new TimerHandler(0.5f, new ITimerCallback()
+        mEngine.registerUpdateHandler(new TimerHandler(2.0f, new ITimerCallback()
         {
             public void onTimePassed(final TimerHandler pTimerHandler)
             {

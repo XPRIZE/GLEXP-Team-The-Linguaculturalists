@@ -13,11 +13,13 @@ import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.WordTileBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.sprite.ButtonSprite;
+import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.AutoWrap;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
@@ -69,7 +71,7 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
             }
         });
 
-        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH/2, 64, 600, 96, PhoeniciaContext.vboManager){
+        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH/2, GameActivity.CAMERA_HEIGHT/2, 600, 400, PhoeniciaContext.vboManager){
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
@@ -80,7 +82,10 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
         this.attachChild(whiteRect);
         this.registerTouchArea(whiteRect);
 
-        this.blockPanel = new Scrollable(GameActivity.CAMERA_WIDTH/2, 64, 600, 96, Scrollable.SCROLL_HORIZONTAL);
+        Rectangle background = new Rectangle(GameActivity.CAMERA_WIDTH/2, GameActivity.CAMERA_HEIGHT/2, 550, 300, PhoeniciaContext.vboManager);
+        background.setColor(new Color(0.9f, 0.9f, 0.9f));
+        this.attachChild(background);
+        this.blockPanel = new Scrollable(GameActivity.CAMERA_WIDTH/2, GameActivity.CAMERA_HEIGHT/2, 550, 300, Scrollable.SCROLL_HORIZONTAL);
         this.blockPanel.setPadding(16);
 
         this.registerTouchArea(blockPanel);
@@ -96,17 +101,18 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
         if (game.locale.levels.size() <= next_available_level) next_available_level--;
         final Level next = game.locale.levels.get(next_available_level);
         final List<Word> words = next.words;
-        final int tile_start = 130;
-        final int startX = (int)(blockPanel.getWidth()/2);
         for (int i = 0; i < words.size(); i++) {
             final Word currentWord = words.get(i);
             Debug.d("Adding HUD word: " + currentWord.name + " (tile: " + currentWord.tile + ")");
-            final int tile_id = currentWord.sprite;
-            ITiledTextureRegion blockRegion = new TiledTextureRegion(game.wordTextures.get(currentWord),
-                    game.wordSprites.get(currentWord).getTextureRegion(0),
-                    game.wordSprites.get(currentWord).getTextureRegion(1),
-                    game.wordSprites.get(currentWord).getTextureRegion(2));
-            ButtonSprite block = new ButtonSprite((64 * ((i * 2)+1)), 48, blockRegion, PhoeniciaContext.vboManager);
+            Rectangle card = new Rectangle((100 * ((i * 2)+1)), blockPanel.getHeight()/2, 175, 200, PhoeniciaContext.vboManager);
+            card.setColor(Color.WHITE);
+            this.blockPanel.attachChild(card);
+
+            Text blockName = new Text(card.getWidth()/2, card.getHeight()-16, GameFonts.inventoryCount(), String.valueOf(currentWord.chars), currentWord.chars.length, new TextOptions(HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+            card.attachChild(blockName);
+
+            ITiledTextureRegion blockRegion = game.wordSprites.get(currentWord);
+            ButtonSprite block = new ButtonSprite(card.getWidth()/2, card.getHeight()*2/3, blockRegion, PhoeniciaContext.vboManager);
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -119,11 +125,14 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
                 block.setEnabled(false);
             }
             this.registerTouchArea(block);
-            blockPanel.attachChild(block);
+            card.attachChild(block);
 
             int cost = currentWord.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getWordTileCount(currentWord));
-            final Text purchaseCost = new Text((64 * ((i * 2)+1))+24, 20, inventoryCountFont, String.valueOf(cost), String.valueOf(cost).length(), PhoeniciaContext.vboManager);
-            blockPanel.attachChild(purchaseCost);
+            final Text purchaseCost = new Text((card.getWidth()/2)+20, card.getHeight()*1/3, GameFonts.inventoryCount(), String.valueOf(cost), String.valueOf(cost).length(), PhoeniciaContext.vboManager);
+            card.attachChild(purchaseCost);
+
+            final Sprite coinIcon = new Sprite(purchaseCost.getX()-(purchaseCost.getWidth()/2)-20, purchaseCost.getY()+2, game.shellTiles.getTextureRegion(GameTextures.COIN_ICON), PhoeniciaContext.vboManager);
+            card.attachChild(coinIcon);
         }
         Debug.d("Finished loading HUD letters");
 
@@ -137,8 +146,8 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
     @Override
     public void show() {
         if (this.placementDone) game.hudManager.clear();
-        whiteRect.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
-        blockPanel.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
+        //whiteRect.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
+        //blockPanel.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
     }
 
     /**

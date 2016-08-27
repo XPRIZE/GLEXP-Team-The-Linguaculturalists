@@ -5,6 +5,7 @@ package com.linguaculturalists.phoenicia.locale;
  */
 public class DefaultBlock {
     public String name;
+    public String level; /** level where this item becomes unlocked **/
     public int mapCol;
     public int mapRow;
     public int columns; /**< number of map columns this block occupies. Default is 1 */

@@ -181,6 +181,7 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale inventory");
         this.locale.inventoryBlock = new InventoryBlock();
         this.locale.inventoryBlock.name = attributes.getValue("name");
+        this.locale.inventoryBlock.level = attributes.getValue("level");
         String size = attributes.getValue("size");
         if (size == null || size == "" || size == "1x1") {
             this.locale.inventoryBlock.columns = 1;
@@ -204,6 +205,7 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale market");
         this.locale.marketBlock = new MarketBlock();
         this.locale.marketBlock.name = attributes.getValue("name");
+        this.locale.marketBlock.level = attributes.getValue("level");
         String size = attributes.getValue("size");
         if (size == null || size == "" || size == "1x1") {
             this.locale.marketBlock.columns = 1;
@@ -227,6 +229,7 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale workshop");
         this.locale.workshopBlock = new WorkshopBlock();
         this.locale.workshopBlock.name = attributes.getValue("name");
+        this.locale.workshopBlock.level = attributes.getValue("level");
         String size = attributes.getValue("size");
         if (size == null || size == "" || size == "1x1") {
             this.locale.workshopBlock.columns = 1;
@@ -259,6 +262,7 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale game");
         Game newGame = new Game();
         newGame.name = attributes.getValue("name");
+        newGame.level = attributes.getValue("level");
         String size = attributes.getValue("size");
         if (size == null || size == "" || size == "1x1") {
             newGame.columns = 1;
@@ -290,6 +294,7 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale decoration");
         Decoration newDecoration = new Decoration();
         newDecoration.name = attributes.getValue("name");
+        newDecoration.level = attributes.getValue("level");
         String size = attributes.getValue("size");
         if (size == null || size == "" || size == "1x1") {
             newDecoration.columns = 1;

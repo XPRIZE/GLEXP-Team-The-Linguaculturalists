@@ -5,9 +5,9 @@
     <music src="locales/en_us_rural/sounds/background.mp3" />
 
     <!-- Default blocks -->
-    <inventory size="1x2" name="Barn" col="37" row="43" block="locales/en_us_rural/textures/biginventory.png" />
-    <market size="2x1" name="Market" col="42" row="40" block="locales/en_us_rural/textures/bigmarket.png" />
-    <workshop name="Workshop" col="38" row="40" block="locales/en_us_rural/textures/workshop.png" />
+    <inventory level="1" size="1x2" name="Barn" col="37" row="43" block="locales/en_us_rural/textures/biginventory.png" />
+    <market level="4" size="2x1" name="Market" col="42" row="40" block="locales/en_us_rural/textures/bigmarket.png" />
+    <workshop level="6" name="Workshop" col="38" row="40" block="locales/en_us_rural/textures/workshop.png" />
 
     <!-- People used in the marketplace and player's avatar -->
     <people>
@@ -19,15 +19,20 @@
 
     <!-- Mini-games -->
     <games>
-        <game name="Blue Tent"  type="wordmatch"  points="100" buy="300" construct="120" time="300" reward="1.5" sprite="locales/en_us_rural/textures/games/sprites/minigame1.png" block="locales/en_us_rural/textures/games/blocks/minigame1.png" />
-        <game name="Green Tent" type="imagematch" points="500" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
+        <game level="6" name="Word Match"  type="wordmatch"  points="100" buy="300" construct="120" time="300" reward="1.5" sprite="locales/en_us_rural/textures/games/sprites/minigame1.png" block="locales/en_us_rural/textures/games/blocks/minigame1.png" />
+        <game level="12" name="Game Test" type="imagematch" points="100" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
+        <game level="12" name="Game Test" type="imagematch" points="100" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
+        <game level="12" name="Game Test" type="imagematch" points="100" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
+        <game level="12" name="Game Test" type="imagematch" points="100" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
+        <game level="12" name="Game Test" type="imagematch" points="100" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
+        <game level="12" name="Image Match" type="imagematch" points="500" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
     </games>
 
     <!-- Decorations -->
     <decorations>
-        <decoration size="1x1" name="Lamp Post"  points="100" buy="200" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
-        <decoration size="1x1" name="Small Tree" points="300" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
-        <decoration size="2x2" name="Fountain"   points="500" buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
+        <decoration level="5" size="1x1" name="Lamp Post"  points="100" buy="200" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
+        <decoration level="10" size="1x1" name="Small Tree" points="300" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
+        <decoration level="20" size="2x2" name="Fountain"   points="500" buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
     </decorations>
 
     <!-- Alphabet -->
