@@ -7,6 +7,7 @@ public class Letter {
     public String name; /**< reference name for this letter (can be different from the letter character itself */
     public int columns; /**< number of map columns this letter block occupies. Default is 1 */
     public int rows; /**< number of map rows this letter block occupies. Default is 1 */
+    public int height; /**< number of map blocks high this block uses. Default is 1 */
     public String restriction; /**< tile class this letter can be placed on */
     public int time; /**< time (in seconds) it takes to build this letter */
     public final int tile = 4; /**< start tile index for a PlacedBlockSprite for this letter */

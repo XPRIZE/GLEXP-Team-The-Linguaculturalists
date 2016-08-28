@@ -4,6 +4,7 @@ import com.linguaculturalists.phoenicia.PhoeniciaGame;
 
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.tmx.TMXTile;
+import org.andengine.util.debug.Debug;
 
 /**
  * Predined tile indexes from the Shell UI texture
@@ -25,12 +26,15 @@ public class GameTextures {
     public static final int XP_ICON = 9; /**< Icon to denote experience points */
     public static final int COIN_ICON = 10; /**< Icon used to denote in-game coins */
 
-    public static int[] calculateTileSize(int columns, int rows) {
+    public static int[] calculateTileSize(int columns, int rows, int height) {
         int[] size = new int[2];
+
+        float diagonal = (columns/2.0f) + (rows/2.0f);
         // Calculate width
-        size[0] = BASE_TILE_WIDTH + ((BASE_TILE_WIDTH/2) * (columns+rows-2));
+        size[0] = (int)(BASE_TILE_WIDTH * diagonal);
         // Calculate height
-        size[1] = BASE_TILE_HEIGHT + ((BASE_TILE_HEIGHT/4) * (columns+rows-2));
+        size[1] = (int)((BASE_TILE_HEIGHT*height/2) + (BASE_TILE_HEIGHT/2 * diagonal));
+
         return size;
     }
 

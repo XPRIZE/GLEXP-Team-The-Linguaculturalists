@@ -183,14 +183,20 @@ public class LocaleParser extends DefaultHandler {
         this.locale.inventoryBlock.name = attributes.getValue("name");
         this.locale.inventoryBlock.level = attributes.getValue("level");
         String size = attributes.getValue("size");
-        if (size == null || size == "" || size == "1x1") {
+        if (size == null || size == "" || size == "1x1" || size == "1x1x1") {
             this.locale.inventoryBlock.columns = 1;
             this.locale.inventoryBlock.rows = 1;
+            this.locale.inventoryBlock.height = 1;
         } else {
             try {
                 String[] dimensions = size.split("x");
                 this.locale.inventoryBlock.columns = Integer.parseInt(dimensions[0]);
                 this.locale.inventoryBlock.rows = Integer.parseInt(dimensions[1]);
+                if (dimensions.length > 2) {
+                    this.locale.inventoryBlock.height = Integer.parseInt(dimensions[2]);
+                } else {
+                    this.locale.inventoryBlock.height = 1;
+                }
             } catch (Exception e) {
                 Debug.e("Failed to parse size for: "+this.locale.inventoryBlock.name);
                 e.printStackTrace();
@@ -207,14 +213,20 @@ public class LocaleParser extends DefaultHandler {
         this.locale.marketBlock.name = attributes.getValue("name");
         this.locale.marketBlock.level = attributes.getValue("level");
         String size = attributes.getValue("size");
-        if (size == null || size == "" || size == "1x1") {
+        if (size == null || size == "" || size == "1x1" || size == "1x1x1") {
             this.locale.marketBlock.columns = 1;
             this.locale.marketBlock.rows = 1;
+            this.locale.marketBlock.height = 1;
         } else {
             try {
                 String[] dimensions = size.split("x");
                 this.locale.marketBlock.columns = Integer.parseInt(dimensions[0]);
                 this.locale.marketBlock.rows = Integer.parseInt(dimensions[1]);
+                if (dimensions.length > 2) {
+                    this.locale.marketBlock.height = Integer.parseInt(dimensions[2]);
+                } else {
+                    this.locale.marketBlock.height = 1;
+                }
             } catch (Exception e) {
                 Debug.e("Failed to parse size for: "+this.locale.marketBlock.name);
                 e.printStackTrace();
@@ -231,14 +243,20 @@ public class LocaleParser extends DefaultHandler {
         this.locale.workshopBlock.name = attributes.getValue("name");
         this.locale.workshopBlock.level = attributes.getValue("level");
         String size = attributes.getValue("size");
-        if (size == null || size == "" || size == "1x1") {
+        if (size == null || size == "" || size == "1x1" || size == "1x1x1") {
             this.locale.workshopBlock.columns = 1;
             this.locale.workshopBlock.rows = 1;
+            this.locale.workshopBlock.height = 1;
         } else {
             try {
                 String[] dimensions = size.split("x");
                 this.locale.workshopBlock.columns = Integer.parseInt(dimensions[0]);
                 this.locale.workshopBlock.rows = Integer.parseInt(dimensions[1]);
+                if (dimensions.length > 2) {
+                    this.locale.workshopBlock.height = Integer.parseInt(dimensions[2]);
+                } else {
+                    this.locale.workshopBlock.height = 1;
+                }
             } catch (Exception e) {
                 Debug.e("Failed to parse size for: "+this.locale.workshopBlock.name);
                 e.printStackTrace();
@@ -264,14 +282,20 @@ public class LocaleParser extends DefaultHandler {
         newGame.name = attributes.getValue("name");
         newGame.level = attributes.getValue("level");
         String size = attributes.getValue("size");
-        if (size == null || size == "" || size == "1x1") {
+        if (size == null || size == "" || size == "1x1" || size == "1x1x1") {
             newGame.columns = 1;
             newGame.rows = 1;
+            newGame.height = 1;
         } else {
             try {
                 String[] dimensions = size.split("x");
                 newGame.columns = Integer.parseInt(dimensions[0]);
                 newGame.rows = Integer.parseInt(dimensions[1]);
+                if (dimensions.length > 2) {
+                    newGame.height = Integer.parseInt(dimensions[2]);
+                } else {
+                    newGame.height = 1;
+                }
             } catch (Exception e) {
                 Debug.e("Failed to parse size for: "+newGame.name);
                 e.printStackTrace();
@@ -296,14 +320,20 @@ public class LocaleParser extends DefaultHandler {
         newDecoration.name = attributes.getValue("name");
         newDecoration.level = attributes.getValue("level");
         String size = attributes.getValue("size");
-        if (size == null || size == "" || size == "1x1") {
+        if (size == null || size == "" || size == "1x1" || size == "1x1x1") {
             newDecoration.columns = 1;
             newDecoration.rows = 1;
+            newDecoration.height = 1;
         } else {
             try {
                 String[] dimensions = size.split("x");
                 newDecoration.columns = Integer.parseInt(dimensions[0]);
                 newDecoration.rows = Integer.parseInt(dimensions[1]);
+                if (dimensions.length > 2) {
+                    newDecoration.height = Integer.parseInt(dimensions[2]);
+                } else {
+                    newDecoration.height = 1;
+                }
             } catch (Exception e) {
                 Debug.e("Failed to parse size for: "+newDecoration.name);
                 e.printStackTrace();
@@ -323,14 +353,20 @@ public class LocaleParser extends DefaultHandler {
         this.currentLetter = new Letter();
         this.currentLetter.name = attributes.getValue("name");
         String size = attributes.getValue("size");
-        if (size == null || size == "" || size == "1x1") {
+        if (size == null || size == "" || size == "1x1" || size == "1x1x1") {
             this.currentLetter.columns = 1;
             this.currentLetter.rows = 1;
+            this.currentLetter.height = 1;
         } else {
             try {
                 String[] dimensions = size.split("x");
                 this.currentLetter.columns = Integer.parseInt(dimensions[0]);
                 this.currentLetter.rows = Integer.parseInt(dimensions[1]);
+                if (dimensions.length > 2) {
+                    this.currentLetter.height = Integer.parseInt(dimensions[2]);
+                } else {
+                    this.currentLetter.height = 1;
+                }
             } catch (Exception e) {
                 Debug.e("Failed to parse letter size for: "+this.currentLetter.name);
                 e.printStackTrace();
@@ -352,14 +388,20 @@ public class LocaleParser extends DefaultHandler {
         this.currentWord = new Word();
         this.currentWord.name = attributes.getValue("name");
         String size = attributes.getValue("size");
-        if (size == null || size == "" || size == "1x1") {
+        if (size == null || size == "" || size == "1x1" || size == "1x1x1") {
             this.currentWord.columns = 1;
             this.currentWord.rows = 1;
+            this.currentWord.height = 1;
         } else {
             try {
                 String[] dimensions = size.split("x");
                 this.currentWord.columns = Integer.parseInt(dimensions[0]);
                 this.currentWord.rows = Integer.parseInt(dimensions[1]);
+                if (dimensions.length > 2) {
+                    this.currentWord.height = Integer.parseInt(dimensions[2]);
+                } else {
+                    this.currentWord.height = 1;
+                }
             } catch (Exception e) {
                 Debug.e("Failed to parse word size for: "+this.currentWord.name);
                 e.printStackTrace();

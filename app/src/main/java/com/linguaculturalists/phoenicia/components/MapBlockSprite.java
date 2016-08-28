@@ -18,6 +18,7 @@ import org.andengine.extension.tmx.TMXTile;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.input.touch.detector.HoldDetector;
+import org.andengine.opengl.texture.bitmap.BitmapTexture;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
@@ -137,8 +138,26 @@ public class MapBlockSprite extends AnimatedSprite implements ClickDetector.ICli
 
     @Override
     public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-        boolean handled = this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
-        return this.holdDetector.onManagedTouchEvent(pSceneTouchEvent) || handled;
+        // TODO: Calculate if touch is in the part of the bounding rectangle's corners where there is no isometric image content
+        // and don't process the event if it is
+
+        // Transform touch location to bottom-left quadrant
+        float px = pTouchAreaLocalX;
+        if (px > (this.getWidth()/2)) {
+            px = this.getWidth() - pTouchAreaLocalX;
+        }
+        float py = pTouchAreaLocalY;
+        if (py > (this.getHeight()/2)) {
+            py = this.getHeight() - pTouchAreaLocalY;
+        }
+        float dy = py / (this.getHeight()/2);
+        float dx = (1-dy) * (this.getWidth()/2);
+
+        if (px > dx) {
+            boolean handled = this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
+            return this.holdDetector.onManagedTouchEvent(pSceneTouchEvent) || handled;
+        }
+        return false;
     }
 
     /**

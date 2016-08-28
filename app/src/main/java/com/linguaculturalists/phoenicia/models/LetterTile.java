@@ -54,6 +54,8 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
     private LetterTileListener eventListener;
     private boolean isCompleted = false;
 
+    private LetterBuilder cached_builder;
+
     public LetterTile() {
         super();
         this.game = new ForeignKeyField<GameSession>(GameSession.class);
@@ -61,6 +63,7 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
         this.isoX = new IntegerField();
         this.isoY = new IntegerField();
         this.item_name = new CharField(32);
+        this.cached_builder = null;
     }
 
     /**
@@ -103,11 +106,15 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
      * @return the builder instance, or null if it does not have one
      */
     public LetterBuilder getBuilder(Context context) {
+        if (this.cached_builder != null) {
+            return this.cached_builder;
+        }
         LetterBuilder builder = this.builder.get(context);
         if (builder != null) {
             builder.addUpdateHandler(this);
             this.onProgressChanged(builder);
             phoeniciaGame.addBuilder(builder);
+            this.cached_builder = builder;
         }
         return builder;
     }
@@ -120,6 +127,7 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
         builder.addUpdateHandler(this);
         this.builder.set(builder);
         this.onProgressChanged(builder);
+        this.cached_builder = builder;
     }
 
     public void onScheduled(Builder buildItem) { Debug.d("Builder.onScheduled"); this.isCompleted = false; return; }

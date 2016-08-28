@@ -265,10 +265,6 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                                 float calcX = motion.getHistoricalX(i) -  motion.getHistoricalX(i - 1);
                                 float calcY = motion.getHistoricalY(i) -  motion.getHistoricalY(i - 1);
                                 final float zoom = camera.getZoomFactor() + 1.0f;
-                                Debug.d("diffX: "+calcX+", diffY: "+calcY);
-                                //calcX = calcX/2;
-                                //calcY = calcY/2;
-                                Debug.d("Zoom factor: "+zoom);
 
                                 camera.setCenter(camera.getCenterX() - (calcX / zoom), camera.getCenterY() + (calcY / zoom));
                             }
@@ -414,17 +410,17 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
             inventoryTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.inventoryBlock.block_texture);
             inventoryTexture.load();
-            int[] inventoryTileSize = GameTextures.calculateTileSize(locale.inventoryBlock.columns, locale.inventoryBlock.rows);
+            int[] inventoryTileSize = GameTextures.calculateTileSize(locale.inventoryBlock.columns, locale.inventoryBlock.rows, locale.inventoryBlock.height);
             inventoryTiles = TextureRegionFactory.extractTiledFromTexture(inventoryTexture, 0, 0, inventoryTileSize[0] * 4, inventoryTileSize[1] * 5, 4, 5);
 
             marketTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.marketBlock.block_texture);
             marketTexture.load();
-            int[] marketTileSize = GameTextures.calculateTileSize(locale.marketBlock.columns, locale.marketBlock.rows);
+            int[] marketTileSize = GameTextures.calculateTileSize(locale.marketBlock.columns, locale.marketBlock.rows, locale.marketBlock.height);
             marketTiles = TextureRegionFactory.extractTiledFromTexture(marketTexture, 0, 0, marketTileSize[0] * 4, marketTileSize[1] * 5, 4, 5);
 
             workshopTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.workshopBlock.block_texture);
             workshopTexture.load();
-            int[] workshopTileSize = GameTextures.calculateTileSize(locale.workshopBlock.columns, locale.workshopBlock.rows);
+            int[] workshopTileSize = GameTextures.calculateTileSize(locale.workshopBlock.columns, locale.workshopBlock.rows, locale.workshopBlock.height);
             workshopTiles = TextureRegionFactory.extractTiledFromTexture(workshopTexture, 0, 0, workshopTileSize[0] * 4, workshopTileSize[1] * 5, 4, 5);
 
         } catch (final IOException e) {
@@ -463,7 +459,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 Debug.d("Loading letter block texture from " + letter.block_texture);
                 final AssetBitmapTexture letterBlockTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, letter.block_texture);
                 letterBlockTexture.load();
-                int[] letterTileSize = GameTextures.calculateTileSize(letter.columns, letter.rows);
+                int[] letterTileSize = GameTextures.calculateTileSize(letter.columns, letter.rows, letter.height);
                 this.letterBlocks.put(letter, TextureRegionFactory.extractTiledFromTexture(letterBlockTexture, 0, 0, letterTileSize[0] * LETTER_TEXTURE_COLS, letterTileSize[1] * LETTER_TEXTURE_ROWS, LETTER_TEXTURE_COLS, LETTER_TEXTURE_ROWS));
             }
 
@@ -502,7 +498,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 Debug.d("Loading word block texture from " + word.block_texture);
                 final AssetBitmapTexture wordTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, word.block_texture);
                 wordTexture.load();
-                int[] wordTileSize = GameTextures.calculateTileSize(word.columns, word.rows);
+                int[] wordTileSize = GameTextures.calculateTileSize(word.columns, word.rows, word.height);
                 Debug.d("Word "+word.name+" has size "+word.columns+"x"+word.rows+" and sprite size "+wordTileSize[0]+"x"+wordTileSize[1]);
                 this.wordBlocks.put(word, TextureRegionFactory.extractTiledFromTexture(wordTexture, 0, 0, wordTileSize[0] * WORD_TEXTURE_COLS, wordTileSize[1] * WORD_TEXTURE_ROWS, WORD_TEXTURE_COLS, WORD_TEXTURE_ROWS));
             }
@@ -541,7 +537,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 Debug.d("Loading game block texture from " + game.block_texture);
                 final AssetBitmapTexture gameTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, game.block_texture);
                 gameTexture.load();
-                int[] gameTileSize = GameTextures.calculateTileSize(game.columns, game.rows);
+                int[] gameTileSize = GameTextures.calculateTileSize(game.columns, game.rows, game.height);
                 Debug.d("Word "+game.name+" has size "+game.columns+"x"+game.rows+" and sprite size "+gameTileSize[0]+"x"+gameTileSize[1]);
                 this.gameBlocks.put(game, TextureRegionFactory.extractTiledFromTexture(gameTexture, 0, 0, gameTileSize[0] * GAME_TEXTURE_COLS, gameTileSize[1] * GAME_TEXTURE_ROWS, GAME_TEXTURE_COLS, GAME_TEXTURE_ROWS));
             }
@@ -568,7 +564,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 Debug.d("Loading decoration block texture from " + decoration.block_texture);
                 final AssetBitmapTexture decorationTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, decoration.block_texture);
                 decorationTexture.load();
-                int[] decorationTileSize = GameTextures.calculateTileSize(decoration.columns, decoration.rows);
+                int[] decorationTileSize = GameTextures.calculateTileSize(decoration.columns, decoration.rows, decoration.height);
                 Debug.d("Word "+decoration.name+" has size "+decoration.columns+"x"+decoration.rows+" and sprite size "+decorationTileSize[0]+"x"+decorationTileSize[1]);
                 this.decorationBlocks.put(decoration, TextureRegionFactory.extractTiledFromTexture(decorationTexture, 0, 0, decorationTileSize[0] * DECORATION_TEXTURE_COLS, decorationTileSize[1] * DECORATION_TEXTURE_ROWS, DECORATION_TEXTURE_COLS, DECORATION_TEXTURE_ROWS));
             }
@@ -858,7 +854,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         final TMXTile inventoryTile = tmxLayer.getTMXTile(inventoryDefaultTile.isoX.get(), inventoryDefaultTile.isoY.get());
 
-        int[] tileSize = GameTextures.calculateTileSize(locale.inventoryBlock.columns, locale.inventoryBlock.rows);
+        int[] tileSize = GameTextures.calculateTileSize(locale.inventoryBlock.columns, locale.inventoryBlock.rows, locale.inventoryBlock.height);
         float[] tilePos = GameTextures.calculateTilePosition(inventoryTile, tileSize, locale.inventoryBlock.columns, locale.inventoryBlock.rows);
         int inventoryZ = inventoryTile.getTileZ();
 
@@ -898,7 +894,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         final TMXTile marketTile = tmxLayer.getTMXTile(marketDefaultTile.isoX.get(), marketDefaultTile.isoY.get());
 
-        int[] tileSize = GameTextures.calculateTileSize(locale.marketBlock.columns, locale.marketBlock.rows);
+        int[] tileSize = GameTextures.calculateTileSize(locale.marketBlock.columns, locale.marketBlock.rows, locale.marketBlock.height);
         float[] tilePos = GameTextures.calculateTilePosition(marketTile, tileSize, locale.marketBlock.columns, locale.marketBlock.rows);
         int marketZ = marketTile.getTileZ();
 
@@ -940,7 +936,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         final TMXTile workshopTile = tmxLayer.getTMXTile(workshopDefaultTile.isoX.get(), workshopDefaultTile.isoY.get());
 
-        int[] tileSize = GameTextures.calculateTileSize(locale.workshopBlock.columns, locale.workshopBlock.rows);
+        int[] tileSize = GameTextures.calculateTileSize(locale.workshopBlock.columns, locale.workshopBlock.rows, locale.workshopBlock.height);
         float[] tilePos = GameTextures.calculateTilePosition(workshopTile, tileSize, locale.workshopBlock.columns, locale.workshopBlock.rows);
         int workshopZ = workshopTile.getTileZ();
 
@@ -1098,7 +1094,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             return;
         }
 
-        int[] tileSize = GameTextures.calculateTileSize(tile.letter.columns, tile.letter.rows);
+        int[] tileSize = GameTextures.calculateTileSize(tile.letter.columns, tile.letter.rows, tile.letter.height);
         float[] tilePos = GameTextures.calculateTilePosition(tmxTile, tileSize, tile.letter.columns, tile.letter.rows);
         int tileZ = tmxTile.getTileZ();
 
@@ -1191,7 +1187,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             return;
         }
 
-        int[] tileSize = GameTextures.calculateTileSize(tile.word.columns, tile.word.rows);
+        int[] tileSize = GameTextures.calculateTileSize(tile.word.columns, tile.word.rows, tile.word.height);
         float[] tilePos = GameTextures.calculateTilePosition(tmxTile, tileSize, tile.word.columns, tile.word.rows);
         int tileZ = tmxTile.getTileZ();
 
@@ -1284,7 +1280,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             return;
         }
 
-        int[] tileSize = GameTextures.calculateTileSize(tile.game.columns, tile.game.rows);
+        int[] tileSize = GameTextures.calculateTileSize(tile.game.columns, tile.game.rows, tile.game.height);
         float[] tilePos = GameTextures.calculateTilePosition(tmxTile, tileSize, tile.game.columns, tile.game.rows);
         int tileZ = tmxTile.getTileZ();
 
@@ -1377,7 +1373,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             return;
         }
 
-        int[] tileSize = GameTextures.calculateTileSize(tile.decoration.columns, tile.decoration.rows);
+        int[] tileSize = GameTextures.calculateTileSize(tile.decoration.columns, tile.decoration.rows, tile.decoration.height);
         float[] tilePos = GameTextures.calculateTilePosition(tmxTile, tileSize, tile.decoration.columns, tile.decoration.rows);
         int tileZ = tmxTile.getTileZ();
 
