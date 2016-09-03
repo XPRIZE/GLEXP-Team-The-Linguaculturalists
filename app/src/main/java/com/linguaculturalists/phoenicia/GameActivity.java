@@ -111,9 +111,9 @@ public class GameActivity extends BaseGameActivity {
                 // If no sessions exist, go start a new one first
                 splash.detachSelf();
                 if (sessions.size() < 1) {
-                    mEngine.setScene(new LocaleSelectionScene(game, splash));
+                    mEngine.setScene(new LocaleSelectionScene(game));
                 } else {
-                    mEngine.setScene(new SessionSelectionScene(game, splash));
+                    mEngine.setScene(new SessionSelectionScene(game));
                 }
             }
         }));

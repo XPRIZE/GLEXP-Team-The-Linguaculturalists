@@ -45,6 +45,7 @@ import java.util.Set;
 
 import com.linguaculturalists.phoenicia.components.MapBlockSprite;
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
+import com.linguaculturalists.phoenicia.components.ProgressDisplay;
 import com.linguaculturalists.phoenicia.locale.Decoration;
 import com.linguaculturalists.phoenicia.locale.Game;
 import com.linguaculturalists.phoenicia.locale.IntroPage;
@@ -283,11 +284,12 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      * Load the game data from both the locale and the saved session.
      * @throws IOException
      */
-    public void load(final GameSession session) throws IOException {
+    public void load(final GameSession session, ProgressDisplay progress) throws IOException {
         this.session = session;
         this.current_level = this.session.current_level.get();
         if (this.current_level == null) this.current_level = "";
 
+        progress.setProgress(0f);
         // Load locale pack
         LocaleLoader localeLoader = new LocaleLoader();
         try {
@@ -296,6 +298,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         } catch (final IOException e) {
             Debug.e("Error loading Locale from "+this.session.locale_pack.get(), e);
         }
+
+        progress.setProgress(0.1f);
 
         // Start the Inventory for this session
         Inventory.init(this.session);
@@ -320,11 +324,12 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         GameSounds.init();
 
-        this.loadLocale();
-        this.loadSession();
+        progress.setProgress(0.2f);
+        this.loadLocale(progress);
+        this.loadSession(progress);
     }
 
-    private void loadLocale() throws IOException {
+    private void loadLocale(ProgressDisplay progress) throws IOException {
         // For storing sound data
         blockSounds = new HashMap<String, Sound>();
 
@@ -337,14 +342,21 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             Debug.e("Failed to load background music asset: "+locale.music_src);
         }
 
+        progress.setProgress(0.3f);
         this.loadLocaleMap();
+        progress.setProgress(0.4f);
         this.loadLocaleDefaults();
         this.loadLocalePeople();
+        progress.setProgress(0.5f);
         this.loadLocaleLetters();
+        progress.setProgress(0.6f);
         this.loadLocaleWords();
+        progress.setProgress(0.7f);
         this.loadLocaleGames();
+        progress.setProgress(0.8f);
         this.loadLocaleDecorations();
         this.loadLocaleLevels();
+        progress.setProgress(0.9f);
     }
 
     private void loadLocaleMap() {
@@ -596,12 +608,18 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         }
 
     }
-    private void loadSession() {
+    private void loadSession(ProgressDisplay progress) {
+        progress.setProgress(0.90f);
         this.loadSessionDefaultTiles();
+        progress.setProgress(0.91f);
         this.loadSessionLetters();
+        progress.setProgress(0.94f);
         this.loadSessionWords();
+        progress.setProgress(0.98f);
         this.loadSessionGames();
+        progress.setProgress(0.99f);
         this.loadSessionDecorations();
+        progress.setProgress(1.0f);
     }
 
     private void loadSessionDefaultTiles() {

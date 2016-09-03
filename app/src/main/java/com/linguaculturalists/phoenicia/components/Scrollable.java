@@ -411,6 +411,7 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
 
         if (!this.clip) {
             super.onManagedDraw(pGLState, pCamera);
+            return;
         }
 
         final boolean wasScissorTestEnabled = pGLState.enableScissorTest();

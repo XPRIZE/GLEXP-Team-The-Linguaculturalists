@@ -40,12 +40,10 @@ public class SessionSelectionScene extends Scene {
     private AssetBitmapTexture backgroundTexture;
     private ITextureRegion backgroundTextureRegion;
     private PhoeniciaGame game;
-    private SplashScene splash;
 
-    public SessionSelectionScene(final PhoeniciaGame game, final SplashScene splash) {
+    public SessionSelectionScene(final PhoeniciaGame game) {
         super();
         this.game = game;
-        this.splash = splash;
 
         this.setBackground(new Background(new Color(100, 100, 100)));
         try {
@@ -138,29 +136,15 @@ public class SessionSelectionScene extends Scene {
 
     private void newGame() {
         this.detachSelf();
-        game.activity.getEngine().setScene(new LocaleSelectionScene(this.game, this.splash));
+        game.activity.getEngine().setScene(new LocaleSelectionScene(this.game));
     }
 
     private void startGame(final GameSession session) {
-        this.detachSelf();
-        game.activity.getEngine().setScene(splash);
+        final LoadingScene loadingScene = new LoadingScene(game);
         session.save(PhoeniciaContext.context);
-        final SessionSelectionScene that = this;
-        game.activity.getEngine().registerUpdateHandler(new TimerHandler(0.5f, new ITimerCallback() {
-            public void onTimePassed(final TimerHandler pTimerHandler) {
-            try {
-                game.load(session);
-                splash.detachSelf();
-                game.activity.getEngine().setScene(game.scene);
-                game.activity.getEngine().registerUpdateHandler(game);
-                game.start();
-            } catch (IOException e) {
-                Debug.e("Failed to load game", e.getMessage());
-                e.printStackTrace();
-                splash.detachSelf();
-                game.activity.getEngine().setScene(that);
-            }
-            }
-        }));
+        this.detachSelf();
+        game.activity.getEngine().setScene(loadingScene);
+        game.activity.getEngine().registerUpdateHandler(loadingScene);
+        loadingScene.load(session);
     }
 }

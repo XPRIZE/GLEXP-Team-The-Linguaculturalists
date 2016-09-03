@@ -41,12 +41,10 @@ public class LocaleSelectionScene extends Scene {
     private AssetBitmapTexture backgroundTexture;
     private ITextureRegion backgroundTextureRegion;
     private PhoeniciaGame game;
-    private SplashScene splash;
 
-    public LocaleSelectionScene(PhoeniciaGame game, SplashScene splash) {
+    public LocaleSelectionScene(PhoeniciaGame game) {
         super();
         this.game = game;
-        this.splash = splash;
 
         this.setBackground(new Background(new Color(100, 100, 100)));
         try {
@@ -90,26 +88,12 @@ public class LocaleSelectionScene extends Scene {
     }
 
     private void startGame(final String locale_src) {
+        final LoadingScene loadingScene = new LoadingScene(game);
+        GameSession session = GameSession.start(locale_src);
+        session.save(PhoeniciaContext.context);
         this.detachSelf();
-        game.activity.getEngine().setScene(splash);
-        final LocaleSelectionScene that = this;
-        game.activity.getEngine().registerUpdateHandler(new TimerHandler(0.5f, new ITimerCallback() {
-            public void onTimePassed(final TimerHandler pTimerHandler) {
-                GameSession session = GameSession.start(locale_src);
-                session.save(PhoeniciaContext.context);
-                try {
-                    game.load(session);
-                    splash.detachSelf();
-                    game.activity.getEngine().setScene(game.scene);
-                    game.activity.getEngine().registerUpdateHandler(game);
-                    game.start();
-                } catch (IOException e) {
-                    Debug.e("Failed to load game", e.getMessage());
-                    e.printStackTrace();
-                    splash.detachSelf();
-                    game.activity.getEngine().setScene(that);
-                }
-            }
-        }));
+        game.activity.getEngine().setScene(loadingScene);
+        game.activity.getEngine().registerUpdateHandler(loadingScene);
+        loadingScene.load(session);
     }
 }
