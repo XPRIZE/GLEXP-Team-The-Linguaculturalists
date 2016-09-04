@@ -1,5 +1,6 @@
 package com.linguaculturalists.phoenicia.components;
 
+import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
@@ -47,8 +48,8 @@ public class PlacedBlockSprite extends MapBlockSprite {
      * @param pTiledTextureRegion region containing the tile set for this PlacedBlockSprite
      * @param pVertexBufferObjectManager the game's VertexBufferObjectManager
      */
-    public PlacedBlockSprite(final float pX, final float pY, final int pTime, final int pTileId, final ITiledTextureRegion pTiledTextureRegion, final VertexBufferObjectManager pVertexBufferObjectManager) {
-        super(pX, pY, pTileId, pTiledTextureRegion, pVertexBufferObjectManager);
+    public PlacedBlockSprite(final PhoeniciaGame phoeniciaGame, final float pX, final float pY, final int pTime, final int pTileId, final ITiledTextureRegion pTiledTextureRegion, final VertexBufferObjectManager pVertexBufferObjectManager) {
+        super(phoeniciaGame, pX, pY, pTileId, pTiledTextureRegion, pVertexBufferObjectManager);
         this.mTime = pTime;
         this.mProgress = 0;
         this.complete = false;

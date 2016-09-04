@@ -1,6 +1,7 @@
 package com.linguaculturalists.phoenicia.models;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.MapBlockSprite;
@@ -33,6 +34,7 @@ import org.andengine.entity.sprite.TiledSprite;
 import org.andengine.entity.text.Text;
 import org.andengine.extension.tmx.TMXTile;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.util.debug.Debug;
 import org.andengine.util.modifier.IModifier;
@@ -347,11 +349,10 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
     /**
      * Called when the Sprite for this tile is clicked by the player
      * @param buttonSprite
-     * @param v
-     * @param v2
+     * @param px
+     * @param py
      */
-    public void onClick(MapBlockSprite buttonSprite, float v, float v2) {
-        Debug.d("Clicked block: "+String.valueOf(this.word.chars));
+    public void onClick(MapBlockSprite buttonSprite, float px, float py) {
         Builder builder = this.getBuilder(PhoeniciaContext.context);
         if (builder != null) {
             if (builder.status.get() == Builder.COMPLETE) {

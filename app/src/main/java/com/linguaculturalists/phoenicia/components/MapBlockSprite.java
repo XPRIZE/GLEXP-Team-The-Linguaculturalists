@@ -1,5 +1,8 @@
 package com.linguaculturalists.phoenicia.components;
 
+import android.graphics.Bitmap;
+
+import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
@@ -19,6 +22,7 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.input.touch.detector.HoldDetector;
 import org.andengine.opengl.texture.bitmap.BitmapTexture;
+import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
@@ -31,7 +35,7 @@ import org.andengine.util.modifier.ease.EaseLinear;
  * An AnimatedSprite that represents a block on the game map.
  */
 public class MapBlockSprite extends AnimatedSprite implements ClickDetector.IClickDetectorListener, HoldDetector.IHoldDetectorListener {
-
+    private PhoeniciaGame phoeniciaGame;
     protected long[] mFrameDurations = {500, 500, 500, 500};
     protected int mTileId;
     protected int startTile;
@@ -51,8 +55,9 @@ public class MapBlockSprite extends AnimatedSprite implements ClickDetector.ICli
      * @param pTiledTextureRegion region containing the tile set for this PlacedBlockSprite
      * @param pVertexBufferObjectManager the game's VertexBufferObjectManager
      */
-    public MapBlockSprite(final float pX, final float pY, final int pTileId, final ITiledTextureRegion pTiledTextureRegion, final VertexBufferObjectManager pVertexBufferObjectManager) {
+    public MapBlockSprite(final PhoeniciaGame phoeniciaGame, final float pX, final float pY, final int pTileId, final ITiledTextureRegion pTiledTextureRegion, final VertexBufferObjectManager pVertexBufferObjectManager) {
         super(pX, pY, pTiledTextureRegion, pVertexBufferObjectManager);
+        this.phoeniciaGame = phoeniciaGame;
         this.mTileId = pTileId;
         this.startTile = pTileId;
         this.setCurrentTileIndex(pTileId);
@@ -138,26 +143,24 @@ public class MapBlockSprite extends AnimatedSprite implements ClickDetector.ICli
 
     @Override
     public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-        // TODO: Calculate if touch is in the part of the bounding rectangle's corners where there is no isometric image content
-        // and don't process the event if it is
+        Bitmap maskBitmap = phoeniciaGame.spriteMasks.get(this.getTiledTextureRegion());
+        // Check click mask
+        if (maskBitmap != null) {
+            //Debug.d("Clicked block bitmap size: " + maskBitmap.getWidth() + "x" + maskBitmap.getHeight());
+            ITextureRegion maskRegion = this.getTiledTextureRegion().getTextureRegion(3);
+            float texturex = maskRegion.getTextureX();
+            float texturey = maskRegion.getTextureY() + maskRegion.getHeight();
+            //Debug.d("Clicked block bitmap region: " + maskRegion.getWidth() + "x" + maskRegion.getHeight() + " at " + texturex + "x" + texturey);
+            int maskPixel = maskBitmap.getPixel((int) (texturex + pTouchAreaLocalX), (int) (texturey - pTouchAreaLocalY)) << 32;
+            //Debug.d("Clicked block pixel at " + (texturex + pTouchAreaLocalX) + "x" + (texturey - pTouchAreaLocalY) + ": " + maskPixel);
+            if (maskPixel == 0) {
+                // Transparent region clicked
+                return false;
+            }
+        }
 
-        // Transform touch location to bottom-left quadrant
-        float px = pTouchAreaLocalX;
-        if (px > (this.getWidth()/2)) {
-            px = this.getWidth() - pTouchAreaLocalX;
-        }
-        float py = pTouchAreaLocalY;
-        if (py > (this.getHeight()/2)) {
-            py = this.getHeight() - pTouchAreaLocalY;
-        }
-        float dy = py / (this.getHeight()/2);
-        float dx = (1-dy) * (this.getWidth()/2);
-
-        if (px > dx) {
-            boolean handled = this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
-            return this.holdDetector.onManagedTouchEvent(pSceneTouchEvent) || handled;
-        }
-        return false;
+        boolean handled = this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
+        return this.holdDetector.onManagedTouchEvent(pSceneTouchEvent) || handled;
     }
 
     /**

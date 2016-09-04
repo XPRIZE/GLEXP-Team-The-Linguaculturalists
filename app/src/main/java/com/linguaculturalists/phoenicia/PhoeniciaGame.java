@@ -1,5 +1,6 @@
 package com.linguaculturalists.phoenicia;
 
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.view.MotionEvent;
@@ -23,6 +24,7 @@ import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.TextureOptions;
+import org.andengine.opengl.texture.atlas.bitmap.source.AssetBitmapTextureAtlasSource;
 import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.texture.region.TextureRegion;
@@ -158,6 +160,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public Map<Decoration, ITiledTextureRegion> decorationSprites; /**< Tile regions depicting session sprites */
     public Map<Decoration, ITiledTextureRegion> decorationBlocks; /**< Tile regions depicting session blocks */
 
+    public Map<ITiledTextureRegion, Bitmap> spriteMasks; /**< Click mask bitmap for block sprites */
+
     public Sprite[][] placedSprites; /**< active map tiles arranged according to the ISO map grid */
     public String[][] mapRestrictions; /**< map tile class types arranged according to the ISO map grid */
     public Map<Integer, String> mapTileClass;
@@ -210,6 +214,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.wordTextures = new HashMap<Word, AssetBitmapTexture>();
         this.wordSprites = new HashMap<Word, ITiledTextureRegion>();
         this.wordBlocks = new HashMap<Word, ITiledTextureRegion>();
+        this.spriteMasks = new HashMap<ITiledTextureRegion, Bitmap>();
 
         this.gameTextures = new HashMap<Game, AssetBitmapTexture>();
         this.gameSprites = new HashMap<Game, ITiledTextureRegion>();
@@ -263,8 +268,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                         MotionEvent motion = pSceneTouchEvent.getMotionEvent();
                         if (motion.getHistorySize() > 0) {
                             for (int i = 1, n = motion.getHistorySize(); i < n; i++) {
-                                float calcX = motion.getHistoricalX(i) -  motion.getHistoricalX(i - 1);
-                                float calcY = motion.getHistoricalY(i) -  motion.getHistoricalY(i - 1);
+                                float calcX = motion.getHistoricalX(i) - motion.getHistoricalX(i - 1);
+                                float calcY = motion.getHistoricalY(i) - motion.getHistoricalY(i - 1);
                                 final float zoom = camera.getZoomFactor() + 1.0f;
 
                                 camera.setCenter(camera.getCenterX() - (calcX / zoom), camera.getCenterY() + (calcY / zoom));
@@ -424,16 +429,19 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             inventoryTexture.load();
             int[] inventoryTileSize = GameTextures.calculateTileSize(locale.inventoryBlock.columns, locale.inventoryBlock.rows, locale.inventoryBlock.height);
             inventoryTiles = TextureRegionFactory.extractTiledFromTexture(inventoryTexture, 0, 0, inventoryTileSize[0] * 4, inventoryTileSize[1] * 5, 4, 5);
+            this.spriteMasks.put(inventoryTiles, AssetBitmapTextureAtlasSource.create(PhoeniciaContext.assetManager, this.locale.inventoryBlock.block_texture).onLoadBitmap(Bitmap.Config.ALPHA_8));
 
             marketTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.marketBlock.block_texture);
             marketTexture.load();
             int[] marketTileSize = GameTextures.calculateTileSize(locale.marketBlock.columns, locale.marketBlock.rows, locale.marketBlock.height);
             marketTiles = TextureRegionFactory.extractTiledFromTexture(marketTexture, 0, 0, marketTileSize[0] * 4, marketTileSize[1] * 5, 4, 5);
+            this.spriteMasks.put(marketTiles, AssetBitmapTextureAtlasSource.create(PhoeniciaContext.assetManager, this.locale.marketBlock.block_texture).onLoadBitmap(Bitmap.Config.ALPHA_8));
 
             workshopTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.workshopBlock.block_texture);
             workshopTexture.load();
             int[] workshopTileSize = GameTextures.calculateTileSize(locale.workshopBlock.columns, locale.workshopBlock.rows, locale.workshopBlock.height);
             workshopTiles = TextureRegionFactory.extractTiledFromTexture(workshopTexture, 0, 0, workshopTileSize[0] * 4, workshopTileSize[1] * 5, 4, 5);
+            this.spriteMasks.put(workshopTiles, AssetBitmapTextureAtlasSource.create(PhoeniciaContext.assetManager, this.locale.workshopBlock.block_texture).onLoadBitmap(Bitmap.Config.ALPHA_8));
 
         } catch (final IOException e) {
             e.printStackTrace();
@@ -472,7 +480,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 final AssetBitmapTexture letterBlockTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, letter.block_texture);
                 letterBlockTexture.load();
                 int[] letterTileSize = GameTextures.calculateTileSize(letter.columns, letter.rows, letter.height);
-                this.letterBlocks.put(letter, TextureRegionFactory.extractTiledFromTexture(letterBlockTexture, 0, 0, letterTileSize[0] * LETTER_TEXTURE_COLS, letterTileSize[1] * LETTER_TEXTURE_ROWS, LETTER_TEXTURE_COLS, LETTER_TEXTURE_ROWS));
+                ITiledTextureRegion letterTiles = TextureRegionFactory.extractTiledFromTexture(letterBlockTexture, 0, 0, letterTileSize[0] * LETTER_TEXTURE_COLS, letterTileSize[1] * LETTER_TEXTURE_ROWS, LETTER_TEXTURE_COLS, LETTER_TEXTURE_ROWS);
+                this.letterBlocks.put(letter, letterTiles);
+                this.spriteMasks.put(letterTiles, AssetBitmapTextureAtlasSource.create(PhoeniciaContext.assetManager, letter.block_texture).onLoadBitmap(Bitmap.Config.ALPHA_8));
             }
 
         } catch (final IOException e)
@@ -511,8 +521,13 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 final AssetBitmapTexture wordTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, word.block_texture);
                 wordTexture.load();
                 int[] wordTileSize = GameTextures.calculateTileSize(word.columns, word.rows, word.height);
-                Debug.d("Word "+word.name+" has size "+word.columns+"x"+word.rows+" and sprite size "+wordTileSize[0]+"x"+wordTileSize[1]);
-                this.wordBlocks.put(word, TextureRegionFactory.extractTiledFromTexture(wordTexture, 0, 0, wordTileSize[0] * WORD_TEXTURE_COLS, wordTileSize[1] * WORD_TEXTURE_ROWS, WORD_TEXTURE_COLS, WORD_TEXTURE_ROWS));
+                Debug.d("Word " + word.name + " has size " + word.columns + "x" + word.rows + " and sprite size " + wordTileSize[0] + "x" + wordTileSize[1]);
+                ITiledTextureRegion blockTextureRegion = TextureRegionFactory.extractTiledFromTexture(wordTexture, 0, 0, wordTileSize[0] * WORD_TEXTURE_COLS, wordTileSize[1] * WORD_TEXTURE_ROWS, WORD_TEXTURE_COLS, WORD_TEXTURE_ROWS);
+                this.wordBlocks.put(word, blockTextureRegion);
+
+                // Get click mask
+                final AssetBitmapTextureAtlasSource wordSpriteTextureSource = AssetBitmapTextureAtlasSource.create(PhoeniciaContext.assetManager, word.block_texture);
+                this.spriteMasks.put(blockTextureRegion, wordSpriteTextureSource.onLoadBitmap(Bitmap.Config.ALPHA_8));
             }
 
         } catch (final IOException e)
@@ -877,7 +892,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         int inventoryZ = inventoryTile.getTileZ();
 
         Debug.d("Creating Sprite for Inventory");
-        final MapBlockSprite inventorySprite = new MapBlockSprite(tilePos[0], tilePos[1], 4, inventoryTiles, PhoeniciaContext.vboManager);
+        final MapBlockSprite inventorySprite = new MapBlockSprite(this, tilePos[0], tilePos[1], 4, inventoryTiles, PhoeniciaContext.vboManager);
         inventorySprite.setZIndex(inventoryZ);
 
         scene.attachChild(inventorySprite);
@@ -917,7 +932,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         int marketZ = marketTile.getTileZ();
 
         Debug.d("Creating Sprite for market");
-        final MapBlockSprite marketSprite = new MapBlockSprite(tilePos[0], tilePos[1], 4, marketTiles, PhoeniciaContext.vboManager);
+        final MapBlockSprite marketSprite = new MapBlockSprite(this, tilePos[0], tilePos[1], 4, marketTiles, PhoeniciaContext.vboManager);
         marketSprite.setZIndex(marketZ);
 
         scene.attachChild(marketSprite);
@@ -959,7 +974,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         int workshopZ = workshopTile.getTileZ();
 
         Debug.d("Creating Sprite for workshop");
-        final MapBlockSprite workshopSprite = new MapBlockSprite(tilePos[0], tilePos[1], 4, workshopTiles, PhoeniciaContext.vboManager);
+        final MapBlockSprite workshopSprite = new MapBlockSprite(this, tilePos[0], tilePos[1], 4, workshopTiles, PhoeniciaContext.vboManager);
         workshopSprite.setZIndex(workshopZ);
 
         scene.attachChild(workshopSprite);
@@ -1126,7 +1141,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         }
 
         Debug.d("Creating LetterSprite for "+tile.letter.name+" at "+tilePos[0]+"x"+tilePos[1]);
-        final PlacedBlockSprite sprite = new PlacedBlockSprite(tilePos[0], tilePos[1], tile.letter.time, 4, letterBlocks.get(tile.letter), PhoeniciaContext.vboManager);
+        final PlacedBlockSprite sprite = new PlacedBlockSprite(this, tilePos[0], tilePos[1], tile.letter.time, 4, letterBlocks.get(tile.letter), PhoeniciaContext.vboManager);
         sprite.setZIndex(tileZ);
 
         final LetterBuilder builder = tile.getBuilder(PhoeniciaContext.context);
@@ -1219,7 +1234,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         }
 
         Debug.d("Creating WordSprite for " + tile.word.name + " at " +tilePos[0]+"x"+tilePos[1]);
-        final PlacedBlockSprite sprite = new PlacedBlockSprite(tilePos[0], tilePos[1], tile.word.construct, 4, wordBlocks.get(tile.word), PhoeniciaContext.vboManager);
+        final PlacedBlockSprite sprite = new PlacedBlockSprite(this, tilePos[0], tilePos[1], tile.word.construct, 4, wordBlocks.get(tile.word), PhoeniciaContext.vboManager);
         sprite.setZIndex(tileZ);
 
         final WordTileBuilder builder = tile.getBuilder(PhoeniciaContext.context);
@@ -1312,7 +1327,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         }
 
         Debug.d("Creating GameSprite for " + tile.game.name + " at " +tilePos[0]+"x"+tilePos[1]);
-        final PlacedBlockSprite sprite = new PlacedBlockSprite(tilePos[0], tilePos[1], tile.game.construct, 4, gameBlocks.get(tile.game), PhoeniciaContext.vboManager);
+        final PlacedBlockSprite sprite = new PlacedBlockSprite(this, tilePos[0], tilePos[1], tile.game.construct, 4, gameBlocks.get(tile.game), PhoeniciaContext.vboManager);
         sprite.setZIndex(tileZ);
 
         final GameTileBuilder builder = tile.getBuilder(PhoeniciaContext.context);
@@ -1405,7 +1420,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         }
 
         Debug.d("Creating Decoration sprite for " + tile.decoration.name + " at " + tilePos[0] + "x" + tilePos[1]);
-        final PlacedBlockSprite sprite = new PlacedBlockSprite(tilePos[0], tilePos[1], 0, 4, decorationBlocks.get(tile.decoration), PhoeniciaContext.vboManager);
+        final PlacedBlockSprite sprite = new PlacedBlockSprite(this, tilePos[0], tilePos[1], 0, 4, decorationBlocks.get(tile.decoration), PhoeniciaContext.vboManager);
         sprite.setZIndex(tileZ);
 
         scene.attachChild(sprite);
