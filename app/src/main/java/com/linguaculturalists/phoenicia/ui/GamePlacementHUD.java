@@ -112,18 +112,25 @@ public class GamePlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
                     addGameTile(currentGame, mapTile);
                 }
             });
-            if (phoeniciaGame.session.points.get() < currentGame.points) {
-                block.setEnabled(false);
-            }
             this.registerTouchArea(block);
             card.attachChild(block);
 
-            final int cost = currentGame.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getGameTileCount(currentGame));
-            final Text purchaseCost = new Text((card.getWidth()/2)+20, card.getHeight()*1/3, GameFonts.inventoryCount(), String.valueOf(cost), String.valueOf(cost).length(), PhoeniciaContext.vboManager);
-            card.attachChild(purchaseCost);
+            if (phoeniciaGame.locale.isLevelReached(currentGame.level, phoeniciaGame.current_level)) {
+                final int cost = currentGame.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getGameTileCount(currentGame));
+                final Text purchaseCost = new Text((card.getWidth()/2)+20, card.getHeight()*1/3, GameFonts.inventoryCount(), String.valueOf(cost), String.valueOf(cost).length(), PhoeniciaContext.vboManager);
+                card.attachChild(purchaseCost);
 
-            final Sprite coinIcon = new Sprite(purchaseCost.getX()-(purchaseCost.getWidth()/2)-20, purchaseCost.getY()+2, phoeniciaGame.shellTiles.getTextureRegion(GameTextures.COIN_ICON), PhoeniciaContext.vboManager);
-            card.attachChild(coinIcon);
+                final Sprite coinIcon = new Sprite(purchaseCost.getX()-(purchaseCost.getWidth()/2)-20, purchaseCost.getY()+2, phoeniciaGame.shellTiles.getTextureRegion(GameTextures.COIN_ICON), PhoeniciaContext.vboManager);
+                card.attachChild(coinIcon);
+            } else {
+                block.setEnabled(false);
+                final Text levelName = new Text((card.getWidth()/2)+20, card.getHeight()*1/3, GameFonts.inventoryCount(), currentGame.level, currentGame.level.length(), PhoeniciaContext.vboManager);
+                card.attachChild(levelName);
+
+                final Sprite levelIcon = new Sprite(levelName.getX()-(levelName.getWidth()/2)-20, levelName.getY()+2, phoeniciaGame.shellTiles.getTextureRegion(GameTextures.LEVEL_ICON), PhoeniciaContext.vboManager);
+                card.attachChild(levelIcon);
+            }
+
         }
         Debug.d("Finished loading HUD letters");
 

@@ -81,6 +81,6 @@ public class Locale {
         return this.isLevelReached(check_level, current_level);
     }
     public boolean isLevelReached(Level check_level, Level current_level) {
-        return this.levels.indexOf(check_level) >= this.levels.indexOf(current_level);
+        return this.levels.indexOf(check_level) <= this.levels.indexOf(current_level);
     }
 }

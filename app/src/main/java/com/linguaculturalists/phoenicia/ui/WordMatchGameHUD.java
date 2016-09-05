@@ -23,6 +23,7 @@ import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.modifier.ParallelEntityModifier;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.IOnSceneTouchListener;
+import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.AutoWrap;
 import org.andengine.entity.text.Text;
@@ -106,6 +107,7 @@ public class WordMatchGameHUD extends PhoeniciaHUD {
     private void pass(Word word) {
         //TODO: count success
         Debug.d("wordmatch: pass!");
+        GameSounds.play(GameSounds.COMPLETE);
         this.winnings.add(word);
         ITiledTextureRegion sprite_region = this.phoeniciaGame.wordSprites.get(word);
         Sprite winning_sprite = new Sprite(this.cardPane.getWidth()/2, this.cardPane.getHeight() - 300, sprite_region.getTextureRegion(1), PhoeniciaContext.vboManager);
@@ -120,6 +122,7 @@ public class WordMatchGameHUD extends PhoeniciaHUD {
     private void fail(Word word) {
         //TODO: count failure
         Debug.d("wordmatch: fail!");
+        GameSounds.play(GameSounds.FAILED);
         ITiledTextureRegion sprite_region = this.phoeniciaGame.wordSprites.get(word);
         Sprite missed_sprite = new Sprite(this.cardPane.getWidth()/2, this.cardPane.getHeight() - 300, sprite_region.getTextureRegion(2), PhoeniciaContext.vboManager);
         this.resultsPane.attachChild(missed_sprite);
@@ -249,9 +252,17 @@ public class WordMatchGameHUD extends PhoeniciaHUD {
             this.cardPane.attachChild(wordText);
         }
 
-        ITextureRegion sprite_region = this.phoeniciaGame.wordSprites.get(challenge_word);
-        Sprite challenge_sprite = new Sprite(this.cardPane.getWidth()/2, this.cardPane.getHeight() - 300, sprite_region, PhoeniciaContext.vboManager);
+        ITiledTextureRegion sprite_region = this.phoeniciaGame.wordSprites.get(challenge_word);
+        ButtonSprite challenge_sprite = new ButtonSprite(this.cardPane.getWidth()/2, this.cardPane.getHeight() - 300, sprite_region, PhoeniciaContext.vboManager);
+        challenge_sprite.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                phoeniciaGame.playBlockSound(challenge_word.sound);
+            }
+        });
         this.cardPane.attachChild(challenge_sprite);
+        this.registerTouchArea(challenge_sprite);
+        this.touchAreas.add(challenge_sprite);
     }
 
     /**

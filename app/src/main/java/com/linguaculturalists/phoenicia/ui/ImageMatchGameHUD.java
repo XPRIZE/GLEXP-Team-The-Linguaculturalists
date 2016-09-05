@@ -69,12 +69,13 @@ public class ImageMatchGameHUD extends PhoeniciaHUD {
         this.random_word_list = new ArrayList<Word>(level.words);
         Collections.shuffle(this.random_word_list);
 
-        Debug.d("WordMatchGame words: " + level.words.size());
+        Debug.d("ImageMatchGame level: " + level.name);
+        Debug.d("ImageMatchGame words: " + level.words.size());
 
         if (this.random_word_list.size() < this.max_rounds) {
             this.max_rounds = this.random_word_list.size();
         }
-        Debug.d("WordMatchGame rounds: "+this.max_rounds);
+        Debug.d("ImageMatchGame  rounds: "+this.max_rounds);
 
         if (this.random_word_list.size() < this.max_choices) {
             this.max_choices = this.random_word_list.size();
@@ -106,7 +107,8 @@ public class ImageMatchGameHUD extends PhoeniciaHUD {
 
     private void pass(Word word, final float wordX) {
         //TODO: count success
-        Debug.d("wordmatch: pass!");
+        Debug.d("ImageMatchGame : pass!");
+        GameSounds.play(GameSounds.COMPLETE);
         this.winnings.add(word);
         float wordY = this.cardPane.getHeight() - 150;
 
@@ -122,7 +124,8 @@ public class ImageMatchGameHUD extends PhoeniciaHUD {
 
     private void fail(Word word, final float wordX) {
         //TODO: count failure
-        Debug.d("wordmatch: fail!");
+        Debug.d("ImageMatchGame : fail!");
+        GameSounds.play(GameSounds.FAILED);
         float wordY = this.cardPane.getHeight() - 150;
         ITiledTextureRegion sprite_region = this.phoeniciaGame.wordSprites.get(word);
         Sprite missed_sprite = new Sprite(wordX, wordY, sprite_region.getTextureRegion(2), PhoeniciaContext.vboManager);

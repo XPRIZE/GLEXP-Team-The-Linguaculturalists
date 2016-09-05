@@ -305,7 +305,6 @@ public class LocaleParser extends DefaultHandler {
         newGame.type = attributes.getValue("type");
         newGame.sprite_texture = attributes.getValue("sprite");
         newGame.block_texture = attributes.getValue("block");
-        newGame.points = Integer.parseInt(attributes.getValue("points"));
         newGame.buy = Integer.parseInt(attributes.getValue("buy"));
         newGame.construct = Integer.parseInt(attributes.getValue("construct"));
         newGame.time = Integer.parseInt(attributes.getValue("time"));
@@ -342,7 +341,6 @@ public class LocaleParser extends DefaultHandler {
         newDecoration.restriction = attributes.getValue("restrict");
         newDecoration.sprite_texture = attributes.getValue("sprite");
         newDecoration.block_texture = attributes.getValue("block");
-        newDecoration.points = Integer.parseInt(attributes.getValue("points"));
         newDecoration.buy = Integer.parseInt(attributes.getValue("buy"));
         this.locale.decorations.add(newDecoration);
         this.locale.decoration_map.put(newDecoration.name, newDecoration);

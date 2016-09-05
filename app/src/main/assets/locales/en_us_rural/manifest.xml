@@ -19,20 +19,15 @@
 
     <!-- Mini-games -->
     <games>
-        <game level="6" name="Word Match"  type="wordmatch"  points="100" buy="300" construct="120" time="300" reward="1.5" sprite="locales/en_us_rural/textures/games/sprites/minigame1.png" block="locales/en_us_rural/textures/games/blocks/minigame1.png" />
-        <game level="12" name="Game Test" type="imagematch" points="100" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
-        <game level="12" name="Game Test" type="imagematch" points="100" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
-        <game level="12" name="Game Test" type="imagematch" points="100" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
-        <game level="12" name="Game Test" type="imagematch" points="100" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
-        <game level="12" name="Game Test" type="imagematch" points="100" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
-        <game level="12" name="Image Match" type="imagematch" points="500" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
+        <game level="6"  name="Word Match"  type="wordmatch"  buy="300" construct="120" time="300" reward="1.5" sprite="locales/en_us_rural/textures/games/sprites/minigame1.png" block="locales/en_us_rural/textures/games/blocks/minigame1.png" />
+        <game level="12" name="Image Match" type="imagematch" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
     </games>
 
     <!-- Decorations -->
     <decorations>
-        <decoration level="5" size="1x1" name="Lamp Post"  points="100" buy="200" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
-        <decoration level="10" size="1x1" name="Small Tree" points="300" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
-        <decoration level="20" size="2x2" name="Fountain"   points="500" buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
+        <decoration level="5"  size="1x1" name="Lamp Post"  buy="200" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
+        <decoration level="10" size="1x1" name="Small Tree" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
+        <decoration level="20" size="2x2" name="Fountain"   buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
     </decorations>
 
     <!-- Alphabet -->
@@ -289,7 +284,7 @@
                 <gather_word count="1">can</gather_word>
             </req>
         </level>
-        <level name="11" coins="400" points="840" market="2">
+        <level name="11" coins="400" points="840" market="3">
             <intro>
             </intro>
             <letters>f</letters>
@@ -303,7 +298,7 @@
                 <gather_word count="1">van</gather_word>
             </req>
         </level>
-        <level name="12" coins="400" points="890" market="2">
+        <level name="12" coins="400" points="890" market="3">
             <intro>
             </intro>
             <letters></letters>
@@ -316,7 +311,7 @@
                 <gather_word count="1">fan</gather_word>
             </req>
         </level>
-        <level name="13" coins="500" points="930" market="2">
+        <level name="13" coins="500" points="930" market="3">
             <intro>
             </intro>
             <letters></letters>
@@ -329,7 +324,7 @@
                 <gather_word count="1">pan</gather_word>
             </req>
         </level>
-        <level name="14" coins="500" points="970" market="2">
+        <level name="14" coins="500" points="970" market="3">
             <intro>
             </intro>
             <letters>j</letters>
@@ -479,7 +474,7 @@
                 <gather_word count="1">bowl</gather_word>
             </req>
         </level>
-        <level name="25" coins="700" points="1380" market="3">
+        <level name="25" coins="700" points="1380" market="4">
             <intro>
             </intro>
             <letters>u</letters>
@@ -493,7 +488,7 @@
                 <gather_word count="1">pig</gather_word>
             </req>
         </level>
-        <level name="26" coins="700" points="1410" market="3">
+        <level name="26" coins="700" points="1410" market="4">
             <intro>
             </intro>
             <letters></letters>
@@ -506,7 +501,7 @@
                 <gather_word count="1">hut</gather_word>
             </req>
         </level>
-        <level name="27" coins="700" points="1440" market="3">
+        <level name="27" coins="700" points="1440" market="4">
             <intro>
             </intro>
             <letters></letters>
@@ -519,7 +514,7 @@
                 <gather_word count="1">mud</gather_word>
             </req>
         </level>
-        <level name="28" coins="700" points="1480" market="3">
+        <level name="28" coins="700" points="1480" market="4">
             <intro>
             </intro>
             <letters>e</letters>
@@ -533,7 +528,7 @@
                 <gather_word count="1">cup</gather_word>
             </req>
         </level>
-        <level name="29" coins="800" points="1510" market="3">
+        <level name="29" coins="800" points="1510" market="4">
             <intro>
             </intro>
             <letters></letters>
@@ -546,7 +541,7 @@
                 <gather_word count="1">pen</gather_word>
             </req>
         </level>
-        <level name="30" coins="800" points="1540" market="3">
+        <level name="30" coins="800" points="1540" market="4">
             <intro>
             </intro>
             <letters></letters>
@@ -559,7 +554,7 @@
                 <gather_word count="1">tent</gather_word>
             </req>
         </level>
-        <level name="31" coins="800" points="1570" market="3">
+        <level name="31" coins="800" points="1570" market="4">
             <intro>
             </intro>
             <letters>k</letters>
@@ -573,7 +568,7 @@
                 <gather_word count="1">bed</gather_word>
             </req>
         </level>
-        <level name="32" coins="800" points="1600" market="3">
+        <level name="32" coins="800" points="1600" market="4">
             <intro>
             </intro>
             <letters></letters>
@@ -586,7 +581,7 @@
                 <gather_word count="1">milk</gather_word>
             </req>
         </level>
-        <level name="33" coins="800" points="1630" market="3">
+        <level name="33" coins="800" points="1630" market="4">
             <intro>
             </intro>
             <letters>s</letters>
@@ -600,7 +595,7 @@
                 <gather_word count="1">banana</gather_word>
             </req>
         </level>
-        <level name="34" coins="800" points="1660" market="3">
+        <level name="34" coins="800" points="1660" market="4">
             <intro>
             </intro>
             <letters></letters>
@@ -613,7 +608,7 @@
                 <gather_word count="1">pants</gather_word>
             </req>
         </level>
-        <level name="35" coins="800" points="1690" market="3">
+        <level name="35" coins="800" points="1690" market="4">
             <intro>
             </intro>
             <letters></letters>
@@ -626,7 +621,7 @@
                 <gather_word count="1">lamp</gather_word>
             </req>
         </level>
-        <level name="36" coins="900" points="1720" market="3">
+        <level name="36" coins="900" points="1720" market="4">
             <intro>
             </intro>
             <letters></letters>
@@ -639,7 +634,7 @@
                 <gather_word count="1">hammer</gather_word>
             </req>
         </level>
-        <level name="37" coins="900" points="1750" market="3">
+        <level name="37" coins="900" points="1750" market="4">
             <intro>
             </intro>
             <letters>y</letters>
@@ -653,7 +648,7 @@
                 <gather_word count="1">camera</gather_word>
             </req>
         </level>
-        <level name="38" coins="900" points="1770" market="3">
+        <level name="38" coins="900" points="1770" market="4">
             <intro>
             </intro>
             <letters></letters>
@@ -666,7 +661,7 @@
                 <gather_word count="1">yarn</gather_word>
             </req>
         </level>
-        <level name="39" coins="900" points="1800" market="3">
+        <level name="39" coins="900" points="1800" market="4">
             <intro>
             </intro>
             <letters></letters>
@@ -679,7 +674,7 @@
                 <gather_word count="1">water</gather_word>
             </req>
         </level>
-        <level name="40" coins="900" points="1830" market="3">
+        <level name="40" coins="900" points="1830" market="4">
             <intro>
             </intro>
             <letters></letters>
@@ -692,7 +687,7 @@
                 <gather_word count="1">doll</gather_word>
             </req>
         </level>
-        <level name="41" coins="900" points="1860" market="3">
+        <level name="41" coins="900" points="1860" market="4">
             <intro>
             </intro>
             <letters></letters>
@@ -705,7 +700,7 @@
                 <gather_word count="1">pencil</gather_word>
             </req>
         </level>
-        <level name="42" coins="900" points="1880" market="3">
+        <level name="42" coins="900" points="1880" market="4">
             <intro>
             </intro>
             <letters></letters>

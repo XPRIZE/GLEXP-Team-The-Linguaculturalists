@@ -13,6 +13,5 @@ public class Decoration {
     public String sprite_texture;/**< path to texture file for this decoration's sprite */
     public String block_texture;/**< path to texture file for this decoration's block */
 
-    public int points;/**< number of experience points needed to unlock this decoration */
     public int buy;/**< amount of in-game currency required to create this decoration */
 }
