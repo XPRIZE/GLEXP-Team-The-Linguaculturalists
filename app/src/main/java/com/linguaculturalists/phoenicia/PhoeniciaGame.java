@@ -474,7 +474,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 final AssetBitmapTexture letterSpriteTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, letter.sprite_texture);
                 letterSpriteTexture.load();
                 this.letterTextures.put(letter, letterSpriteTexture);
-                this.letterSprites.put(letter, TextureRegionFactory.extractTiledFromTexture(letterSpriteTexture, 0, 0, LETTER_SPRITE_WIDTH * LETTER_TEXTURE_COLS, LETTER_SPRITE_HEIGHT * LETTER_TEXTURE_ROWS, LETTER_TEXTURE_COLS, LETTER_TEXTURE_ROWS));
+                this.letterSprites.put(letter, TextureRegionFactory.extractTiledFromTexture(letterSpriteTexture, 0, 0, LETTER_SPRITE_WIDTH * LETTER_SPRITE_COLS, LETTER_SPRITE_HEIGHT * LETTER_SPRITE_ROWS, LETTER_SPRITE_COLS, LETTER_SPRITE_ROWS));
 
                 Debug.d("Loading letter block texture from " + letter.block_texture);
                 final AssetBitmapTexture letterBlockTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, letter.block_texture);

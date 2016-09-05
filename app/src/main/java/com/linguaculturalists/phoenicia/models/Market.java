@@ -111,10 +111,10 @@ public class Market {
         if (requestType < 2) { // 0-2
             Debug.d("Creating current level random request for "+available_persons.get(person_id));
             this.populateCurrentLevelRandom(request);
-        } else if (requestType < 6) { // 2-6
+        } else if (requestType < 7) { // 2-7
             Debug.d("Creating inventory reduction request for "+available_persons.get(person_id));
             this.populateInventoryReduction(request);
-        } else if (requestType < 9) { // 6-9
+        } else if (requestType < 9) { // 7-9
             Debug.d("Creating word practice request for "+available_persons.get(person_id));
             this.populateWordPractice(request);
         } else { // 9-10
@@ -141,7 +141,7 @@ public class Market {
         Filter positiveQuantity = new Filter();
         positiveQuantity.is("quantity", ">", 0);
 
-        final List<InventoryItem> inventoryItems = InventoryItem.objects(PhoeniciaContext.context).filter(this.game.session.filter).filter(positiveQuantity).orderBy("-quantity").limit(5).toList();
+        final List<InventoryItem> inventoryItems = InventoryItem.objects(PhoeniciaContext.context).filter(this.game.session.filter).filter(positiveQuantity).orderBy("#-quantity").limit(5).toList();
         int requestCoins = 0;
         int requestPoints = 0;
         List<String> usedList = new ArrayList<String>();
@@ -295,7 +295,7 @@ public class Market {
     private void populateWordPractice(final MarketRequest request) {
         int num_items = Math.round((float) Math.random() * (this.game.locale.level_map.get(this.game.current_level).marketRequests - 1)) + 1;
 
-        final List<InventoryItem> inventoryItems = InventoryItem.objects(PhoeniciaContext.context).filter(this.game.session.filter).orderBy("history").limit(10).toList();
+        final List<InventoryItem> inventoryItems = InventoryItem.objects(PhoeniciaContext.context).filter(this.game.session.filter).orderBy("#+history").limit(10).toList();
         int requestCoins = 0;
         int requestPoints = 0;
         List<String> usedList = new ArrayList<String>();

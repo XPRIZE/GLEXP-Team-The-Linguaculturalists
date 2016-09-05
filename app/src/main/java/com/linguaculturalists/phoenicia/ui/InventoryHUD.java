@@ -21,6 +21,7 @@ import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
@@ -89,11 +90,8 @@ public class InventoryHUD extends PhoeniciaHUD {
             }
             Debug.d("Adding Builder letter: " + currentLetter.name + " (tile: " + currentLetter.tile + ")");
             final int tile_id = currentLetter.sprite;
-            final ITextureRegion blockRegion = new TiledTextureRegion(game.letterTextures.get(currentLetter),
-                    game.letterSprites.get(currentLetter).getTextureRegion(0),
-                    game.letterSprites.get(currentLetter).getTextureRegion(1),
-                    game.letterSprites.get(currentLetter).getTextureRegion(2));
-            final LetterSprite block = new LetterSprite(startX + (96 * offsetX), offsetY, currentLetter, Inventory.getInstance().getCount(currentLetter.name), blockRegion, PhoeniciaContext.vboManager);
+            final ITiledTextureRegion blockRegion = game.letterSprites.get(currentLetter);
+            final LetterSprite block = new LetterSprite(startX + (96 * offsetX), offsetY, currentLetter, item.quantity.get(), blockRegion, PhoeniciaContext.vboManager);
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -101,7 +99,11 @@ public class InventoryHUD extends PhoeniciaHUD {
                     try {
                         Inventory.getInstance().subtract(currentLetter.name);
                         Bank.getInstance().credit(currentLetter.sell);
-                        block.setCount(Inventory.getInstance().getCount(currentLetter.name));
+                        final int newCount = Inventory.getInstance().getCount(currentLetter.name);
+                        block.setCount(newCount);
+                        if (newCount < 1) {
+                            block.setEnabled(false);
+                        }
                     } catch (Exception e) {
                         Debug.d("Could not sell "+currentLetter.name, e);
 
@@ -122,16 +124,13 @@ public class InventoryHUD extends PhoeniciaHUD {
             final InventoryItem item = items.get(i);
             final Word currentWord = game.locale.word_map.get(item.item_name.get());
             if (currentWord == null) {
-                Debug.d("Inventory Word: "+item.item_name.get());
+                Debug.d("Inventory letter: "+item.item_name.get());
                 continue;
             }
-            Debug.d("Adding Builder letter: " + currentWord.name + " (tile: " + currentWord.tile + ")");
+            Debug.d("Adding Builder word: " + currentWord.name + " (tile: " + currentWord.tile + ")");
             final int tile_id = currentWord.sprite;
-            final ITextureRegion blockRegion = new TiledTextureRegion(game.wordTextures.get(currentWord),
-                    game.wordSprites.get(currentWord).getTextureRegion(0),
-                    game.wordSprites.get(currentWord).getTextureRegion(1),
-                    game.wordSprites.get(currentWord).getTextureRegion(2));
-            final WordSprite block = new WordSprite(startX + (96 * offsetX), offsetY, currentWord, Inventory.getInstance().getCount(currentWord.name), blockRegion, PhoeniciaContext.vboManager);
+            final ITiledTextureRegion blockRegion = game.wordSprites.get(currentWord);
+            final WordSprite block = new WordSprite(startX + (96 * offsetX), offsetY, currentWord, item.quantity.get(), blockRegion, PhoeniciaContext.vboManager);
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -139,7 +138,11 @@ public class InventoryHUD extends PhoeniciaHUD {
                     try {
                         Inventory.getInstance().subtract(currentWord.name);
                         Bank.getInstance().credit(currentWord.sell);
-                        block.setCount(Inventory.getInstance().getCount(currentWord.name));
+                        final int newCount = Inventory.getInstance().getCount(currentWord.name);
+                        block.setCount(newCount);
+                        if (newCount < 1) {
+                            block.setEnabled(false);
+                        }
                     } catch (Exception e) {
                         Debug.d("Could not sell "+currentWord.name, e);
 

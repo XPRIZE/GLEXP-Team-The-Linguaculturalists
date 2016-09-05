@@ -8,6 +8,7 @@ import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
@@ -32,7 +33,7 @@ public class WordSprite extends ButtonSprite {
      * @param region the ITextureRegion containing the tiles for this letter
      * @param vbo the game's VertexBufferObjectManager
      */
-    public WordSprite(float pX, float pY, Word word, int count, ITextureRegion region, VertexBufferObjectManager vbo) {
+    public WordSprite(float pX, float pY, Word word, int count, ITiledTextureRegion region, VertexBufferObjectManager vbo) {
         this(pX, pY, word, count, 0, region, vbo);
     }
     /**
@@ -45,7 +46,7 @@ public class WordSprite extends ButtonSprite {
      * @param region the ITextureRegion containing the tiles for this letter
      * @param vbo the game's VertexBufferObjectManager
      */
-    public WordSprite(float pX, float pY, Word word, int count, int needed, ITextureRegion region, VertexBufferObjectManager vbo) {
+    public WordSprite(float pX, float pY, Word word, int count, int needed, ITiledTextureRegion region, VertexBufferObjectManager vbo) {
         super(pX, pY, region, vbo);
         this.word = word;
         this.count = count;

@@ -58,7 +58,7 @@ public class Inventory {
     public List<InventoryItem> items() {
         Filter positiveQuantity = new Filter();
         positiveQuantity.is("quantity", ">", 0);
-        List<InventoryItem> items = InventoryItem.objects(PhoeniciaContext.context).filter(this.session.filter).filter(positiveQuantity).orderBy("-quantity").toList();
+        List<InventoryItem> items = InventoryItem.objects(PhoeniciaContext.context).filter(this.session.filter).filter(positiveQuantity).orderBy("#-quantity").toList();
         return items;
     }
 

@@ -37,7 +37,7 @@ public class LetterSprite extends ButtonSprite {
      * @param region the ITextureRegion containing the tiles for this letter
      * @param vbo the game's VertexBufferObjectManager
      */
-    public LetterSprite(float pX, float pY, Letter letter, int count, ITextureRegion region, VertexBufferObjectManager vbo) {
+    public LetterSprite(float pX, float pY, Letter letter, int count, ITiledTextureRegion region, VertexBufferObjectManager vbo) {
         this(pX, pY, letter, count, 0, region, vbo);
     }
 
@@ -51,7 +51,7 @@ public class LetterSprite extends ButtonSprite {
      * @param region the ITextureRegion containing the tiles for this letter
      * @param vbo the game's VertexBufferObjectManager
      */
-    public LetterSprite(float pX, float pY, Letter letter, int count, int needed, ITextureRegion region, VertexBufferObjectManager vbo) {
+    public LetterSprite(float pX, float pY, Letter letter, int count, int needed, ITiledTextureRegion region, VertexBufferObjectManager vbo) {
         super(pX, pY, region, vbo);
         this.letter = letter;
         this.count = count;

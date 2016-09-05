@@ -54,9 +54,9 @@ public class OrderBy {
 				mOrderBy = " ";
 			}
 			if(col.startsWith("#")) {
-				if(col.startsWith("-")) {
+				if(col.startsWith("#-")) {
 					mOrderBy += "CAST(" +col.substring(2) + " AS INTEGER) DESC";
-				} else if(col.startsWith("+")) {
+				} else if(col.startsWith("#+")) {
 					mOrderBy += "CAST(" +col.substring(2) + " AS INTEGER) ASC";
 				} else {
 					mOrderBy += "CAST(" +col.substring(1)  + " AS INTEGER) ASC";
