@@ -36,6 +36,7 @@ import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,8 @@ public class MarketHUD extends PhoeniciaHUD {
 
     private Map<MarketRequest, Sprite> requestPerson;
     private Map<MarketRequest, Text> requestName;
+
+    private List<Entity> touchAreas;
     /**
      * A HUD used to display a list of Marketplace requests and facilitate those sales
      * @param game Reference to the current PhoeniciaGame this HUD is running in
@@ -62,6 +65,7 @@ public class MarketHUD extends PhoeniciaHUD {
         this.game = game;
         this.requestPerson = new HashMap<MarketRequest, Sprite>();
         this.requestName = new HashMap<MarketRequest, Text>();
+        this.touchAreas = new ArrayList<Entity>();
 
         // Close the HUD if the user clicks outside the whiteRect
         this.clickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
@@ -142,6 +146,9 @@ public class MarketHUD extends PhoeniciaHUD {
      */
     private void populateRequestItems(final MarketRequest request) {
         this.requestItemsPane.detachChildren();
+        for (Entity touchArea : this.touchAreas) {
+            this.unregisterTouchArea(touchArea);
+        }
         final int columns = 3;
         float startX = this.requestItemsPane.getWidth() / 2 - (columns * 32) - 16;
         int offsetX = 0;
@@ -165,6 +172,7 @@ public class MarketHUD extends PhoeniciaHUD {
                 });
                 this.requestItemsPane.attachChild(requestItemSprite);
                 this.registerTouchArea(requestItemSprite);
+                this.touchAreas.add(requestItemSprite);
             } else if (currentWord != null) {
                 Debug.d("Request Word: " + item.item_name.get());
                 WordSprite requestItemSprite = new WordSprite(startX, startY, currentWord, Inventory.getInstance().getCount(item.item_name.get()), item.quantity.get(), game.wordSprites.get(currentWord).getTextureRegion(0), PhoeniciaContext.vboManager);
@@ -176,6 +184,7 @@ public class MarketHUD extends PhoeniciaHUD {
                 });
                 this.requestItemsPane.attachChild(requestItemSprite);
                 this.registerTouchArea(requestItemSprite);
+                this.touchAreas.add(requestItemSprite);
             } else {
                 continue;
             }
@@ -205,6 +214,7 @@ public class MarketHUD extends PhoeniciaHUD {
         });
         this.requestItemsPane.attachChild(sellButton);
         this.registerTouchArea(sellButton);
+        this.touchAreas.add(sellButton);
 
         Button cancelButton = new Button(this.requestItemsPane.getWidth() / 2, 32, this.requestItemsPane.getWidth(), 64, "Decline", new Color(0.80f, 0.04f, 0.04f), PhoeniciaContext.vboManager, new Button.OnClickListener() {
             @Override
@@ -228,6 +238,7 @@ public class MarketHUD extends PhoeniciaHUD {
         });
         this.requestItemsPane.attachChild(cancelButton);
         this.registerTouchArea(cancelButton);
+        this.touchAreas.add(cancelButton);
     }
 
     /**

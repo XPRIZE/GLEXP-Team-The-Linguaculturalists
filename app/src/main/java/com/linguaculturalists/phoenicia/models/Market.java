@@ -108,10 +108,10 @@ public class Market {
         request.save(PhoeniciaContext.context);
 
         double requestType = Math.random() * 10;
-        if (requestType < 3) { // 0-3
+        if (requestType < 2) { // 0-2
             Debug.d("Creating current level random request for "+available_persons.get(person_id));
             this.populateCurrentLevelRandom(request);
-        } else if (requestType < 6) { // 3-6
+        } else if (requestType < 6) { // 2-6
             Debug.d("Creating inventory reduction request for "+available_persons.get(person_id));
             this.populateInventoryReduction(request);
         } else if (requestType < 9) { // 6-9
@@ -160,7 +160,7 @@ public class Market {
                 usedList.add(item_name);
 
                 requestLetter.item_name.set(item_name);
-                requestLetter.quantity.set(Math.round((float) Math.random() * 5)+1);
+                requestLetter.quantity.set((int)Math.round(Math.random() * 9)+1);
                 requestLetter.save(PhoeniciaContext.context);
                 requestCoins += (this.game.locale.letter_map.get(item_name).sell * requestLetter.quantity.get());
                 requestPoints += (this.game.locale.letter_map.get(item_name).points * requestLetter.quantity.get());
@@ -174,7 +174,7 @@ public class Market {
                 usedList.add(item_name);
 
                 requestWord.item_name.set(item_name);
-                requestWord.quantity.set(Math.round((float) Math.random() * 3)+1);
+                requestWord.quantity.set((int)Math.round(Math.random() * 4)+1);
                 requestWord.save(PhoeniciaContext.context);
                 requestCoins += (this.game.locale.word_map.get(item_name).sell * requestWord.quantity.get());
                 requestPoints += (this.game.locale.word_map.get(item_name).points * requestWord.quantity.get());
@@ -264,7 +264,7 @@ public class Market {
                 usedList.add(next_letters.get(randomLetter).name);
 
                 requestLetter.item_name.set(next_letters.get(randomLetter).name);
-                requestLetter.quantity.set(Math.round((float) Math.random() * 5)+1);
+                requestLetter.quantity.set(Math.round((float) Math.random() * 3)+1);
                 requestLetter.save(PhoeniciaContext.context);
                 requestCoins += (next_letters.get(randomLetter).sell * requestLetter.quantity.get());
                 requestPoints += (next_letters.get(randomLetter).points * requestLetter.quantity.get());
@@ -280,7 +280,7 @@ public class Market {
                 usedList.add(next_words.get(randomWord).name);
 
                 requestWord.item_name.set(next_words.get(randomWord).name);
-                requestWord.quantity.set(Math.round((float) Math.random() * 3)+1);
+                requestWord.quantity.set(Math.round((float) Math.random() * 2)+1);
                 requestWord.save(PhoeniciaContext.context);
                 requestCoins += (next_words.get(randomWord).sell * requestWord.quantity.get());
                 requestPoints += (next_words.get(randomWord).points * requestWord.quantity.get());
