@@ -51,7 +51,6 @@ public abstract class Builder extends Model {
         // Increment progress
         int newProgress = this.progress.get() + (int)time;
         this.progress.set(newProgress);
-        this.save(PhoeniciaContext.context);
         this.progressChanged();
 
         // Check for completeness

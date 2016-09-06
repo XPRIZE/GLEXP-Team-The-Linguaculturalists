@@ -412,7 +412,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             // Lock the camera to the map's boundaries
             TMXLayer baseLayer = this.mTMXTiledMap.getTMXLayers().get(0);
             this.camera.setBoundsEnabled(true);
-            this.camera.setBounds((-baseLayer.getWidth()/2)+32, -baseLayer.getHeight(), (baseLayer.getWidth()/2)+32, 32);
+            this.camera.setBounds((-baseLayer.getWidth() / 2) + 32, -baseLayer.getHeight(), (baseLayer.getWidth() / 2) + 32, 32);
         } catch (final TMXLoadException e) {
             Debug.e("Error loading map at " + this.locale.map_src, e);
         }
@@ -1027,7 +1027,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         if (this.music != null) {
             this.music.pause();
         }
-        session.last_timestamp.set((double)this.currentTime);
+        this.saveBuilders();
+        session.last_timestamp.set((double) this.currentTime);
         session.save(PhoeniciaContext.context);
     }
 
@@ -1036,7 +1037,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         double timediff = (double)System.currentTimeMillis() - session.last_timestamp.get();
         Debug.d("Resume after " + (timediff / 1000) + " seconds");
-        this.onUpdate((float)timediff/1000);
+        this.onUpdate((float) timediff / 1000);
 
         this.isRunning = true;
         if (this.music != null) {
@@ -1062,9 +1063,10 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.currentTime = System.currentTimeMillis();
         this.updateTime += v;
         if (this.updateTime > 1) {
-            // Copy builders set to avoid concurrency conflicts
-            final Set<Builder> currentBuilders = new HashSet(this.builders);
-            for (Builder builder : currentBuilders) {
+            // Because this.builders might be modified based on updates to other builders
+            // work from a copy of the set as it exists now
+            final Set<Builder> updateBuilders = new HashSet<Builder>(this.builders);
+            for (Builder builder : updateBuilders) {
                 if (builder.status.get() == Builder.BUILDING) {
                     builder.update(this.updateTime);
                     //builder.save(PhoeniciaContext.context);
@@ -1072,9 +1074,23 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 }
             }
             this.updateTime = 0;
+
+        }
+        // Save things every 5 minutes in case of a crash or force quit without pause
+        if (this.currentTime - session.last_timestamp.get() > (5 * 60 * 1000)) { // timestamps are in milliseconds
+            this.saveBuilders();
+            session.last_timestamp.set((double) this.currentTime);
+            session.save(PhoeniciaContext.context);
+
         }
     }
 
+    private void saveBuilders() {
+        // save status of all builders
+        for (Builder builder : builders) {
+            builder.save(PhoeniciaContext.context);
+        }
+    }
     /**
      * Add an new Builder instance to the list of builders updated every second
      * @param builder to be added
