@@ -50,7 +50,7 @@ public class LoadingScene extends Scene implements ProgressDisplay {
             AssetBitmapTexture progressbarTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, "textures/progressbar.png", TextureOptions.BILINEAR);
             progressbarTexture.load();
             progressbarTextureRegion = TextureRegionFactory.extractFromTexture(progressbarTexture);
-            progress = new ProgressBar((GameActivity.CAMERA_WIDTH) * 0.5f, (116 * scale_factor), progressbarTextureRegion, PhoeniciaContext.vboManager);
+            progress = new ProgressBar((GameActivity.CAMERA_WIDTH + 5) * 0.5f, (125 * scale_factor), progressbarTextureRegion, PhoeniciaContext.vboManager);
             progress.setScale(scale_factor);
             this.attachChild(progress);
 

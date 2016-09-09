@@ -80,6 +80,7 @@ import com.linguaculturalists.phoenicia.locale.LocaleLoader;
 import com.linguaculturalists.phoenicia.util.GameSounds;
 import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
+import com.linguaculturalists.phoenicia.util.SystemUiHider;
 import com.orm.androrm.Filter;
 
 /**

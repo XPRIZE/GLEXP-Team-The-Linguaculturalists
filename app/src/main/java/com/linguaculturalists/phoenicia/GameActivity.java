@@ -16,6 +16,7 @@ import com.linguaculturalists.phoenicia.models.WordTileBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.models.WorkshopBuilder;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
+import com.linguaculturalists.phoenicia.util.SystemUiHider;
 import com.orm.androrm.DatabaseAdapter;
 import com.orm.androrm.Model;
 
@@ -24,6 +25,7 @@ import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
+import org.andengine.engine.options.resolutionpolicy.FillResolutionPolicy;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
 import org.andengine.input.touch.controller.MultiTouchController;
@@ -40,7 +42,7 @@ import java.util.List;
 public class GameActivity extends BaseGameActivity {
 
     public static final int CAMERA_WIDTH = 1280;
-    public static final int CAMERA_HEIGHT = 750;
+    public static final int CAMERA_HEIGHT = 900;
 
     public ZoomCamera main_camera = new ZoomCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
     private PhoeniciaGame game;
@@ -48,7 +50,7 @@ public class GameActivity extends BaseGameActivity {
 
     @Override
     public EngineOptions onCreateEngineOptions() {
-        EngineOptions engineOptions = new EngineOptions(true, ScreenOrientation.LANDSCAPE_FIXED,
+        EngineOptions engineOptions = new EngineOptions(true, ScreenOrientation.LANDSCAPE_SENSOR,
                 new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), main_camera);
         engineOptions.getAudioOptions().setNeedsSound(true);
         engineOptions.getAudioOptions().setNeedsMusic(true);
