@@ -9,5 +9,10 @@
 /screenshots
 /deps
 /app/doc
+/pixelc
 *.apk
 *.jks
+/blog
+/dcsummit
+/tools/*.xml
+/tools/*.txt
