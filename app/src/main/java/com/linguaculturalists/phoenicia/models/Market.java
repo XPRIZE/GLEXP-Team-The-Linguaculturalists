@@ -260,12 +260,12 @@ public class Market {
                 requestLetter.request.set(request);
                 int randomLetter = Math.round((float) Math.random() * (next_letters.size() - 1));
 
-                if (usedList.contains(next_letters.get(randomLetter).name)) continue;
-                usedList.add(next_letters.get(randomLetter).name);
-
                 requestLetter.item_name.set(next_letters.get(randomLetter).name);
                 requestLetter.quantity.set(Math.round((float) Math.random() * 3)+1);
                 requestLetter.save(PhoeniciaContext.context);
+
+                next_letters.remove(requestLetter);
+
                 requestCoins += (next_letters.get(randomLetter).sell * requestLetter.quantity.get());
                 requestPoints += (next_letters.get(randomLetter).points * requestLetter.quantity.get());
                 i += 1;
@@ -276,16 +276,17 @@ public class Market {
                 requestWord.request.set(request);
                 int randomWord = Math.round((float) Math.random() * (next_words.size() - 1));
 
-                if (usedList.contains(next_words.get(randomWord).name)) continue;
-                usedList.add(next_words.get(randomWord).name);
-
                 requestWord.item_name.set(next_words.get(randomWord).name);
                 requestWord.quantity.set(Math.round((float) Math.random() * 2)+1);
                 requestWord.save(PhoeniciaContext.context);
+
+                next_words.remove(requestWord);
+
                 requestCoins += (next_words.get(randomWord).sell * requestWord.quantity.get());
                 requestPoints += (next_words.get(randomWord).points * requestWord.quantity.get());
                 i += 1;
             }
+            if ( next_letters.size() < 1 &&  next_words.size() < 1) break;
 
         }
         request.coins.set(requestCoins);
