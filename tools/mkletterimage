@@ -1,40 +1,88 @@
 #!/bin/sh
 
+basedir=`dirname $0`
+
+TEXT_DIRECTION="left-to-right"
+DRAW_OPTS="kerning 0"
+FONT="Ubuntu-Bold"
+
+if [ "$1" = "-rtl" ] ; then
+    shift
+    TEXT_DIRECTION="right-to-left"
+    DRAW_OPTS="direction right-to-left kerning 0"
+    FONT="FreeSerif"
+    #echo "TEXT_DIRECTION=${TEXT_DIRECTION}"
+fi
+
+if [ "$1" = "-d" ] ; then
+    shift
+    outdir=$1
+    #echo "OUTDIR=${outdir}"
+    shift
+else
+    outdir=`pwd`
+fi
+
 lower=$1
 upper=`echo $lower | tr '[:lower:]' '[:upper:]'`
-block=./blocks/${lower}.png
+
+filename=$2
+if [ "$filename" = "" ] ; then
+    filename=$lower
+    echo "FILENAME=${filename}"
+fi
+
+mkdir -p ${outdir}/textures/letters/blocks
+mkdir -p ${outdir}/textures/letters/sprites
+block=${outdir}/textures/letters/blocks/${filename}.png
+sprite=${outdir}/textures/letters/sprites/${filename}.png
 
 echo "Creating ${block}"
-cp letter_template.png ${block}
+cp ${basedir}/letter_template.png ${block}
 
 length=`echo ${lower} | wc -m`
-offsetx=9
-x1=`echo 32-${offsetx}|bc`
-x2=`echo 96-${offsetx}|bc`
-x3=`echo 160-${offsetx}|bc`
-x4=`echo 224-${offsetx}|bc`
+offsetx=3
+if [ "$TEXT_DIRECTION" = "left-to-right" ] ; then
+    x1=`echo 28-${offsetx}|bc`
+    x2=`echo ${x1}+64|bc`
+    x3=`echo ${x1}+128|bc`
+    x4=`echo ${x1}+192|bc`
+else
+    x1=`echo 16+${offsetx}|bc`
+    x2=`echo ${x1}+64|bc`
+    x3=`echo ${x1}+128|bc`
+    x4=`echo ${x1}+192|bc`
+fi
 
-convert ${block} -font Ubuntu -pointsize 48 -fill yellow -draw "text 17,48 '${upper}'" ${block}
-convert ${block} -font Ubuntu -pointsize 48 -fill red    -draw "text 81,48 '${upper}'" ${block}
-convert ${block} -font Ubuntu -pointsize 48 -fill green  -draw "text 145,48 '${upper}'" ${block}
-convert ${block} -font Ubuntu -pointsize 48 -fill gray   -draw "text 209,48 '${upper}'" ${block}
+CONVERT_OPTS="-font ${FONT}"
 
-convert ${block} -font Ubuntu -pointsize 12 -fill yellow -draw "text 28,115 '${lower}'" ${block}
-convert ${block} -font Ubuntu -pointsize 12 -fill yellow -draw "text 92,120 '${lower}'" ${block}
-convert ${block} -font Ubuntu -pointsize 12 -fill yellow -draw "text 156,115 '${lower}'" ${block}
-convert ${block} -font Ubuntu -pointsize 12 -fill yellow -draw "text 220,120 '${lower}'" ${block}
+convert ${block} ${CONVERT_OPTS} -pointsize 48 -fill yellow -draw "${DRAW_OPTS} text 17,48 '${upper}'" ${block}
+convert ${block} ${CONVERT_OPTS} -pointsize 48 -fill red    -draw "${DRAW_OPTS} text 81,48 '${upper}'" ${block}
+convert ${block} ${CONVERT_OPTS} -pointsize 48 -fill green  -draw "${DRAW_OPTS} text 145,48 '${upper}'" ${block}
+convert ${block} ${CONVERT_OPTS} -pointsize 48 -fill gray   -draw "${DRAW_OPTS} text 209,48 '${upper}'" ${block}
+                                                                   
+convert ${block} ${CONVERT_OPTS} -pointsize 12 -fill yellow -draw "${DRAW_OPTS} text 28,115 '${lower}'" ${block}
+convert ${block} ${CONVERT_OPTS} -pointsize 12 -fill yellow -draw "${DRAW_OPTS} text 92,120 '${lower}'" ${block}
+convert ${block} ${CONVERT_OPTS} -pointsize 12 -fill yellow -draw "${DRAW_OPTS} text 156,115 '${lower}'" ${block}
+convert ${block} ${CONVERT_OPTS} -pointsize 12 -fill yellow -draw "${DRAW_OPTS} text 220,120 '${lower}'" ${block}
+                                                                   
+convert ${block} ${CONVERT_OPTS} -pointsize 18 -fill yellow -draw "${DRAW_OPTS} text ${x1},165 '${lower}'" ${block}
+convert ${block} ${CONVERT_OPTS} -pointsize 18 -fill yellow -draw "${DRAW_OPTS} text ${x2},160 '${lower}'" ${block}
+convert ${block} ${CONVERT_OPTS} -pointsize 18 -fill yellow -draw "${DRAW_OPTS} text ${x3},165 '${lower}'" ${block}
+convert ${block} ${CONVERT_OPTS} -pointsize 18 -fill yellow -draw "${DRAW_OPTS} text ${x4},160 '${lower}'" ${block}
+                                                                   
+convert ${block} ${CONVERT_OPTS} -pointsize 24 -fill yellow -draw "${DRAW_OPTS} text ${x1},240 '${upper}'" ${block}
+convert ${block} ${CONVERT_OPTS} -pointsize 24 -fill yellow -draw "${DRAW_OPTS} text ${x2},235 '${upper}'" ${block}
+convert ${block} ${CONVERT_OPTS} -pointsize 24 -fill yellow -draw "${DRAW_OPTS} text ${x3},240 '${upper}'" ${block}
+convert ${block} ${CONVERT_OPTS} -pointsize 24 -fill yellow -draw "${DRAW_OPTS} text ${x4},235 '${upper}'" ${block}
+                                                                   
+convert ${block} ${CONVERT_OPTS} -pointsize 32 -fill yellow -draw "${DRAW_OPTS} text ${x1},297 '${upper}'" ${block}
+convert ${block} ${CONVERT_OPTS} -pointsize 32 -fill yellow -draw "${DRAW_OPTS} text ${x2},292 '${upper}'" ${block}
+convert ${block} ${CONVERT_OPTS} -pointsize 32 -fill yellow -draw "${DRAW_OPTS} text ${x3},297 '${upper}'" ${block}
+convert ${block} ${CONVERT_OPTS} -pointsize 32 -fill yellow -draw "${DRAW_OPTS} text ${x4},292 '${upper}'" ${block}
 
-convert ${block} -font Ubuntu -pointsize 18 -fill yellow -draw "text ${x1},165 '${lower}'" ${block}
-convert ${block} -font Ubuntu -pointsize 18 -fill yellow -draw "text ${x2},160 '${lower}'" ${block}
-convert ${block} -font Ubuntu -pointsize 18 -fill yellow -draw "text ${x3},165 '${lower}'" ${block}
-convert ${block} -font Ubuntu -pointsize 18 -fill yellow -draw "text ${x4},160 '${lower}'" ${block}
-
-convert ${block} -font Ubuntu -pointsize 24 -fill yellow -draw "text ${x1},240 '${upper}'" ${block}
-convert ${block} -font Ubuntu -pointsize 24 -fill yellow -draw "text ${x2},235 '${upper}'" ${block}
-convert ${block} -font Ubuntu -pointsize 24 -fill yellow -draw "text ${x3},240 '${upper}'" ${block}
-convert ${block} -font Ubuntu -pointsize 24 -fill yellow -draw "text ${x4},235 '${upper}'" ${block}
-
-convert ${block} -font Ubuntu -pointsize 32 -fill yellow -draw "text ${x1},297 '${upper}'" ${block}
-convert ${block} -font Ubuntu -pointsize 32 -fill yellow -draw "text ${x2},292 '${upper}'" ${block}
-convert ${block} -font Ubuntu -pointsize 32 -fill yellow -draw "text ${x3},297 '${upper}'" ${block}
-convert ${block} -font Ubuntu -pointsize 32 -fill yellow -draw "text ${x4},292 '${upper}'" ${block}
+echo "Creating ${sprite}"
+convert -size 256x64 xc:transparent ${sprite}
+convert ${sprite} ${CONVERT_OPTS} -pointsize 48 -fill yellow -draw "${DRAW_OPTS} text ${x1},52 '${upper}'" ${sprite}
+convert ${sprite} ${CONVERT_OPTS} -pointsize 48 -fill yellow -stroke red -draw "${DRAW_OPTS} text ${x2},52 '${upper}'" ${sprite}
+convert ${sprite} ${CONVERT_OPTS} -pointsize 48 -fill grey -draw "${DRAW_OPTS} text ${x3},52 '${upper}'" ${sprite}

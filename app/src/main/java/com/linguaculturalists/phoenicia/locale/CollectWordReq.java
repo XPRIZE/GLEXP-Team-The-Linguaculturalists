@@ -18,7 +18,8 @@ public class CollectWordReq implements Requirement {
     private int count;
 
     public CollectWordReq() {
-        this(new ArrayList<Word>(), 0);
+        this.words = new ArrayList<Word>();
+        this.count = 0;
     }
 
     /**
