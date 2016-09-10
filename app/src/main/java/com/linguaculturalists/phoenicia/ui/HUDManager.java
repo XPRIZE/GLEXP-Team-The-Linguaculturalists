@@ -3,6 +3,8 @@ package com.linguaculturalists.phoenicia.ui;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
+import com.linguaculturalists.phoenicia.locale.tour.Stop;
+import com.linguaculturalists.phoenicia.locale.tour.Tour;
 import com.linguaculturalists.phoenicia.models.DefaultTile;
 import com.linguaculturalists.phoenicia.models.GameTile;
 import com.linguaculturalists.phoenicia.models.WordTile;
@@ -66,6 +68,9 @@ public class HUDManager extends HUD {
         this.push(new NewLevelHUD(this.game, level));
     }
 
+    public void showTour(final Stop stop) {
+        this.push(new TourHUD(this.game, stop));
+    }
     /**
      * Create a new instance of the inter-level introduction HUD and display it
      * @param level
@@ -218,8 +223,8 @@ public class HUDManager extends HUD {
         }
         newHUD.open();
         this.setChildScene(newHUD);
-        newHUD.show();
         this.currentHUD = newHUD;
+        newHUD.show();
     }
 
     /**

@@ -20,6 +20,7 @@ import com.linguaculturalists.phoenicia.util.SystemUiHider;
 import com.orm.androrm.DatabaseAdapter;
 import com.orm.androrm.Model;
 
+import org.andengine.engine.camera.SmoothCamera;
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
@@ -44,7 +45,7 @@ public class GameActivity extends BaseGameActivity {
     public static final int CAMERA_WIDTH = 1280;
     public static final int CAMERA_HEIGHT = 900;
 
-    public ZoomCamera main_camera = new ZoomCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
+    public SmoothCamera main_camera = new SmoothCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT, 2000f, 2000f, 10f);
     private PhoeniciaGame game;
     private SplashScene splash;
 

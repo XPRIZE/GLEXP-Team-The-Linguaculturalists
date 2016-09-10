@@ -9,6 +9,7 @@ import org.andengine.audio.music.Music;
 import org.andengine.audio.music.MusicFactory;
 import org.andengine.audio.sound.Sound;
 import org.andengine.audio.sound.SoundFactory;
+import org.andengine.engine.camera.SmoothCamera;
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.entity.scene.IOnSceneTouchListener;
@@ -115,7 +116,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public static final int DECORATION_TEXTURE_ROWS = 2;
     public Locale locale; /**< the locale used by the game session */
     public Scene scene;
-    public ZoomCamera camera;
+    public SmoothCamera camera;
     private float startCenterX;
     private float startCenterY;
     public GameActivity activity;
@@ -187,7 +188,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public String current_level = ""; /**< The current level the player has reached */
     private List<LevelChangeListener> levelListeners;
 
-    public PhoeniciaGame(GameActivity activity, final ZoomCamera camera) {
+    public PhoeniciaGame(GameActivity activity, final SmoothCamera camera) {
         FontFactory.setAssetBasePath("fonts/");
 
         this.activity = activity;
@@ -237,7 +238,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             public void onPinchZoom(final PinchZoomDetector pPinchZoomDetector, final TouchEvent pTouchEvent, final float pZoomFactor) {
                 final float newZoomFactor = mPinchZoomStartedCameraZoomFactor * pZoomFactor;
                 if (newZoomFactor >= minZoomFactor && newZoomFactor <= maxZoomFactor) {
-                    camera.setZoomFactor(newZoomFactor);
+                    camera.setZoomFactorDirect(newZoomFactor);
                 }
             }
 
@@ -273,7 +274,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                                 float calcY = motion.getHistoricalY(i) - motion.getHistoricalY(i - 1);
                                 final float zoom = camera.getZoomFactor() + 1.0f;
 
-                                camera.setCenter(camera.getCenterX() - (calcX / zoom), camera.getCenterY() + (calcY / zoom));
+                                camera.setCenterDirect(camera.getCenterX() - (calcX / zoom), camera.getCenterY() + (calcY / zoom));
                             }
                         }
                         return true;
@@ -347,6 +348,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         } catch (Exception e) {
             Debug.e("Failed to load background music asset: "+locale.music_src);
         }
+
+        this.locale.tour.init(this);
 
         progress.setProgress(0.3f);
         this.loadLocaleMap();
@@ -908,6 +911,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         scene.registerTouchArea(inventorySprite);
 
         inventoryDefaultTile.setSprite(inventorySprite);
+        this.locale.tour.inventory.setFocus(inventorySprite);
     }
 
     private void createMarketTile() {
@@ -998,8 +1002,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      * Start playing the game
      */
     public void start() {
-        this.camera.setCenter(this.startCenterX, this.startCenterY);
-        this.camera.setZoomFactor(2.0f);
+        this.camera.setCenterDirect(this.startCenterX, this.startCenterY);
+        this.camera.setZoomFactorDirect(2.0f);
         this.camera.setHUD(this.hudManager);
         this.hudManager.showDefault();
         if (this.music != null) {

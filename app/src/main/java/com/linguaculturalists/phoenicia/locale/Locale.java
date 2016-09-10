@@ -3,6 +3,7 @@ package com.linguaculturalists.phoenicia.locale;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
+import com.linguaculturalists.phoenicia.locale.tour.Tour;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +23,8 @@ public class Locale {
     public String shell_src;
 
     public String music_src;
+
+    public Tour tour;
 
     public InventoryBlock inventoryBlock;
     public MarketBlock marketBlock;

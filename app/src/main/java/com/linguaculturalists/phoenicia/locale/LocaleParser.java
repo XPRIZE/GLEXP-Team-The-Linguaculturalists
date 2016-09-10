@@ -1,5 +1,8 @@
 package com.linguaculturalists.phoenicia.locale;
 
+import com.linguaculturalists.phoenicia.locale.tour.Tour;
+import com.linguaculturalists.phoenicia.locale.tour.stops.InventoryStop;
+
 import org.andengine.util.debug.Debug;
 import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
@@ -160,6 +163,8 @@ public class LocaleParser extends DefaultHandler {
         this.locale.name = attributes.getValue("name");
         this.locale.display_name = attributes.getValue("display_name");
         this.locale.lang = attributes.getValue("lang");
+        this.locale.tour = new Tour();
+        // TODO: parse tour text and audio from manifest
     }
 
     private void parseMap(Attributes attributes) throws SAXException {
@@ -350,6 +355,7 @@ public class LocaleParser extends DefaultHandler {
         Debug.v("Parsing locale letter");
         this.currentLetter = new Letter();
         this.currentLetter.name = attributes.getValue("name");
+        Debug.v("Parsing locale letter: "+this.currentLetter.name);
         String size = attributes.getValue("size");
         if (size == null || size == "" || size == "1x1" || size == "1x1x1") {
             this.currentLetter.columns = 1;
