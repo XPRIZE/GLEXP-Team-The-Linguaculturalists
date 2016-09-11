@@ -24,13 +24,13 @@ def print_header():
     manifest_file.write("""<?xml version="1.0" encoding="utf-8"?>
 <locale name="%(locale)s" lang="%(lang)s" display_name="%(display)s">
     <shell src="locales/common/textures/gameui.png" />
-    <map src="locales/%(locale)s/map.tmx" />
-    <music src="locales/%(locale)s/sounds/background.mp3" />
+    <map src="locales/common/map.tmx" />
+    <music src="locales/common/sounds/forest_background.mp3" />
 
     <!-- Default blocks -->
-    <inventory level="1" size="1x2" name="Barn" col="37" row="43" block="locales/%(locale)s/textures/biginventory.png" />
-    <market level="4" size="2x1" name="Market" col="42" row="40" block="locales/%(locale)s/textures/bigmarket.png" />
-    <workshop level="6" name="Workshop" col="38" row="40" block="locales/%(locale)s/textures/workshop.png" />
+    <inventory level="1" size="1x2" name="Barn" col="37" row="43" block="locales/common/textures/inventory.png" />
+    <market level="4" size="4x4x4" name="Market" col="42" row="40" block="locales/common/textures/market.png" />
+    <workshop level="6" name="Workshop" col="38" row="40" block="locales/common/textures/workshop.png" />
 
     <!-- People used in the marketplace and player's avatar -->
     <people>
@@ -42,8 +42,8 @@ def print_header():
 
     <!-- Mini-games -->
     <games>
-        <game name="Blue Tent"  type="wordmatch"  level="6" buy="300" construct="120" time="300" reward="1.5" sprite="locales/%(locale)s/textures/games/sprites/minigame1.png" block="locales/%(locale)s/textures/games/blocks/minigame1.png" />
-        <game name="Green Tent" type="imagematch" level="12" buy="500" construct="300" time="600" reward="2.0" sprite="locales/%(locale)s/textures/games/sprites/minigame2.png" block="locales/%(locale)s/textures/games/blocks/minigame2.png" />
+        <game name="Blue Tent"  type="wordmatch"  level="6" buy="300" construct="120" time="300" reward="1.5" sprite="locales/en_us_rural/textures/games/sprites/minigame1.png" block="locales/%(locale)s/textures/games/blocks/minigame1.png" />
+        <game name="Green Tent" type="imagematch" level="12" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/%(locale)s/textures/games/blocks/minigame2.png" />
     </games>
 
     <!-- Decorations -->
