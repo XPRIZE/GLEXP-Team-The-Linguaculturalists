@@ -30,6 +30,20 @@
         <decoration level="20" size="2x2" name="Fountain"   buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
     </decorations>
 
+    <!-- Tour -->
+    <tour>
+        <stop id="welcome">
+            <message sound="locales/en_us_rural/sounds/intro1p1.ogg">Welcome to Phoenicia!</message>
+        </stop>
+        <stop id="letters">
+            <message sound="locales/en_us_rural/sounds/intro1p2.ogg" texture="locales/en_us_rural/textures/levels/intro1p2.png">Use the Letter images at the bottom of your screen to start planting with the letter 'A'</message>
+        </stop>
+        <stop id="inventory">
+            <message sound="">This is your storage building. Any words or letters you collect will be kept here for you to use.</message>
+            <message sound="">You can also sell an item you have at any time, just by tapping on it.</message>
+        </stop>
+    </tour>
+
     <!-- Alphabet -->
     <letters>
         <letter name="a" buy="1" sell="1"  points="1" time="60" sprite="locales/common/textures/letters/sprites/a.png" block="locales/common/textures/letters/blocks/a.png" sound="locales/en_us_rural/sounds/a-name.ogg" phoneme="locales/en_us_rural/sounds/a-phoneme.ogg">a</letter>

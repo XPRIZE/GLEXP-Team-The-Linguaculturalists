@@ -34,10 +34,12 @@ public abstract class Stop {
         return this.messages;
     }
     public void addMessage(Message m) {
+        m.stop = this;
         this.messages.add(m);
     }
     public void removeMessage(Message m) {
         this.messages.remove(m);
+        m.stop = null;
     }
 
 }
