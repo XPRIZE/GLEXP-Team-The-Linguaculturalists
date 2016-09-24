@@ -2,22 +2,15 @@ package com.linguaculturalists.phoenicia.ui;
 
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.locale.Level;
-import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.locale.tour.Stop;
-import com.linguaculturalists.phoenicia.locale.tour.Tour;
 import com.linguaculturalists.phoenicia.models.DefaultTile;
 import com.linguaculturalists.phoenicia.models.GameTile;
 import com.linguaculturalists.phoenicia.models.WordTile;
+import com.linguaculturalists.phoenicia.tour.TourOverlay;
 
 import org.andengine.engine.camera.hud.HUD;
-import org.andengine.engine.handler.IUpdateHandler;
-import org.andengine.engine.handler.timer.ITimerCallback;
-import org.andengine.engine.handler.timer.TimerHandler;
-import org.andengine.entity.scene.Scene;
 import org.andengine.util.debug.Debug;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
@@ -68,9 +61,6 @@ public class HUDManager extends HUD {
         this.push(new NewLevelHUD(this.game, level));
     }
 
-    public void showTour(final Stop stop) {
-        this.push(new TourHUD(this.game, stop));
-    }
     /**
      * Create a new instance of the inter-level introduction HUD and display it
      * @param level

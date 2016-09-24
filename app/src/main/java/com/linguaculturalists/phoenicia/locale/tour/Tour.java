@@ -2,9 +2,8 @@ package com.linguaculturalists.phoenicia.locale.tour;
 
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.locale.Person;
-import com.linguaculturalists.phoenicia.locale.tour.stops.InventoryStop;
-import com.linguaculturalists.phoenicia.locale.tour.stops.WelcomeStop;
-import com.linguaculturalists.phoenicia.models.GameSession;
+import com.linguaculturalists.phoenicia.tour.InventoryStop;
+import com.linguaculturalists.phoenicia.tour.WelcomeStop;
 
 /**
  * Created by mhall on 9/8/16.

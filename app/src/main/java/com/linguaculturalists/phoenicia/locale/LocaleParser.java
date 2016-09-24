@@ -3,8 +3,7 @@ package com.linguaculturalists.phoenicia.locale;
 import com.linguaculturalists.phoenicia.locale.tour.Message;
 import com.linguaculturalists.phoenicia.locale.tour.Stop;
 import com.linguaculturalists.phoenicia.locale.tour.Tour;
-import com.linguaculturalists.phoenicia.locale.tour.stops.InventoryStop;
-import com.linguaculturalists.phoenicia.locale.tour.stops.WelcomeStop;
+import com.linguaculturalists.phoenicia.tour.TourOverlay;
 
 import org.andengine.util.debug.Debug;
 import org.apache.commons.lang3.StringUtils;
@@ -291,15 +290,32 @@ public class LocaleParser extends DefaultHandler {
             this.currentTourStop = locale.tour.welcome;
         } else if (stopId.equals("inventory")) {
             this.currentTourStop = locale.tour.inventory;
+        } else {
+            this.currentTourStop = new Stop(locale.tour) {
+                @Override
+                public void close() {
+
+                }
+
+                @Override
+                public void next() {
+
+                }
+                @Override
+                public void run(TourOverlay overlay) {
+
+                }
+            };
         }
 
     }
 
     private void parseTourStopMessage(Attributes attributes) throws SAXException {
-        Debug.v("Parsing locale tour stop message");
+        Debug.v("Parsing locale tour stop message for "+this.currentTourStop.getClass());
         Message newMessage = new Message();
         newMessage.sound = attributes.getValue("sound");
         newMessage.texture_src = attributes.getValue("texture");
+        newMessage.text = "";
         this.currentTourStop.addMessage(newMessage);
         this.currentTourStopMessage = newMessage;
     }
@@ -475,7 +491,7 @@ public class LocaleParser extends DefaultHandler {
     public void characters(char[] ch, int start, int length) throws SAXException {
         String nodePath = StringUtils.join(this.nodeStack, '/');
 
-        Debug.d("Reading characteres for "+nodePath);
+        Debug.v("Reading characteres for "+nodePath);
 
         String text = new String(ch, start, length);
         if (nodePath.equals("/locale/tour/stop/message")) {

@@ -5,6 +5,7 @@ import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.GameSession;
+import com.linguaculturalists.phoenicia.tour.TourOverlay;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
@@ -109,7 +110,8 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         helpButton.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                game.hudManager.showTour(game.locale.tour.inventory);
+                TourOverlay tour = new TourOverlay(game, game.locale.tour.inventory);
+                tour.show();
 
 //                Level level = game.locale.level_map.get(game.current_level);
 //                while (level.intro.size() < 1 && level.prev != null && level.prev != level) {

@@ -38,9 +38,18 @@
         <stop id="letters">
             <message sound="locales/en_us_rural/sounds/intro1p2.ogg" texture="locales/en_us_rural/textures/levels/intro1p2.png">Use the Letter images at the bottom of your screen to start planting with the letter 'A'</message>
         </stop>
+        <stop id="words">
+            <message sound="locales/en_us_rural/sounds/intro3p2.ogg" texture="locales/en_us_rural/textures/levels/intro3p2.png">Use the Word images to build a 'cat' factory</message>
+        </stop>
         <stop id="inventory">
             <message sound="">This is your storage building. Any words or letters you collect will be kept here for you to use.</message>
             <message sound="">You can also sell an item you have at any time, just by tapping on it.</message>
+        </stop>
+        <stop id="market">
+            <message sound=""></message>
+        </stop>
+        <stop id="workshop">
+            <message sound=""></message>
         </stop>
     </tour>
 

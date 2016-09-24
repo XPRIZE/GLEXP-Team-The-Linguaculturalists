@@ -157,7 +157,7 @@ public class DebugHUD extends PhoeniciaHUD {
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
         // Block touch events
         final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
-        Debug.d("Inventory HUD touched, handled? "+handled);
+        Debug.d("Debug HUD touched, handled? "+handled);
         if (handled) return true;
         return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
         // TODO: Fix inventory selling
