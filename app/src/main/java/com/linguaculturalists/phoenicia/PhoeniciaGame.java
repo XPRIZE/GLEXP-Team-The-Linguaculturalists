@@ -75,6 +75,7 @@ import com.linguaculturalists.phoenicia.models.WordBuilder;
 import com.linguaculturalists.phoenicia.models.WordTileBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.models.WorkshopBuilder;
+import com.linguaculturalists.phoenicia.tour.TourOverlay;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
 import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
 import com.linguaculturalists.phoenicia.locale.LocaleLoader;
@@ -1633,7 +1634,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         if (this.locale.levels.indexOf(next) >= 1) {
             this.hudManager.showNewLevel(next);
         } else {
-            this.hudManager.showLevelIntro(next);
+            TourOverlay tour = new TourOverlay(this, this.locale.tour.welcome);
+            tour.show();
+            //this.hudManager.showLevelIntro(next);
         }
         return;
     }

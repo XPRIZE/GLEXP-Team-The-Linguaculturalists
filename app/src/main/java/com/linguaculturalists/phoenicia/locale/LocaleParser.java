@@ -298,11 +298,11 @@ public class LocaleParser extends DefaultHandler {
                 }
 
                 @Override
-                public void next() {
+                public void show(int messageIndex) {
 
                 }
                 @Override
-                public void run(TourOverlay overlay) {
+                public void start(TourOverlay overlay) {
 
                 }
             };

@@ -16,15 +16,23 @@ public abstract class Stop {
     public Tour tour;
     private MapBlockSprite focus;
     private List<Message> messages;
+    protected int currentMessageIndex;
     protected TourOverlay overlay;
 
     public Stop(Tour tour) {
         this.tour = tour;
         this.messages = new ArrayList<Message>();
+        this.currentMessageIndex = -1;
     }
 
-    public abstract void run(TourOverlay overlay);
-    public abstract void next();
+    public abstract void start(TourOverlay overlay);
+
+    public void next() {
+        this.currentMessageIndex++;
+        this.show(this.currentMessageIndex);
+    }
+    public abstract void show(int messageIndex);
+
     public abstract void close();
 
     public boolean hasFocus() {
@@ -46,14 +54,12 @@ public abstract class Stop {
         m.stop = this;
         this.messages.add(m);
     }
+    public Message getMessage(int messageIndex) {
+        return this.messages.get(messageIndex);
+    }
     public void removeMessage(Message m) {
         this.messages.remove(m);
         m.stop = null;
-    }
-
-    public void moveCameraTo(MapBlockSprite target) {
-        this.tour.game.camera.setCenter(target.getX(), target.getY() - target.getHeight());
-        ((SmoothCamera)this.tour.game.camera).setZoomFactor(2.0f);
     }
 
 }

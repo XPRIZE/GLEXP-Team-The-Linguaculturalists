@@ -6,6 +6,7 @@ import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.MapBlockSprite;
 import com.linguaculturalists.phoenicia.locale.tour.Message;
 import com.linguaculturalists.phoenicia.locale.tour.Stop;
+import com.linguaculturalists.phoenicia.ui.DefaultHUD;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
 import com.linguaculturalists.phoenicia.ui.PhoeniciaHUD;
 import com.linguaculturalists.phoenicia.util.GameFonts;
@@ -13,7 +14,9 @@ import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.engine.camera.SmoothCamera;
 import org.andengine.engine.camera.ZoomCamera;
+import org.andengine.entity.Entity;
 import org.andengine.entity.modifier.MoveXModifier;
+import org.andengine.entity.modifier.ScaleModifier;
 import org.andengine.entity.primitive.Gradient;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.CameraScene;
@@ -26,10 +29,14 @@ import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
+import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
+import org.andengine.opengl.texture.region.TextureRegion;
+import org.andengine.opengl.texture.region.TextureRegionFactory;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -44,7 +51,20 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
     private int currentMessage;
     private boolean messagePlaying;
     private Rectangle messageBox;
+    public enum MessageBox {
+        Top, Bottom;
+    }
     private Text displayText;
+    private Entity focusSprite;
+    private PhoeniciaHUD backgroundHUD;
+
+    public static final String SPOTLIGHT_NONE = "textures/tour/tour-focus-none.png";
+    public static final String SPOTLIGHT_CENTER = "textures/tour/tour-focus-center.png";
+    public static final String SPOTLIGHT_TOP_LEFT = "textures/tour/tour-focus-topleft.png";
+    public static final String SPOTLIGHT_TOP_RIGHT = "textures/tour/tour-focus-topright.png";
+    public static final String SPOTLIGHT_BOTTOM_LEFT = "textures/tour/tour-focus-bottomleft.png";
+    public static final String SPOTLIGHT_BOTTOM_RIGHT = "textures/tour/tour-focus-bottomright.png";
+    private Sprite spotlight;
 
     public TourOverlay(final PhoeniciaGame game, final Stop stop) {
         super(game.camera);
@@ -55,12 +75,6 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
         this.setBackgroundEnabled(false);
 
         final float messageBoxHeight = 256;
-
-        Gradient g = new Gradient(this.getWidth()/2, 160, this.getWidth(), 320, PhoeniciaContext.vboManager);
-        g.setGradient(new Color(0, 0, 0, 0.8f), new Color(0, 0, 0, 0f), 0, 1);
-        g.setGradientFitToBounds(true);
-        g.setGradientDitherEnabled(true);
-        this.attachChild(g);
 
         this.clickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
             @Override
@@ -88,22 +102,19 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
         Debug.d("TourOverlay ready");
     }
 
-    public void nextMessage() {
-        this.currentMessage++;
-        Debug.d("Showing message: "+this.currentMessage);
-        if (this.currentMessage >= this.messages.size()) {
-            Debug.d("No more messages, closing the overlay");
-            this.close();
-            return;
-        }
-        String messageText = this.messages.get(this.currentMessage).text;
-        String messageSound = this.messages.get(this.currentMessage).sound;
+    public void showMessage(Message message) {
+        this.showMessage(message, MessageBox.Top);
+    }
+    public void showMessage(Message message, MessageBox position) {
+        String messageText = message.text;
+        String messageSound = message.sound;
         this.messageBox.detachChildren();
+        this.positionMessageBox(position);
         this.displayText = new Text(this.messageBox.getWidth()/2+16, this.messageBox.getHeight()/2, GameFonts.introText(), messageText, messageText.length(), new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
         this.displayText.setAutoWrapWidth(this.messageBox.getWidth() - 32);
         this.displayText.setAutoWrap(AutoWrap.WORDS);
 
-        this.messageBox.setHeight(this.displayText.getHeight()+64);
+        this.messageBox.setHeight(this.displayText.getHeight() + 64);
         this.displayText.setPosition(this.messageBox.getWidth() / 2 + 16, this.messageBox.getHeight() - (this.displayText.getHeight() / 2));
 
         this.messageBox.attachChild(this.displayText);
@@ -113,6 +124,18 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
             this.game.playLevelSound(messageSound, this);
         }
     }
+    private void positionMessageBox(MessageBox pos) {
+        switch (pos) {
+            case Bottom:
+                this.guideSprite.setY(160);
+                this.messageBox.setY(160);
+                break;
+            case Top:
+                this.guideSprite.setY(this.getHeight() - 160);
+                this.messageBox.setY(this.getHeight() - 160);
+                break;
+        }
+    }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
@@ -120,7 +143,8 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
     }
 
     public void show() {
-        this.stop.run(this);
+        this.stop.start(this);
+        this.stop.next();
     }
 
     private void close() {
@@ -130,7 +154,46 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
         this.guideSprite.registerEntityModifier(new MoveXModifier(0.5f, -128, 128));
     }
 
+    public void clearSpotlight() {
+        if (this.spotlight != null) {
+            this.detachChild(this.spotlight);
+            this.spotlight = null;
+        }
+    }
+    public void setSpotlight(String texture) {
+        try {
+            final AssetBitmapTexture spotlight_texture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, texture);
+            spotlight_texture.load();
+            TextureRegion spotlight_region = TextureRegionFactory.extractFromTexture(spotlight_texture);
+            this.clearSpotlight();
+            this.spotlight = new Sprite(this.getWidth()/2, this.getHeight()/2, spotlight_region, PhoeniciaContext.vboManager);
+            this.spotlight.setZIndex(this.guideSprite.getZIndex()-1);
+            this.attachChild(this.spotlight);
+            this.sortChildren();
+        } catch (IOException e) {
+            Debug.e("Failed to load spotlight texture: "+texture);
+        }
+    }
+
+    public void focusOn(MapBlockSprite target) {
+        this.game.camera.setCenterDirect(target.getX(), target.getY());
+        ((SmoothCamera)this.game.camera).setZoomFactor(2.0f);
+        float[] targetSceneCoordinates = this.game.camera.getCameraSceneCoordinatesFromSceneCoordinates(target.getSceneCenterCoordinates());
+        Debug.d("Tour focus sprite coordinates are: "+targetSceneCoordinates[1]+"x"+targetSceneCoordinates[1]);
+        this.focusSprite = new Sprite(targetSceneCoordinates[0], targetSceneCoordinates[1], target.getTextureRegion(), PhoeniciaContext.vboManager);
+        this.focusSprite.setScale(2.0f);
+        this.focusSprite.registerEntityModifier(new ScaleModifier(0.5f, 2.0f, 3.0f));
+        //this.focusSprite.setColor(this.focusSprite.getRed()+0.3f, this.focusSprite.getGreen()+0.3f, this.focusSprite.getBlue()+0.3f);
+        this.attachChild(focusSprite);
+
+    }
+
+    public void clearFocus() {
+        this.detachChild(this.focusSprite);
+    }
+
     public void setBackgroundHUD(PhoeniciaHUD hud) {
+        this.backgroundHUD = hud;
         Debug.d("Attaching tour overlay to HUD: "+hud);
         this.game.hudManager.push(hud);
         hud.setChildScene(this, false, true, true);
