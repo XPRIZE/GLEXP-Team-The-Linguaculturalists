@@ -5,7 +5,7 @@
     <music src="locales/en_us_rural/sounds/background.mp3" />
 
     <!-- Default blocks -->
-    <inventory level="1" size="1x2" name="Barn" col="37" row="43" block="locales/en_us_rural/textures/biginventory.png" />
+    <inventory level="2" size="1x2" name="Barn" col="37" row="43" block="locales/en_us_rural/textures/biginventory.png" />
     <market level="4" size="4x4x4" name="Market" col="42" row="40" block="locales/en_us_rural/textures/market-4x4x4.png" />
     <workshop level="6" name="Workshop" col="38" row="40" block="locales/en_us_rural/textures/workshop.png" />
 
@@ -36,6 +36,8 @@
             <message sound="locales/en_us_rural/sounds/intro1p1.ogg">Welcome to Phoenicia!</message>
             <message sound="locales/en_us_rural/sounds/intro1p2.ogg">Use the Letter images at the bottom of your screen to start planting with the letter 'A'</message>
             <message sound="">Tap a letter to start planting it</message>
+            <message sound="">Tap a location on the map to plant your new letter</message>
+            <message sound="">When your letter if fully grown, tap it again to harvest it</message>
         </stop>
         <stop id="inventory">
             <message sound="">This is your storage building. Any words or letters you collect will be kept here for you to use.</message>

@@ -179,7 +179,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
      * @param letter Letter to create the tile for
      * @param onTile Map tile to place the new tile on
      */
-    private void addLetterTile(final Letter letter, final TMXTile onTile) {
+    protected void addLetterTile(final Letter letter, final TMXTile onTile) {
         final int cost = letter.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getLetterTileCount(letter));
 
         if (game.session.account_balance.get() < cost) {

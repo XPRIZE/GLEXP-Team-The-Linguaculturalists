@@ -57,6 +57,7 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
     private Text displayText;
     private Entity focusSprite;
     private PhoeniciaHUD backgroundHUD;
+    private PhoeniciaHUD managedHUD;
 
     public static final String SPOTLIGHT_NONE = "textures/tour/tour-focus-none.png";
     public static final String SPOTLIGHT_CENTER = "textures/tour/tour-focus-center.png";
@@ -195,10 +196,25 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
     public void setBackgroundHUD(PhoeniciaHUD hud) {
         this.backgroundHUD = hud;
         Debug.d("Attaching tour overlay to HUD: "+hud);
-        this.game.hudManager.push(hud);
+        if (this.game.hudManager.currentHUD != hud) {
+            this.game.hudManager.push(hud);
+        }
         hud.setChildScene(this, false, true, true);
         this.setVisible(true);
     }
+
+    public void setManagedHUD(PhoeniciaHUD hud) {
+        this.setManagedHUD(hud, null);
+    }
+    public void setManagedHUD(PhoeniciaHUD hud, IOnSceneTouchListener touchListener) {
+        this.managedHUD = hud;
+        Debug.d("Attaching HUD to tour overlay: " + hud);
+        this.attachChild(this.managedHUD);
+        if (touchListener != null) {
+            this.managedHUD.setOnSceneTouchListener(touchListener);
+        }
+    }
+
     /**
      * Capture scene touch events and look for click/touch events on the map to trigger placement.
      * All other touch events are passed through.

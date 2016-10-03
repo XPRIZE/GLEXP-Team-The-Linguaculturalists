@@ -1,16 +1,27 @@
 package com.linguaculturalists.phoenicia.tour;
 
+import com.linguaculturalists.phoenicia.PhoeniciaGame;
+import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.tour.Stop;
 import com.linguaculturalists.phoenicia.locale.tour.Tour;
+import com.linguaculturalists.phoenicia.models.Bank;
+import com.linguaculturalists.phoenicia.models.LetterBuilder;
+import com.linguaculturalists.phoenicia.models.LetterTile;
 import com.linguaculturalists.phoenicia.ui.DefaultHUD;
 import com.linguaculturalists.phoenicia.ui.LetterPlacementHUD;
+import com.linguaculturalists.phoenicia.ui.PhoeniciaHUD;
+import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.modifier.MoveXModifier;
+import org.andengine.extension.tmx.TMXTile;
+import org.andengine.util.debug.Debug;
 
 /**
  * Created by mhall on 9/8/16.
  */
 public class WelcomeStop extends Stop {
+
+    public LetterTile letterTile;
 
     public WelcomeStop(Tour tour) {
         super(tour);
@@ -34,9 +45,47 @@ public class WelcomeStop extends Stop {
                 this.overlay.showMessage(this.getMessage(messageIndex), TourOverlay.MessageBox.Top);
                 break;
             case 2:
-                this.overlay.attachChild(new LetterPlacementHUD(this.tour.game, this.tour.game.locale.level_map.get(this.tour.game.current_level)));
+                final WelcomeStop stop = this;
+                final LetterPlacementHUD hud = new LetterPlacementHUD(this.tour.game, this.tour.game.locale.level_map.get(this.tour.game.current_level)) {
+                    @Override
+                    protected void addLetterTile(final Letter letter, final TMXTile onTile) {
+                        stop.letterTile = new LetterTile(tour.game, letter);
+
+                        stop.letterTile.isoX.set(onTile.getTileColumn());
+                        stop.letterTile.isoY.set(onTile.getTileRow());
+
+                        tour.game.createLetterSprite(stop.letterTile, new PhoeniciaGame.CreateLetterSpriteCallback() {
+                            @Override
+                            public void onLetterSpriteCreated(LetterTile tile) {
+                                LetterBuilder builder = new LetterBuilder(tour.game.session, stop.letterTile, stop.letterTile.item_name.get(), letter.time);
+                                builder.start();
+                                builder.save(PhoeniciaContext.context);
+                                tour.game.addBuilder(builder);
+
+                                stop.letterTile.setBuilder(builder);
+                                stop.letterTile.save(PhoeniciaContext.context);
+                            }
+
+                            @Override
+                            public void onLetterSpriteCreationFailed(LetterTile tile) {
+                                stop.show(2);
+                            }
+                        });
+                    }
+                };
                 this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_NONE);
+                this.overlay.attachChild(hud);
+                this.overlay.registerTouchArea(hud);
                 this.overlay.showMessage(this.getMessage(messageIndex), TourOverlay.MessageBox.Top);
+                break;
+            case 3:
+                overlay.setSpotlight(TourOverlay.SPOTLIGHT_CENTER);
+                this.overlay.showMessage(this.getMessage(messageIndex), TourOverlay.MessageBox.Bottom);
+                break;
+            case 4:
+                overlay.setBackgroundHUD(tour.game.hudManager.currentHUD);
+                overlay.setSpotlight(TourOverlay.SPOTLIGHT_CENTER);
+                this.overlay.showMessage(this.getMessage(messageIndex), TourOverlay.MessageBox.Bottom);
                 break;
             default:
                 this.close();
