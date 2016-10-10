@@ -5,6 +5,7 @@ import com.linguaculturalists.phoenicia.ui.PhoeniciaHUD;
 import com.linguaculturalists.phoenicia.tour.TourOverlay;
 
 import org.andengine.engine.camera.SmoothCamera;
+import org.andengine.input.touch.TouchEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +28,22 @@ public abstract class Stop {
 
     public abstract void start(TourOverlay overlay);
 
+    public abstract void show(int messageIndex);
+
+    public abstract void onClicked();
+
     public void next() {
         this.currentMessageIndex++;
         this.show(this.currentMessageIndex);
     }
-    public abstract void show(int messageIndex);
+    public void goTo(int messageIndex) {
+        this.currentMessageIndex = messageIndex;
+        this.show(messageIndex);
+    }
 
-    public abstract void close();
+    public void close() {
+        this.tour.game.hudManager.endTour();
+    }
 
     public boolean hasFocus() {
         return this.focus != null;
@@ -61,5 +71,6 @@ public abstract class Stop {
         this.messages.remove(m);
         m.stop = null;
     }
+
 
 }

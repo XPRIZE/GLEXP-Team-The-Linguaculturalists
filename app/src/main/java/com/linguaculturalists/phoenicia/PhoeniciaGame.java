@@ -1065,7 +1065,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      */
     public void onUpdate(float v) {
         // update build queues
-        this.hudManager.update(v);
+        //this.hudManager.update(v);
         this.currentTime = System.currentTimeMillis();
         this.updateTime += v;
         if (this.updateTime > 1) {

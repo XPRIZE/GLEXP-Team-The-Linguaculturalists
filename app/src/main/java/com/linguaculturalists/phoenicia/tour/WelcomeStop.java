@@ -22,6 +22,11 @@ import org.andengine.util.debug.Debug;
 public class WelcomeStop extends Stop {
 
     public LetterTile letterTile;
+    private static final int MSG_WELCOME = 0;
+    private static final int MSG_LAUNCHER = 1;
+    private static final int MSG_HUD = 2;
+    private static final int MSG_PLACEMENT = 3;
+    private static final int MSG_COLLECTION = 4;
 
     public WelcomeStop(Tour tour) {
         super(tour);
@@ -34,58 +39,20 @@ public class WelcomeStop extends Stop {
 
     public void show(int messageIndex) {
         switch (messageIndex) {
-            case 0:
-                overlay.setBackgroundHUD(new DefaultHUD(this.tour.game));
-                this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_NONE);
-                overlay.showGuide();
-                overlay.showMessage(this.getMessage(messageIndex), TourOverlay.MessageBox.Bottom);
+            case MSG_WELCOME:
+                this.showWelcome();
                 break;
-            case 1:
-                this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_BOTTOM_RIGHT);
-                this.overlay.showMessage(this.getMessage(messageIndex), TourOverlay.MessageBox.Top);
+            case MSG_LAUNCHER:
+                this.showLetterPlacementLauncher();
                 break;
-            case 2:
-                final WelcomeStop stop = this;
-                final LetterPlacementHUD hud = new LetterPlacementHUD(this.tour.game, this.tour.game.locale.level_map.get(this.tour.game.current_level)) {
-                    @Override
-                    protected void addLetterTile(final Letter letter, final TMXTile onTile) {
-                        stop.letterTile = new LetterTile(tour.game, letter);
-
-                        stop.letterTile.isoX.set(onTile.getTileColumn());
-                        stop.letterTile.isoY.set(onTile.getTileRow());
-
-                        tour.game.createLetterSprite(stop.letterTile, new PhoeniciaGame.CreateLetterSpriteCallback() {
-                            @Override
-                            public void onLetterSpriteCreated(LetterTile tile) {
-                                LetterBuilder builder = new LetterBuilder(tour.game.session, stop.letterTile, stop.letterTile.item_name.get(), letter.time);
-                                builder.start();
-                                builder.save(PhoeniciaContext.context);
-                                tour.game.addBuilder(builder);
-
-                                stop.letterTile.setBuilder(builder);
-                                stop.letterTile.save(PhoeniciaContext.context);
-                            }
-
-                            @Override
-                            public void onLetterSpriteCreationFailed(LetterTile tile) {
-                                stop.show(2);
-                            }
-                        });
-                    }
-                };
-                this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_NONE);
-                this.overlay.attachChild(hud);
-                this.overlay.registerTouchArea(hud);
-                this.overlay.showMessage(this.getMessage(messageIndex), TourOverlay.MessageBox.Top);
+            case MSG_HUD:
+                this.showLetterPlacementHUD();
                 break;
-            case 3:
-                overlay.setSpotlight(TourOverlay.SPOTLIGHT_CENTER);
-                this.overlay.showMessage(this.getMessage(messageIndex), TourOverlay.MessageBox.Bottom);
+            case MSG_PLACEMENT:
+                this.showLetterPlacement();
                 break;
-            case 4:
-                overlay.setBackgroundHUD(tour.game.hudManager.currentHUD);
-                overlay.setSpotlight(TourOverlay.SPOTLIGHT_CENTER);
-                this.overlay.showMessage(this.getMessage(messageIndex), TourOverlay.MessageBox.Bottom);
+            case MSG_COLLECTION:
+                this.showLetterCollection();
                 break;
             default:
                 this.close();
@@ -93,7 +60,73 @@ public class WelcomeStop extends Stop {
 
         }
     }
-    public void close() {
-        this.tour.game.hudManager.clear();
+
+    private void showWelcome() {
+        overlay.setBackgroundHUD(new DefaultHUD(this.tour.game));
+        this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_NONE);
+        overlay.showGuide();
+        overlay.showMessage(this.getMessage(MSG_WELCOME), TourOverlay.MessageBox.Bottom);
+    }
+
+    private void showLetterPlacementLauncher() {
+        this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_BOTTOM_RIGHT);
+        this.overlay.showMessage(this.getMessage(MSG_LAUNCHER), TourOverlay.MessageBox.Top);
+    }
+
+    private void showLetterPlacementHUD() {
+        final WelcomeStop stop = this;
+        final LetterPlacementHUD hud = new LetterPlacementHUD(this.tour.game, this.tour.game.locale.level_map.get(this.tour.game.current_level)) {
+            @Override
+            protected void addLetterTile(final Letter letter, final TMXTile onTile) {
+
+                stop.letterTile = new LetterTile(tour.game, letter);
+
+                stop.letterTile.isoX.set(onTile.getTileColumn());
+                stop.letterTile.isoY.set(onTile.getTileRow());
+
+                tour.game.createLetterSprite(stop.letterTile, new PhoeniciaGame.CreateLetterSpriteCallback() {
+                    @Override
+                    public void onLetterSpriteCreated(LetterTile tile) {
+                        LetterBuilder builder = new LetterBuilder(tour.game.session, stop.letterTile, stop.letterTile.item_name.get(), letter.time);
+                        builder.start();
+                        builder.save(PhoeniciaContext.context);
+                        tour.game.addBuilder(builder);
+
+                        stop.letterTile.setBuilder(builder);
+                        stop.letterTile.save(PhoeniciaContext.context);
+                        stop.goTo(MSG_COLLECTION);
+                    }
+
+                    @Override
+                    public void onLetterSpriteCreationFailed(LetterTile tile) {
+                        stop.goTo(MSG_HUD);
+                    }
+                });
+                Debug.d("Going to next stop page");
+                next();
+            }
+        };
+        this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_NONE);
+        this.overlay.setManagedHUD(hud);
+        this.overlay.showMessage(this.getMessage(MSG_HUD), TourOverlay.MessageBox.Top);
+    }
+
+    private void showLetterPlacement() {
+        Debug.d("Clearing managed hud and spotlight");
+        this.overlay.clearManagedHUD();
+        this.overlay.clearSpotlight();
+        this.overlay.showMessage(this.getMessage(MSG_PLACEMENT), TourOverlay.MessageBox.Top);
+    }
+
+    private void showLetterCollection() {
+        Debug.d("Focusing on newly placed block");
+        this.overlay.focusOn(this.letterTile.sprite);
+        this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_CENTER);
+        this.overlay.showMessage(this.getMessage(MSG_COLLECTION), TourOverlay.MessageBox.Bottom);
+    }
+
+    @Override
+    public void onClicked() {
+        this.next();
     }
 }

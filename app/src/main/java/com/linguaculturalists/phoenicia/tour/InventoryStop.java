@@ -18,7 +18,6 @@ public class InventoryStop extends Stop {
 
     public void start(TourOverlay overlay) {
         this.overlay = overlay;
-        this.currentMessageIndex = -1;
     }
 
     public void show(int messageIndex) {
@@ -41,7 +40,8 @@ public class InventoryStop extends Stop {
         }
     }
 
-    public void close() {
-        this.tour.game.hudManager.clear();
+    @Override
+    public void onClicked() {
+        this.next();
     }
 }

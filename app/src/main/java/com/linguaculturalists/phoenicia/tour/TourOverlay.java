@@ -16,6 +16,7 @@ import org.andengine.engine.camera.SmoothCamera;
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.entity.Entity;
 import org.andengine.entity.modifier.MoveXModifier;
+import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.modifier.ScaleModifier;
 import org.andengine.entity.primitive.Gradient;
 import org.andengine.entity.primitive.Rectangle;
@@ -82,7 +83,7 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
             public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
                 Debug.d("Tour HUD clicked, playing="+messagePlaying);
                 if (!messagePlaying) {
-                    stop.next();
+                    stop.onClicked();
                 }
             }
         });
@@ -184,6 +185,7 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
         this.focusSprite = new Sprite(targetSceneCoordinates[0], targetSceneCoordinates[1], target.getTextureRegion(), PhoeniciaContext.vboManager);
         this.focusSprite.setScale(2.0f);
         this.focusSprite.registerEntityModifier(new ScaleModifier(0.5f, 2.0f, 3.0f));
+        this.focusSprite.registerEntityModifier(new MoveYModifier(0.5f, this.focusSprite.getY(), this.focusSprite.getY() + 32));
         //this.focusSprite.setColor(this.focusSprite.getRed()+0.3f, this.focusSprite.getGreen()+0.3f, this.focusSprite.getBlue()+0.3f);
         this.attachChild(focusSprite);
 
@@ -195,24 +197,32 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
 
     public void setBackgroundHUD(PhoeniciaHUD hud) {
         this.backgroundHUD = hud;
-        Debug.d("Attaching tour overlay to HUD: "+hud);
-        if (this.game.hudManager.currentHUD != hud) {
-            this.game.hudManager.push(hud);
-        }
-        hud.setChildScene(this, false, true, true);
-        this.setVisible(true);
+        this.game.hudManager.push(hud);
     }
 
     public void setManagedHUD(PhoeniciaHUD hud) {
         this.setManagedHUD(hud, null);
     }
     public void setManagedHUD(PhoeniciaHUD hud, IOnSceneTouchListener touchListener) {
+        if (hud == null) {
+            this.clearManagedHUD();
+            return;
+        }
+        if (this.managedHUD != null) {
+            this.detachChild(this.managedHUD);
+        }
         this.managedHUD = hud;
         Debug.d("Attaching HUD to tour overlay: " + hud);
+        this.game.hudManager.setHudLayerVisible(false);
         this.attachChild(this.managedHUD);
         if (touchListener != null) {
             this.managedHUD.setOnSceneTouchListener(touchListener);
         }
+    }
+    public void clearManagedHUD() {
+        this.game.hudManager.setHudLayerVisible(true);
+        this.detachChild(this.managedHUD);
+        this.managedHUD = null;
     }
 
     /**
@@ -225,13 +235,14 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
     @Override
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
         Debug.v("Overlay touched");
-        final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
+        boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
 
-        if (!handled) this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
+        if (!handled && this.managedHUD != null) handled = this.managedHUD.onSceneTouchEvent(pSceneTouchEvent);
+        if (!handled && this.spotlight != null) this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
 
         // Don't allow click-through to background hud or game scene, the tour should handle
         // any interactions
-        return true;
+        return this.spotlight != null;
     }
 
 }

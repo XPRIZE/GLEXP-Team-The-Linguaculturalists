@@ -21,6 +21,8 @@ public class Letter {
     public int buy; /**< amount of in-game currency required to create this letter */
     public int sell; /**< amount of in-game currency obtained from selling this letter */
 
+    public static final int costMultiplier = 5;
+
     @Override
     public int hashCode() {
         return this.name.hashCode();

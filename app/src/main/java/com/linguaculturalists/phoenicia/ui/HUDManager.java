@@ -1,5 +1,6 @@
 package com.linguaculturalists.phoenicia.ui;
 
+import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.tour.Stop;
@@ -9,6 +10,9 @@ import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.tour.TourOverlay;
 
 import org.andengine.engine.camera.hud.HUD;
+import org.andengine.entity.Entity;
+import org.andengine.entity.IEntity;
+import org.andengine.input.touch.TouchEvent;
 import org.andengine.util.debug.Debug;
 
 import java.util.EmptyStackException;
@@ -27,6 +31,10 @@ public class HUDManager extends HUD {
     private PhoeniciaHUD nextHUD;
     private float transitionWait = 0;
 
+    private Entity hudLayer;
+    private TourOverlay tourLayer;
+
+
     /**
      * Create a new instance for the given PhoeniciaGame
      * @param game game to attach HUDs to
@@ -34,6 +42,19 @@ public class HUDManager extends HUD {
     public HUDManager(final PhoeniciaGame game) {
         this.game = game;
         this.hudStack = new Stack<PhoeniciaHUD>();
+        this.hudLayer = new Entity(GameActivity.CAMERA_WIDTH/2, GameActivity.CAMERA_HEIGHT/2, GameActivity.CAMERA_WIDTH, GameActivity.CAMERA_HEIGHT);
+        this.attachChild(this.hudLayer);
+    }
+
+    public void startTour(Stop stop) {
+        this.tourLayer = new TourOverlay(game, stop);
+        this.setChildScene(this.tourLayer);
+        this.tourLayer.show();
+    }
+
+    public void endTour() {
+        this.clearChildScene();
+        this.tourLayer = null;
     }
 
     /**
@@ -150,7 +171,7 @@ public class HUDManager extends HUD {
      */
     public void showGame(final Level level, final GameTile tile) {
         //TODO: Show appropriate game hud
-        Debug.d("Opening game of type: "+tile.game.type);
+        Debug.d("Opening game of type: " + tile.game.type);
         if (tile.game.type.equals("wordmatch")) {
             this.push(new WordMatchGameHUD(this.game, level, tile));
         } else if (tile.game.type.equals("imagematch")) {
@@ -183,7 +204,7 @@ public class HUDManager extends HUD {
             if (previousHUD != null) {
                 this.currentHUD.hide();
                 this.currentHUD.close();
-                this.setChildScene(previousHUD);
+                this.setHudLayer(previousHUD);
                 this.currentHUD = previousHUD;
                 previousHUD.show();
             }
@@ -212,27 +233,25 @@ public class HUDManager extends HUD {
             this.currentHUD.hide();
         }
         newHUD.open();
-        this.setChildScene(newHUD);
+        this.setHudLayer(newHUD);
         this.currentHUD = newHUD;
         newHUD.show();
     }
 
-    /**
-     * TODO: Determine if this is still needed
-     * @param pSecondsElapsed
-     */
-    public void update (float pSecondsElapsed) {
-        if (this.nextHUD != null) {
-            this.transitionWait += pSecondsElapsed;
-            if (transitionWait >= 1f) {
-                Debug.d("HUDManager completing transition");
-                this.setChildScene(this.nextHUD);
-                this.nextHUD.show();
-                this.currentHUD.close();
-                this.currentHUD = this.nextHUD;
-                this.nextHUD = null;
-                this.transitionWait = 0;
-            }
-        }
+    private void setHudLayer(PhoeniciaHUD hud) {
+        this.hudLayer.detachChildren();
+        this.hudLayer.attachChild(hud);
+    }
+
+    public boolean isHudLayerVisible() {
+        return this.hudLayer.isVisible();
+    }
+    public void setHudLayerVisible(boolean visible) {
+        this.hudLayer.setVisible(visible);
+    }
+    @Override
+    public boolean onSceneTouchEvent(TouchEvent pSceneTouchEvent) {
+        final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
+        return handled || this.currentHUD.onSceneTouchEvent(pSceneTouchEvent);
     }
 }
