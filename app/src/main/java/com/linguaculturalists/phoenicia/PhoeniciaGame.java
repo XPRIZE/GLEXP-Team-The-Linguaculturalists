@@ -953,7 +953,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         scene.registerTouchArea(marketSprite);
 
         marketDefaultTile.setSprite(marketSprite);
-
+        this.locale.tour.market.setFocus(marketSprite);
         scene.sortChildren();
     }
 
@@ -995,7 +995,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         scene.registerTouchArea(workshopSprite);
 
         workshopDefaultTile.setSprite(workshopSprite);
-
+        this.locale.tour.workshop.setFocus(workshopSprite);
         scene.sortChildren();
     }
 

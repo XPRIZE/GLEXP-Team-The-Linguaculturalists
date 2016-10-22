@@ -127,6 +127,8 @@ public class WelcomeStop extends Stop {
 
     @Override
     public void onClicked() {
-        this.next();
+        if (this.currentMessageIndex != MSG_HUD) {
+            this.next();
+        }
     }
 }

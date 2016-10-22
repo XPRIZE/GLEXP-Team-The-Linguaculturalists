@@ -12,6 +12,8 @@ import com.linguaculturalists.phoenicia.ui.InventoryHUD;
  */
 public class InventoryStop extends Stop {
 
+    private static final int MSG_MAPBLOCK = 0;
+    private static final int MSG_SELLING = 1;
     public InventoryStop(Tour tour) {
         super(tour);
     }
@@ -24,24 +26,34 @@ public class InventoryStop extends Stop {
         Message msg = this.getMessage(messageIndex);
         switch (messageIndex) {
             case 0:
-                this.overlay.setBackgroundHUD(new DefaultHUD(this.tour.game));
-                this.overlay.focusOn(this.getFocus());
-                this.overlay.showGuide();
-                this.overlay.showMessage(msg);
+                this.showMapBlock();
                 break;
             case 1:
-                this.overlay.clearFocus();
-                this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_NONE);
-                this.overlay.attachChild(new InventoryHUD(this.tour.game));
-                this.overlay.showMessage(msg);
+                this.showSelling();
                 break;
             default:
                 this.close();
         }
     }
 
+    private void showMapBlock() {
+        this.overlay.focusOn(this.getFocus());
+        this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_CENTER);
+        this.overlay.showGuide();
+        this.overlay.showMessage(this.getMessage(MSG_MAPBLOCK));
+    }
+
+    private void showSelling() {
+        this.overlay.clearFocus();
+        this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_NONE);
+        this.overlay.setManagedHUD(new InventoryHUD(this.tour.game));
+        this.overlay.showMessage(this.getMessage(MSG_SELLING));
+    }
+
     @Override
     public void onClicked() {
-        this.next();
+        if (this.currentMessageIndex != MSG_SELLING) {
+            this.next();
+        }
     }
 }

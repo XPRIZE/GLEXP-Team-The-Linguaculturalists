@@ -6,8 +6,8 @@
 
     <!-- Default blocks -->
     <inventory level="2" size="1x2" name="Barn" col="37" row="43" block="locales/en_us_rural/textures/biginventory.png" />
-    <market level="4" size="4x4x4" name="Market" col="42" row="40" block="locales/en_us_rural/textures/market-4x4x4.png" />
-    <workshop level="6" name="Workshop" col="38" row="40" block="locales/en_us_rural/textures/workshop.png" />
+    <market level="5" size="4x4x4" name="Market" col="42" row="40" block="locales/en_us_rural/textures/market-4x4x4.png" />
+    <workshop level="9" name="Workshop" col="38" row="40" block="locales/en_us_rural/textures/workshop.png" />
 
     <!-- People used in the marketplace and player's avatar -->
     <people>
@@ -47,7 +47,9 @@
             <message sound="locales/en_us_rural/sounds/intro3p2.ogg" texture="locales/en_us_rural/textures/levels/intro3p2.png">Use the Word images to build a 'cat' factory</message>
         </stop>
         <stop id="market">
-            <message sound=""></message>
+            <message sound="">Now that you have some words, you can start selling them at the market.</message>
+            <message sound="">Here you will find friends who would like to buy the letters and words you've gathered</message>
+            <message sound="">Once you have everything they need, you can sell them to earn the coins you need to keep building your town</message>
         </stop>
         <stop id="workshop">
             <message sound=""></message>
