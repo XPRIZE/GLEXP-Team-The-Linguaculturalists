@@ -119,6 +119,26 @@ def print_header():
 def print_footer():
     manifest_file.write("</locale>\n")
 
+def print_numbers():
+    manifest_file.write("\n    <!-- Numbers -->\n")
+    manifest_file.write("    <numbers>\n")
+    for number in range(0,10):
+        filename = numberFileName(number)
+        context = {
+            'number': number, 
+            'name': number, 
+            'filename': filename,
+            'locale': locale_name
+        }
+        manifest_file.write('        <number name="%(name)s" sprite="locales/%(locale)s/textures/letters/sprites/%(filename)s.png" sound="locales/%(locale)s/sounds/%(filename)s.ogg">%(number)s</number>\n' % context)
+
+        mkletterimage = ["./mknumberimage", "-d", locale_name, letter, filename]
+        if rtl:
+            mknumberimage.insert(1, "-rtl")
+        subprocess.call(mkletterimage)
+
+    manifest_file.write("    </numbers>\n")
+
 def print_letters():
     manifest_file.write("\n    <!-- Alphabet -->\n")
     manifest_file.write("    <letters>\n")
@@ -232,6 +252,14 @@ def print_levels():
         level_number += 1
     manifest_file.write("    </levels>\n")
     
+def numberFileName(number):
+    try:
+        return str(number)
+    except:
+        name = 'number_%s' % len(number_names)
+        number_names[name] = number
+        return name
+
 def letterFileName(letter):
     try:
         return letter.decode('ascii')
@@ -268,6 +296,7 @@ character_order = list()
 letter_values = dict()
 word_values = dict()
 
+number_names = dict()
 letter_names = dict()
 word_names = dict()
 
@@ -315,6 +344,7 @@ if os.path.exists(locale_name):
 else:
     os.mkdir(locale_name)
     os.makedirs(os.path.join(locale_name, 'sounds'))
+    os.makedirs(os.path.join(locale_name, 'textures', 'numbers'))
     os.makedirs(os.path.join(locale_name, 'textures', 'letters', 'sprites'))
     os.makedirs(os.path.join(locale_name, 'textures', 'letters', 'blocks'))
     os.makedirs(os.path.join(locale_name, 'textures', 'words', 'sprites'))
@@ -328,6 +358,7 @@ manifest_file_unicode = UnicodeWriter(manifest_file)
 
 print "Creating %s" % manifest_file_name
 print_header()
+print_numbers()
 print_letters()
 print_words()
 print_levels()
