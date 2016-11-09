@@ -56,6 +56,7 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
         Top, Bottom;
     }
     private Text displayText;
+    private MapBlockSprite targetSprite;
     private Entity focusSprite;
     private PhoeniciaHUD backgroundHUD;
     private PhoeniciaHUD managedHUD;
@@ -133,8 +134,8 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
                 this.messageBox.setY(160);
                 break;
             case Top:
-                this.guideSprite.setY(this.getHeight() - 160);
-                this.messageBox.setY(this.getHeight() - 160);
+                this.guideSprite.setY(this.getHeight() - 120);
+                this.messageBox.setY(this.getHeight() - 120);
                 break;
         }
     }
@@ -149,9 +150,12 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
         this.stop.next();
     }
 
-    private void close() {
-        this.stop.close();
+    public void close() {
+        this.clearManagedHUD();
+        this.clearSpotlight();
+        this.clearFocus();
     }
+
     public void showGuide() {
         this.guideSprite.registerEntityModifier(new MoveXModifier(0.5f, -128, 128));
     }
@@ -177,22 +181,40 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
         }
     }
 
-    public void focusOn(MapBlockSprite target) {
+    public void focusOn(final MapBlockSprite target) { this.focusOn(target, null);}
+
+    public void focusOn(final MapBlockSprite target, final MapBlockSprite.OnClickListener clickListener) {
+        this.targetSprite = target;
         this.game.camera.setCenterDirect(target.getX(), target.getY());
         ((SmoothCamera)this.game.camera).setZoomFactor(2.0f);
         float[] targetSceneCoordinates = this.game.camera.getCameraSceneCoordinatesFromSceneCoordinates(target.getSceneCenterCoordinates());
-        Debug.d("Tour focus sprite coordinates are: "+targetSceneCoordinates[1]+"x"+targetSceneCoordinates[1]);
-        this.focusSprite = new Sprite(targetSceneCoordinates[0], targetSceneCoordinates[1], target.getTextureRegion(), PhoeniciaContext.vboManager);
+        Debug.d("Tour focus sprite coordinates are: " + targetSceneCoordinates[1] + "x" + targetSceneCoordinates[1]);
+        final ClickDetector spriteClickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
+            @Override
+            public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
+                if (clickListener != null) {
+                    clickListener.onClick(target, v, v1);
+                }
+            }
+        });
+        this.focusSprite = new Sprite(targetSceneCoordinates[0], targetSceneCoordinates[1], target.getTextureRegion(), PhoeniciaContext.vboManager) {
+            @Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                return spriteClickDetector.onManagedTouchEvent(pSceneTouchEvent);
+            }
+        };
+
         this.focusSprite.setScale(2.0f);
         this.focusSprite.registerEntityModifier(new ScaleModifier(0.5f, 2.0f, 3.0f));
         this.focusSprite.registerEntityModifier(new MoveYModifier(0.5f, this.focusSprite.getY(), this.focusSprite.getY() + 32));
-        //this.focusSprite.setColor(this.focusSprite.getRed()+0.3f, this.focusSprite.getGreen()+0.3f, this.focusSprite.getBlue()+0.3f);
-        this.attachChild(focusSprite);
-
+        this.attachChild(this.focusSprite);
+        this.registerTouchArea(this.focusSprite);
     }
 
     public void clearFocus() {
+        if (this.focusSprite == null) return;
         this.detachChild(this.focusSprite);
+        this.unregisterTouchArea(this.focusSprite);
     }
 
     public void setBackgroundHUD(PhoeniciaHUD hud) {
@@ -220,6 +242,7 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
         }
     }
     public void clearManagedHUD() {
+        if (this.managedHUD == null) return;
         this.game.hudManager.setHudLayerVisible(true);
         this.detachChild(this.managedHUD);
         this.managedHUD = null;

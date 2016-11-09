@@ -31,7 +31,6 @@ import org.andengine.util.modifier.ease.EaseBackOut;
  */
 public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChangeListener, Bank.BankUpdateListener, GameSession.ExperienceChangeListener {
 
-    private PhoeniciaGame game;
     private ButtonSprite levelIcon;
     private Text levelDisplay;
     private Sprite coinIcon;
@@ -51,7 +50,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
      * @param game Reference to the PhoeniciaGame this HUD is running in
      */
     public DefaultHUD(final PhoeniciaGame game) {
-        super(game.camera);
+        super(game);
         this.setBackgroundEnabled(false);
         this.game = game;
         this.game.addLevelListener(this);
@@ -110,8 +109,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         helpButton.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                game.hudManager.startTour(game.locale.tour.welcome);
-
+            game.hudManager.startTour(game.locale.tour.inventory);
 //                Level level = game.locale.level_map.get(game.current_level);
 //                while (level.intro.size() < 1 && level.prev != null && level.prev != level) {
 //                    level = level.prev;
@@ -231,5 +229,10 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         Debug.d("New balance: " + new_balance);
         this.balanceDisplay.setText(""+new_balance);
         this.balanceDisplay.setPosition(64 + (this.balanceDisplay.getWidth() / 2), this.balanceDisplay.getY());
+    }
+
+    @Override
+    public void finish() {
+        // Default HUD should never finish
     }
 }

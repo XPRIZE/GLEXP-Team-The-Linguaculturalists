@@ -52,7 +52,6 @@ import java.util.Map;
  * Display level transition text pages, images and sound.
  */
 public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener, ClickDetector.IClickDetectorListener, MediaPlayer.OnCompletionListener {
-    private PhoeniciaGame game;
     private Scrollable textPanel;
     private Level level;
     private int current_page;
@@ -68,7 +67,7 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
      * @param level The level to display introduction pages for
      */
     public LevelIntroHUD(final PhoeniciaGame game, final Level level) {
-        super(game.camera);
+        super(game);
         this.setBackgroundEnabled(false);
         this.game = game;
         this.level = level;
@@ -112,7 +111,7 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
                     nextButton.setVisible(false);
                     showPage(current_page + 1);
                 } else {
-                    game.hudManager.pop();
+                    finish();
                 }
             }
         });
@@ -170,7 +169,7 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
     @Override
     public void onClick(ClickDetector clickDetector, int pointerId, float sceneX, float sceneY) {
         if (this.current_page+1 >= this.level.intro.size() && nextButton.isVisible()) {
-            this.game.hudManager.pop();
+            this.finish();
         }
 
     }
@@ -185,5 +184,11 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
         this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
         return true;// Don't allow touch events to fall through to the scene below
     }
+
+    @Override
+    public void finish() {
+        game.hudManager.clear();
+    }
+
 
 }

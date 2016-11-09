@@ -48,7 +48,7 @@ public class LocaleParser extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         this.nodeStack.push(localName);
         String nodePath = StringUtils.join(this.nodeStack, '/');
-        Debug.d("Parser start: "+nodePath);
+        //Debug.d("Parser start: "+nodePath);
 
         if (nodePath.equals("/locale")) {
             this.parseLocale(attributes);
@@ -288,24 +288,14 @@ public class LocaleParser extends DefaultHandler {
         String stopId = attributes.getValue("id");
         if (stopId.equals("welcome")) {
             this.currentTourStop = locale.tour.welcome;
+        } else if (stopId.equals("words")) {
+            this.currentTourStop = locale.tour.words;
         } else if (stopId.equals("inventory")) {
             this.currentTourStop = locale.tour.inventory;
-        } else {
-            this.currentTourStop = new Stop(locale.tour) {
-                @Override
-                public void close() {
-
-                }
-
-                @Override
-                public void show(int messageIndex) {
-
-                }
-                @Override
-                public void start(TourOverlay overlay) {
-
-                }
-            };
+        } else if (stopId.equals("market")) {
+            this.currentTourStop = locale.tour.market;
+        } else if (stopId.equals("workshop")) {
+            this.currentTourStop = locale.tour.workshop;
         }
 
     }

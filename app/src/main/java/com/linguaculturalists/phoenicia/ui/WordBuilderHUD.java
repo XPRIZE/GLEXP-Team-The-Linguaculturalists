@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.Scrollable;
+import com.linguaculturalists.phoenicia.components.WordSprite;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Word;
@@ -45,7 +46,6 @@ import java.util.Map;
  */
 public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryUpdateListener {
 
-    private PhoeniciaGame game;
     private WordTile tile;
     private Word buildWord;
     private char spelling[];
@@ -73,7 +73,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
      * @param tile The word tile which the player clicked
      */
     public WordBuilderHUD(final PhoeniciaGame game, final Level level, final WordTile tile) {
-        super(game.camera);
+        super(game);
         this.setBackgroundEnabled(false);
         this.setOnAreaTouchTraversalFrontToBack();
         Inventory.getInstance().addUpdateListener(this);
@@ -96,7 +96,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
         this.clickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
             @Override
             public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
-                game.hudManager.pop();
+                finish();
             }
         });
 
@@ -174,15 +174,9 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
             final ClickDetector builderClickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
                 @Override
                 public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
-                    Debug.d("Activated block: " + builder.getId());
+                    Debug.d("Activated queue item: " + builder.getId());
                     if (builder.status.get() == Builder.COMPLETE) {
-                        game.playBlockSound(buildWord.sound);
-                        Inventory.getInstance().add(builder.item_name.get());
-                        game.session.addExperience(buildWord.points);
-                        tile.getQueue().remove(builder);
-                        builder.delete(PhoeniciaContext.context);
-                        wordSprite.setVisible(false);
-                        tile.checkAttention();
+                        collectWord(wordSprite, builder);
                     }
                 }
             });
@@ -230,7 +224,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
         wordSprite.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                Debug.d("Activated block: " + buildWord.name);
+                Debug.d("Activated spelling sprite: " + buildWord.name);
                 game.playBlockSound(buildWord.sound);
             }
         });
@@ -279,14 +273,10 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                    Debug.d("Activated block: " + currentLetter.name);
+                    Debug.d("Activated letter sprite: " + currentLetter.name);
                     if (Inventory.getInstance().getCount(currentLetter.name) > usedCounts.get(currentLetter.name)) {
                         try {
-                            usedCounts.put(currentLetter.name, usedCounts.get(currentLetter.name)+1);
                             putChar(currentLetter);
-                            final Text countText = inventoryCounts.get(currentLetter.name);
-                            final int newCount =(Inventory.getInstance().getCount(currentLetter.name)-usedCounts.get(currentLetter.name));
-                            countText.setText("" + newCount);
                         } catch (Exception e) {
                             Debug.e("Failed to update inventory");
                         }
@@ -336,6 +326,11 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
             Debug.d("Too many characters!");
             return;
         }
+        usedCounts.put(letter.name, usedCounts.get(letter.name)+1);
+        final Text countText = inventoryCounts.get(letter.name);
+        final int newCount =(Inventory.getInstance().getCount(letter.name)-usedCounts.get(letter.name));
+        countText.setText("" + newCount);
+
         final int startX = 200 - (this.buildWord.chars.length * 35) + 35; // TODO: replace magic numbers
         final ITextureRegion blockRegion = game.letterSprites.get(letter).getTextureRegion(0);
         final Sprite character = new Sprite(this.charBlocksX[cursorAt], this.charBlocksY[cursorAt], blockRegion, PhoeniciaContext.vboManager);
@@ -357,20 +352,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
                         game.activity.runOnUpdateThread(new Runnable() {
                             @Override
                             public void run() {
-                                Debug.d("Preparing to build word: "+tile.word.name);
-                                try {
-                                    for (int i = 0; i < that.spelling.length; i++) {
-                                        final String letter = new String(spelling, i, 1);
-                                        usedCounts.put(letter, usedCounts.get(letter)-1);
-                                        Inventory.getInstance().subtract(letter);
-                                    }
-                                    Debug.d("Creating new WordBuilder for " + tile.word.name);
-                                    tile.createWord();
-                                    that.game.hudManager.pop();
-                                } catch (Exception e) {
-                                    Debug.e("Error subtracting letter: "+e.getMessage());
-                                    e.printStackTrace();
-                                }
+                                that.createWord();
                             }
                         });
                     } else {
@@ -388,6 +370,32 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
         }
     }
 
+    protected void createWord() {
+        Debug.d("Preparing to build word: " + tile.word.name);
+        try {
+            for (int i = 0; i < spelling.length; i++) {
+                final String letter = new String(spelling, i, 1);
+                usedCounts.put(letter, usedCounts.get(letter)-1);
+                Inventory.getInstance().subtract(letter);
+            }
+            Debug.d("Creating new WordBuilder for " + tile.word.name);
+            tile.createWord();
+            this.finish();
+        } catch (Exception e) {
+            Debug.e("Error subtracting letter: "+e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    protected void collectWord(final TiledSprite wordSprite, final WordBuilder builder) {
+        game.playBlockSound(buildWord.sound);
+        Inventory.getInstance().add(builder.item_name.get());
+        game.session.addExperience(buildWord.points);
+        tile.getQueue().remove(builder);
+        builder.delete(PhoeniciaContext.context);
+        wordSprite.setVisible(false);
+        tile.checkAttention();
+    }
     /**
      * Aport spelling attempt and return used letters to the player's Inventory
      */
@@ -446,4 +454,11 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
         if (handled) return true;
         return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
     }
+
+    @Override
+    public void finish() {
+        game.hudManager.clear();
+    }
+
+
 }

@@ -968,6 +968,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         workshopDefaultTile.isoY.set(locale.workshopBlock.mapRow);
         this.createWorkshopSprite(workshopDefaultTile);
         workshopDefaultTile.save(PhoeniciaContext.context);
+        this.locale.tour.workshop.setFocus(workshopDefaultTile);
     }
 
     private void createWorkshopSprite(DefaultTile workshopDefaultTile) {
@@ -1020,7 +1021,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.isRunning = true;
 
         if (this.current_level == null || this.current_level == "") {
-            this.changeLevel( this.locale.levels.get(0));
+            this.changeLevel(this.locale.levels.get(0));
         } else if (this.current_level != this.session.current_level.get()) {
             this.changeLevel(this.locale.level_map.get(this.session.current_level.get()));
         }
@@ -1630,17 +1631,36 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             this.levelListeners.get(i).onLevelChanged(next);
         }
 
-        // Show what's new only for levels after the first one
-        if (this.locale.levels.indexOf(next) >= 1) {
-            this.hudManager.showNewLevel(next);
+        if (this.hudManager.tourActive()) {
+            // Don't interrupt the tour
+            return;
+        }
+
+        // Show what's new only for levels without a tour stop
+        if (this.locale.levels.indexOf(next) == 0) {
+            this.hudManager.startTour(this.locale.tour.welcome);
+
+        } else if (next.prev.words.size() < 1 && next.words.size() >= 1) {
+            this.hudManager.startTour(this.locale.tour.words);
+
+        } else if (next.name.equals(this.locale.inventoryBlock.level)) {
+            this.hudManager.startTour(this.locale.tour.inventory);
+
+        } else if (next.name.equals(this.locale.marketBlock.level)) {
+            this.hudManager.startTour(this.locale.tour.market);
+
+        } else if (next.name.equals(this.locale.workshopBlock.level)) {
+            this.hudManager.startTour(this.locale.tour.workshop);
+
         } else {
-            TourOverlay tour = new TourOverlay(this, this.locale.tour.welcome);
-            tour.show();
-            //this.hudManager.showLevelIntro(next);
+            this.hudManager.showNewLevel(next);
         }
         return;
     }
 
+    public Level getCurrentLevel() {
+        return this.locale.level_map.get(this.current_level);
+    }
     public void addLevelListener(LevelChangeListener listener) {
         this.levelListeners.add(listener);
     }
@@ -1649,5 +1669,16 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     }
     public interface LevelChangeListener {
         public void onLevelChanged(Level newLevel);
+    }
+
+    public void runOnDelay(final long waitTime, final Runnable runnable) {
+        Thread delayRunner = new Thread() {
+            @Override
+            public void run() {
+                try {Thread.sleep(waitTime);} catch (InterruptedException e) {}
+                activity.runOnUpdateThread(runnable);
+            }
+        };
+        delayRunner.start();
     }
 }

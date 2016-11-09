@@ -5,6 +5,7 @@ import com.linguaculturalists.phoenicia.locale.Person;
 import com.linguaculturalists.phoenicia.tour.InventoryStop;
 import com.linguaculturalists.phoenicia.tour.MarketStop;
 import com.linguaculturalists.phoenicia.tour.WelcomeStop;
+import com.linguaculturalists.phoenicia.tour.WordsStop;
 import com.linguaculturalists.phoenicia.tour.WorkshopStop;
 
 /**
@@ -18,10 +19,12 @@ public class Tour {
     public InventoryStop inventory;
     public MarketStop market;
     public WorkshopStop workshop;
+    public WordsStop words;
 
     public Tour() {
         this.welcome = new WelcomeStop(this);
         this.inventory = new InventoryStop(this);
+        this.words = new WordsStop(this);
         this.market = new MarketStop(this);
         this.workshop = new WorkshopStop(this);
     }

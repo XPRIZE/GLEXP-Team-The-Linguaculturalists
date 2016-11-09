@@ -77,4 +77,7 @@ public class WordSprite extends ButtonSprite {
         }
     }
 
+    public Word getWord() {
+        return word;
+    }
 }

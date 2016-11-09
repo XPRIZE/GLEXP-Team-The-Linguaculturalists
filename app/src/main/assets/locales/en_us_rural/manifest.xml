@@ -5,8 +5,8 @@
     <music src="locales/en_us_rural/sounds/background.mp3" />
 
     <!-- Default blocks -->
-    <inventory level="2" size="1x2" name="Barn" col="37" row="43" block="locales/en_us_rural/textures/biginventory.png" />
-    <market level="5" size="4x4x4" name="Market" col="42" row="40" block="locales/en_us_rural/textures/market-4x4x4.png" />
+    <inventory level="3" size="1x2" name="Barn" col="37" row="43" block="locales/en_us_rural/textures/biginventory.png" />
+    <market level="6" size="4x4x4" name="Market" col="42" row="40" block="locales/en_us_rural/textures/market-4x4x4.png" />
     <workshop level="9" name="Workshop" col="38" row="40" block="locales/en_us_rural/textures/workshop.png" />
 
     <!-- People used in the marketplace and player's avatar -->
@@ -37,7 +37,8 @@
             <message sound="locales/en_us_rural/sounds/intro1p2.ogg">Use the Letter images at the bottom of your screen to start planting with the letter 'A'</message>
             <message sound="">Tap a letter to start planting it</message>
             <message sound="">Tap a location on the map to plant your new letter</message>
-            <message sound="">When your letter if fully grown, tap it again to harvest it</message>
+            <message sound="">When your letter if fully grown, tap it again to collect it</message>
+            <message sound="">Your letters will start growing again for you to collect later</message>
         </stop>
         <stop id="inventory">
             <message sound="">This is your storage building. Any words or letters you collect will be kept here for you to use.</message>
@@ -45,6 +46,12 @@
         </stop>
         <stop id="words">
             <message sound="locales/en_us_rural/sounds/intro3p2.ogg" texture="locales/en_us_rural/textures/levels/intro3p2.png">Use the Word images to build a 'cat' factory</message>
+            <message sound="">Tap a a word image to create a building for it</message>
+            <message sound="">Tap a location on the map to place your building</message>
+            <message sound="">Once your building is ready, you can use it to start making words</message>
+            <message sound="">You create a word by spelling it, use the letters C A T to spell cat</message>
+            <message sound="">It will take time for your word to finish, once it's ready you can collect it</message>
+            <message sound="">Tap the finished word to add it to your inventory</message>
         </stop>
         <stop id="market">
             <message sound="">Now that you have some words, you can start selling them at the market.</message>
@@ -52,7 +59,10 @@
             <message sound="">Once you have everything they need, you can sell them to earn the coins you need to keep building your town</message>
         </stop>
         <stop id="workshop">
-            <message sound=""></message>
+            <message sound="">If you want to make a word that you don't have a building for yet, you can make it in your workshop</message>
+            <message sound="">Here you can make any word in the game, all you need are the letters and knowing how to spell it</message>
+            <message sound="">Try making the word cat with the letters C A T</message>
+            <message sound="">Great! But remember, you can only make one word at a time in the workshop, so keep making word buildings!</message>
         </stop>
     </tour>
 

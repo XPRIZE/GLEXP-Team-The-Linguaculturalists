@@ -53,10 +53,14 @@ public class HUDManager extends HUD {
     }
 
     public void endTour() {
+        this.tourLayer.close();
         this.clearChildScene();
         this.tourLayer = null;
     }
 
+    public boolean tourActive() {
+        return this.tourLayer != null;
+    }
     /**
      * Create a new instance of the default game hud and display it
      */
@@ -113,7 +117,7 @@ public class HUDManager extends HUD {
      * Create a new instance of the workshop HUD and display it
      */
     public void showWorkshop(final DefaultTile tile) {
-        WorkshopHUD workshopHUD = new WorkshopHUD (this.game, this.game.locale.level_map.get(this.game.current_level), tile);
+        WorkshopHUD workshopHUD = new WorkshopHUD (this.game, tile);
         this.push(workshopHUD);
     }
 

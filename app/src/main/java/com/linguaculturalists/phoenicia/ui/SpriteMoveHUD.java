@@ -26,7 +26,6 @@ import org.andengine.util.modifier.ease.EaseBackOut;
  * HUD that allows the player to re-position a sprite on the map.
  */
 public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickDetectorListener {
-    private PhoeniciaGame game;
     private Rectangle whiteRect;
     private MapBlockSprite sprite;
     public int spriteColumns;
@@ -53,7 +52,7 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
      * @param handler Callback for when the new placement is accepted or canceled by the player
      */
     public SpriteMoveHUD(final PhoeniciaGame game, final TMXTile startLocation, final MapBlockSprite sprite, final int columns, final int rows, final String restriction, final SpriteMoveHandler handler) {
-        super(game.camera);
+        super(game);
         this.game = game;
         this.sprite = sprite;
         this.spriteColumns = columns;
@@ -87,7 +86,7 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
                     hud.handler.onSpriteMoveCanceled(sprite);
                     hud.handler = null;
                 }
-                game.hudManager.pop();
+                finish();
             }
         });
         this.registerTouchArea(cancelBlock);
@@ -104,7 +103,7 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
                     hud.handler.onSpriteMoveFinished(sprite, hud.newLocation);
                     hud.handler = null;
                 }
-                game.hudManager.pop();
+                finish();
             }
         });
         this.registerTouchArea(confirmBlock);
@@ -225,4 +224,10 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
 
         return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
     }
+
+    @Override
+    public void finish() {
+        game.hudManager.pop();
+    }
+
 }

@@ -42,7 +42,6 @@ import java.util.List;
  * HUD for selecting \link Word Words \endlink to be placed as tiles onto the map.
  */
 public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateListener {
-    private PhoeniciaGame game; /**< Reference to the current PhoeniciaGame */
 
     private Rectangle whiteRect; /**< Background of this HUD */
     private Scrollable blockPanel; /**< Scrollpane containing the word icons */
@@ -58,7 +57,7 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
      * @param level The level whos words will be displayed in the HUD
      */
     public WordPlacementHUD(final PhoeniciaGame game, final Level level) {
-        super(game.camera);
+        super(game);
         this.setBackgroundEnabled(false);
         this.setOnAreaTouchTraversalFrontToBack();
         Bank.getInstance().addUpdateListener(this);
@@ -67,7 +66,7 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
         this.clickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
             @Override
             public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
-                game.hudManager.pop();
+                finish();
             }
         });
 
@@ -145,7 +144,7 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
      */
     @Override
     public void show() {
-        if (this.placementDone) game.hudManager.clear();
+        if (this.placementDone) this.finish();
         //whiteRect.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
         //blockPanel.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
     }
@@ -178,7 +177,7 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
      * @param word Word to create the tile for
      * @param onTile Map tile to place the new tile on
      */
-    private void addWordTile(final Word word, final TMXTile onTile) {
+    protected void addWordTile(final Word word, final TMXTile onTile) {
 
         final int cost = word.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getWordTileCount(word));
         if (game.session.account_balance.get() < cost) {
@@ -225,5 +224,11 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
         });
 
     }
+
+    @Override
+    public void finish() {
+        game.hudManager.pop();
+    }
+
 
 }

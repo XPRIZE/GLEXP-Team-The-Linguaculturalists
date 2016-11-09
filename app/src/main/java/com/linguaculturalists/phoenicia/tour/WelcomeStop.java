@@ -1,6 +1,7 @@
 package com.linguaculturalists.phoenicia.tour;
 
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
+import com.linguaculturalists.phoenicia.components.MapBlockSprite;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.tour.Stop;
 import com.linguaculturalists.phoenicia.locale.tour.Tour;
@@ -27,6 +28,7 @@ public class WelcomeStop extends Stop {
     private static final int MSG_HUD = 2;
     private static final int MSG_PLACEMENT = 3;
     private static final int MSG_COLLECTION = 4;
+    private static final int MSG_REGROW = 5;
 
     public WelcomeStop(Tour tour) {
         super(tour);
@@ -54,10 +56,11 @@ public class WelcomeStop extends Stop {
             case MSG_COLLECTION:
                 this.showLetterCollection();
                 break;
+            case MSG_REGROW:
+                this.showLetterRegrowing();
+                break;
             default:
                 this.close();
-
-
         }
     }
 
@@ -105,6 +108,11 @@ public class WelcomeStop extends Stop {
                 Debug.d("Going to next stop page");
                 next();
             }
+
+            @Override
+            public void finish() {
+                //overlay.clearManagedHUD();
+            }
         };
         this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_NONE);
         this.overlay.setManagedHUD(hud);
@@ -120,14 +128,39 @@ public class WelcomeStop extends Stop {
 
     private void showLetterCollection() {
         Debug.d("Focusing on newly placed block");
-        this.overlay.focusOn(this.letterTile.sprite);
+        LetterBuilder tileBuilder = this.letterTile.getBuilder(PhoeniciaContext.context);
+        tileBuilder.update(tileBuilder.time.get());
+        this.overlay.focusOn(this.letterTile.sprite, new MapBlockSprite.OnClickListener() {
+            @Override
+            public void onClick(MapBlockSprite pPlacedBlockSprite, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                Debug.d("Focused sprite clicked");
+                letterTile.collect();
+                next();
+            }
+
+            @Override
+            public void onHold(MapBlockSprite pPlacedBlockSprite, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+
+            }
+        });
         this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_CENTER);
         this.overlay.showMessage(this.getMessage(MSG_COLLECTION), TourOverlay.MessageBox.Bottom);
     }
 
+    private void showLetterRegrowing() {
+        //this.overlay.focusOn(this.letterTile.sprite);
+        //this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_CENTER);
+        this.overlay.clearFocus();
+        this.overlay.showMessage(this.getMessage(MSG_REGROW), TourOverlay.MessageBox.Bottom);
+        this.letterTile.onClick(null, 0, 0);
+
+    }
+
     @Override
     public void onClicked() {
-        if (this.currentMessageIndex != MSG_HUD) {
+        Debug.d("Welcome stop clicked");
+        if (this.currentMessageIndex != MSG_HUD && this.currentMessageIndex != MSG_COLLECTION) {
+            Debug.d("Welcome stop click triggered next message");
             this.next();
         }
     }

@@ -2,7 +2,13 @@ package com.linguaculturalists.phoenicia.tour;
 
 import com.linguaculturalists.phoenicia.locale.tour.Stop;
 import com.linguaculturalists.phoenicia.locale.tour.Tour;
+import com.linguaculturalists.phoenicia.models.Inventory;
+import com.linguaculturalists.phoenicia.models.MarketRequest;
+import com.linguaculturalists.phoenicia.models.RequestItem;
 import com.linguaculturalists.phoenicia.ui.MarketHUD;
+import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
+
+import java.util.List;
 
 /**
  * Created by mhall on 10/15/16.
@@ -57,7 +63,33 @@ public class MarketStop extends Stop {
 
         final MarketStop stop = this;
         final MarketHUD hud = new MarketHUD(this.tour.game) {
+            @Override
+            public void abortSale(RequestItem item, int needed) {
+                super.abortSale(item, needed);
+                stop.show(MSG_REQUESTS);
+            }
 
+            @Override
+            public void completeSale(MarketRequest request) {
+                super.completeSale(request);
+                stop.next();
+            }
+
+            @Override
+            protected List<MarketRequest> getRequests() {
+                // Only present one request
+                List<MarketRequest> requests =  super.getRequests().subList(0, 1);
+                // Ensure that the player can fulfill the request
+                for (RequestItem item : requests.get(0).getItems(PhoeniciaContext.context)) {
+                    Inventory.getInstance().add(item.item_name.get(), item.quantity.get());
+                }
+                return requests;
+            }
+
+            @Override
+            public void finish() {
+                overlay.clearManagedHUD();
+            }
         };
         this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_NONE);
         this.overlay.setManagedHUD(hud);
@@ -65,6 +97,6 @@ public class MarketStop extends Stop {
     }
 
     private void showSelling() {
-
+        this.overlay.showMessage(this.getMessage(MSG_SELLING), TourOverlay.MessageBox.Bottom);
     }
 }

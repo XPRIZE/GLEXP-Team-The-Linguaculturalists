@@ -38,9 +38,7 @@ import java.util.Map;
  */
 public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpdateListener {
     private static final int MAX_WORD_SIZE = 8;
-    private PhoeniciaGame game;
     private DefaultTile tile;
-    private Level level;
     private char spelling[];
     private int charBlocksX[];
     private int charBlocksY[];
@@ -68,14 +66,13 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
      * @param game A reference to the current PhoeniciaGame the HUD is running in
      * @param tile The word tile which the player clicked
      */
-    public WorkshopHUD(final PhoeniciaGame game, final Level level, final DefaultTile tile) {
-        super(game.camera);
+    public WorkshopHUD(final PhoeniciaGame game, final DefaultTile tile) {
+        super(game);
         this.setBackgroundEnabled(false);
         this.setOnAreaTouchTraversalFrontToBack();
         Inventory.getInstance().addUpdateListener(this);
         this.game = game;
         this.tile = tile;
-        this.level = level;
 
         this.spelling = new char[MAX_WORD_SIZE];
         this.eraseSpelling();
@@ -90,7 +87,7 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
         this.clickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
             @Override
             public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
-                game.hudManager.pop();
+                finish();
             }
         });
 
@@ -298,6 +295,7 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
             this.registerTouchArea(block);
             this.lettersPane.attachChild(block);
 
+            Level level = game.locale.level_map.get(game.current_level);
             if (level.letters.contains(currentLetter)) {
                 Debug.d("Checking inventory for "+currentLetter.name);
                 Debug.d("Inventory says: "+this.game.inventory.getCount(currentLetter.name));
@@ -385,7 +383,7 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
                                 }
                                 Debug.d("Creating new WordBuilder for " + tryWord.name);
                                 that.createWord(tryWord, that.tile);
-                                that.game.hudManager.pop();
+                                that.finish();
                             } catch (Exception e) {
                                 Debug.e("Error subtracting letter: "+e.getMessage());
                                 e.printStackTrace();
@@ -481,4 +479,11 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
         if (handled) return true;
         return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
     }
+
+    @Override
+    public void finish() {
+        game.hudManager.clear();
+    }
+
+
 }

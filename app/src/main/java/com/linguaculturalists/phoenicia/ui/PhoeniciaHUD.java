@@ -1,5 +1,7 @@
 package com.linguaculturalists.phoenicia.ui;
 
+import com.linguaculturalists.phoenicia.PhoeniciaGame;
+
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.scene.CameraScene;
 import org.andengine.entity.scene.IOnSceneTouchListener;
@@ -10,13 +12,16 @@ import org.andengine.input.touch.TouchEvent;
  */
 public abstract class PhoeniciaHUD extends CameraScene {
 
+    protected PhoeniciaGame game;
+
     /**
      * Common setup for game HUDs
      *
-     * @param camera Camera this HUD will be attached to
+     * @param game Instance of the PhoeniciaGame this HUD is running in
      */
-    public PhoeniciaHUD(Camera camera) {
-        super(camera);
+    public PhoeniciaHUD(PhoeniciaGame game) {
+        super(game.camera);
+        this.game = game;
         this.setOnAreaTouchTraversalFrontToBack();
     }
 
@@ -47,6 +52,8 @@ public abstract class PhoeniciaHUD extends CameraScene {
      */
     public void close() {
     }
+
+    public abstract void finish();
 
 //    public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
 //        if (this.hasOnSceneTouchListener()) {

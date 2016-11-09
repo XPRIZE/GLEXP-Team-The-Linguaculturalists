@@ -44,7 +44,6 @@ import java.util.List;
  * Created by mhall on 7/26/16.
  */
 public class ImageMatchGameHUD extends PhoeniciaHUD {
-    private PhoeniciaGame phoeniciaGame;
     private Level level;
     private int current_round;
     private GameTile tile;
@@ -60,9 +59,8 @@ public class ImageMatchGameHUD extends PhoeniciaHUD {
     private List<Entity> touchAreas;
 
     public ImageMatchGameHUD(final PhoeniciaGame phoeniciaGame, final Level level, final GameTile tile) {
-        super(phoeniciaGame.camera);
+        super(phoeniciaGame);
         this.setBackgroundEnabled(false);
-        this.phoeniciaGame = phoeniciaGame;
         this.level = level;
         this.tile = tile;
         this.current_round = 0;
@@ -112,7 +110,7 @@ public class ImageMatchGameHUD extends PhoeniciaHUD {
         this.winnings.add(word);
         float wordY = this.cardPane.getHeight() - 150;
 
-        ITiledTextureRegion sprite_region = this.phoeniciaGame.wordSprites.get(word);
+        ITiledTextureRegion sprite_region = this.game.wordSprites.get(word);
         Sprite winning_sprite = new Sprite(wordX, wordY, sprite_region.getTextureRegion(1), PhoeniciaContext.vboManager);
         this.resultsPane.attachChild(winning_sprite);
         winning_sprite.registerEntityModifier(new ParallelEntityModifier(
@@ -127,7 +125,7 @@ public class ImageMatchGameHUD extends PhoeniciaHUD {
         Debug.d("ImageMatchGame : fail!");
         GameSounds.play(GameSounds.FAILED);
         float wordY = this.cardPane.getHeight() - 150;
-        ITiledTextureRegion sprite_region = this.phoeniciaGame.wordSprites.get(word);
+        ITiledTextureRegion sprite_region = this.game.wordSprites.get(word);
         Sprite missed_sprite = new Sprite(wordX, wordY, sprite_region.getTextureRegion(2), PhoeniciaContext.vboManager);
         this.resultsPane.attachChild(missed_sprite);
         missed_sprite.registerEntityModifier(new ParallelEntityModifier(
@@ -167,7 +165,7 @@ public class ImageMatchGameHUD extends PhoeniciaHUD {
             public void onDialogButtonClicked(Dialog dialog, Dialog.DialogButton dialogButton) {
                 dialog.close();
                 unregisterTouchArea(dialog);
-                phoeniciaGame.hudManager.pop();
+                finish();
             }
         });
         Text sorry_text = new Text(sorry_dialog.getWidth()/2, sorry_dialog.getHeight()-48, GameFonts.dialogText(), "Sorry, no winnings", 18,  new TextOptions(AutoWrap.WORDS, sorry_dialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
@@ -190,26 +188,26 @@ public class ImageMatchGameHUD extends PhoeniciaHUD {
             public void onDialogButtonClicked(Dialog dialog, Dialog.DialogButton dialogButton) {
                 Inventory.getInstance().add(reward_word.name, 1);
                 Bank.getInstance().credit(reward_coins);
-                phoeniciaGame.session.addExperience(reward_points);
+                game.session.addExperience(reward_points);
                 GameSounds.play(GameSounds.COLLECT);
                 dialog.close();
                 unregisterTouchArea(dialog);
-                phoeniciaGame.hudManager.pop();
+                finish();
             }
         });
 
-        ITiledTextureRegion sprite_region = this.phoeniciaGame.wordSprites.get(reward_word);
+        ITiledTextureRegion sprite_region = this.game.wordSprites.get(reward_word);
         Sprite reward_sprite = new Sprite(reward_dialog.getWidth()/2, reward_dialog.getHeight() - 100, sprite_region.getTextureRegion(1), PhoeniciaContext.vboManager);
         reward_dialog.attachChild(reward_sprite);
 
-        ITextureRegion coinRegion = this.phoeniciaGame.shellTiles.getTextureRegion(GameTextures.COIN_ICON);
+        ITextureRegion coinRegion = this.game.shellTiles.getTextureRegion(GameTextures.COIN_ICON);
         Sprite coinIcon = new Sprite(64, 112, coinRegion, PhoeniciaContext.vboManager);
         Text iconDisplay = new Text(64, 112, GameFonts.dialogText(), String.valueOf(reward_coins), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
         iconDisplay.setPosition(96 + (iconDisplay.getWidth() / 2), iconDisplay.getY());
         reward_dialog.attachChild(iconDisplay);
         reward_dialog.attachChild(coinIcon);
 
-        ITextureRegion pointsRegion = this.phoeniciaGame.shellTiles.getTextureRegion(GameTextures.XP_ICON);
+        ITextureRegion pointsRegion = this.game.shellTiles.getTextureRegion(GameTextures.XP_ICON);
         Sprite pointsIcon = new Sprite((reward_dialog.getWidth() / 2)+64, 112, pointsRegion, PhoeniciaContext.vboManager);
         Text pointsDisplay = new Text((reward_dialog.getWidth() / 2)+64, 112, GameFonts.dialogText(), String.valueOf(reward_points), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
         pointsDisplay.setPosition((reward_dialog.getWidth() / 2) + 96 + (pointsDisplay.getWidth() / 2), pointsDisplay.getY());
@@ -240,7 +238,7 @@ public class ImageMatchGameHUD extends PhoeniciaHUD {
             float available_width = (this.cardPane.getWidth()/choice_words.size());
             final float wordX = i*(this.cardPane.getWidth()/choice_words.size());
             final float wordY = this.cardPane.getHeight() - 150;
-            ITextureRegion sprite_region = this.phoeniciaGame.wordSprites.get(word);
+            ITextureRegion sprite_region = this.game.wordSprites.get(word);
             ButtonSprite wordSprite = new ButtonSprite(wordX+(available_width/2), wordY, sprite_region, PhoeniciaContext.vboManager, new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v1) {
@@ -260,7 +258,7 @@ public class ImageMatchGameHUD extends PhoeniciaHUD {
 
         Font wordFont = GameFonts.introText();
         Text challenge_text = new Text(this.cardPane.getWidth()/2, this.cardPane.getHeight() - 300, wordFont, String.valueOf(challenge_word.chars), challenge_word.chars.length, new TextOptions(HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
-        challenge_text.setX(this.cardPane.getWidth()/2 - challenge_text.getWidth()/2);
+        challenge_text.setX(this.cardPane.getWidth() / 2 - challenge_text.getWidth() / 2);
         this.cardPane.attachChild(challenge_text);
     }
 
@@ -272,4 +270,11 @@ public class ImageMatchGameHUD extends PhoeniciaHUD {
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
         final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
         return true;
-    }}
+    }
+
+    @Override
+    public void finish() {
+        game.hudManager.clear();
+    }
+
+}

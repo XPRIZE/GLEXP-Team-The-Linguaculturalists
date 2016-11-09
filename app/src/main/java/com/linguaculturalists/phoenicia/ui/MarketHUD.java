@@ -45,7 +45,6 @@ import java.util.Map;
  * A HUD used to display a list of Marketplace requests and facilitate those sales
  */
 public class MarketHUD extends PhoeniciaHUD {
-    private PhoeniciaGame game;
     private Rectangle whiteRect;
     private Entity requestItemsPane;
     private ClickDetector clickDetector;
@@ -59,7 +58,7 @@ public class MarketHUD extends PhoeniciaHUD {
      * @param game Reference to the current PhoeniciaGame this HUD is running in
      */
     public MarketHUD(final PhoeniciaGame game) {
-        super(game.camera);
+        super(game);
         this.setBackgroundEnabled(false);
         this.setOnAreaTouchTraversalFrontToBack();
         this.game = game;
@@ -71,7 +70,7 @@ public class MarketHUD extends PhoeniciaHUD {
         this.clickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
             @Override
             public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
-                game.hudManager.pop();
+                finish();
             }
         });
 
@@ -101,10 +100,7 @@ public class MarketHUD extends PhoeniciaHUD {
         int offsetX = 0;
         int offsetY = startY;
 
-        // Make sure we have all requests we can get
-        Market.getInstance().populate();
-
-        List<MarketRequest> requests = Market.getInstance().requests();
+        List<MarketRequest> requests = this.getRequests();
         for (int i = 0; i < requests.size(); i++) {
             if (offsetX >= columns) {
                 offsetY -= 288;
@@ -137,6 +133,12 @@ public class MarketHUD extends PhoeniciaHUD {
             offsetX++;
 
         }
+    }
+
+    protected  List<MarketRequest> getRequests() {
+        // Make sure we have all requests we can get
+        Market.getInstance().populate();
+        return Market.getInstance().requests();
     }
 
     /**
@@ -232,7 +234,7 @@ public class MarketHUD extends PhoeniciaHUD {
 
                 Debug.d("Remaining requests: "+requestPerson.size());
                 if (requestPerson.size() < 1) {
-                    game.hudManager.pop();
+                    finish();
                 }
             }
         });
@@ -267,7 +269,7 @@ public class MarketHUD extends PhoeniciaHUD {
         GameSounds.play(GameSounds.COLLECT);
         Market.getInstance().fulfillRequest(request);
         this.requestItemsPane.detachChildren();
-        game.hudManager.clear();
+        this.finish();
     }
 
     /**
@@ -329,4 +331,11 @@ public class MarketHUD extends PhoeniciaHUD {
         if (handled) return true;
         return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
     }
+
+    @Override
+    public void finish() {
+        game.hudManager.clear();
+    }
+
+
 }
