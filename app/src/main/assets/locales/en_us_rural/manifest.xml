@@ -7,7 +7,7 @@
     <!-- Default blocks -->
     <inventory level="3" size="1x2" name="Barn" col="37" row="43" block="locales/en_us_rural/textures/biginventory.png" />
     <market level="6" size="4x4x4" name="Market" col="42" row="40" block="locales/en_us_rural/textures/market-4x4x4.png" />
-    <workshop level="9" name="Workshop" col="38" row="40" block="locales/en_us_rural/textures/workshop.png" />
+    <workshop level="9" name="Workshop" col="36" row="39" block="locales/en_us_rural/textures/workshop.png" />
 
     <!-- People used in the marketplace and player's avatar -->
     <people>
@@ -51,7 +51,7 @@
             <message sound="">Once your building is ready, you can use it to start making words</message>
             <message sound="">You create a word by spelling it, use the letters C A T to spell cat</message>
             <message sound="">It will take time for your word to finish, once it's ready you can collect it</message>
-            <message sound="">Tap the finished word to add it to your inventory</message>
+            <message sound="">Tap the finished word at the top to add it to your inventory</message>
         </stop>
         <stop id="market">
             <message sound="">Now that you have some words, you can start selling them at the market.</message>
@@ -61,7 +61,7 @@
         <stop id="workshop">
             <message sound="">If you want to make a word that you don't have a building for yet, you can make it in your workshop</message>
             <message sound="">Here you can make any word in the game, all you need are the letters and knowing how to spell it</message>
-            <message sound="">Try making the word cat with the letters C A T</message>
+            <message sound="">Try making the word map with the letters M A P</message>
             <message sound="">Great! But remember, you can only make one word at a time in the workshop, so keep making word buildings!</message>
         </stop>
     </tour>

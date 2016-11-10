@@ -47,6 +47,7 @@ public class HUDManager extends HUD {
     }
 
     public void startTour(Stop stop) {
+        this.clear();
         this.tourLayer = new TourOverlay(game, stop);
         this.setChildScene(this.tourLayer);
         this.tourLayer.show();

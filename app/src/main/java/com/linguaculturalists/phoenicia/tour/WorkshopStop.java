@@ -1,11 +1,18 @@
 package com.linguaculturalists.phoenicia.tour;
 
+import com.linguaculturalists.phoenicia.components.MapBlockSprite;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.locale.tour.Stop;
 import com.linguaculturalists.phoenicia.locale.tour.Tour;
 import com.linguaculturalists.phoenicia.models.DefaultTile;
+import com.linguaculturalists.phoenicia.models.Inventory;
+import com.linguaculturalists.phoenicia.models.WordBuilder;
 import com.linguaculturalists.phoenicia.models.WorkshopBuilder;
+import com.linguaculturalists.phoenicia.ui.WordBuilderHUD;
 import com.linguaculturalists.phoenicia.ui.WorkshopHUD;
+
+import org.andengine.input.touch.TouchEvent;
+import org.andengine.util.debug.Debug;
 
 /**
  * Created by mhall on 10/15/16.
@@ -22,7 +29,8 @@ public class WorkshopStop extends Stop {
 
     @Override
     public void onClicked() {
-        if (this.currentMessageIndex != MSG_SPELLING) {
+        Debug.d("WorkshopStop clicked");
+        if (this.currentMessageIndex != MSG_MAPBLOCK && this.currentMessageIndex != MSG_SPELLING) {
             this.next();
         }
     }
@@ -54,14 +62,29 @@ public class WorkshopStop extends Stop {
     }
 
     private void showMapBlock() {
-        this.overlay.focusOn(this.getFocus());
-        this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_CENTER);
+        this.overlay.focusOn(this.getFocus(), new MapBlockSprite.OnClickListener() {
+            @Override
+            public void onClick(MapBlockSprite pPlacedBlockSprite, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                next();
+            }
+
+            @Override
+            public void onHold(MapBlockSprite pPlacedBlockSprite, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+
+            }
+        });
+        this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_NONE);
         this.overlay.showGuide();
-        this.overlay.showMessage(this.getMessage(MSG_MAPBLOCK), TourOverlay.MessageBox.Bottom);
+        this.overlay.showMessage(this.getMessage(MSG_MAPBLOCK), TourOverlay.MessageBox.Top);
     }
 
     private void showWorkshopHud() {
         this.overlay.clearFocus();
+        Word word = this.tour.game.getCurrentLevel().words.get(this.tour.game.getCurrentLevel().words.size()-1);
+        Debug.d("Adding chars for "+word.name);
+        for (char c : word.chars) {
+            Inventory.getInstance().add(String.valueOf(c), 1);
+        }
         final WorkshopStop stop = this;
         WorkshopHUD hud = new WorkshopHUD(this.tour.game, this.tile) {
             @Override
@@ -72,7 +95,16 @@ public class WorkshopStop extends Stop {
 
             @Override
             public void finish() {
-                overlay.clearManagedHUD();
+                return;
+            }
+
+            @Override
+            public boolean onSceneTouchEvent(TouchEvent pSceneTouchEvent) {
+                if (currentMessageIndex == MSG_HUD && pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
+                    next();
+                    return true;
+                }
+                return super.onSceneTouchEvent(pSceneTouchEvent);
             }
         };
         this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_NONE);
@@ -85,6 +117,7 @@ public class WorkshopStop extends Stop {
     }
 
     private void showWarning() {
+        this.overlay.clearManagedHUD();
         this.overlay.showMessage(this.getMessage(MSG_WARN), TourOverlay.MessageBox.Bottom);
     }
 

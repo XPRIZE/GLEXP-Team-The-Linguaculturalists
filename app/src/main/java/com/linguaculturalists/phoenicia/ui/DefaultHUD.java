@@ -109,14 +109,13 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         helpButton.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-            game.hudManager.startTour(game.locale.tour.inventory);
-//                Level level = game.locale.level_map.get(game.current_level);
-//                while (level.intro.size() < 1 && level.prev != null && level.prev != level) {
-//                    level = level.prev;
-//                }
-//                if (level.intro.size() > 0) {
-//                    game.hudManager.showLevelIntro(level);
-//                }
+                Level level = game.locale.level_map.get(game.current_level);
+                while (level.intro.size() < 1 && level.prev != null && level.prev != level) {
+                    level = level.prev;
+                }
+                if (level.intro.size() > 0) {
+                    game.hudManager.showLevelIntro(level);
+                }
             }
         });
         this.registerTouchArea(helpButton);

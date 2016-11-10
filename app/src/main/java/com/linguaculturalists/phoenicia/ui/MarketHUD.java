@@ -146,7 +146,7 @@ public class MarketHUD extends PhoeniciaHUD {
      * experience points, and a button to attempt the sale
      * @param request The activated MarketRequest to display items for
      */
-    private void populateRequestItems(final MarketRequest request) {
+    protected void populateRequestItems(final MarketRequest request) {
         this.requestItemsPane.detachChildren();
         for (Entity touchArea : this.touchAreas) {
             this.unregisterTouchArea(touchArea);
@@ -221,21 +221,7 @@ public class MarketHUD extends PhoeniciaHUD {
         Button cancelButton = new Button(this.requestItemsPane.getWidth() / 2, 32, this.requestItemsPane.getWidth(), 64, "Decline", new Color(0.80f, 0.04f, 0.04f), PhoeniciaContext.vboManager, new Button.OnClickListener() {
             @Override
             public void onClicked(Button button) {
-                Market.getInstance().cancelRequest(request);
-                requestItemsPane.detachChildren();
-                Sprite personSprite = requestPerson.get(request);
-                unregisterTouchArea(personSprite);
-                personSprite.detachSelf();
-                requestPerson.remove(request);
-
-                Text personName = requestName.get(request);
-                personName.detachSelf();
-                requestName.remove(request);
-
-                Debug.d("Remaining requests: "+requestPerson.size());
-                if (requestPerson.size() < 1) {
-                    finish();
-                }
+                declineSale(request);
             }
         });
         this.requestItemsPane.attachChild(cancelButton);
@@ -243,11 +229,29 @@ public class MarketHUD extends PhoeniciaHUD {
         this.touchAreas.add(cancelButton);
     }
 
+    protected void declineSale(MarketRequest request) {
+        Market.getInstance().cancelRequest(request);
+        requestItemsPane.detachChildren();
+        Sprite personSprite = requestPerson.get(request);
+        unregisterTouchArea(personSprite);
+        personSprite.detachSelf();
+        requestPerson.remove(request);
+
+        Text personName = requestName.get(request);
+        personName.detachSelf();
+        requestName.remove(request);
+
+        Debug.d("Remaining requests: "+requestPerson.size());
+        if (requestPerson.size() < 1) {
+            finish();
+        }
+
+    }
     /**
      * Check if the player has enough inventory to complete the sale, otherwise abort the sale
      * @param request
      */
-    private void attemptSale(MarketRequest request) {
+    protected void attemptSale(MarketRequest request) {
         Debug.d("Attempting sale to " + request.person_name.get());
         for (RequestItem item : request.getItems(PhoeniciaContext.context)) {
             int available = Inventory.getInstance().getCount(item.item_name.get());
@@ -265,7 +269,7 @@ public class MarketHUD extends PhoeniciaHUD {
      * crediting the player coins and experience points
      * @param request
      */
-    public void completeSale(MarketRequest request) {
+    protected void completeSale(MarketRequest request) {
         GameSounds.play(GameSounds.COLLECT);
         Market.getInstance().fulfillRequest(request);
         this.requestItemsPane.detachChildren();
@@ -277,7 +281,7 @@ public class MarketHUD extends PhoeniciaHUD {
      * @param item Item that the player does not have enough of to complete the sale
      * @param needed How many more of this item is needed
      */
-    public void abortSale(RequestItem item, int needed) {
+    protected void abortSale(RequestItem item, int needed) {
         Debug.d("Aborting sale due to not enough " + item.item_name.get());
         Dialog confirmDialog = new Dialog(500, 300, Dialog.Buttons.OK, PhoeniciaContext.vboManager, new Dialog.DialogListener() {
             @Override

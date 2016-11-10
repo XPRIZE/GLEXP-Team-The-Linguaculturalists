@@ -185,8 +185,8 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
 
     public void focusOn(final MapBlockSprite target, final MapBlockSprite.OnClickListener clickListener) {
         this.targetSprite = target;
+        ((SmoothCamera)this.game.camera).setZoomFactorDirect(2.0f);
         this.game.camera.setCenterDirect(target.getX(), target.getY());
-        ((SmoothCamera)this.game.camera).setZoomFactor(2.0f);
         float[] targetSceneCoordinates = this.game.camera.getCameraSceneCoordinatesFromSceneCoordinates(target.getSceneCenterCoordinates());
         Debug.d("Tour focus sprite coordinates are: " + targetSceneCoordinates[1] + "x" + targetSceneCoordinates[1]);
         final ClickDetector spriteClickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
@@ -205,8 +205,8 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
         };
 
         this.focusSprite.setScale(2.0f);
-        this.focusSprite.registerEntityModifier(new ScaleModifier(0.5f, 2.0f, 3.0f));
-        this.focusSprite.registerEntityModifier(new MoveYModifier(0.5f, this.focusSprite.getY(), this.focusSprite.getY() + 32));
+        //this.focusSprite.registerEntityModifier(new ScaleModifier(0.5f, 2.0f, 3.0f));
+        //this.focusSprite.registerEntityModifier(new MoveYModifier(0.5f, this.focusSprite.getY(), this.focusSprite.getY() + 32));
         this.attachChild(this.focusSprite);
         this.registerTouchArea(this.focusSprite);
     }
@@ -237,6 +237,9 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
         Debug.d("Attaching HUD to tour overlay: " + hud);
         this.game.hudManager.setHudLayerVisible(false);
         this.attachChild(this.managedHUD);
+        this.managedHUD.setZIndex(this.messageBox.getZIndex() - 1);
+        this.sortChildren();
+
         if (touchListener != null) {
             this.managedHUD.setOnSceneTouchListener(touchListener);
         }

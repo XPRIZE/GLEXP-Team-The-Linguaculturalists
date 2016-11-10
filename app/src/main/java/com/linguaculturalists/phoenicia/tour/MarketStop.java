@@ -1,5 +1,6 @@
 package com.linguaculturalists.phoenicia.tour;
 
+import com.linguaculturalists.phoenicia.components.MapBlockSprite;
 import com.linguaculturalists.phoenicia.locale.tour.Stop;
 import com.linguaculturalists.phoenicia.locale.tour.Tour;
 import com.linguaculturalists.phoenicia.models.Inventory;
@@ -23,9 +24,7 @@ public class MarketStop extends Stop {
 
     @Override
     public void onClicked() {
-        if (this.currentMessageIndex != MSG_REQUESTS && this.currentMessageIndex != MSG_SELLING) {
-            this.next();
-        }
+        return;
     }
 
     @Override
@@ -52,10 +51,20 @@ public class MarketStop extends Stop {
     }
 
     private void showBlock() {
-        this.overlay.focusOn(this.getFocus());
-        this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_CENTER);
+        this.overlay.focusOn(this.getFocus(), new MapBlockSprite.OnClickListener() {
+            @Override
+            public void onClick(MapBlockSprite pPlacedBlockSprite, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                next();
+            }
+
+            @Override
+            public void onHold(MapBlockSprite pPlacedBlockSprite, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+
+            }
+        });
+        this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_NONE);
         this.overlay.showGuide();
-        this.overlay.showMessage(this.getMessage(MSG_MAPBLOCK));
+        this.overlay.showMessage(this.getMessage(MSG_MAPBLOCK), TourOverlay.MessageBox.Top);
     }
 
     private void showRequests() {
@@ -64,13 +73,12 @@ public class MarketStop extends Stop {
         final MarketStop stop = this;
         final MarketHUD hud = new MarketHUD(this.tour.game) {
             @Override
-            public void abortSale(RequestItem item, int needed) {
-                super.abortSale(item, needed);
-                stop.show(MSG_REQUESTS);
+            protected void declineSale(MarketRequest request) {
+                // Can't decline sales during the tour
             }
 
             @Override
-            public void completeSale(MarketRequest request) {
+            protected void completeSale(MarketRequest request) {
                 super.completeSale(request);
                 stop.next();
             }
@@ -87,8 +95,14 @@ public class MarketStop extends Stop {
             }
 
             @Override
+            protected void populateRequestItems(MarketRequest request) {
+                super.populateRequestItems(request);
+                stop.next();
+            }
+
+            @Override
             public void finish() {
-                overlay.clearManagedHUD();
+                return;
             }
         };
         this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_NONE);
@@ -97,6 +111,8 @@ public class MarketStop extends Stop {
     }
 
     private void showSelling() {
-        this.overlay.showMessage(this.getMessage(MSG_SELLING), TourOverlay.MessageBox.Bottom);
+        this.overlay.showMessage(this.getMessage(MSG_SELLING), TourOverlay.MessageBox.Top);
     }
+
+
 }

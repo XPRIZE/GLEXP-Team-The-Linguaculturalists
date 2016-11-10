@@ -968,7 +968,6 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         workshopDefaultTile.isoY.set(locale.workshopBlock.mapRow);
         this.createWorkshopSprite(workshopDefaultTile);
         workshopDefaultTile.save(PhoeniciaContext.context);
-        this.locale.tour.workshop.setFocus(workshopDefaultTile);
     }
 
     private void createWorkshopSprite(DefaultTile workshopDefaultTile) {
@@ -996,7 +995,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         scene.registerTouchArea(workshopSprite);
 
         workshopDefaultTile.setSprite(workshopSprite);
-        this.locale.tour.workshop.setFocus(workshopSprite);
+        this.locale.tour.workshop.setFocus(workshopDefaultTile);
         scene.sortChildren();
     }
 
