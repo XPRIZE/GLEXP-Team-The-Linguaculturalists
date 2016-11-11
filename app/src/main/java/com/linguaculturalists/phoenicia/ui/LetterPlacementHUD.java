@@ -46,7 +46,6 @@ import java.util.Map;
 public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateListener {
     private Letter placeBlock = null;
     private Map<String, Text> inventoryCounts;
-    private PhoeniciaGame game;
 
     private Rectangle whiteRect;
     private Scrollable blockPanel;
@@ -62,7 +61,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
      * @param level The level whos letters will be displayed
      */
     public LetterPlacementHUD(final PhoeniciaGame game, final Level level) {
-        super(game.camera);
+        super(game);
         this.setBackgroundEnabled(false);
         this.setOnAreaTouchTraversalFrontToBack();
         this.inventoryCounts = new HashMap<String, Text>();
@@ -72,7 +71,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
         this.clickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
             @Override
             public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
-                game.hudManager.pop();
+                finish();
             }
         });
         this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH/2, 64, 600, 96, PhoeniciaContext.vboManager){
@@ -146,7 +145,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
      */
     @Override
     public void show() {
-        if (placementDone) game.hudManager.clear();
+        if (placementDone) this.finish();
         whiteRect.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
         blockPanel.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
     }
@@ -179,7 +178,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
      * @param letter Letter to create the tile for
      * @param onTile Map tile to place the new tile on
      */
-    private void addLetterTile(final Letter letter, final TMXTile onTile) {
+    protected void addLetterTile(final Letter letter, final TMXTile onTile) {
         final int cost = letter.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getLetterTileCount(letter));
 
         if (game.session.account_balance.get() < cost) {
@@ -225,5 +224,11 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
         });
 
     }
+
+    @Override
+    public void finish() {
+        game.hudManager.pop();
+    }
+
 
 }

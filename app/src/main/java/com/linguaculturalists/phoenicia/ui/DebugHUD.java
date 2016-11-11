@@ -27,7 +27,6 @@ import java.util.List;
  * Display the \link InventoryItem InventoryItems \endlink with a positive balance and allow selling them.
  */
 public class DebugHUD extends PhoeniciaHUD {
-    private PhoeniciaGame game;
     private Rectangle whiteRect;
     private ClickDetector clickDetector;
     private long startTime;
@@ -37,7 +36,7 @@ public class DebugHUD extends PhoeniciaHUD {
      * @param game Reference to the PhoeniciaGame this HUD is running in
      */
     public DebugHUD(final PhoeniciaGame game) {
-        super(game.camera);
+        super(game);
         this.setBackgroundEnabled(false);
         this.setOnAreaTouchTraversalFrontToBack();
         this.game = game;
@@ -46,7 +45,7 @@ public class DebugHUD extends PhoeniciaHUD {
             @Override
             public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
                 if (System.currentTimeMillis() - startTime > 1000) {
-                    game.hudManager.pop();
+                    finish();
                 }
             }
         });
@@ -149,6 +148,11 @@ public class DebugHUD extends PhoeniciaHUD {
         this.startTime = System.currentTimeMillis();
     }
 
+    @Override
+    public void finish() {
+        game.hudManager.pop();
+    }
+
     /**
      * Capture scene touch events and look for click events
      * @param pSceneTouchEvent
@@ -157,7 +161,7 @@ public class DebugHUD extends PhoeniciaHUD {
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
         // Block touch events
         final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
-        Debug.d("Inventory HUD touched, handled? "+handled);
+        Debug.d("Debug HUD touched, handled? "+handled);
         if (handled) return true;
         return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
         // TODO: Fix inventory selling

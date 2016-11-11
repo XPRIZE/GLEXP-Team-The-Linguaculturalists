@@ -34,7 +34,6 @@ import java.util.List;
  * Created by mhall on 8/9/16.
  */
 public class NewLevelHUD extends PhoeniciaHUD {
-    private PhoeniciaGame game;
     private Scrollable itemsPanel;
     private Rectangle whiteRect;
     private Sprite levelStar;
@@ -44,7 +43,7 @@ public class NewLevelHUD extends PhoeniciaHUD {
     private ClickDetector clickDetector;
 
     public NewLevelHUD(final PhoeniciaGame game, final Level level) {
-        super(game.camera);
+        super(game);
         this.game = game;
         this.level = level;
         this.setBackgroundEnabled(false);
@@ -53,7 +52,7 @@ public class NewLevelHUD extends PhoeniciaHUD {
             @Override
             public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
                 Debug.d("Background clicked");
-                game.hudManager.pop();
+                finish();
             }
         });
 
@@ -170,4 +169,11 @@ public class NewLevelHUD extends PhoeniciaHUD {
         return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
         // TODO: Fix inventory selling
     }
+
+    @Override
+    public void finish() {
+        game.hudManager.pop();
+    }
+
+
 }

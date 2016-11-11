@@ -41,7 +41,6 @@ import java.util.List;
  * HUD for selecting \link Game Games \endlink to be placed as tiles onto the map.
  */
 public class DecorationPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateListener {
-    private PhoeniciaGame phoeniciaGame; /**< Reference to the current PhoeniciaGame */
 
     private Rectangle whiteRect; /**< Background of this HUD */
     private Scrollable blockPanel; /**< Scrollpane containing the game icons */
@@ -56,16 +55,15 @@ public class DecorationPlacementHUD extends PhoeniciaHUD implements Bank.BankUpd
      * @param phoeniciaGame Refernece to the current PhoeniciaGame the HUD is running in
      */
     public DecorationPlacementHUD(final PhoeniciaGame phoeniciaGame) {
-        super(phoeniciaGame.camera);
+        super(phoeniciaGame);
         this.setBackgroundEnabled(false);
         this.setOnAreaTouchTraversalFrontToBack();
         Bank.getInstance().addUpdateListener(this);
-        this.phoeniciaGame = phoeniciaGame;
 
         this.clickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
             @Override
             public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
-                phoeniciaGame.hudManager.pop();
+                finish();
             }
         });
 
@@ -145,7 +143,7 @@ public class DecorationPlacementHUD extends PhoeniciaHUD implements Bank.BankUpd
      */
     @Override
     public void show() {
-        if (this.placementDone) phoeniciaGame.hudManager.clear();
+        if (this.placementDone) this.finish();
         //whiteRect.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
         //blockPanel.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
     }
@@ -180,7 +178,7 @@ public class DecorationPlacementHUD extends PhoeniciaHUD implements Bank.BankUpd
      */
     private void addDecorationTile(final Decoration decoration, final TMXTile onTile) {
         final int cost = decoration.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getDecorationTileCount(decoration));
-        if (phoeniciaGame.session.account_balance.get() < cost) {
+        if (game.session.account_balance.get() < cost) {
             Dialog lowBalanceDialog = new Dialog(500, 300, Dialog.Buttons.OK, PhoeniciaContext.vboManager, new Dialog.DialogListener() {
                 @Override
                 public void onDialogButtonClicked(Dialog dialog, Dialog.DialogButton dialogButton) {
@@ -188,7 +186,7 @@ public class DecorationPlacementHUD extends PhoeniciaHUD implements Bank.BankUpd
                     unregisterTouchArea(dialog);
                 }
             });
-            int difference = cost - phoeniciaGame.session.account_balance.get();
+            int difference = cost - game.session.account_balance.get();
             Text confirmText = new Text(lowBalanceDialog.getWidth()/2, lowBalanceDialog.getHeight()-48, GameFonts.dialogText(), "You need "+difference+" more coins", 30,  new TextOptions(AutoWrap.WORDS, lowBalanceDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
             lowBalanceDialog.attachChild(confirmText);
 
@@ -197,12 +195,12 @@ public class DecorationPlacementHUD extends PhoeniciaHUD implements Bank.BankUpd
             return;
         }
         Debug.d("Placing decoration "+decoration.name+" at "+onTile.getTileColumn()+"x"+onTile.getTileRow());
-        final DecorationTile decorationTile = new DecorationTile(this.phoeniciaGame, decoration);
+        final DecorationTile decorationTile = new DecorationTile(this.game, decoration);
 
         decorationTile.isoX.set(onTile.getTileColumn());
         decorationTile.isoY.set(onTile.getTileRow());
 
-        phoeniciaGame.createDecorationSprite(decorationTile, new PhoeniciaGame.CreateDecorationSpriteCallback() {
+        game.createDecorationSprite(decorationTile, new PhoeniciaGame.CreateDecorationSpriteCallback() {
             @Override
             public void onDecorationSpriteCreated(DecorationTile tile) {
                 decorationTile.save(PhoeniciaContext.context);
@@ -218,5 +216,11 @@ public class DecorationPlacementHUD extends PhoeniciaHUD implements Bank.BankUpd
         });
 
     }
+
+    @Override
+    public void finish() {
+        game.hudManager.pop();
+    }
+
 
 }

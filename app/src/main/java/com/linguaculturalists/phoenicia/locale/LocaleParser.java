@@ -1,5 +1,10 @@
 package com.linguaculturalists.phoenicia.locale;
 
+import com.linguaculturalists.phoenicia.locale.tour.Message;
+import com.linguaculturalists.phoenicia.locale.tour.Stop;
+import com.linguaculturalists.phoenicia.locale.tour.Tour;
+import com.linguaculturalists.phoenicia.tour.TourOverlay;
+
 import org.andengine.util.debug.Debug;
 import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
@@ -8,68 +13,29 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 
 /**
  * Read the locale XML and build it into a Locale object.
  */
 public class LocaleParser extends DefaultHandler {
 
-    private static final String TAG_LOCALE = "locale";
-    private static final String TAG_MAP = "map";
-    private static final String TAG_SHELL = "shell";
-    private static final String TAG_MUSIC = "music";
-    private static final String TAG_INVENTORY = "inventory";
-    private static final String TAG_MARKET = "market";
-    private static final String TAG_WORKSHOP = "workshop";
-    private static final String TAG_PEOPLE= "people";
-    private static final String TAG_PERSON = "person";
-    private static final String TAG_GAMES = "games";
-    private static final String TAG_GAME = "game";
-    private static final String TAG_DECORATIONS = "decorations";
-    private static final String TAG_DECORATION = "decoration";
-    private static final String TAG_LETTERS = "letters";
-    private static final String TAG_LETTER = "letter";
-    private static final String TAG_WORDS = "words";
-    private static final String TAG_WORD = "word";
-    private static final String TAG_LEVELS = "levels";
-    private static final String TAG_LEVEL = "level";
-    private static final String TAG_INTRO = "intro";
-    private static final String TAG_PAGE = "page";
-    private static final String TAG_HELP = "help";
-    private static final String TAG_REQ = "req";
-    private static final String TAG_REQLETTER = "gather_letter";
-    private static final String TAG_REQWORD = "gather_word";
-    private boolean inLocale = false;
-    private boolean inPeople = false;
-    private boolean inGames = false;
-    private boolean inDecorations = false;
-    private boolean inLettersList = false;
-    private boolean inLetterDefinition = false;
-    private boolean inWordsList = false;
-    private boolean inWordDefinition = false;
-    private boolean inLevelsList = false;
     private boolean inLevelDefinition = false;
-    private boolean inLevelIntro = false;
-    private boolean inLevelIntroPage = false;
-    private boolean inLevelLetters = false;
-    private boolean inLevelWords = false;
-    private boolean inLevelHelp = false;
-    private boolean inLevelHelpLetters = false;
-    private boolean inLevelHelpWords = false;
-    private boolean inLevelReq = false;
-    private boolean inLevelReqLetter = false;
-    private boolean inLevelReqWord = false;
     private Letter currentLetter;
     private Word currentWord;
     private Level currentLevel;
     private IntroPage currentPage;
     private CollectLetterReq currentReqLetter;
     private CollectWordReq currentReqWord;
+    private Stop currentTourStop;
+    private Message currentTourStopMessage;
 
     private Locale locale;
+    private Stack<String> nodeStack;
 
     public LocaleParser() {
         super();
+        this.nodeStack = new Stack<String>();
     }
 
 
@@ -80,76 +46,46 @@ public class LocaleParser extends DefaultHandler {
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        Debug.v("Parser start: "+localName);
-        if (localName.equals(LocaleParser.TAG_LOCALE)) {
-            this.inLocale = true;
+        this.nodeStack.push(localName);
+        String nodePath = StringUtils.join(this.nodeStack, '/');
+        //Debug.d("Parser start: "+nodePath);
+
+        if (nodePath.equals("/locale")) {
             this.parseLocale(attributes);
-        } else if (this.inLocale && localName.equals(LocaleParser.TAG_MAP)) {
+        } else if (nodePath.equals("/locale/map")) {
             this.parseMap(attributes);
-        } else if (this.inLocale && localName.equals(LocaleParser.TAG_SHELL)) {
+        } else if (nodePath.equals("/locale/shell")) {
             this.parseShell(attributes);
-        } else if (this.inLocale && localName.equals(LocaleParser.TAG_MUSIC)) {
+        } else if (nodePath.equals("/locale/music")) {
             this.parseMusic(attributes);
-        } else if (this.inLocale && localName.equals(LocaleParser.TAG_INVENTORY)) {
+        } else if (nodePath.equals("/locale/inventory")) {
             this.parseInventory(attributes);
-        } else if (this.inLocale && localName.equals(LocaleParser.TAG_MARKET)) {
+        } else if (nodePath.equals("/locale/market")) {
             this.parseMarket(attributes);
-        } else if (this.inLocale && localName.equals(LocaleParser.TAG_WORKSHOP)) {
+        } else if (nodePath.equals("/locale/workshop")) {
             this.parseWorkshop(attributes);
-        } else if (this.inLocale && localName.equals(LocaleParser.TAG_PEOPLE)) {
-            this.inPeople = true;
-        } else if (this.inLocale && this.inPeople && localName.equals(LocaleParser.TAG_PERSON)) {
+        } else if (nodePath.equals("/locale/people/person")) {
             this.parsePerson(attributes);
-        } else if (this.inLocale && localName.equals(LocaleParser.TAG_GAMES)) {
-            this.inGames = true;
-        } else if (this.inLocale && localName.equals(LocaleParser.TAG_DECORATIONS)) {
-            this.inDecorations = true;
-        } else if (this.inLocale && this.inGames && localName.equals(LocaleParser.TAG_GAME)) {
+        } else if (nodePath.equals("/locale/games/game")) {
             this.parseGame(attributes);
-        } else if (this.inLocale && this.inDecorations && localName.equals(LocaleParser.TAG_DECORATION)) {
+        } else if (nodePath.equals("/locale/decorations/decoration")) {
             this.parseDecoration(attributes);
-        } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
-            if (!this.inLevelDefinition) {
-                this.inLettersList = true;
-            }
-        } else if (this.inLocale && this.inLettersList && localName.equals(LocaleParser.TAG_LETTER)) {
-            this.inLetterDefinition = true;
+        } else if (nodePath.equals("/locale/tour/stop")) {
+            this.parseTourStop(attributes);
+        } else if (nodePath.equals("/locale/tour/stop/message")) {
+            this.parseTourStopMessage(attributes);
+        } else if (nodePath.equals("/locale/letters/letter")) {
             this.parseLetterDefinition(attributes);
-        } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_WORDS)) {
-            if (!this.inLevelDefinition) {
-                this.inWordsList = true;
-            }
-        } else if (this.inLocale && this.inWordsList && localName.equals(LocaleParser.TAG_WORD)) {
-            this.inWordDefinition = true;
+        } else if (nodePath.equals("/locale/words/word")) {
             this.parseWordDefinition(attributes);
-        } else if (this.inLocale && localName.equals(LocaleParser.TAG_LEVELS)) {
-            this.inLevelsList = true;
-        } else if (this.inLocale && this.inLevelsList && localName.equals(LocaleParser.TAG_LEVEL)) {
-            this.inLevelDefinition = true;
+        } else if (nodePath.equals("/locale/levels/level")) {
             this.parseLevel(attributes);
-        } else if (this.inLocale && this.inLevelDefinition && localName.equals(LocaleParser.TAG_INTRO)) {
-            this.inLevelIntro = true;
-        } else if (this.inLevelIntro && localName.equals(LocaleParser.TAG_PAGE)) {
-            this.inLevelIntroPage = true;
+        } else if (nodePath.equals("/locale/levels/level/intro/page")) {
             this.parseLevelIntroPage(attributes);
-        } else if (this.inLocale && this.inLevelDefinition && !this.inLevelHelp && localName.equals(LocaleParser.TAG_LETTERS)) {
-            this.inLevelLetters = true;
-        } else if (this.inLocale && this.inLevelDefinition && !this.inLevelHelp && localName.equals(LocaleParser.TAG_WORDS)) {
-            this.inLevelWords = true;
-        } else if (this.inLocale && this.inLevelDefinition && localName.equals(LocaleParser.TAG_HELP)) {
-            this.inLevelHelp = true;
-        } else if (this.inLocale && this.inLevelDefinition && this.inLevelHelp && localName.equals(LocaleParser.TAG_LETTERS)) {
-            this.inLevelHelpLetters = true;
-        } else if (this.inLocale && this.inLevelDefinition && this.inLevelHelp && localName.equals(LocaleParser.TAG_WORDS)) {
-            this.inLevelHelpWords = true;
-        } else if (this.inLocale && this.inLevelDefinition && localName.equals(LocaleParser.TAG_REQ)) {
-            this.inLevelReq = true;
-        } else if (this.inLocale && this.inLevelDefinition && this.inLevelReq && localName.equals(LocaleParser.TAG_REQLETTER)) {
-            this.inLevelReqLetter = true;
+        } else if (nodePath.equals("/locale/levels/level/req/gather_letter")) {
             this.currentReqLetter = new CollectLetterReq();
             this.parseLevelReqLetter(attributes);
-        } else if (this.inLocale && this.inLevelDefinition && this.inLevelReq && localName.equals(LocaleParser.TAG_REQWORD)) {
-            this.inLevelReqWord = true;
+        } else if (nodePath.equals("/locale/levels/level/req/gather_word")) {
             this.currentReqWord = new CollectWordReq();
             this.parseLevelReqWord(attributes);
         }
@@ -160,6 +96,7 @@ public class LocaleParser extends DefaultHandler {
         this.locale.name = attributes.getValue("name");
         this.locale.display_name = attributes.getValue("display_name");
         this.locale.lang = attributes.getValue("lang");
+        this.locale.tour = new Tour();
     }
 
     private void parseMap(Attributes attributes) throws SAXException {
@@ -346,10 +283,38 @@ public class LocaleParser extends DefaultHandler {
         this.locale.decoration_map.put(newDecoration.name, newDecoration);
     }
 
+    private void parseTourStop(Attributes attributes) throws SAXException {
+        Debug.v("Parsing locale tour stop");
+        String stopId = attributes.getValue("id");
+        if (stopId.equals("welcome")) {
+            this.currentTourStop = locale.tour.welcome;
+        } else if (stopId.equals("words")) {
+            this.currentTourStop = locale.tour.words;
+        } else if (stopId.equals("inventory")) {
+            this.currentTourStop = locale.tour.inventory;
+        } else if (stopId.equals("market")) {
+            this.currentTourStop = locale.tour.market;
+        } else if (stopId.equals("workshop")) {
+            this.currentTourStop = locale.tour.workshop;
+        }
+
+    }
+
+    private void parseTourStopMessage(Attributes attributes) throws SAXException {
+        Debug.v("Parsing locale tour stop message for "+this.currentTourStop.getClass());
+        Message newMessage = new Message();
+        newMessage.sound = attributes.getValue("sound");
+        newMessage.texture_src = attributes.getValue("texture");
+        newMessage.text = "";
+        this.currentTourStop.addMessage(newMessage);
+        this.currentTourStopMessage = newMessage;
+    }
+
     private void parseLetterDefinition(Attributes attributes) throws SAXException {
         Debug.v("Parsing locale letter");
         this.currentLetter = new Letter();
         this.currentLetter.name = attributes.getValue("name");
+        Debug.v("Parsing locale letter: "+this.currentLetter.name);
         String size = attributes.getValue("size");
         if (size == null || size == "" || size == "1x1" || size == "1x1x1") {
             this.currentLetter.columns = 1;
@@ -480,72 +445,51 @@ public class LocaleParser extends DefaultHandler {
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        Debug.v("Parser end: "+localName);
-        if (localName.equals(LocaleParser.TAG_LOCALE)) {
-            this.inLocale = false;
-        } else if (this.inLocale && this.inPeople && localName.equals(LocaleParser.TAG_PEOPLE)) {
-            this.inPeople = false;
-        } else if (this.inLocale && this.inGames && localName.equals(LocaleParser.TAG_GAMES)) {
-            this.inGames = false;
-        } else if (this.inLocale && this.inGames && localName.equals(LocaleParser.TAG_DECORATIONS)) {
-            this.inDecorations = false;
-        } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_LETTERS)) {
-            if (!this.inLevelDefinition) {
-                this.inLettersList = false;
-            }
-        } else if (this.inLocale && this.inLetterDefinition && localName.equals(LocaleParser.TAG_LETTER)) {
+        String nodePath = StringUtils.join(this.nodeStack, '/');
+        Debug.v("Parser end: "+nodePath);
+
+        if (nodePath.equals("/locale/letters/letter")) {
             this.locale.letters.add(this.currentLetter);
             this.locale.letter_map.put(this.currentLetter.name, this.currentLetter);
             this.currentLetter = null;
-            this.inLetterDefinition = false;
-        } else if (this.inLocale && !this.inLevelDefinition && localName.equals(LocaleParser.TAG_WORDS)) {
-            if (!this.inLevelDefinition) {
-                this.inWordsList = false;
-            }
-        } else if (this.inLocale && this.inWordDefinition && localName.equals(LocaleParser.TAG_WORD)) {
+        } else if (nodePath.equals("/locale/words/word")) {
             this.locale.words.add(this.currentWord);
             this.locale.word_map.put(this.currentWord.name, this.currentWord);
             this.currentWord = null;
-            this.inWordDefinition = false;
-        } else if (this.inLocale && this.inLevelDefinition && localName.equals(LocaleParser.TAG_LEVEL)) {
+        } else if (nodePath.equals("/locale/levels/level")) {
             this.locale.levels.add(this.currentLevel);
             this.locale.level_map.put(this.currentLevel.name, this.currentLevel);
             this.inLevelDefinition = false;
-        } else if (this.inLocale && this.inLevelIntroPage && localName.equals(LocaleParser.TAG_INTRO)) {
-            this.inLevelIntro = false;
-        } else if (this.inLevelIntroPage && localName.equals(LocaleParser.TAG_PAGE)) {
-            this.inLevelIntroPage = false;
+        } else if (nodePath.equals("/locale/levels/level/intro/page")) {
             this.currentLevel.intro.add(this.currentPage);
-        } else if (this.inLocale && this.inLevelDefinition && !this.inLevelHelpLetters && localName.equals(LocaleParser.TAG_LETTERS)) {
-            this.inLevelLetters = false;
-        } else if (this.inLocale && this.inLevelDefinition && !this.inLevelHelpWords && localName.equals(LocaleParser.TAG_WORDS)) {
-            this.inLevelWords = false;
-        } else if (this.inLocale && this.inLevelDefinition && this.inLevelHelpLetters && localName.equals(LocaleParser.TAG_LETTERS)) {
-            this.inLevelHelpLetters = false;
-        } else if (this.inLocale && this.inLevelDefinition && this.inLevelHelpWords && localName.equals(LocaleParser.TAG_WORDS)) {
-            this.inLevelHelpWords = false;
-        } else if (this.inLocale && this.inLevelHelp && localName.equals(LocaleParser.TAG_HELP)) {
-            this.inLevelHelp = false;
-        } else if (this.inLocale && this.inLevelReq && localName.equals(LocaleParser.TAG_REQ)) {
-            this.inLevelReq = false;
-        } else if (this.inLocale && this.inLevelReqLetter && localName.equals(LocaleParser.TAG_REQLETTER)) {
+        } else if (nodePath.equals("/locale/levels/level/req/gather_letter")) {
             this.currentLevel.requirements.add(this.currentReqLetter);
             this.currentReqLetter = null;
-            this.inLevelReqLetter = false;
-        } else if (this.inLocale && this.inLevelReqWord && localName.equals(LocaleParser.TAG_REQWORD)) {
+        } else if (nodePath.equals("/locale/levels/level/req/gather_word")) {
             this.currentLevel.requirements.add(this.currentReqWord);
             this.currentReqWord = null;
-            this.inLevelReqWord = false;
+        }
+
+        if (this.nodeStack.peek().equals(localName)) {
+            this.nodeStack.pop();
+        } else {
+            Debug.e("Closing tag "+localName+" was not the last opened tag: "+this.nodeStack.peek());
         }
     }
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
+        String nodePath = StringUtils.join(this.nodeStack, '/');
+
+        Debug.v("Reading characteres for "+nodePath);
+
         String text = new String(ch, start, length);
-        if (this.inLocale && this.inLettersList && this.inLetterDefinition) {
+        if (nodePath.equals("/locale/tour/stop/message")) {
+            this.currentTourStopMessage.text = text;
+        } else if (nodePath.equals("/locale/letters/letter")) {
             Debug.v("Adding Letter chars: "+text);
             this.currentLetter.chars = text.toCharArray();
-        } else if (this.inLocale && this.inWordsList && this.inWordDefinition) {
+        } else if (nodePath.equals("/locale/words/word")) {
             Debug.v("Adding Word chars: "+text);
             if (this.currentWord.chars == null) {
                 this.currentWord.chars = text.toCharArray();
@@ -555,14 +499,14 @@ public class LocaleParser extends DefaultHandler {
                 System.arraycopy(text.toCharArray(), 0, appended, this.currentWord.chars.length, text.length());
                 this.currentWord.chars = appended;
             }
-        } else if (this.inLevelIntroPage) {
+        } else if (nodePath.equals("/locale/levels/level/intro/page")) {
             Debug.v("Adding Intro page chars: "+text);
             if (this.currentPage.text == null) {
                 this.currentPage.text = text;
             } else {
                 this.currentPage.text += text;
             }
-        } else if (this.inLocale && this.inLevelDefinition && !this.inLevelHelp && this.inLevelLetters) {
+        } else if (nodePath.equals("/locale/levels/level/letters")) {
             String[] letters =  StringUtils.split(text, ",");
             for (int i = 0; i < letters.length; i++) {
                 Letter letter = this.locale.letter_map.get(letters[i]);
@@ -574,7 +518,7 @@ public class LocaleParser extends DefaultHandler {
                     this.currentLevel.letter_count.put(letter, this.currentLevel.letter_count.get(letter));
                 }
             }
-        } else if (this.inLocale && this.inLevelDefinition && !this.inLevelHelp && this.inLevelWords) {
+        } else if (nodePath.equals("/locale/levels/level/words")) {
             String[] words =  StringUtils.split(text, ",");
             for (int i = 0; i < words.length; i++) {
                 Word word = this.locale.word_map.get(words[i]);
@@ -586,25 +530,25 @@ public class LocaleParser extends DefaultHandler {
                     this.currentLevel.word_count.put(word, this.currentLevel.word_count.get(word));
                 }
             }
-        } else if (this.inLocale && this.inLevelDefinition && this.inLevelHelp && this.inLevelHelpLetters) {
+        } else if (nodePath.equals("/locale/levels/level/help/letters")) {
             String[] letters =  StringUtils.split(text, ",");
             for (int i = 0; i < letters.length; i++) {
                 Debug.v("Adding help Letter "+letters[i]+" to Level "+this.currentLevel.name);
                 this.currentLevel.help_letters.add(this.locale.letter_map.get(letters[i]));
             }
-        } else if (this.inLocale && this.inLevelDefinition && this.inLevelHelp && this.inLevelHelpWords) {
+        } else if (nodePath.equals("/locale/levels/level/help/words")) {
             String[] words =  StringUtils.split(text, ",");
             for (int i = 0; i < words.length; i++) {
                 Debug.v("Adding help Word "+words[i]+" to Level "+this.currentLevel.name);
                 this.currentLevel.help_words.add(this.locale.word_map.get(words[i]));
             }
-        } else if (this.inLocale && this.inLevelDefinition && this.inLevelReq && this.inLevelReqLetter) {
+        } else if (nodePath.equals("/locale/levels/level/req/gather_letter")) {
             String[] letters =  StringUtils.split(text, ",");
             for (int i = 0; i < letters.length; i++) {
                 Debug.v("Adding req letter "+letters[i]+" to Level "+this.currentLevel.name);
                 this.currentReqLetter.addLetter(this.locale.letter_map.get(letters[i]));
             }
-        } else if (this.inLocale && this.inLevelDefinition && this.inLevelReq && this.inLevelReqWord) {
+        } else if (nodePath.equals("/locale/levels/level/req/gather_word")) {
             String[] words =  StringUtils.split(text, ",");
             for (int i = 0; i < words.length; i++) {
                 Debug.v("Adding req word "+words[i]+" to Level "+this.currentLevel.name);
@@ -613,8 +557,16 @@ public class LocaleParser extends DefaultHandler {
         }
     }
 
+
+    @Override
+    public void startDocument() throws SAXException {
+        super.startDocument();
+        this.nodeStack.push("");
+    }
+
     @Override
     public void endDocument() throws SAXException {
         super.endDocument();
+        this.nodeStack.pop();
     }
 }

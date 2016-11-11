@@ -82,4 +82,8 @@ public class LetterSprite extends ButtonSprite {
         }
     }
 
+    public Letter getLetter() {
+        return letter;
+    }
+
 }

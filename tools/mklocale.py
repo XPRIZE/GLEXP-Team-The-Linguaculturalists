@@ -3,6 +3,9 @@
 import os
 import sys
 import math
+import codecs
+sys.stdin = codecs.getreader('UTF-8')(sys.stdin);
+#sys.stdout = codecs.getwriter('UTF-8')(sys.stdout);
 
 def read_data(source):
     data = list()

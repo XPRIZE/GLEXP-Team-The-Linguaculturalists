@@ -42,7 +42,6 @@ import java.util.List;
  * HUD for selecting \link Game Games \endlink to be placed as tiles onto the map.
  */
 public class GamePlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateListener {
-    private PhoeniciaGame phoeniciaGame; /**< Reference to the current PhoeniciaGame */
 
     private Rectangle whiteRect; /**< Background of this HUD */
     private Scrollable blockPanel; /**< Scrollpane containing the game icons */
@@ -57,16 +56,15 @@ public class GamePlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
      * @param phoeniciaGame Refernece to the current PhoeniciaGame the HUD is running in
      */
     public GamePlacementHUD(final PhoeniciaGame phoeniciaGame) {
-        super(phoeniciaGame.camera);
+        super(phoeniciaGame);
         this.setBackgroundEnabled(false);
         this.setOnAreaTouchTraversalFrontToBack();
         Bank.getInstance().addUpdateListener(this);
-        this.phoeniciaGame = phoeniciaGame;
 
         this.clickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
             @Override
             public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
-                phoeniciaGame.hudManager.pop();
+                finish();
             }
         });
 
@@ -143,7 +141,7 @@ public class GamePlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
      */
     @Override
     public void show() {
-        if (this.placementDone) phoeniciaGame.hudManager.clear();
+        if (this.placementDone) this.finish();
         //whiteRect.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
         //blockPanel.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
     }
@@ -173,12 +171,12 @@ public class GamePlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
 
     /**
      * Create a new WordTile (with Sprite and Builder).
-     * @param game Word to create the tile for
+     * @param minigame Word to create the tile for
      * @param onTile Map tile to place the new tile on
      */
-    private void addGameTile(final Game game, final TMXTile onTile) {
-        final int cost = game.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getGameTileCount(game));
-        if (phoeniciaGame.session.account_balance.get() < cost) {
+    private void addGameTile(final Game minigame, final TMXTile onTile) {
+        final int cost = minigame.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getGameTileCount(minigame));
+        if (game.session.account_balance.get() < cost) {
             Dialog lowBalanceDialog = new Dialog(500, 300, Dialog.Buttons.OK, PhoeniciaContext.vboManager, new Dialog.DialogListener() {
                 @Override
                 public void onDialogButtonClicked(Dialog dialog, Dialog.DialogButton dialogButton) {
@@ -186,7 +184,7 @@ public class GamePlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
                     unregisterTouchArea(dialog);
                 }
             });
-            int difference = cost - phoeniciaGame.session.account_balance.get();
+            int difference = cost - game.session.account_balance.get();
             Text confirmText = new Text(lowBalanceDialog.getWidth()/2, lowBalanceDialog.getHeight()-48, GameFonts.dialogText(), "You need "+difference+" more coins", 30,  new TextOptions(AutoWrap.WORDS, lowBalanceDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
             lowBalanceDialog.attachChild(confirmText);
 
@@ -194,19 +192,19 @@ public class GamePlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
             this.registerTouchArea(lowBalanceDialog);
             return;
         }
-        Debug.d("Placing game "+game.name+" at "+onTile.getTileColumn()+"x"+onTile.getTileRow());
-        final GameTile gameTile = new GameTile(this.phoeniciaGame, game);
+        Debug.d("Placing game "+minigame.name+" at "+onTile.getTileColumn()+"x"+onTile.getTileRow());
+        final GameTile gameTile = new GameTile(this.game, minigame);
 
         gameTile.isoX.set(onTile.getTileColumn());
         gameTile.isoY.set(onTile.getTileRow());
 
-        phoeniciaGame.createGameSprite(gameTile, new PhoeniciaGame.CreateGameSpriteCallback() {
+        game.createGameSprite(gameTile, new PhoeniciaGame.CreateGameSpriteCallback() {
             @Override
             public void onGameSpriteCreated(GameTile tile) {
-                GameTileBuilder builder = new GameTileBuilder(phoeniciaGame.session, gameTile, gameTile.item_name.get(), game.construct);
+                GameTileBuilder builder = new GameTileBuilder(game.session, gameTile, gameTile.item_name.get(), minigame.construct);
                 builder.start();
                 builder.save(PhoeniciaContext.context);
-                phoeniciaGame.addBuilder(builder);
+                game.addBuilder(builder);
 
                 gameTile.setBuilder(builder);
                 gameTile.save(PhoeniciaContext.context);
@@ -222,5 +220,11 @@ public class GamePlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
         });
 
     }
+
+    @Override
+    public void finish() {
+        game.hudManager.pop();
+    }
+
 
 }

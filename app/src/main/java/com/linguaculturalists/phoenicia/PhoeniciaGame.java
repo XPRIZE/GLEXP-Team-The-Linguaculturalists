@@ -9,6 +9,7 @@ import org.andengine.audio.music.Music;
 import org.andengine.audio.music.MusicFactory;
 import org.andengine.audio.sound.Sound;
 import org.andengine.audio.sound.SoundFactory;
+import org.andengine.engine.camera.SmoothCamera;
 import org.andengine.engine.camera.ZoomCamera;
 import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.entity.scene.IOnSceneTouchListener;
@@ -74,6 +75,7 @@ import com.linguaculturalists.phoenicia.models.WordBuilder;
 import com.linguaculturalists.phoenicia.models.WordTileBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.models.WorkshopBuilder;
+import com.linguaculturalists.phoenicia.tour.TourOverlay;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
 import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
 import com.linguaculturalists.phoenicia.locale.LocaleLoader;
@@ -115,7 +117,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public static final int DECORATION_TEXTURE_ROWS = 2;
     public Locale locale; /**< the locale used by the game session */
     public Scene scene;
-    public ZoomCamera camera;
+    public SmoothCamera camera;
     private float startCenterX;
     private float startCenterY;
     public GameActivity activity;
@@ -187,7 +189,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public String current_level = ""; /**< The current level the player has reached */
     private List<LevelChangeListener> levelListeners;
 
-    public PhoeniciaGame(GameActivity activity, final ZoomCamera camera) {
+    public PhoeniciaGame(GameActivity activity, final SmoothCamera camera) {
         FontFactory.setAssetBasePath("fonts/");
 
         this.activity = activity;
@@ -237,7 +239,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             public void onPinchZoom(final PinchZoomDetector pPinchZoomDetector, final TouchEvent pTouchEvent, final float pZoomFactor) {
                 final float newZoomFactor = mPinchZoomStartedCameraZoomFactor * pZoomFactor;
                 if (newZoomFactor >= minZoomFactor && newZoomFactor <= maxZoomFactor) {
-                    camera.setZoomFactor(newZoomFactor);
+                    camera.setZoomFactorDirect(newZoomFactor);
                 }
             }
 
@@ -273,7 +275,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                                 float calcY = motion.getHistoricalY(i) - motion.getHistoricalY(i - 1);
                                 final float zoom = camera.getZoomFactor() + 1.0f;
 
-                                camera.setCenter(camera.getCenterX() - (calcX / zoom), camera.getCenterY() + (calcY / zoom));
+                                camera.setCenterDirect(camera.getCenterX() - (calcX / zoom), camera.getCenterY() + (calcY / zoom));
                             }
                         }
                         return true;
@@ -333,6 +335,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         progress.setProgress(0.2f);
         this.loadLocale(progress);
         this.loadSession(progress);
+        this.locale.tour.init(this);
     }
 
     private void loadLocale(ProgressDisplay progress) throws IOException {
@@ -625,6 +628,13 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
     }
     private void loadSession(ProgressDisplay progress) {
+        // Assign the next person to be the guide image
+        if (this.session.person_name.get() == null) {
+            List<GameSession> sessions = GameSession.objects(PhoeniciaContext.context).all().toList();
+            int person_index = (sessions.size()-1) % this.locale.people.size();
+            this.session.person_name.set(this.locale.people.get(person_index).name);
+            this.session.save(PhoeniciaContext.context);
+        }
         progress.setProgress(0.90f);
         this.loadSessionDefaultTiles();
         progress.setProgress(0.91f);
@@ -908,6 +918,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         scene.registerTouchArea(inventorySprite);
 
         inventoryDefaultTile.setSprite(inventorySprite);
+        this.locale.tour.inventory.setFocus(inventorySprite);
     }
 
     private void createMarketTile() {
@@ -948,7 +959,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         scene.registerTouchArea(marketSprite);
 
         marketDefaultTile.setSprite(marketSprite);
-
+        this.locale.tour.market.setFocus(marketSprite);
         scene.sortChildren();
     }
 
@@ -990,7 +1001,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         scene.registerTouchArea(workshopSprite);
 
         workshopDefaultTile.setSprite(workshopSprite);
-
+        this.locale.tour.workshop.setFocus(workshopDefaultTile);
         scene.sortChildren();
     }
 
@@ -998,8 +1009,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      * Start playing the game
      */
     public void start() {
-        this.camera.setCenter(this.startCenterX, this.startCenterY);
-        this.camera.setZoomFactor(2.0f);
+        this.camera.setCenterDirect(this.startCenterX, this.startCenterY);
+        this.camera.setZoomFactorDirect(2.0f);
         this.camera.setHUD(this.hudManager);
         this.hudManager.showDefault();
         if (this.music != null) {
@@ -1015,7 +1026,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.isRunning = true;
 
         if (this.current_level == null || this.current_level == "") {
-            this.changeLevel( this.locale.levels.get(0));
+            this.changeLevel(this.locale.levels.get(0));
         } else if (this.current_level != this.session.current_level.get()) {
             this.changeLevel(this.locale.level_map.get(this.session.current_level.get()));
         }
@@ -1060,7 +1071,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
      */
     public void onUpdate(float v) {
         // update build queues
-        this.hudManager.update(v);
+        //this.hudManager.update(v);
         this.currentTime = System.currentTimeMillis();
         this.updateTime += v;
         if (this.updateTime > 1) {
@@ -1625,15 +1636,36 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             this.levelListeners.get(i).onLevelChanged(next);
         }
 
-        // Show what's new only for levels after the first one
-        if (this.locale.levels.indexOf(next) >= 1) {
-            this.hudManager.showNewLevel(next);
+        if (this.hudManager.tourActive()) {
+            // Don't interrupt the tour
+            return;
+        }
+
+        // Show what's new only for levels without a tour stop
+        if (this.locale.levels.indexOf(next) == 0) {
+            this.hudManager.startTour(this.locale.tour.welcome);
+
+        } else if (next.prev.words.size() < 1 && next.words.size() >= 1) {
+            this.hudManager.startTour(this.locale.tour.words);
+
+        } else if (next.name.equals(this.locale.inventoryBlock.level)) {
+            this.hudManager.startTour(this.locale.tour.inventory);
+
+        } else if (next.name.equals(this.locale.marketBlock.level)) {
+            this.hudManager.startTour(this.locale.tour.market);
+
+        } else if (next.name.equals(this.locale.workshopBlock.level)) {
+            this.hudManager.startTour(this.locale.tour.workshop);
+
         } else {
-            this.hudManager.showLevelIntro(next);
+            this.hudManager.showNewLevel(next);
         }
         return;
     }
 
+    public Level getCurrentLevel() {
+        return this.locale.level_map.get(this.current_level);
+    }
     public void addLevelListener(LevelChangeListener listener) {
         this.levelListeners.add(listener);
     }
@@ -1642,5 +1674,16 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     }
     public interface LevelChangeListener {
         public void onLevelChanged(Level newLevel);
+    }
+
+    public void runOnDelay(final long waitTime, final Runnable runnable) {
+        Thread delayRunner = new Thread() {
+            @Override
+            public void run() {
+                try {Thread.sleep(waitTime);} catch (InterruptedException e) {}
+                activity.runOnUpdateThread(runnable);
+            }
+        };
+        delayRunner.start();
     }
 }

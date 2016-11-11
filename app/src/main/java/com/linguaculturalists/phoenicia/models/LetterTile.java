@@ -207,6 +207,12 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
 
     }
 
+    public void collect() {
+        this.reset(PhoeniciaContext.context);
+        phoeniciaGame.playBlockSound(this.letter.sound);
+        Inventory.getInstance().add(this.letter.name);
+        phoeniciaGame.session.addExperience(this.letter.points);
+    }
     /**
      * Called when the Sprite for the tile has been clicked by the player
      * @param buttonSprite
@@ -219,10 +225,7 @@ public class LetterTile extends Model implements Builder.BuildStatusUpdateHandle
         if (builder != null) {
             if (builder.status.get() == LetterBuilder.COMPLETE) {
                 Debug.d("Clicked block was completed");
-                this.reset(PhoeniciaContext.context);
-                phoeniciaGame.playBlockSound(this.letter.sound);
-                Inventory.getInstance().add(this.letter.name);
-                phoeniciaGame.session.addExperience(this.letter.points);
+                this.collect();
             } else {
                 Debug.d("Clicked block was NOT completed");
                 // Don't run another modifier animation if one is still running

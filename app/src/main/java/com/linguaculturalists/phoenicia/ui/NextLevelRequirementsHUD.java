@@ -34,7 +34,6 @@ import org.andengine.util.debug.Debug;
  */
 public class NextLevelRequirementsHUD extends PhoeniciaHUD {
 
-    private PhoeniciaGame game;
     private Level level;
     private Scrollable itemsPanel;
     private Rectangle whiteRect;
@@ -42,7 +41,7 @@ public class NextLevelRequirementsHUD extends PhoeniciaHUD {
     private ClickDetector clickDetector;
 
     public NextLevelRequirementsHUD(final PhoeniciaGame game, final Level level) {
-        super(game.camera);
+        super(game);
         this.game = game;
         this.level = level;
         this.setBackgroundEnabled(false);
@@ -51,7 +50,7 @@ public class NextLevelRequirementsHUD extends PhoeniciaHUD {
             @Override
             public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
                 Debug.d("Background clicked");
-                game.hudManager.pop();
+                finish();
             }
         });
 
@@ -151,4 +150,11 @@ public class NextLevelRequirementsHUD extends PhoeniciaHUD {
         return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
         // TODO: Fix inventory selling
     }
+
+    @Override
+    public void finish() {
+        game.hudManager.pop();
+    }
+
+
 }

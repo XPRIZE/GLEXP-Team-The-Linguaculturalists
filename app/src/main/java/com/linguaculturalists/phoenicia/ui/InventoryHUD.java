@@ -32,7 +32,6 @@ import java.util.List;
  * Display the \link InventoryItem InventoryItems \endlink with a positive balance and allow selling them.
  */
 public class InventoryHUD extends PhoeniciaHUD {
-    private PhoeniciaGame game;
     private Rectangle whiteRect;
     private ClickDetector clickDetector;
 
@@ -41,7 +40,7 @@ public class InventoryHUD extends PhoeniciaHUD {
      * @param game Reference to the PhoeniciaGame this HUD is running in
      */
     public InventoryHUD(final PhoeniciaGame game) {
-        super(game.camera);
+        super(game);
         this.setBackgroundEnabled(false);
         this.setOnAreaTouchTraversalFrontToBack();
         this.game = game;
@@ -49,7 +48,7 @@ public class InventoryHUD extends PhoeniciaHUD {
         this.clickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
             @Override
             public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
-                game.hudManager.pop();
+                finish();
             }
         });
 
@@ -96,18 +95,7 @@ public class InventoryHUD extends PhoeniciaHUD {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {
                     Debug.d("Inventory Item " + currentLetter.name + " clicked");
-                    try {
-                        Inventory.getInstance().subtract(currentLetter.name);
-                        Bank.getInstance().credit(currentLetter.sell);
-                        final int newCount = Inventory.getInstance().getCount(currentLetter.name);
-                        block.setCount(newCount);
-                        if (newCount < 1) {
-                            block.setEnabled(false);
-                        }
-                    } catch (Exception e) {
-                        Debug.d("Could not sell "+currentLetter.name, e);
-
-                    }
+                    sellLetter(block);
                 }
             });
             this.registerTouchArea(block);
@@ -135,23 +123,42 @@ public class InventoryHUD extends PhoeniciaHUD {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {
                     Debug.d("Inventory Item " + currentWord.name + " clicked");
-                    try {
-                        Inventory.getInstance().subtract(currentWord.name);
-                        Bank.getInstance().credit(currentWord.sell);
-                        final int newCount = Inventory.getInstance().getCount(currentWord.name);
-                        block.setCount(newCount);
-                        if (newCount < 1) {
-                            block.setEnabled(false);
-                        }
-                    } catch (Exception e) {
-                        Debug.d("Could not sell "+currentWord.name, e);
-
-                    }
+                    sellWord(block);
                 }
             });
             this.registerTouchArea(block);
             itemsPane.attachChild(block);
             offsetX++;
+
+        }
+    }
+
+    protected void sellLetter(LetterSprite block) {
+        try {
+            Inventory.getInstance().subtract(block.getLetter().name);
+            Bank.getInstance().credit(block.getLetter().sell);
+            final int newCount = Inventory.getInstance().getCount(block.getLetter().name);
+            block.setCount(newCount);
+            if (newCount < 1) {
+                block.setEnabled(false);
+            }
+        } catch (Exception e) {
+            Debug.d("Could not sell "+block.getLetter().name, e);
+
+        }
+    }
+
+    protected void sellWord(WordSprite block) {
+        try {
+            Inventory.getInstance().subtract(block.getWord().name);
+            Bank.getInstance().credit(block.getWord().sell);
+            final int newCount = Inventory.getInstance().getCount(block.getWord().name);
+            block.setCount(newCount);
+            if (newCount < 1) {
+                block.setEnabled(false);
+            }
+        } catch (Exception e) {
+            Debug.d("Could not sell "+block.getWord().name, e);
 
         }
     }
@@ -168,4 +175,11 @@ public class InventoryHUD extends PhoeniciaHUD {
         return this.clickDetector.onManagedTouchEvent(pSceneTouchEvent);
         // TODO: Fix inventory selling
     }
+
+    @Override
+    public void finish() {
+        game.hudManager.clear();
+    }
+
+
 }
