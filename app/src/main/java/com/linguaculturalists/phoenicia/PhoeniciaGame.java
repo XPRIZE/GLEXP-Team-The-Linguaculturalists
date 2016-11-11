@@ -335,6 +335,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         progress.setProgress(0.2f);
         this.loadLocale(progress);
         this.loadSession(progress);
+        this.locale.tour.init(this);
     }
 
     private void loadLocale(ProgressDisplay progress) throws IOException {
@@ -349,8 +350,6 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         } catch (Exception e) {
             Debug.e("Failed to load background music asset: "+locale.music_src);
         }
-
-        this.locale.tour.init(this);
 
         progress.setProgress(0.3f);
         this.loadLocaleMap();
@@ -629,6 +628,13 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
     }
     private void loadSession(ProgressDisplay progress) {
+        // Assign the next person to be the guide image
+        if (this.session.person_name.get() == null) {
+            List<GameSession> sessions = GameSession.objects(PhoeniciaContext.context).all().toList();
+            int person_index = (sessions.size()-1) % this.locale.people.size();
+            this.session.person_name.set(this.locale.people.get(person_index).name);
+            this.session.save(PhoeniciaContext.context);
+        }
         progress.setProgress(0.90f);
         this.loadSessionDefaultTiles();
         progress.setProgress(0.91f);

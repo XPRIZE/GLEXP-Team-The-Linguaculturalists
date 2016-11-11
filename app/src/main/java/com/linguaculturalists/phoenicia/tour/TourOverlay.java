@@ -89,6 +89,7 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
             }
         });
 
+        Debug.d("Tour guide: "+stop.tour.guide.name);
         this.guideSprite = new Sprite(-112, 160, game.personTiles.get(stop.tour.guide), PhoeniciaContext.vboManager);
         this.attachChild(guideSprite);
         final float messageBoxWidth = this.getWidth()-this.guideSprite.getWidth()-32;
@@ -205,7 +206,7 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
         };
 
         this.focusSprite.setScale(2.0f);
-        //this.focusSprite.registerEntityModifier(new ScaleModifier(0.5f, 2.0f, 3.0f));
+        this.focusSprite.registerEntityModifier(new ScaleModifier(0.5f, 2.0f, 2.25f));
         //this.focusSprite.registerEntityModifier(new MoveYModifier(0.5f, this.focusSprite.getY(), this.focusSprite.getY() + 32));
         this.attachChild(this.focusSprite);
         this.registerTouchArea(this.focusSprite);
