@@ -18,7 +18,8 @@ public class CollectLetterReq implements Requirement {
     private int count;
 
     public CollectLetterReq() {
-        this(new ArrayList<Letter>(), 0);
+        this.letters = new ArrayList<Letter>();
+        this.count = 0;
     }
 
     /**

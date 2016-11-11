@@ -1,49 +1,92 @@
 #!/bin/sh
 
+basedir=`dirname $0`
+
+TEXT_DIRECTION="left-to-right"
+DRAW_OPTS=""
+FONT="Ubuntu-Bold"
+FONT_SIZE=14
+
+if [ "$1" = "-rtl" ] ; then
+    shift
+    TEXT_DIRECTION="right-to-left"
+    DRAW_OPTS="direction right-to-left"
+    FONT="FreeSerif"
+    FONT_SIZE="14"
+    #echo "TEXT_DIRECTION=${TEXT_DIRECTION}"
+fi
+
+if [ "$1" = "-d" ] ; then
+    shift
+    outdir=$1
+    #echo "OUTDIR=${outdir}"
+    shift
+else
+    outdir=`pwd`
+fi
+
 word=$1
-block=./blocks/${word}.png
-sprite=./sprites/${word}.png
+
+filename=$2
+if [ "$filename" = "" ] ; then
+    filename=$lower
+    echo "FILENAME=${filename}"
+fi
+
+mkdir -p ${outdir}/textures/words/blocks
+mkdir -p ${outdir}/textures/words/sprites
+block=${outdir}/textures/words/blocks/${filename}.png
+sprite=${outdir}/textures/words/sprites/${filename}.png
 
 echo "Creating ${block}"
-cp word_template.png ${block}
+cp ${basedir}/word_template.png ${block}
 
 length=`echo ${word} | wc -m`
 offsetx=`echo "${length}*3" | bc`
-x1=`echo 32-${offsetx}|bc`
-x2=`echo 96-${offsetx}|bc`
-x3=`echo 160-${offsetx}|bc`
-x4=`echo 224-${offsetx}|bc`
+if [ "$TEXT_DIRECTION" = "left-to-right" ] ; then
+    x1=`echo 32-${offsetx}|bc`
+    x2=`echo 96-${offsetx}|bc`
+    x3=`echo 160-${offsetx}|bc`
+    x4=`echo 224-${offsetx}|bc`
+else
+    x1=`echo 32+${offsetx}|bc`
+    x2=`echo 96+${offsetx}|bc`
+    x3=`echo 160+${offsetx}|bc`
+    x4=`echo 224+${offsetx}|bc`
+fi
 
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x1},25 '${word}'" ${block}
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x2},25 '${word}'" ${block}
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x3},25 '${word}'" ${block}
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x4},25 '${word}'" ${block}
+CONVERT_OPTS="-font ${FONT} -pointsize ${FONT_SIZE}"
 
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x1},115 '${word}'" ${block}
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x2},120 '${word}'" ${block}
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x3},115 '${word}'" ${block}
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x4},120 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x1},25 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x2},25 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x3},25 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x4},25 '${word}'" ${block}
 
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x1},175 '${word}'" ${block}
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x2},170 '${word}'" ${block}
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x3},175 '${word}'" ${block}
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x4},170 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x1},115 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x2},120 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x3},115 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x4},120 '${word}'" ${block}
 
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x1},240 '${word}'" ${block}
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x2},235 '${word}'" ${block}
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x3},240 '${word}'" ${block}
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x4},235 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x1},175 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x2},170 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x3},175 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x4},170 '${word}'" ${block}
 
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x1},281 '${word}'" ${block}
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x2},276 '${word}'" ${block}
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x3},281 '${word}'" ${block}
-convert ${block} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x4},276 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x1},240 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x2},235 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x3},240 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x4},235 '${word}'" ${block}
+
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x1},281 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x2},276 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x3},281 '${word}'" ${block}
+convert ${block} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x4},276 '${word}'" ${block}
 
 echo "Creating ${sprite}"
 convert -size 256x64 xc:transparent ${sprite}
-convert ${sprite} -font Ubuntu-Bold -pointsize 12 -fill white -stroke black -draw "rectangle 2,2 62,62 " ${sprite}
-convert ${sprite} -font Ubuntu-Bold -pointsize 12 -fill white -stroke red -draw "rectangle 66,2 126,62 " ${sprite}
-convert ${sprite} -font Ubuntu-Bold -pointsize 12 -fill lightgrey -stroke grey -draw "rectangle 130,2 190,62 " ${sprite}
-convert ${sprite} -font Ubuntu-Bold -pointsize 12 -fill blue -draw "text ${x1},25 '${word}'" ${sprite}
-convert ${sprite} -font Ubuntu-Bold -pointsize 12 -fill red -draw "text ${x2},25 '${word}'" ${sprite}
-convert ${sprite} -font Ubuntu-Bold -pointsize 12 -fill grey -draw "text ${x3},25 '${word}'" ${sprite}
+convert ${sprite} ${CONVERT_OPTS} -fill white -stroke black -draw "rectangle 2,2 62,62 " ${sprite}
+convert ${sprite} ${CONVERT_OPTS} -fill white -stroke red -draw "rectangle 66,2 126,62 " ${sprite}
+convert ${sprite} ${CONVERT_OPTS} -fill lightgrey -stroke grey -draw "rectangle 130,2 190,62 " ${sprite}
+convert ${sprite} ${CONVERT_OPTS} -fill blue -draw "${DRAW_OPTS} text ${x1},25 '${word}'" ${sprite}
+convert ${sprite} ${CONVERT_OPTS} -fill red -draw "${DRAW_OPTS} text ${x2},25 '${word}'" ${sprite}
+convert ${sprite} ${CONVERT_OPTS} -fill grey -draw "${DRAW_OPTS} text ${x3},25 '${word}'" ${sprite}

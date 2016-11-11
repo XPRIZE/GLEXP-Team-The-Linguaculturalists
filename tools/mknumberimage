@@ -1,0 +1,58 @@
+#!/bin/sh
+
+basedir=`dirname $0`
+
+TEXT_DIRECTION="left-to-right"
+DRAW_OPTS="kerning 0"
+FONT="Ubuntu-Bold"
+
+if [ "$1" = "-rtl" ] ; then
+    shift
+    TEXT_DIRECTION="right-to-left"
+    DRAW_OPTS="direction right-to-left kerning 0"
+    FONT="FreeSerif"
+    #echo "TEXT_DIRECTION=${TEXT_DIRECTION}"
+fi
+
+if [ "$1" = "-d" ] ; then
+    shift
+    outdir=$1
+    #echo "OUTDIR=${outdir}"
+    shift
+else
+    outdir=`pwd`
+fi
+
+lower=$1
+upper=`echo $lower | tr '[:lower:]' '[:upper:]'`
+
+filename=$2
+if [ "$filename" = "" ] ; then
+    filename=$lower
+    echo "FILENAME=${filename}"
+fi
+
+mkdir -p ${outdir}/textures/numbers
+sprite=${outdir}/textures/numbers/${filename}.png
+
+length=`echo ${lower} | wc -m`
+offsetx=3
+if [ "$TEXT_DIRECTION" = "left-to-right" ] ; then
+    x1=`echo 28-${offsetx}|bc`
+    x2=`echo ${x1}+64|bc`
+    x3=`echo ${x1}+128|bc`
+    x4=`echo ${x1}+192|bc`
+else
+    x1=`echo 16+${offsetx}|bc`
+    x2=`echo ${x1}+64|bc`
+    x3=`echo ${x1}+128|bc`
+    x4=`echo ${x1}+192|bc`
+fi
+
+CONVERT_OPTS="-font ${FONT}"
+
+echo "Creating ${sprite}"
+convert -size 256x64 xc:transparent ${sprite}
+convert ${sprite} ${CONVERT_OPTS} -pointsize 48 -fill yellow -draw "${DRAW_OPTS} text ${x1},52 '${upper}'" ${sprite}
+convert ${sprite} ${CONVERT_OPTS} -pointsize 48 -fill yellow -stroke red -draw "${DRAW_OPTS} text ${x2},52 '${upper}'" ${sprite}
+convert ${sprite} ${CONVERT_OPTS} -pointsize 48 -fill grey -draw "${DRAW_OPTS} text ${x3},52 '${upper}'" ${sprite}
