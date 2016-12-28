@@ -97,10 +97,10 @@ public class DebugHUD extends PhoeniciaHUD {
         whiteRect.attachChild(creditBank);
         this.registerTouchArea(creditBank);
 
-        Button debitBank = new Button(450, whiteRect.getHeight() - 375, 200, 80, "-10 Coins", PhoeniciaContext.vboManager, new Button.OnClickListener() {
+        Button debitBank = new Button(450, whiteRect.getHeight() - 375, 200, 80, "+100 Coins", PhoeniciaContext.vboManager, new Button.OnClickListener() {
             @Override
             public void onClicked(Button button) {
-                Bank.getInstance().debit(10);
+                Bank.getInstance().credit(100);
             }
         });
         whiteRect.attachChild(debitBank);

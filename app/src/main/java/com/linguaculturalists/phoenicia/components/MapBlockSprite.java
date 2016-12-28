@@ -74,9 +74,9 @@ public class MapBlockSprite extends AnimatedSprite implements ClickDetector.ICli
     public void setEmblem(Sprite emblem) {
         Debug.d("Setting emblem to "+emblem);
         this.emblem = emblem;
-        this.emblem.setPosition(this.getWidth()*0.70f, this.getHeight()-10);
+        this.emblem.setPosition(this.getWidth()*0.66f, this.getHeight()*0.66f);
         this.emblem.setZIndex(this.getZIndex() + 1);
-        this.emblem.setScale(0.2f);
+        this.emblem.setScale(0.33f);
         this.emblem.registerEntityModifier(
                 new LoopEntityModifier(
                         new SequenceEntityModifier(

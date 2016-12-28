@@ -7,6 +7,10 @@ import subprocess
 import codecs
 sys.stdin = codecs.getreader('UTF-8')(sys.stdin);
 
+if len(sys.argv) < 3:
+    print "./mklocale.py NAME CHARS_FILE WORDS_FILE ./OUTPUT_DIR"
+    exit(1)
+
 def read_data(source):
     data = list()
     fh = open(source, "r")
@@ -208,6 +212,7 @@ for word in words:
     add_letters = list()
     word_values[word] = value
     value += 1
+    print "Evaluating word %s" % word
     for letter in word.decode("utf-8"):
         if letter not in character_exposure:
             add_letters.append(letter)

@@ -432,19 +432,19 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             inventoryTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.inventoryBlock.block_texture);
             inventoryTexture.load();
             int[] inventoryTileSize = GameTextures.calculateTileSize(locale.inventoryBlock.columns, locale.inventoryBlock.rows, locale.inventoryBlock.height);
-            inventoryTiles = TextureRegionFactory.extractTiledFromTexture(inventoryTexture, 0, 0, inventoryTileSize[0] * 4, inventoryTileSize[1] * 5, 4, 5);
+            inventoryTiles = TextureRegionFactory.extractTiledFromTexture(inventoryTexture, 0, 0, inventoryTileSize[0] * 4, inventoryTileSize[1] * 2, 4, 2);
             this.spriteMasks.put(inventoryTiles, AssetBitmapTextureAtlasSource.create(PhoeniciaContext.assetManager, this.locale.inventoryBlock.block_texture).onLoadBitmap(Bitmap.Config.ALPHA_8));
 
             marketTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.marketBlock.block_texture);
             marketTexture.load();
             int[] marketTileSize = GameTextures.calculateTileSize(locale.marketBlock.columns, locale.marketBlock.rows, locale.marketBlock.height);
-            marketTiles = TextureRegionFactory.extractTiledFromTexture(marketTexture, 0, 0, marketTileSize[0] * 4, marketTileSize[1] * 5, 4, 5);
+            marketTiles = TextureRegionFactory.extractTiledFromTexture(marketTexture, 0, 0, marketTileSize[0] * 4, marketTileSize[1] * 2, 4, 2);
             this.spriteMasks.put(marketTiles, AssetBitmapTextureAtlasSource.create(PhoeniciaContext.assetManager, this.locale.marketBlock.block_texture).onLoadBitmap(Bitmap.Config.ALPHA_8));
 
             workshopTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.workshopBlock.block_texture);
             workshopTexture.load();
             int[] workshopTileSize = GameTextures.calculateTileSize(locale.workshopBlock.columns, locale.workshopBlock.rows, locale.workshopBlock.height);
-            workshopTiles = TextureRegionFactory.extractTiledFromTexture(workshopTexture, 0, 0, workshopTileSize[0] * 4, workshopTileSize[1] * 5, 4, 5);
+            workshopTiles = TextureRegionFactory.extractTiledFromTexture(workshopTexture, 0, 0, workshopTileSize[0] * 4, workshopTileSize[1] * 2, 4, 2);
             this.spriteMasks.put(workshopTiles, AssetBitmapTextureAtlasSource.create(PhoeniciaContext.assetManager, this.locale.workshopBlock.block_texture).onLoadBitmap(Bitmap.Config.ALPHA_8));
 
         } catch (final IOException e) {
