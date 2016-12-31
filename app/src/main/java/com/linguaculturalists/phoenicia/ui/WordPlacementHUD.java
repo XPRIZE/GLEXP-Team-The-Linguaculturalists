@@ -14,6 +14,7 @@ import com.linguaculturalists.phoenicia.models.WordTileBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.GameTextures;
+import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.modifier.MoveYModifier;
@@ -103,7 +104,7 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
         for (int i = 0; i < words.size(); i++) {
             final Word currentWord = words.get(i);
             Debug.d("Adding HUD word: " + currentWord.name + " (tile: " + currentWord.tile + ")");
-            Rectangle card = new Rectangle((100 * ((i * 2)+1)), blockPanel.getHeight()/2, 175, 200, PhoeniciaContext.vboManager);
+            Rectangle card = new Rectangle((110 * ((i * 2)+1)), blockPanel.getHeight()/2, 200, 200, PhoeniciaContext.vboManager);
             card.setColor(Color.WHITE);
             this.blockPanel.attachChild(card);
 
@@ -127,10 +128,11 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
             card.attachChild(block);
 
             int cost = currentWord.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getWordTileCount(currentWord));
-            final Text purchaseCost = new Text((card.getWidth()/2)+20, card.getHeight()*1/3, GameFonts.inventoryCount(), String.valueOf(cost), String.valueOf(cost).length(), PhoeniciaContext.vboManager);
-            card.attachChild(purchaseCost);
 
-            final Sprite coinIcon = new Sprite(purchaseCost.getX()-(purchaseCost.getWidth()/2)-20, purchaseCost.getY()+2, game.shellTiles.getTextureRegion(GameTextures.COIN_ICON), PhoeniciaContext.vboManager);
+            final ITextureRegion coinRegion = GameUI.getInstance().getCoinsButton();
+            final Sprite coinIcon = new Sprite((card.getWidth()/2), (coinRegion.getHeight()/2), coinRegion, PhoeniciaContext.vboManager);
+            final Text purchaseCost = new Text(100, coinIcon.getHeight()/2, GameFonts.defaultHUDDisplay(), String.valueOf(cost), String.valueOf(cost).length(), PhoeniciaContext.vboManager);
+            coinIcon.attachChild(purchaseCost);
             card.attachChild(coinIcon);
         }
         Debug.d("Finished loading HUD letters");

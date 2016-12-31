@@ -7,6 +7,7 @@ import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.CameraScene;
 import org.andengine.entity.scene.IOnAreaTouchListener;
 import org.andengine.entity.scene.ITouchArea;
+import org.andengine.entity.scene.Scene;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.Constants;
@@ -22,7 +23,7 @@ import java.util.List;
  */
 public class Dialog extends Entity {
 
-    private CameraScene openOn;
+    private Scene openOn;
     private DialogListener listener;
     private List<ITouchArea> touchAreas;
 
@@ -105,7 +106,7 @@ public class Dialog extends Entity {
     public void unregisterTouchArea(ITouchArea area) {
         if (this.touchAreas.contains(area)) this.touchAreas.remove(area);
     }
-    public void open(CameraScene target) {
+    public void open(Scene target) {
         Debug.d("Opening dialog on "+target);
         this.openOn = target;
         //this.openOn.centerEntityInCamera(this);

@@ -8,6 +8,7 @@ import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.tour.TourOverlay;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.GameTextures;
+import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.linguaculturalists.phoenicia.util.RepeatedClickDetectorListener;
 
@@ -29,14 +30,12 @@ import org.andengine.util.modifier.ease.EaseBackOut;
  *
  * Displays the current level, bank account balance, and buttons for adding letter or work tiles
  */
-public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChangeListener, Bank.BankUpdateListener, GameSession.ExperienceChangeListener {
+public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChangeListener, Bank.BankUpdateListener {
 
     private ButtonSprite levelIcon;
     private Text levelDisplay;
     private Sprite coinIcon;
     private Text balanceDisplay;
-    private Sprite xpIcon;
-    private Text xpDisplay;
     private ButtonSprite helpButton;
     //private ButtonSprite inventoryBlock;
     private ButtonSprite letterBlock;
@@ -54,11 +53,11 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         this.setBackgroundEnabled(false);
         this.game = game;
         this.game.addLevelListener(this);
-        this.game.session.addExperienceChangeListener(this);
         Bank.getInstance().addUpdateListener(this);
 
-        ITextureRegion levelRegion = game.shellTiles.getTextureRegion(GameTextures.LEVEL_ICON);
-        levelIcon = new ButtonSprite(32, GameActivity.CAMERA_HEIGHT - 24, levelRegion, PhoeniciaContext.vboManager);
+
+        ITextureRegion levelRegion = GameUI.getInstance().getLevelDisplay();
+        levelIcon = new ButtonSprite(levelRegion.getWidth()/2, GameActivity.CAMERA_HEIGHT-(levelRegion.getHeight()/2), levelRegion, PhoeniciaContext.vboManager);
         levelIcon.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v1) {
@@ -66,25 +65,16 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
                 game.hudManager.showNextLevelReq(level);
             }
         });
-        levelDisplay = new Text(160, GameActivity.CAMERA_HEIGHT - 24, GameFonts.defaultHUDDisplay(), game.current_level, 20, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        levelDisplay = new Text(160, levelIcon.getHeight()/2, GameFonts.defaultHUDDisplay(), game.current_level, 20, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        levelIcon.attachChild(levelDisplay);
         this.attachChild(levelIcon);
         this.registerTouchArea(levelIcon);
-        this.attachChild(levelDisplay);
-        levelDisplay.setPosition(64 + (levelDisplay.getWidth() / 2), levelDisplay.getY());
 
-        ITextureRegion xpRegion = game.shellTiles.getTextureRegion(GameTextures.XP_ICON);
-        xpIcon = new Sprite(32, GameActivity.CAMERA_HEIGHT-64, xpRegion, PhoeniciaContext.vboManager);
-        xpDisplay = new Text(160, GameActivity.CAMERA_HEIGHT-64, GameFonts.defaultHUDDisplay(), game.session.points.get().toString(), 20, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
-        this.attachChild(xpIcon);
-        this.attachChild(xpDisplay);
-        xpDisplay.setPosition(64 + (xpDisplay.getWidth() / 2), xpDisplay.getY());
-
-        ITextureRegion coinRegion = game.shellTiles.getTextureRegion(GameTextures.COIN_ICON);
-        coinIcon = new Sprite(32, GameActivity.CAMERA_HEIGHT-104, coinRegion, PhoeniciaContext.vboManager);
-        balanceDisplay = new Text(160, GameActivity.CAMERA_HEIGHT-104, GameFonts.defaultHUDDisplay(), game.session.account_balance.get().toString(), 20, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        ITextureRegion coinRegion = GameUI.getInstance().getCoinsDisplay();
+        coinIcon = new Sprite(coinRegion.getWidth()/2, GameActivity.CAMERA_HEIGHT-(coinRegion.getHeight()/2)-64, coinRegion, PhoeniciaContext.vboManager);
+        balanceDisplay = new Text(160, levelRegion.getHeight()/2, GameFonts.defaultHUDDisplay(), game.session.account_balance.get().toString(), 20, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        coinIcon.attachChild(balanceDisplay);
         this.attachChild(coinIcon);
-        this.attachChild(balanceDisplay);
-        balanceDisplay.setPosition(64 + (balanceDisplay.getWidth() / 2), balanceDisplay.getY());
 
 
         this.debugClickDetector = new ClickDetector(new RepeatedClickDetectorListener(10, 5*1000) {
@@ -95,7 +85,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
             }
 
         });
-        Entity debugTouchArea = new Entity(50, this.levelIcon.getY() - 50, 100, 100) {
+        Entity debugTouchArea = new Entity(50, this.levelIcon.getY() - this.levelIcon.getHeight()/2, 100, 100) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 return debugClickDetector.onManagedTouchEvent(pSceneTouchEvent);
@@ -104,8 +94,8 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         this.attachChild(debugTouchArea);
         this.registerTouchArea(debugTouchArea);
 
-        ITextureRegion helpRegion = game.shellTiles.getTextureRegion(GameTextures.HELP);
-        this.helpButton = new ButtonSprite(GameActivity.CAMERA_WIDTH-32, GameActivity.CAMERA_HEIGHT-48, helpRegion, PhoeniciaContext.vboManager);
+        ITextureRegion helpRegion = GameUI.getInstance().getHelpIcon();
+        this.helpButton = new ButtonSprite(GameActivity.CAMERA_WIDTH-(helpRegion.getWidth()/2), GameActivity.CAMERA_HEIGHT-(helpRegion.getHeight()/2), helpRegion, PhoeniciaContext.vboManager);
         helpButton.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -121,8 +111,8 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         this.registerTouchArea(helpButton);
         this.attachChild(helpButton);
 
-        ITextureRegion decorationRegion = game.shellTiles.getTextureRegion(GameTextures.DECORATION_PLACEMENT);
-        this.decorationBlock = new ButtonSprite(64, 64, decorationRegion, PhoeniciaContext.vboManager);
+        ITextureRegion decorationRegion = GameUI.getInstance().getDecorationLauncher();
+        this.decorationBlock = new ButtonSprite(16+decorationRegion.getWidth()/2, (decorationRegion.getHeight()/2)+16, decorationRegion, PhoeniciaContext.vboManager);
         decorationBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -132,8 +122,8 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         this.registerTouchArea(decorationBlock);
         this.attachChild(decorationBlock);
 
-        ITextureRegion letterRegion = game.shellTiles.getTextureRegion(GameTextures.LETTER_PLACEMENT);
-        this.letterBlock = new ButtonSprite(GameActivity.CAMERA_WIDTH-(64*5), 64, letterRegion, PhoeniciaContext.vboManager);
+        ITextureRegion letterRegion = GameUI.getInstance().getLetterLauncher();
+        this.letterBlock = new ButtonSprite(16+GameActivity.CAMERA_WIDTH-(letterRegion.getWidth()+16)*3, (letterRegion.getHeight()/2)+16, letterRegion, PhoeniciaContext.vboManager);
         letterBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -143,8 +133,8 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         this.registerTouchArea(letterBlock);
         this.attachChild(letterBlock);
 
-        ITextureRegion wordRegion = game.shellTiles.getTextureRegion(GameTextures.WORD_PLACEMENT);
-        this.wordBlock = new ButtonSprite(GameActivity.CAMERA_WIDTH-(64*3), 64, wordRegion, PhoeniciaContext.vboManager);
+        ITextureRegion wordRegion = GameUI.getInstance().getWordLauncher();
+        this.wordBlock = new ButtonSprite(16+GameActivity.CAMERA_WIDTH-(wordRegion.getWidth()+16)*2, (wordRegion.getHeight()/2)+16, wordRegion, PhoeniciaContext.vboManager);
         wordBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -154,8 +144,8 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         this.registerTouchArea(wordBlock);
         this.attachChild(wordBlock);
 
-        ITextureRegion gameRegion = game.shellTiles.getTextureRegion(GameTextures.GAME_PLACEMENT);
-        this.gameBlock = new ButtonSprite(GameActivity.CAMERA_WIDTH-64, 64, gameRegion, PhoeniciaContext.vboManager);
+        ITextureRegion gameRegion = GameUI.getInstance().getGameLauncher();
+        this.gameBlock = new ButtonSprite(16+GameActivity.CAMERA_WIDTH-(wordRegion.getWidth()+16)*1, (gameRegion.getHeight()/2)+16, gameRegion, PhoeniciaContext.vboManager);
         gameBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -173,21 +163,18 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
     @Override
     public void show() {
         //inventoryBlock.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
-        letterBlock.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
-        wordBlock.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
-        gameBlock.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
-        decorationBlock.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
+        letterBlock.registerEntityModifier(new MoveYModifier(0.5f, -(letterBlock.getHeight()/2), (letterBlock.getHeight()/2)+16, EaseBackOut.getInstance()));
+        wordBlock.registerEntityModifier(new MoveYModifier(0.5f, -(wordBlock.getHeight()/2), (wordBlock.getHeight()/2)+16, EaseBackOut.getInstance()));
+        gameBlock.registerEntityModifier(new MoveYModifier(0.5f, -(gameBlock.getHeight()/2), (gameBlock.getHeight()/2)+16, EaseBackOut.getInstance()));
+        decorationBlock.registerEntityModifier(new MoveYModifier(0.5f, -(decorationBlock.getHeight()/2), (decorationBlock.getHeight()/2)+16, EaseBackOut.getInstance()));
 
-        helpButton.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT + 32, GameActivity.CAMERA_HEIGHT - 48, EaseBackOut.getInstance()));
+        helpButton.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT + 48, GameActivity.CAMERA_HEIGHT-(helpButton.getHeight()/2), EaseBackOut.getInstance()));
 
-        levelIcon.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT + 48, GameActivity.CAMERA_HEIGHT - 24, EaseBackOut.getInstance()));
-        levelDisplay.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT + 48, GameActivity.CAMERA_HEIGHT - 24, EaseBackOut.getInstance()));
+        levelIcon.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT + 48, GameActivity.CAMERA_HEIGHT-(levelIcon.getHeight()/2), EaseBackOut.getInstance()));
+        //levelDisplay.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT + 48, GameActivity.CAMERA_HEIGHT - 24, EaseBackOut.getInstance()));
 
-        xpIcon.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT - 12, GameActivity.CAMERA_HEIGHT - 64, EaseBackOut.getInstance()));
-        xpDisplay.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT - 12, GameActivity.CAMERA_HEIGHT - 64, EaseBackOut.getInstance()));
-
-        coinIcon.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT - 52, GameActivity.CAMERA_HEIGHT - 104, EaseBackOut.getInstance()));
-        balanceDisplay.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT -52, GameActivity.CAMERA_HEIGHT - 104, EaseBackOut.getInstance()));
+        coinIcon.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT - 16, GameActivity.CAMERA_HEIGHT-(coinIcon.getHeight()/2)-64, EaseBackOut.getInstance()));
+        //balanceDisplay.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT - 52, GameActivity.CAMERA_HEIGHT - 104, EaseBackOut.getInstance()));
 
     }
 
@@ -200,8 +187,8 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         letterBlock.setY(-48);
         wordBlock.setY(-48);
         gameBlock.setY(-48);
-        levelDisplay.setY(GameActivity.CAMERA_HEIGHT + 48);
-        balanceDisplay.setY(GameActivity.CAMERA_HEIGHT + 16);
+        //levelDisplay.setY(GameActivity.CAMERA_HEIGHT + 48);
+        //balanceDisplay.setY(GameActivity.CAMERA_HEIGHT + 16);
         helpButton.setY(GameActivity.CAMERA_HEIGHT + 32);
     }
 
@@ -211,13 +198,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
      */
     public void onLevelChanged(Level next) {
         this.levelDisplay.setText(next.name);
-        this.levelDisplay.setPosition(64 + (this.levelDisplay.getWidth() / 2), this.levelDisplay.getY());
-    }
-
-    public void onExperienceChanged(int points) {
-        Debug.d("New XP: " + points);
-        this.xpDisplay.setText("" + points);
-        this.xpDisplay.setPosition(64 + (this.xpDisplay.getWidth() / 2), this.xpDisplay.getY());
+        //this.levelDisplay.setPosition(64 + (this.levelDisplay.getWidth() / 2), this.levelDisplay.getY());
     }
 
     /**
@@ -227,7 +208,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
     public void onBankAccountUpdated(int new_balance) {
         Debug.d("New balance: " + new_balance);
         this.balanceDisplay.setText(""+new_balance);
-        this.balanceDisplay.setPosition(64 + (this.balanceDisplay.getWidth() / 2), this.balanceDisplay.getY());
+        //this.balanceDisplay.setPosition(64 + (this.balanceDisplay.getWidth() / 2), this.balanceDisplay.getY());
     }
 
     @Override

@@ -14,6 +14,7 @@ import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.GameSounds;
 import com.linguaculturalists.phoenicia.util.GameTextures;
+import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.Entity;
@@ -200,19 +201,11 @@ public class ImageMatchGameHUD extends PhoeniciaHUD {
         Sprite reward_sprite = new Sprite(reward_dialog.getWidth()/2, reward_dialog.getHeight() - 100, sprite_region.getTextureRegion(1), PhoeniciaContext.vboManager);
         reward_dialog.attachChild(reward_sprite);
 
-        ITextureRegion coinRegion = this.game.shellTiles.getTextureRegion(GameTextures.COIN_ICON);
-        Sprite coinIcon = new Sprite(64, 112, coinRegion, PhoeniciaContext.vboManager);
-        Text iconDisplay = new Text(64, 112, GameFonts.dialogText(), String.valueOf(reward_coins), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
-        iconDisplay.setPosition(96 + (iconDisplay.getWidth() / 2), iconDisplay.getY());
-        reward_dialog.attachChild(iconDisplay);
+        ITextureRegion coinRegion = GameUI.getInstance().getCoinsButton();
+        Sprite coinIcon = new Sprite(reward_dialog.getWidth()/2, 112, coinRegion, PhoeniciaContext.vboManager);
+        Text iconDisplay = new Text(100, coinIcon.getHeight()/2, GameFonts.defaultHUDDisplay(), String.valueOf(reward_coins), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        coinIcon.attachChild(iconDisplay);
         reward_dialog.attachChild(coinIcon);
-
-        ITextureRegion pointsRegion = this.game.shellTiles.getTextureRegion(GameTextures.XP_ICON);
-        Sprite pointsIcon = new Sprite((reward_dialog.getWidth() / 2)+64, 112, pointsRegion, PhoeniciaContext.vboManager);
-        Text pointsDisplay = new Text((reward_dialog.getWidth() / 2)+64, 112, GameFonts.dialogText(), String.valueOf(reward_points), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
-        pointsDisplay.setPosition((reward_dialog.getWidth() / 2) + 96 + (pointsDisplay.getWidth() / 2), pointsDisplay.getY());
-        reward_dialog.attachChild(pointsDisplay);
-        reward_dialog.attachChild(pointsIcon);
 
         this.registerTouchArea(reward_dialog);
         reward_dialog.open(this);

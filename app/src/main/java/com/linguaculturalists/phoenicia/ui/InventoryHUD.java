@@ -1,5 +1,7 @@
 package com.linguaculturalists.phoenicia.ui;
 
+import android.graphics.Typeface;
+
 import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.LetterSprite;
@@ -11,18 +13,23 @@ import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
+import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.ButtonSprite;
+import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
+import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
+import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
 
@@ -63,10 +70,16 @@ public class InventoryHUD extends PhoeniciaHUD {
         this.attachChild(whiteRect);
         this.registerTouchArea(whiteRect);
 
-        Scrollable itemsPane = new Scrollable(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 400, Scrollable.SCROLL_VERTICAL);
+        Scrollable itemsPane = new Scrollable(GameActivity.CAMERA_WIDTH / 2, (GameActivity.CAMERA_HEIGHT / 2) - 10, 400, 380, Scrollable.SCROLL_VERTICAL);
         itemsPane.setPadding(32);
         this.attachChild(itemsPane);
         this.registerTouchArea(itemsPane);
+
+        ITextureRegion bannerRegion = GameUI.getInstance().getGreenBanner();
+        Sprite banner = new Sprite(whiteRect.getX(), whiteRect.getY()+(whiteRect.getHeight()/2), bannerRegion, PhoeniciaContext.vboManager);
+        Text name = new Text(banner.getWidth()/2, 120, GameFonts.defaultHUDDisplay(), game.locale.inventoryBlock.name, game.locale.inventoryBlock.name.length(), new TextOptions(HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+        banner.attachChild(name);
+        this.attachChild(banner);
 
         final int columns = 4;
         int startX = (int) (itemsPane.getWidth() / 2) - (columns * 32) - 16;
@@ -78,7 +91,7 @@ public class InventoryHUD extends PhoeniciaHUD {
         List<InventoryItem> items = Inventory.getInstance().items();
         for (int i = 0; i < items.size(); i++) {
             if (offsetX >= columns) {
-                offsetY -= 96;
+                offsetY -= 100;
                 offsetX = 0;
             }
             final InventoryItem item = items.get(i);

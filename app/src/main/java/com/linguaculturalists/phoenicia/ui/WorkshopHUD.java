@@ -14,6 +14,7 @@ import com.linguaculturalists.phoenicia.models.WordBuilder;
 import com.linguaculturalists.phoenicia.models.WorkshopBuilder;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.GameTextures;
+import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.Entity;
@@ -224,7 +225,7 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
             this.buildPane.attachChild(innerRect);
 
         }
-        ITextureRegion tryRegion = game.shellTiles.getTextureRegion(GameTextures.OK);
+        ITextureRegion tryRegion = GameUI.getInstance().getOkIcon();
         this.tryButton = new ButtonSprite(startX+(64*MAX_WORD_SIZE), this.buildPane.getHeight()-50, tryRegion, PhoeniciaContext.vboManager);
         tryButton.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
@@ -238,7 +239,7 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
         this.registerTouchArea(tryButton);
         this.buildPane.attachChild(tryButton);
 
-        ITextureRegion abortRegion = game.shellTiles.getTextureRegion(GameTextures.CANCEL);
+        ITextureRegion abortRegion = GameUI.getInstance().getCancelIcon();
         ButtonSprite abortButton = new ButtonSprite(startX+(64*(MAX_WORD_SIZE+1)), this.buildPane.getHeight()-50, abortRegion, PhoeniciaContext.vboManager);
         abortButton.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override

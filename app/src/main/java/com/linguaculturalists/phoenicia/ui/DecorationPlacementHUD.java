@@ -15,6 +15,7 @@ import com.linguaculturalists.phoenicia.models.GameTile;
 import com.linguaculturalists.phoenicia.models.GameTileBuilder;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.GameTextures;
+import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.modifier.MoveYModifier;
@@ -29,6 +30,7 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
+import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
@@ -96,7 +98,7 @@ public class DecorationPlacementHUD extends PhoeniciaHUD implements Bank.BankUpd
         for (int i = 0; i < decorations.size(); i++) {
             final Decoration currentDecoration = decorations.get(i);
             Debug.d("Adding HUD decoration: " + currentDecoration.name);
-            Rectangle card = new Rectangle((100 * ((i * 2)+1)), blockPanel.getHeight()/2, 175, 200, PhoeniciaContext.vboManager);
+            Rectangle card = new Rectangle((110 * ((i * 2)+1)), blockPanel.getHeight()/2, 200, 200, PhoeniciaContext.vboManager);
             card.setColor(Color.WHITE);
             this.blockPanel.attachChild(card);
 
@@ -117,17 +119,21 @@ public class DecorationPlacementHUD extends PhoeniciaHUD implements Bank.BankUpd
             card.attachChild(block);
             if (phoeniciaGame.locale.isLevelReached(currentDecoration.level, phoeniciaGame.current_level)) {
                 final int cost = currentDecoration.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getDecorationTileCount(currentDecoration));
-                final Text purchaseCost = new Text((card.getWidth()/2)+20, card.getHeight()*1/3, GameFonts.inventoryCount(), String.valueOf(cost), String.valueOf(cost).length(), PhoeniciaContext.vboManager);
+
+                ITextureRegion coinRegion = GameUI.getInstance().getCoinsButton();
+                final Sprite coinIcon = new Sprite((card.getWidth()/2), coinRegion.getHeight()/2, coinRegion, PhoeniciaContext.vboManager);
+                final Text purchaseCost = new Text(100, coinIcon.getHeight()/2, GameFonts.defaultHUDDisplay(), String.valueOf(cost), String.valueOf(cost).length(), PhoeniciaContext.vboManager);
+                card.attachChild(coinIcon);
                 card.attachChild(purchaseCost);
 
-                final Sprite coinIcon = new Sprite(purchaseCost.getX()-(purchaseCost.getWidth()/2)-20, purchaseCost.getY()+2, phoeniciaGame.shellTiles.getTextureRegion(GameTextures.COIN_ICON), PhoeniciaContext.vboManager);
-                card.attachChild(coinIcon);
             } else {
                 block.setEnabled(false);
-                final Text levelName = new Text((card.getWidth()/2)+20, card.getHeight()*1/3, GameFonts.inventoryCount(), currentDecoration.level, currentDecoration.level.length(), PhoeniciaContext.vboManager);
-                card.attachChild(levelName);
 
-                final Sprite levelIcon = new Sprite(levelName.getX()-(levelName.getWidth()/2)-20, levelName.getY()+2, phoeniciaGame.shellTiles.getTextureRegion(GameTextures.LEVEL_ICON), PhoeniciaContext.vboManager);
+                ITextureRegion levelRegion = GameUI.getInstance().getLevelButton();
+
+                final Sprite levelIcon = new Sprite((card.getWidth()/2),levelRegion.getHeight()/2, levelRegion, PhoeniciaContext.vboManager);
+                final Text levelName = new Text(110, levelIcon.getHeight()/2, GameFonts.defaultHUDDisplay(), currentDecoration.level, currentDecoration.level.length(), PhoeniciaContext.vboManager);
+                levelIcon.attachChild(levelName);
                 card.attachChild(levelIcon);
             }
 

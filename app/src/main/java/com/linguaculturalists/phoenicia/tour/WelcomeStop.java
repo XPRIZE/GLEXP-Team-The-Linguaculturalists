@@ -123,6 +123,7 @@ public class WelcomeStop extends Stop {
         Debug.d("Clearing managed hud and spotlight");
         this.overlay.clearManagedHUD();
         this.overlay.clearSpotlight();
+        this.overlay.moveCamera(0, -5);
         this.overlay.showMessage(this.getMessage(MSG_PLACEMENT), TourOverlay.MessageBox.Top);
     }
 

@@ -8,6 +8,9 @@ import com.linguaculturalists.phoenicia.tour.WelcomeStop;
 import com.linguaculturalists.phoenicia.tour.WordsStop;
 import com.linguaculturalists.phoenicia.tour.WorkshopStop;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by mhall on 9/8/16.
  */
@@ -29,9 +32,20 @@ public class Tour {
         this.workshop = new WorkshopStop(this);
     }
 
+    public List<Stop> getStops() {
+        List<Stop> list = new ArrayList<Stop>();
+        list.add(this.welcome);
+        list.add(this.inventory);
+        list.add(this.words);
+        list.add(this.market);
+        list.add(this.workshop);
+        return list;
+    }
+
     public void init(PhoeniciaGame game) {
         this.game = game;
-        this.guide = game.locale.person_map.get(game.session.person_name.get());
-
+        if (this.guide == null) {
+            this.guide = game.locale.person_map.get(game.session.person_name.get());
+        }
     }
 }

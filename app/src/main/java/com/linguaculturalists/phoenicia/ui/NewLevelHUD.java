@@ -11,6 +11,7 @@ import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.GameSounds;
 import com.linguaculturalists.phoenicia.util.GameTextures;
+import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.IEntity;
@@ -22,6 +23,8 @@ import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
+import org.andengine.opengl.texture.ITexture;
+import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
@@ -74,14 +77,16 @@ public class NewLevelHUD extends PhoeniciaHUD {
         this.attachChild(whiteRect);
         this.registerTouchArea(whiteRect);
 
-        this.levelStar = new Sprite(32, whiteRect.getHeight()-32, game.shellTiles.getTextureRegion(GameTextures.LEVEL_ICON),PhoeniciaContext.vboManager);
+        ITextureRegion levelRegion = GameUI.getInstance().getLevelIcon();
+        this.levelStar = new Sprite(levelRegion.getWidth()/2, whiteRect.getHeight()-levelRegion.getHeight()/2, levelRegion, PhoeniciaContext.vboManager);
         whiteRect.attachChild(levelStar);
-        Text levelNum = new Text(32, 32, GameFonts.buttonText(), level.name, level.name.length(), new TextOptions(HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+        Text levelNum = new Text(levelRegion.getWidth()/2, levelRegion.getHeight()/2, GameFonts.buttonText(), level.name, level.name.length(), new TextOptions(HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
         levelNum.setScale(0.4f);
         levelStar.attachChild(levelNum);
 
-        this.levelCoins = new Sprite(0, whiteRect.getHeight()-32, game.shellTiles.getTextureRegion(GameTextures.COIN_ICON), PhoeniciaContext.vboManager);
-        this.levelCoinsCount = new Text(0, whiteRect.getHeight()-32, GameFonts.inventoryCount(), String.valueOf(level.coinsEarned), String.valueOf(level.coinsEarned).length(), new TextOptions(HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+        ITextureRegion coinRegion = GameUI.getInstance().getCoinsIcon();
+        this.levelCoins = new Sprite(0, whiteRect.getHeight()-(coinRegion.getHeight()/2), coinRegion, PhoeniciaContext.vboManager);
+        this.levelCoinsCount = new Text(0, whiteRect.getHeight()-(coinRegion.getHeight()/2), GameFonts.inventoryCount(), String.valueOf(level.coinsEarned), String.valueOf(level.coinsEarned).length(), new TextOptions(HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
         this.levelCoinsCount.setPosition(whiteRect.getWidth() - (this.levelCoinsCount.getWidth() / 2) - 16, this.levelCoinsCount.getY());
         this.levelCoins.setPosition(whiteRect.getWidth() - this.levelCoinsCount.getWidth() - 32, this.levelCoins.getY());
         whiteRect.attachChild(this.levelCoins);

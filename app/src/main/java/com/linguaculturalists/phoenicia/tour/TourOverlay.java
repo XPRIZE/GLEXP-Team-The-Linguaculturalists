@@ -182,6 +182,10 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
         }
     }
 
+    public void moveCamera(int cols, int rows) {
+        this.game.camera.setCenterDirect(this.game.camera.getCenterX()+(cols*64), this.game.camera.getCenterY()+(rows*32));
+    }
+
     public void focusOn(final MapBlockSprite target) { this.focusOn(target, null);}
 
     public void focusOn(final MapBlockSprite target, final MapBlockSprite.OnClickListener clickListener) {

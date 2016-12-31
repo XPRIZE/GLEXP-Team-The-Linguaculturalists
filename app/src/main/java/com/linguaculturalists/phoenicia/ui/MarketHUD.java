@@ -19,6 +19,7 @@ import com.linguaculturalists.phoenicia.models.RequestItem;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.GameSounds;
 import com.linguaculturalists.phoenicia.util.GameTextures;
+import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.Entity;
@@ -90,7 +91,7 @@ public class MarketHUD extends PhoeniciaHUD {
         whiteRect.attachChild(requestsPane);
         this.registerTouchArea(requestsPane);
 
-        this.requestItemsPane = new Entity((int)(this.whiteRect.getWidth()*0.8), (int)(this.whiteRect.getHeight()*0.55)-64, (int)(this. whiteRect.getWidth()*0.3), (int)(this.whiteRect.getHeight()*0.9)-64);
+        this.requestItemsPane = new Entity((int)(this.whiteRect.getWidth()*0.8), (int)(this.whiteRect.getHeight()*0.55)-32, (int)(this. whiteRect.getWidth()*0.3), (int)(this.whiteRect.getHeight()*0.9)-64);
         whiteRect.attachChild(this.requestItemsPane);
 
         final int columns = 2;
@@ -151,10 +152,16 @@ public class MarketHUD extends PhoeniciaHUD {
         for (Entity touchArea : this.touchAreas) {
             this.unregisterTouchArea(touchArea);
         }
+        ITextureRegion coinRegion = GameUI.getInstance().getCoinsButton();
+        Sprite coinIcon = new Sprite(coinRegion.getWidth()/2, this.requestItemsPane.getHeight()-(coinRegion.getHeight()/2), coinRegion, PhoeniciaContext.vboManager);
+        Text iconDisplay = new Text(100, coinIcon.getHeight()/2, GameFonts.defaultHUDDisplay(), request.coins.get().toString(), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        coinIcon.attachChild(iconDisplay);
+        this.requestItemsPane.attachChild(coinIcon);
+
         final int columns = 3;
         float startX = this.requestItemsPane.getWidth() / 2 - (columns * 32) - 16;
         int offsetX = 0;
-        float startY = this.requestItemsPane.getHeight() - 48;
+        float startY = this.requestItemsPane.getHeight() - coinRegion.getHeight() - 16;
         for (final RequestItem item : request.getItems(PhoeniciaContext.context)) {
             if (offsetX >= columns) {
                 startY -= 96;
@@ -193,20 +200,6 @@ public class MarketHUD extends PhoeniciaHUD {
             offsetX++;
             startX += 96;
         }
-
-        ITextureRegion coinRegion = game.shellTiles.getTextureRegion(GameTextures.COIN_ICON);
-        Sprite coinIcon = new Sprite(32, 162, coinRegion, PhoeniciaContext.vboManager);
-        Text iconDisplay = new Text(32, 162, GameFonts.dialogText(), request.coins.get().toString(), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
-        iconDisplay.setPosition(64 + (iconDisplay.getWidth() / 2), iconDisplay.getY());
-        this.requestItemsPane.attachChild(iconDisplay);
-        this.requestItemsPane.attachChild(coinIcon);
-
-        ITextureRegion pointsRegion = game.shellTiles.getTextureRegion(GameTextures.XP_ICON);
-        Sprite pointsIcon = new Sprite((this.requestItemsPane.getWidth() / 2)+32, 162, pointsRegion, PhoeniciaContext.vboManager);
-        Text pointsDisplay = new Text((this.requestItemsPane.getWidth() / 2)+32, 162, GameFonts.dialogText(), request.points.get().toString(), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
-        pointsDisplay.setPosition((this.requestItemsPane.getWidth() / 2) + 64 + (pointsDisplay.getWidth() / 2), pointsDisplay.getY());
-        this.requestItemsPane.attachChild(pointsDisplay);
-        this.requestItemsPane.attachChild(pointsIcon);
 
         Button sellButton = new Button(this.requestItemsPane.getWidth() / 2, 102, this.requestItemsPane.getWidth(), 64, "Sell", new Color(0.12f, 0.72f, 0.02f), PhoeniciaContext.vboManager, new Button.OnClickListener() {
             @Override

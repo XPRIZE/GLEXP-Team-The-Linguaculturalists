@@ -57,7 +57,7 @@ public class GameFonts {
     public static Font defaultHUDDisplay() {
         if (defaultHUDDisplayFont == null) {
             BitmapTextureAtlas texture = new BitmapTextureAtlas(PhoeniciaContext.textureManager, 1024, 1024, TextureOptions.BILINEAR);
-            defaultHUDDisplayFont = FontFactory.createStroke(PhoeniciaContext.fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 32, true, Color.GREEN_ARGB_PACKED_INT, 1, Color.WHITE_ARGB_PACKED_INT);
+            defaultHUDDisplayFont = FontFactory.create(PhoeniciaContext.fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 30, true, Color.WHITE_ARGB_PACKED_INT);
             defaultHUDDisplayFont.load();
         }
         return defaultHUDDisplayFont;

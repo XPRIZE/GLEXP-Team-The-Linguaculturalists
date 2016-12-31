@@ -14,6 +14,7 @@ import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.GameTextures;
+import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.engine.camera.Camera;
@@ -24,6 +25,7 @@ import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
+import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
@@ -54,7 +56,7 @@ public class NextLevelRequirementsHUD extends PhoeniciaHUD {
             }
         });
 
-        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 400, PhoeniciaContext.vboManager) {
+        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 350, 300, PhoeniciaContext.vboManager) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
@@ -65,14 +67,19 @@ public class NextLevelRequirementsHUD extends PhoeniciaHUD {
         this.attachChild(whiteRect);
         this.registerTouchArea(whiteRect);
 
-        this.levelStar = new Sprite(32, whiteRect.getHeight()-32, game.shellTiles.getTextureRegion(GameTextures.LEVEL_ICON),PhoeniciaContext.vboManager);
-        whiteRect.attachChild(levelStar);
-        Text levelNum = new Text(32, 32, GameFonts.buttonText(), level.name, level.name.length(), new TextOptions(HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
-        levelNum.setScale(0.4f);
-        levelStar.attachChild(levelNum);
-        levelStar.setScale(1.5f);
+        ITextureRegion bannerRegion = GameUI.getInstance().getBlueBanner();
+        Sprite banner = new Sprite(whiteRect.getX(), whiteRect.getY()+(whiteRect.getHeight()/2), bannerRegion, PhoeniciaContext.vboManager);
+        this.attachChild(banner);
 
-        this.itemsPanel = new Scrollable(GameActivity.CAMERA_WIDTH / 2, (GameActivity.CAMERA_HEIGHT / 2)-50, 400, 350, Scrollable.SCROLL_VERTICAL);
+        ITextureRegion levelRegion = GameUI.getInstance().getLevelIcon();
+        this.levelStar = new Sprite(banner.getWidth()/2, 120, levelRegion, PhoeniciaContext.vboManager);
+        banner.attachChild(levelStar);
+        Text levelNum = new Text(this.levelStar.getWidth()/2, this.levelStar.getHeight()/2, GameFonts.defaultHUDDisplay(), level.next.name, level.next.name.length(), new TextOptions(HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+        levelNum.setScale(0.8f);
+        levelStar.attachChild(levelNum);
+        levelStar.setScale(0.75f);
+
+        this.itemsPanel = new Scrollable(GameActivity.CAMERA_WIDTH / 2, (GameActivity.CAMERA_HEIGHT / 2)-25, 350, 250, Scrollable.SCROLL_VERTICAL);
         itemsPanel.setPadding(50);
 
         final int columns = 3;

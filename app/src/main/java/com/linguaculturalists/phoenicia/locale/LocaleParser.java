@@ -70,6 +70,8 @@ public class LocaleParser extends DefaultHandler {
             this.parseGame(attributes);
         } else if (nodePath.equals("/locale/decorations/decoration")) {
             this.parseDecoration(attributes);
+        } else if (nodePath.equals("/locale/tour")) {
+            this.parseTourGuide(attributes);
         } else if (nodePath.equals("/locale/tour/stop")) {
             this.parseTourStop(attributes);
         } else if (nodePath.equals("/locale/tour/stop/message")) {
@@ -281,6 +283,14 @@ public class LocaleParser extends DefaultHandler {
         newDecoration.buy = Integer.parseInt(attributes.getValue("buy"));
         this.locale.decorations.add(newDecoration);
         this.locale.decoration_map.put(newDecoration.name, newDecoration);
+    }
+
+    private void parseTourGuide(Attributes attributes) throws SAXException {
+        String guideName = attributes.getValue("guide");
+        Debug.v("Setting tour guide to: "+guideName);
+        if (locale.person_map.containsKey(guideName)) {
+            locale.tour.guide = locale.person_map.get(guideName);
+        }
     }
 
     private void parseTourStop(Attributes attributes) throws SAXException {

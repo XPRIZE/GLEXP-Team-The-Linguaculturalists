@@ -24,6 +24,7 @@ import org.andengine.input.touch.detector.PinchZoomDetector;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.ITexture;
+import org.andengine.opengl.texture.Texture;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.source.AssetBitmapTextureAtlasSource;
 import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
@@ -57,6 +58,8 @@ import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.Locale;
 import com.linguaculturalists.phoenicia.locale.Person;
 import com.linguaculturalists.phoenicia.locale.Word;
+import com.linguaculturalists.phoenicia.locale.tour.Message;
+import com.linguaculturalists.phoenicia.locale.tour.Stop;
 import com.linguaculturalists.phoenicia.models.Assets;
 import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.Builder;
@@ -81,6 +84,7 @@ import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
 import com.linguaculturalists.phoenicia.locale.LocaleLoader;
 import com.linguaculturalists.phoenicia.util.GameSounds;
 import com.linguaculturalists.phoenicia.util.GameTextures;
+import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.linguaculturalists.phoenicia.util.SystemUiHider;
 import com.orm.androrm.Filter;
@@ -131,9 +135,6 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public Font defaultFont;
 
     private Music music;
-
-    public AssetBitmapTexture shellTexture;
-    public ITiledTextureRegion shellTiles; /**< Tile regions for building the game shell */
 
     public Map<Person, AssetBitmapTexture> personTextures;
     public Map<Person, TextureRegion> personTiles; /**< Tile regions depicting people */
@@ -302,7 +303,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         LocaleLoader localeLoader = new LocaleLoader();
         try {
             this.locale = localeLoader.load(PhoeniciaContext.assetManager.open(this.session.locale_pack.get()));
-            Debug.d("Locale map: "+locale.map_src);
+            Debug.d("Locale map: " + locale.map_src);
         } catch (final IOException e) {
             Debug.e("Error loading Locale from "+this.session.locale_pack.get(), e);
         }
@@ -357,15 +358,17 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.loadLocaleDefaults();
         this.loadLocalePeople();
         progress.setProgress(0.5f);
-        this.loadLocaleLetters();
+        this.loadLocaleTour();
         progress.setProgress(0.6f);
-        this.loadLocaleWords();
+        this.loadLocaleLetters();
         progress.setProgress(0.7f);
-        this.loadLocaleGames();
+        this.loadLocaleWords();
         progress.setProgress(0.8f);
+        this.loadLocaleGames();
+        progress.setProgress(0.9f);
         this.loadLocaleDecorations();
         this.loadLocaleLevels();
-        progress.setProgress(0.9f);
+        progress.setProgress(0.99f);
     }
 
     private void loadLocaleMap() {
@@ -425,9 +428,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
     private void loadLocaleDefaults() throws IOException {
         try {
-            shellTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.shell_src);
-            shellTexture.load();
-            shellTiles = TextureRegionFactory.extractTiledFromTexture(shellTexture, 0, 0, 64 * 8, 64 * 8, 8, 8);
+            Texture newShell = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.shell_src);
+            newShell.load();
+            GameUI.init(newShell);
 
             inventoryTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.inventoryBlock.block_texture);
             inventoryTexture.load();
@@ -464,6 +467,16 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             } catch (final IOException e) {
                 e.printStackTrace();
                 throw e;
+            }
+        }
+    }
+
+    private void loadLocaleTour() throws IOException {
+        for (Stop stop : locale.tour.getStops()) {
+            for (Message msg : stop.getMessages()) {
+                if (msg.sound != "") {
+                    levelSounds.put(msg.sound, MusicFactory.createMusicFromAsset(PhoeniciaContext.musicManager, PhoeniciaContext.context, msg.sound));
+                }
             }
         }
     }

@@ -5,6 +5,7 @@ import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.MapBlockSprite;
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.util.GameTextures;
+import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.engine.camera.Camera;
@@ -14,6 +15,7 @@ import org.andengine.entity.modifier.LoopEntityModifier;
 import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.sprite.ButtonSprite;
+import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.tmx.TMXTile;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
@@ -26,7 +28,7 @@ import org.andengine.util.modifier.ease.EaseBackOut;
  * HUD that allows the player to re-position a sprite on the map.
  */
 public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickDetectorListener {
-    private Rectangle whiteRect;
+    private Sprite whiteRect;
     private MapBlockSprite sprite;
     public int spriteColumns;
     public int spriteRows;
@@ -67,14 +69,14 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
         final IEntityModifier fadeModifier = new LoopEntityModifier(new AlphaModifier(1,0.4f,0.6f));
         this.sprite.registerEntityModifier(fadeModifier);
 
-        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH/2, 64, 200, 96, PhoeniciaContext.vboManager);
-        whiteRect .setColor(Color.WHITE);
+        ITextureRegion blockRegion = GameUI.getInstance().getGreyBlock();
+        this.whiteRect = new Sprite(GameActivity.CAMERA_WIDTH/2, blockRegion.getHeight()/2, blockRegion, PhoeniciaContext.vboManager);
         this.attachChild(whiteRect);
 
         final SpriteMoveHUD hud = this;
 
-        ITextureRegion cancelRegion = game.shellTiles.getTextureRegion(7);
-        this.cancelBlock = new ButtonSprite((whiteRect.getWidth()/2)-64, 48, cancelRegion, PhoeniciaContext.vboManager);
+        ITextureRegion cancelRegion = GameUI.getInstance().getCancelIcon();
+        this.cancelBlock = new ButtonSprite((whiteRect.getWidth()/2)-48, 48, cancelRegion, PhoeniciaContext.vboManager);
         this.cancelBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -92,8 +94,8 @@ public class SpriteMoveHUD extends PhoeniciaHUD implements ClickDetector.IClickD
         this.registerTouchArea(cancelBlock);
         whiteRect.attachChild(cancelBlock);
 
-        ITextureRegion confirmRegion = game.shellTiles.getTextureRegion(6);
-        this.confirmBlock = new ButtonSprite((whiteRect.getWidth()/2)+64, 48, confirmRegion, PhoeniciaContext.vboManager);
+        ITextureRegion confirmRegion = GameUI.getInstance().getOkIcon();
+        this.confirmBlock = new ButtonSprite((whiteRect.getWidth()/2)+48, 48, confirmRegion, PhoeniciaContext.vboManager);
         this.confirmBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
