@@ -72,12 +72,13 @@ public class NextLevelRequirementsHUD extends PhoeniciaHUD {
         this.attachChild(banner);
 
         ITextureRegion levelRegion = GameUI.getInstance().getLevelIcon();
-        this.levelStar = new Sprite(banner.getWidth()/2, 120, levelRegion, PhoeniciaContext.vboManager);
-        banner.attachChild(levelStar);
-        Text levelNum = new Text(this.levelStar.getWidth()/2, this.levelStar.getHeight()/2, GameFonts.defaultHUDDisplay(), level.next.name, level.next.name.length(), new TextOptions(HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
-        levelNum.setScale(0.8f);
-        levelStar.attachChild(levelNum);
+        this.levelStar = new Sprite(banner.getWidth()/2 - 32, 120, levelRegion, PhoeniciaContext.vboManager);
         levelStar.setScale(0.75f);
+        banner.attachChild(levelStar);
+
+        Text levelNum = new Text(banner.getWidth()/2 + 32, 120, GameFonts.defaultHUDDisplay(), level.next.name, level.next.name.length(), new TextOptions(HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+        levelNum.setScale(1.5f);
+        banner.attachChild(levelNum);
 
         this.itemsPanel = new Scrollable(GameActivity.CAMERA_WIDTH / 2, (GameActivity.CAMERA_HEIGHT / 2)-25, 350, 250, Scrollable.SCROLL_VERTICAL);
         itemsPanel.setPadding(50);

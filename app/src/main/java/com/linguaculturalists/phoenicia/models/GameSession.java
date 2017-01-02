@@ -7,6 +7,7 @@ import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.Filter;
 import com.orm.androrm.Model;
 import com.orm.androrm.QuerySet;
+import com.orm.androrm.field.BooleanField;
 import com.orm.androrm.field.CharField;
 import com.orm.androrm.field.DoubleField;
 import com.orm.androrm.field.IntegerField;
@@ -35,6 +36,10 @@ public class GameSession extends Model {
     public IntegerField points; /**< accumulated points from various in-game actions */
     public IntegerField account_balance; /**< current amount of in-game currency held by the player */
     public IntegerField gross_income; /**< cumulative total of in-game currency earned over the course of this session */
+
+    public BooleanField is_active; /**< Whether this session is active (not deleted) and should be displayed */
+    public BooleanField pref_music; /**< Store user preference to play background music or not */
+
     public Filter filter;
     public Filter session_filter;
 
@@ -58,6 +63,9 @@ public class GameSession extends Model {
         this.account_balance = new IntegerField();
         this.gross_income = new IntegerField();
 
+        this.is_active = new BooleanField();
+        this.pref_music = new BooleanField();
+
         this.listeners = new ArrayList<ExperienceChangeListener>();
     }
 
@@ -77,6 +85,8 @@ public class GameSession extends Model {
         session.points.set(0);
         session.account_balance.set(0);
         session.gross_income.set(0);
+        session.is_active.set(true);
+        session.pref_music.set(true);
         return session;
     }
 
@@ -169,6 +179,10 @@ public class GameSession extends Model {
         migrator.addField("account_balance", new IntegerField());
         migrator.addField("gross_income", new IntegerField());
         migrator.addField("person_name", new CharField());
+
+        // Add state fields
+        migrator.addField("is_active", new BooleanField());
+        migrator.addField("pref_music", new BooleanField());
 
         // roll out all migrations
         migrator.migrate(context);

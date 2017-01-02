@@ -2,6 +2,7 @@ package com.linguaculturalists.phoenicia.util;
 
 import org.andengine.opengl.texture.Texture;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.opengl.texture.region.TextureRegionFactory;
 
@@ -62,6 +63,9 @@ public class GameUI {
         return TextureRegionFactory.extractFromTexture(this.gameui, GU*3, GU*1, GU*1, GU*1);
     }
 
+    public ITextureRegion getRedButton() {
+        return TextureRegionFactory.extractFromTexture(this.gameui, GU*0, GU*4, GU*2, GU*1);
+    }
     public ITextureRegion getCoinsButton() {
         return TextureRegionFactory.extractFromTexture(this.gameui, GU*4, GU*2, GU*2, GU*1);
     }
@@ -92,5 +96,13 @@ public class GameUI {
 
     public ITextureRegion getBlueBanner() {
         return TextureRegionFactory.extractFromTexture(this.gameui, GU*0, GU*6, GU*6, GU*2);
+    }
+
+    public ITiledTextureRegion getMusicIcon() {
+        return TextureRegionFactory.extractTiledFromTexture(this.gameui, GU * 6, GU * 5, GU * 2, GU * 1, 2, 1);
+    }
+
+    public ITiledTextureRegion getSoundIcon() {
+        return TextureRegionFactory.extractTiledFromTexture(this.gameui, GU*6, GU*5, GU*2, GU*1, 2, 1);
     }
 }

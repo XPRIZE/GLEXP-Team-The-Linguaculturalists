@@ -2,7 +2,7 @@
 <locale name="en_us_rural" lang="en_us" display_name="US English, Rural Setting">
     <shell src="locales/common/textures/gameui.png" />
     <map src="locales/en_us_rural/map.tmx" />
-    <music src="locales/en_us_rural/sounds/background.mp3" />
+    <music src="locales/common/sounds/forest_background.mp3" />
 
     <!-- Default blocks -->
     <inventory level="3" size="4x4x4" name="Barn" col="23" row="26" block="locales/common/textures/inventory.png" />
@@ -45,7 +45,7 @@
             <message sound="">Your letters will start growing again for you to collect later</message>
         </stop>
         <stop id="inventory">
-            <message sound="">This is your storage building. Any words or letters you collect will be kept here for you to use.</message>
+            <message sound="">This is your barn. Any words or letters you collect will be kept here for you to use.</message>
             <message sound="">You can also sell an item you have at any time, just by tapping on it.</message>
         </stop>
         <stop id="words">

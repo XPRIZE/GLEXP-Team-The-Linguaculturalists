@@ -134,7 +134,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public ITexture fontTexture;
     public Font defaultFont;
 
-    private Music music;
+    public Music music;
 
     public Map<Person, AssetBitmapTexture> personTextures;
     public Map<Person, TextureRegion> personTiles; /**< Tile regions depicting people */
@@ -474,7 +474,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     private void loadLocaleTour() throws IOException {
         for (Stop stop : locale.tour.getStops()) {
             for (Message msg : stop.getMessages()) {
-                if (msg.sound != "") {
+                if (msg != null && !msg.sound.isEmpty()) {
                     levelSounds.put(msg.sound, MusicFactory.createMusicFromAsset(PhoeniciaContext.musicManager, PhoeniciaContext.context, msg.sound));
                 }
             }
@@ -1028,6 +1028,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.hudManager.showDefault();
         if (this.music != null) {
             this.music.play();
+            if (!this.session.pref_music.get()) {
+                this.music.pause();
+            }
         }
 
         double timediff = (double)System.currentTimeMillis() - session.last_timestamp.get();
@@ -1065,7 +1068,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         this.onUpdate((float) timediff / 1000);
 
         this.isRunning = true;
-        if (this.music != null) {
+        if (this.music != null && this.session.pref_music.get()) {
             this.music.resume();
         }
     }

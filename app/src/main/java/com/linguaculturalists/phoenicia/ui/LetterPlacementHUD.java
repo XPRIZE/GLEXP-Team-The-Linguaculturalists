@@ -123,7 +123,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
             if (!level.letters.contains(currentLetter)) {
                 block.setEnabled(false);
             }
-            this.registerTouchArea(block);
+            blockPanel.registerTouchArea(block);
             blockPanel.attachChild(block);
 
             int cost = currentLetter.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getLetterTileCount(currentLetter));

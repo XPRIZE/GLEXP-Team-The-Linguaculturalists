@@ -47,7 +47,7 @@ import java.util.Map;
  */
 public class MarketHUD extends PhoeniciaHUD {
     private Rectangle whiteRect;
-    private Entity requestItemsPane;
+    private Rectangle requestItemsPane;
     private ClickDetector clickDetector;
 
     private Map<MarketRequest, Sprite> requestPerson;
@@ -75,7 +75,8 @@ public class MarketHUD extends PhoeniciaHUD {
             }
         });
 
-        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, (int)(GameActivity.CAMERA_WIDTH * 0.9), (int)(GameActivity.CAMERA_HEIGHT * 0.9), PhoeniciaContext.vboManager) {
+        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 768, 512, PhoeniciaContext.vboManager) {
+
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 //Debug.d("Market dialog touched");
@@ -87,16 +88,33 @@ public class MarketHUD extends PhoeniciaHUD {
         this.attachChild(whiteRect);
         this.registerTouchArea(whiteRect);
 
-        Scrollable requestsPane = new Scrollable((int)(this.whiteRect.getWidth()*0.3), (int)(this.whiteRect.getHeight()*0.55), (int)(this. whiteRect.getWidth()*0.6), (int)(this.whiteRect.getHeight()*0.9), Scrollable.SCROLL_VERTICAL);
-        whiteRect.attachChild(requestsPane);
+        Scrollable requestsPane = new Scrollable((this.whiteRect.getX() - this.whiteRect.getWidth()/4), this.whiteRect.getY() - 32, (int)(this. whiteRect.getWidth()*0.5), (int)(this.whiteRect.getHeight()*0.9)-16, Scrollable.SCROLL_VERTICAL);
+        this.attachChild(requestsPane);
         this.registerTouchArea(requestsPane);
+        //requestsPane.setClip(false);
 
-        this.requestItemsPane = new Entity((int)(this.whiteRect.getWidth()*0.8), (int)(this.whiteRect.getHeight()*0.55)-32, (int)(this. whiteRect.getWidth()*0.3), (int)(this.whiteRect.getHeight()*0.9)-64);
+        this.requestItemsPane = new Rectangle((this.whiteRect.getWidth()*0.75f)-2, (this.whiteRect.getHeight()*0.5f)+2, (this.whiteRect.getWidth()*0.5f)-4, (this.whiteRect.getHeight()*0.8f)-4, PhoeniciaContext.vboManager);
+        this.requestItemsPane.setColor(new Color(0.99f, 0.99f, 0.99f));
+        Rectangle borderDark = new Rectangle(this.requestItemsPane.getX(), this.requestItemsPane.getY(), this.requestItemsPane.getWidth()+4f, this.requestItemsPane.getHeight()+4f, PhoeniciaContext.vboManager);
+        borderDark.setColor(new Color(0.85f, 0.85f, 0.85f));
+        Rectangle borderLight = new Rectangle(this.requestItemsPane.getX()+2f, this.requestItemsPane.getY()-2f, this.requestItemsPane.getWidth()+2f, this.requestItemsPane.getHeight()+2f, PhoeniciaContext.vboManager);
+        borderLight.setColor(new Color(0.95f, 0.95f, 0.95f));
+        whiteRect.attachChild(borderDark);
+        whiteRect.attachChild(borderLight);
         whiteRect.attachChild(this.requestItemsPane);
 
+        ITextureRegion bannerRegion = GameUI.getInstance().getGreenBanner();
+        Sprite banner = new Sprite(whiteRect.getWidth()/2, whiteRect.getHeight(), bannerRegion, PhoeniciaContext.vboManager);
+        Text name = new Text(banner.getWidth()/2, 120, GameFonts.defaultHUDDisplay(), game.locale.marketBlock.name, game.locale.marketBlock.name.length(), new TextOptions(HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+        name.setScaleX(0.5f);
+        banner.setScaleX(2.0f);
+        banner.attachChild(name);
+        whiteRect.attachChild(banner);
+
+
         final int columns = 2;
-        int startX = (int) (whiteRect.getWidth() / 2) - (columns * 128) - 128;
-        int startY = (int) whiteRect.getHeight() - 256;
+        int startX = (int) (requestsPane.getWidth()) - (columns * 192) + 96;
+        int startY = (int) requestsPane.getHeight() - 128;
 
         int offsetX = 0;
         int offsetY = startY;
@@ -116,7 +134,7 @@ public class MarketHUD extends PhoeniciaHUD {
             Debug.d("Adding Market request: " + currentPerson.name);
             final ITextureRegion personRegion = game.personTiles.get(currentPerson);
 
-            final ButtonSprite block = new ButtonSprite(startX + (272 * offsetX), offsetY, personRegion, PhoeniciaContext.vboManager);
+            final ButtonSprite block = new ButtonSprite(startX + (192 * offsetX), offsetY, personRegion, PhoeniciaContext.vboManager);
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -124,11 +142,11 @@ public class MarketHUD extends PhoeniciaHUD {
                     populateRequestItems(request);
                 }
             });
-            this.registerTouchArea(block);
+            requestsPane.registerTouchArea(block);
             requestsPane.attachChild(block);
             this.requestPerson.put(request, block);
 
-            Text personName = new Text(startX + (272 * offsetX), offsetY-128-16, GameFonts.dialogText(), currentPerson.name, currentPerson.name.length(),  new TextOptions(AutoWrap.WORDS, 256, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+            Text personName = new Text(startX + (192 * offsetX), offsetY-128-16, GameFonts.dialogText(), currentPerson.name, currentPerson.name.length(),  new TextOptions(AutoWrap.WORDS, 192, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
             requestsPane.attachChild(personName);
             this.requestName.put(request, personName);
             offsetX++;
@@ -152,16 +170,11 @@ public class MarketHUD extends PhoeniciaHUD {
         for (Entity touchArea : this.touchAreas) {
             this.unregisterTouchArea(touchArea);
         }
-        ITextureRegion coinRegion = GameUI.getInstance().getCoinsButton();
-        Sprite coinIcon = new Sprite(coinRegion.getWidth()/2, this.requestItemsPane.getHeight()-(coinRegion.getHeight()/2), coinRegion, PhoeniciaContext.vboManager);
-        Text iconDisplay = new Text(100, coinIcon.getHeight()/2, GameFonts.defaultHUDDisplay(), request.coins.get().toString(), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
-        coinIcon.attachChild(iconDisplay);
-        this.requestItemsPane.attachChild(coinIcon);
 
         final int columns = 3;
         float startX = this.requestItemsPane.getWidth() / 2 - (columns * 32) - 16;
         int offsetX = 0;
-        float startY = this.requestItemsPane.getHeight() - coinRegion.getHeight() - 16;
+        float startY = this.requestItemsPane.getHeight() - 32;
         for (final RequestItem item : request.getItems(PhoeniciaContext.context)) {
             if (offsetX >= columns) {
                 startY -= 96;
@@ -201,19 +214,26 @@ public class MarketHUD extends PhoeniciaHUD {
             startX += 96;
         }
 
-        Button sellButton = new Button(this.requestItemsPane.getWidth() / 2, 102, this.requestItemsPane.getWidth(), 64, "Sell", new Color(0.12f, 0.72f, 0.02f), PhoeniciaContext.vboManager, new Button.OnClickListener() {
+        ITextureRegion coinRegion = GameUI.getInstance().getCoinsButton();
+        ButtonSprite coinIcon = new ButtonSprite(coinRegion.getWidth()*2/3, 48, coinRegion, PhoeniciaContext.vboManager);
+        Text iconDisplay = new Text(100, coinIcon.getHeight()/2, GameFonts.defaultHUDDisplay(), request.coins.get().toString(), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
+        coinIcon.attachChild(iconDisplay);
+        coinIcon.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
-            public void onClicked(Button button) {
+            public void onClick(ButtonSprite buttonSprite, float v, float v1) {
                 attemptSale(request);
             }
         });
-        this.requestItemsPane.attachChild(sellButton);
-        this.registerTouchArea(sellButton);
-        this.touchAreas.add(sellButton);
+        this.requestItemsPane.attachChild(coinIcon);
+        this.registerTouchArea(coinIcon);
+        this.touchAreas.add(coinIcon);
 
-        Button cancelButton = new Button(this.requestItemsPane.getWidth() / 2, 32, this.requestItemsPane.getWidth(), 64, "Decline", new Color(0.80f, 0.04f, 0.04f), PhoeniciaContext.vboManager, new Button.OnClickListener() {
+
+        ITextureRegion cancelRegion = GameUI.getInstance().getCancelIcon();
+        ButtonSprite cancelButton = new ButtonSprite(this.requestItemsPane.getWidth() - 64, 48, cancelRegion, PhoeniciaContext.vboManager);
+        cancelButton.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
-            public void onClicked(Button button) {
+            public void onClick(ButtonSprite buttonSprite, float v, float v1) {
                 declineSale(request);
             }
         });

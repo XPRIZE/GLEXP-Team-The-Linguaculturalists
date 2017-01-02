@@ -22,6 +22,9 @@ import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
 import org.andengine.util.math.MathUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Allows scrolling child \link Entity Entities \endlink  within it
  * A container Entity that allows the vertical and/or horizontal scrolling of \link Entity Entities \endlink placed within
@@ -40,6 +43,8 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
     private boolean isInHUD = false;
     private boolean clip = true;
     private float padding = 0;
+    private float scroll_timeout = 250;
+    private long scroll_last = 0;
     private boolean show_scrollbars;
     private Color scrollbar_color;
     private Rectangle vertical_scrollbar;
@@ -48,7 +53,8 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
     private float scroll_x = 0;
     private float scroll_y = 0;
 
-    private boolean print_debug = false;
+    private boolean print_debug = true;
+    private List<ITouchArea> touchAreas;
 
     public final ChildRect childRect = new ChildRect(); /**< Bounding box that holds all child Entities */
 
@@ -82,6 +88,7 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
 
         this.contents = new Entity(w/2, h/2, 0, 0);
         this.childRect.set(0, 0, 0, 0);
+        this.touchAreas = new ArrayList<ITouchArea>();
 
         super.attachChild(this.contents);
 
@@ -226,6 +233,13 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
 
     }
 
+    public void registerTouchArea(ITouchArea area) {
+        this.touchAreas.add(area);
+    }
+    public void unregisterTouchArea(ITouchArea area) {
+        if (this.touchAreas.contains(area)) this.touchAreas.remove(area);
+    }
+
     @Override
     public boolean onAreaTouched(final TouchEvent pTouchEvent, final float touchX, final float touchY) {
         boolean handled = this.scrollDetector.onManagedTouchEvent(pTouchEvent);
@@ -233,10 +247,28 @@ public class Scrollable extends Entity implements ScrollDetector.IScrollDetector
         if (this.touch_was_scroll || this.is_scrolling) {
             //Debug.d("Touch was scroll ");
             this.touch_was_scroll = false;
+            this.scroll_last = System.currentTimeMillis();
             return true;
         } else  {
             //Debug.d("Touch was not scroll ");
             this.touch_was_scroll = false;
+            long delay = System.currentTimeMillis() - this.scroll_last;
+            if (delay < this.scroll_timeout) {
+                return false;
+            }
+            final float sceneTouchX = pTouchEvent.getX();
+            final float sceneTouchY = pTouchEvent.getY();
+            for (ITouchArea area: this.touchAreas) {
+                if (area.contains(sceneTouchX, sceneTouchY)) {
+                    final float[] areaTouchCoordinates = area.convertSceneCoordinatesToLocalCoordinates(sceneTouchX, sceneTouchY);
+                    final float areaTouchX = areaTouchCoordinates[Constants.VERTEX_INDEX_X];
+                    final float areaTouchY = areaTouchCoordinates[Constants.VERTEX_INDEX_Y];
+                    final Boolean ishandled = area.onAreaTouched(pTouchEvent, areaTouchX, areaTouchY);
+                    if (ishandled != null && ishandled) {
+                        return true;
+                    }
+                }
+            }
             return false;
         }
     }

@@ -23,11 +23,13 @@ import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.sprite.TiledSprite;
 import org.andengine.entity.text.Text;
+import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
+import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
 
@@ -250,6 +252,14 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
         this.registerTouchArea(abortButton);
         this.buildPane.attachChild(abortButton);
 
+        ITextureRegion bannerRegion = GameUI.getInstance().getGreenBanner();
+        Sprite banner = new Sprite(whiteRect.getWidth()/2, whiteRect.getHeight(), bannerRegion, PhoeniciaContext.vboManager);
+        Text name = new Text(banner.getWidth()/2, 120, GameFonts.defaultHUDDisplay(), game.locale.workshopBlock.name, game.locale.workshopBlock.name.length(), new TextOptions(HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+        name.setScaleX(0.5f);
+        banner.setScaleX(2.0f);
+        banner.attachChild(name);
+        whiteRect.attachChild(banner);
+
         /**
          * Start available letters area
          */
@@ -293,7 +303,7 @@ public class WorkshopHUD extends PhoeniciaHUD implements Inventory.InventoryUpda
                     }
                 }
             });
-            this.registerTouchArea(block);
+            this.lettersPane.registerTouchArea(block);
             this.lettersPane.attachChild(block);
 
             Level level = game.locale.level_map.get(game.current_level);

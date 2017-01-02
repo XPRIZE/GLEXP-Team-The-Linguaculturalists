@@ -2,6 +2,7 @@ package com.linguaculturalists.phoenicia.ui;
 
 import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
+import com.linguaculturalists.phoenicia.components.ToggleSprite;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.GameSession;
@@ -21,6 +22,7 @@ import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.debug.Debug;
 import org.andengine.util.modifier.ease.EaseBackOut;
@@ -37,6 +39,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
     private Sprite coinIcon;
     private Text balanceDisplay;
     private ButtonSprite helpButton;
+    private ToggleSprite musicButton;
     //private ButtonSprite inventoryBlock;
     private ButtonSprite letterBlock;
     private ButtonSprite wordBlock;
@@ -85,10 +88,11 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
             }
 
         });
-        Entity debugTouchArea = new Entity(50, this.levelIcon.getY() - this.levelIcon.getHeight()/2, 100, 100) {
+        Entity debugTouchArea = new Entity(50, this.coinIcon.getY() + this.levelIcon.getHeight()/3, 100, 100) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
-                return debugClickDetector.onManagedTouchEvent(pSceneTouchEvent);
+                debugClickDetector.onManagedTouchEvent(pSceneTouchEvent);
+                return false;
             }
         };
         this.attachChild(debugTouchArea);
@@ -110,6 +114,24 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         });
         this.registerTouchArea(helpButton);
         this.attachChild(helpButton);
+
+        ITiledTextureRegion musicRegion = GameUI.getInstance().getMusicIcon();
+        this.musicButton = new ToggleSprite(helpButton.getX()-(musicRegion.getWidth()/4)*3 - 16, GameActivity.CAMERA_HEIGHT-(musicRegion.getHeight()/2), musicRegion, PhoeniciaContext.vboManager) {
+            @Override
+            public void onToggled() {
+                if (this.isEnabled()) {
+                    game.music.resume();
+                    game.session.pref_music.set(true);
+                } else {
+                    game.music.pause();
+                    game.session.pref_music.set(false);
+                }
+                game.session.save(PhoeniciaContext.context);
+            }
+        };
+        musicButton.setEnabled(game.session.pref_music.get());
+        this.registerTouchArea(musicButton);
+        this.attachChild(musicButton);
 
         ITextureRegion decorationRegion = GameUI.getInstance().getDecorationLauncher();
         this.decorationBlock = new ButtonSprite(16+decorationRegion.getWidth()/2, (decorationRegion.getHeight()/2)+16, decorationRegion, PhoeniciaContext.vboManager);
@@ -169,6 +191,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         decorationBlock.registerEntityModifier(new MoveYModifier(0.5f, -(decorationBlock.getHeight()/2), (decorationBlock.getHeight()/2)+16, EaseBackOut.getInstance()));
 
         helpButton.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT + 48, GameActivity.CAMERA_HEIGHT-(helpButton.getHeight()/2), EaseBackOut.getInstance()));
+        musicButton.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT + 48, GameActivity.CAMERA_HEIGHT-(musicButton.getHeight()/2), EaseBackOut.getInstance()));
 
         levelIcon.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT + 48, GameActivity.CAMERA_HEIGHT-(levelIcon.getHeight()/2), EaseBackOut.getInstance()));
         //levelDisplay.registerEntityModifier(new MoveYModifier(0.5f, GameActivity.CAMERA_HEIGHT + 48, GameActivity.CAMERA_HEIGHT - 24, EaseBackOut.getInstance()));
@@ -190,6 +213,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         //levelDisplay.setY(GameActivity.CAMERA_HEIGHT + 48);
         //balanceDisplay.setY(GameActivity.CAMERA_HEIGHT + 16);
         helpButton.setY(GameActivity.CAMERA_HEIGHT + 32);
+        musicButton.setY(GameActivity.CAMERA_HEIGHT + 32);
     }
 
     /**

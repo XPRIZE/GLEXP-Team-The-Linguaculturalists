@@ -111,7 +111,7 @@ public class InventoryHUD extends PhoeniciaHUD {
                     sellLetter(block);
                 }
             });
-            this.registerTouchArea(block);
+            itemsPane.registerTouchArea(block);
             itemsPane.attachChild(block);
             offsetX++;
 
@@ -139,7 +139,7 @@ public class InventoryHUD extends PhoeniciaHUD {
                     sellWord(block);
                 }
             });
-            this.registerTouchArea(block);
+            itemsPane.registerTouchArea(block);
             itemsPane.attachChild(block);
             offsetX++;
 
