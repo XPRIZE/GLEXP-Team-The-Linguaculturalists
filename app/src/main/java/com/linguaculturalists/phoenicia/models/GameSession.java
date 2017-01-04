@@ -101,6 +101,8 @@ public class GameSession extends Model {
         session.points.set(0);
         session.account_balance.set(0);
         session.gross_income.set(0);
+        session.is_active.set(true);
+        session.pref_music.set(true);
         return session;
     }
 
@@ -114,6 +116,8 @@ public class GameSession extends Model {
         this.points.set(0);
         this.account_balance.set(0);
         this.gross_income.set(0);
+        this.is_active.set(true);
+        this.pref_music.set(true);
     }
 
     public int addExperience(int points) {

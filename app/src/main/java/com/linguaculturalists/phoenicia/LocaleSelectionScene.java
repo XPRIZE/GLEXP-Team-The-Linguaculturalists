@@ -31,6 +31,7 @@ import org.andengine.util.debug.Debug;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,10 +43,12 @@ public class LocaleSelectionScene extends Scene {
     private AssetBitmapTexture backgroundTexture;
     private ITextureRegion backgroundTextureRegion;
     private PhoeniciaGame game;
+    public List<String> available_locales;
 
     public LocaleSelectionScene(PhoeniciaGame game) {
         super();
         this.game = game;
+        available_locales = new ArrayList<String>();
 
         this.setBackground(new Background(new Color(100, 100, 100)));
         try {
@@ -81,6 +84,7 @@ public class LocaleSelectionScene extends Scene {
                 this.attachChild(locale_button);
                 this.registerTouchArea(locale_button);
                 startY -= 120;
+                available_locales.add(locale_src);
             }
         } catch (IOException e) {
             Debug.e("Failed to find Locales", e.getMessage());
@@ -88,7 +92,8 @@ public class LocaleSelectionScene extends Scene {
         }
     }
 
-    private void startGame(final String locale_src) {
+
+    public void startGame(final String locale_src) {
         final LoadingScene loadingScene = new LoadingScene(game);
         GameSession session = GameSession.start(locale_src);
 

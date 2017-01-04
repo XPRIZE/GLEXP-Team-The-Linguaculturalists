@@ -1045,8 +1045,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             this.changeLevel(this.locale.levels.get(0));
         } else if (this.current_level != this.session.current_level.get()) {
             this.changeLevel(this.locale.level_map.get(this.session.current_level.get()));
+        } else if (this.locale.levels.indexOf(this.locale.level_map.get(this.session.current_level.get())) == 0) {
+            this.hudManager.startTour(this.locale.tour.welcome);
         }
-
     }
 
     public void pause() {

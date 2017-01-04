@@ -1,5 +1,6 @@
 package com.linguaculturalists.phoenicia;
 
+import com.linguaculturalists.phoenicia.locale.LocaleManager;
 import com.linguaculturalists.phoenicia.models.DecorationTile;
 import com.linguaculturalists.phoenicia.models.DefaultTile;
 import com.linguaculturalists.phoenicia.models.GameSession;
@@ -36,6 +37,7 @@ import org.andengine.util.debug.Debug;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The Android Activity for PhoeniciaGame.
@@ -114,7 +116,11 @@ public class GameActivity extends BaseGameActivity {
                 // If no sessions exist, go start a new one first
                 splash.detachSelf();
                 if (sessions.size() < 1) {
-                    mEngine.setScene(new LocaleSelectionScene(game));
+                    LocaleSelectionScene localeScene = new LocaleSelectionScene(game);
+                    mEngine.setScene(localeScene);
+                    if (localeScene.available_locales.size() == 1) {
+                        localeScene.startGame(localeScene.available_locales.get(0));
+                    }
                 } else {
                     mEngine.setScene(new SessionSelectionScene(game));
                 }

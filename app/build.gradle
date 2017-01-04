@@ -29,6 +29,12 @@ android {
         targetCompatibility JavaVersion.VERSION_1_6
     }
     productFlavors {
+        xprize {
+
+        }
+        full {
+
+        }
     }
 }
 

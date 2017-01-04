@@ -115,7 +115,11 @@ public class SessionSelectionScene extends Scene {
     private void newGame() {
         this.detachSelf();
         game.activity.getEngine().unregisterUpdateHandler(this);
-        game.activity.getEngine().setScene(new LocaleSelectionScene(this.game));
+        LocaleSelectionScene localeScene = new LocaleSelectionScene(this.game);
+        game.activity.getEngine().setScene(localeScene);
+        if (localeScene.available_locales.size() == 1) {
+            localeScene.startGame(localeScene.available_locales.get(0));
+        }
     }
 
     private void startGame(final GameSession session) {
@@ -179,7 +183,7 @@ public class SessionSelectionScene extends Scene {
             this.session = session;
             if (session.session_name.get() == null) {
                 Debug.d("Session has no name, setting it to Player "+(sessionSprites.size()+1));
-                session.session_name.set("New Player "+(sessionSprites.size()+1));
+                session.session_name.set("Player "+(sessionSprites.size()+1));
                 session.save(PhoeniciaContext.context);
             }
             Debug.d("Adding Game session: " + session.session_name.get());
