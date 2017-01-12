@@ -23,6 +23,8 @@ public class Level {
     public List<Word> help_words; /**< list of \link Word Words \endlink to give extra help with on this level */
     public List<IntroPage> intro; /**< list of \link IntroPage IntroPages \endlink to be displayed at the start of this level */
     public List<Requirement> requirements; /**< list of \link Requirement Requirements \endlink that must be fulfilled to move on to the next level */
+    public List<Game> games;
+    public List<Decoration> decorations;
     public Level next;
     public Level prev;
 

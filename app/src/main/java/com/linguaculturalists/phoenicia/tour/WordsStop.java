@@ -185,7 +185,7 @@ public class WordsStop extends Stop {
 
             }
         });
-        this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_CENTER);
+        this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_NONE);
         this.overlay.showMessage(this.getMessage(MSG_CREATING), TourOverlay.MessageBox.Top);
     }
 

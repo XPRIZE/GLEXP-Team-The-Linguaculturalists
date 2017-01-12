@@ -4,6 +4,7 @@ import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.locale.tour.Stop;
+import com.linguaculturalists.phoenicia.locale.tour.TourFinishedListener;
 import com.linguaculturalists.phoenicia.models.DefaultTile;
 import com.linguaculturalists.phoenicia.models.GameTile;
 import com.linguaculturalists.phoenicia.models.WordTile;
@@ -33,6 +34,7 @@ public class HUDManager extends HUD {
 
     private Entity hudLayer;
     private TourOverlay tourLayer;
+    private TourFinishedListener tourListener;
 
 
     /**
@@ -46,16 +48,21 @@ public class HUDManager extends HUD {
         this.attachChild(this.hudLayer);
     }
 
-    public void startTour(Stop stop) {
+    public void startTour(Stop stop, TourFinishedListener listener) {
         this.clear();
+        this.tourListener = listener;
         this.tourLayer = new TourOverlay(game, stop);
         this.setChildScene(this.tourLayer);
         this.tourLayer.show();
     }
 
     public void endTour() {
+        if (this.tourLayer == null) return;
         this.tourLayer.close();
         this.clearChildScene();
+        if (this.tourListener != null) {
+            this.tourListener.onTourFinished(this.tourLayer.stop);
+        }
         this.tourLayer = null;
     }
 
@@ -74,9 +81,12 @@ public class HUDManager extends HUD {
      * @param level
      */
     public void showNewLevel(final Level level) {
+        this.showNewLevel(level, true);
+    }
+    public void showNewLevel(final Level level, boolean collectCoins) {
         this.clear();
         // Place the intro HUD just below the new level HUD so the player sees it next
-        if (level.intro.size() > 0) {
+        if (level.intro.size() > 0 && collectCoins) {
             if (this.currentHUD != null) {
                 this.hudStack.push(this.currentHUD);
                 this.currentHUD.hide();
@@ -84,7 +94,7 @@ public class HUDManager extends HUD {
             this.currentHUD = new LevelIntroHUD(this.game, level);
             this.currentHUD.open();
         }
-        this.push(new NewLevelHUD(this.game, level));
+        this.push(new NewLevelHUD(this.game, level, collectCoins));
     }
 
     /**

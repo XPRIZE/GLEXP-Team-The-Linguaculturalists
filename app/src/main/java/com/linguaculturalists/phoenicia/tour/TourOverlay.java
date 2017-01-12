@@ -45,7 +45,7 @@ import java.util.List;
  */
 public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletionListener {
     private PhoeniciaGame game;
-    private Stop stop;
+    public Stop stop;
     private Sprite guideSprite;
     private ClickDetector clickDetector;
     private List<Message> messages;

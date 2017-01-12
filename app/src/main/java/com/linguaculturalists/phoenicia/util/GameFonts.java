@@ -22,6 +22,7 @@ public class GameFonts {
     static Font defaultHUDDisplayFont;
     static Font introTextFont;
     static Font inventoryCountFont;
+    static Font itemCostFont;
     static Font buttonFont;
     static Font progressFont;
 
@@ -37,6 +38,20 @@ public class GameFonts {
         }
         return dialogFont;
     }
+
+    /**
+     * Font used for displaying the cost of an InventoryItem.
+     * @return
+     */
+    public static Font itemCost() {
+        if (itemCostFont == null) {
+            BitmapTextureAtlas texture = new BitmapTextureAtlas(PhoeniciaContext.textureManager, 1024, 1024, TextureOptions.BILINEAR);
+            itemCostFont = FontFactory.createStroke(PhoeniciaContext.fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 24, true, new Color(0.96f, 0.70f, 0f).getARGBPackedInt(), 0.5f, new Color(0.90f, 0.41f, 0f).getARGBPackedInt());
+            itemCostFont.load();
+        }
+        return itemCostFont;
+    }
+
     /**
      * Font used for displaying the quantity of an InventoryItem.
      * @return

@@ -3,6 +3,7 @@ package com.linguaculturalists.phoenicia.ui;
 import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.ToggleSprite;
+import com.linguaculturalists.phoenicia.locale.Game;
 import com.linguaculturalists.phoenicia.locale.Level;
 import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.GameSession;
@@ -64,8 +65,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         levelIcon.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v1) {
-                Level level = game.locale.level_map.get(game.current_level);
-                game.hudManager.showNextLevelReq(level);
+                game.hudManager.showNewLevel(game.getCurrentLevel(), false);
             }
         });
         levelDisplay = new Text(160, levelIcon.getHeight()/2, GameFonts.defaultHUDDisplay(), game.current_level, 20, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
@@ -103,13 +103,14 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         helpButton.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                Level level = game.locale.level_map.get(game.current_level);
-                while (level.intro.size() < 1 && level.prev != null && level.prev != level) {
-                    level = level.prev;
-                }
-                if (level.intro.size() > 0) {
-                    game.hudManager.showLevelIntro(level);
-                }
+                game.hudManager.showNextLevelReq(game.getCurrentLevel());
+//                Level level = game.locale.level_map.get(game.current_level);
+//                while (level.intro.size() < 1 && level.prev != null && level.prev != level) {
+//                    level = level.prev;
+//                }
+//                if (level.intro.size() > 0) {
+//                    game.hudManager.showLevelIntro(level);
+//                }
             }
         });
         this.registerTouchArea(helpButton);
@@ -134,7 +135,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         this.attachChild(musicButton);
 
         ITextureRegion decorationRegion = GameUI.getInstance().getDecorationLauncher();
-        this.decorationBlock = new ButtonSprite(16+decorationRegion.getWidth()/2, (decorationRegion.getHeight()/2)+16, decorationRegion, PhoeniciaContext.vboManager);
+        this.decorationBlock = new ButtonSprite(16 + decorationRegion.getWidth() / 2, (decorationRegion.getHeight() / 2) + 16, decorationRegion, PhoeniciaContext.vboManager);
         decorationBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -142,10 +143,44 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
             }
         });
         this.registerTouchArea(decorationBlock);
-        this.attachChild(decorationBlock);
+
+        if (this.game.getCurrentLevel().decorations.size() > 0) {
+            Debug.d("Found "+this.game.getCurrentLevel().decorations.size()+" available decorations");
+            this.attachChild(decorationBlock);
+        }
+
+        int position = 1;
+        ITextureRegion gameRegion = GameUI.getInstance().getGameLauncher();
+        this.gameBlock = new ButtonSprite(16 + GameActivity.CAMERA_WIDTH - (gameRegion.getWidth() + 16) * position, (gameRegion.getHeight() / 2) + 16, gameRegion, PhoeniciaContext.vboManager);
+        gameBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
+                game.hudManager.showGamePlacement();
+            }
+        });
+        this.registerTouchArea(gameBlock);
+        if (this.game.getCurrentLevel().games.size() > 0) {
+            Debug.d("Found "+this.game.getCurrentLevel().games.size()+" available games");
+            this.attachChild(gameBlock);
+            position++;
+        }
+
+        ITextureRegion wordRegion = GameUI.getInstance().getWordLauncher();
+        this.wordBlock = new ButtonSprite(16 + GameActivity.CAMERA_WIDTH - (wordRegion.getWidth() + 16) * position, (wordRegion.getHeight() / 2) + 16, wordRegion, PhoeniciaContext.vboManager);
+        wordBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
+                game.hudManager.showWordPlacement();
+            }
+        });
+        this.registerTouchArea(wordBlock);
+        if (this.game.getCurrentLevel().words.size() > 0) {
+            this.attachChild(wordBlock);
+            position++;
+        }
 
         ITextureRegion letterRegion = GameUI.getInstance().getLetterLauncher();
-        this.letterBlock = new ButtonSprite(16+GameActivity.CAMERA_WIDTH-(letterRegion.getWidth()+16)*3, (letterRegion.getHeight()/2)+16, letterRegion, PhoeniciaContext.vboManager);
+        this.letterBlock = new ButtonSprite(16+GameActivity.CAMERA_WIDTH-(letterRegion.getWidth()+16) * position, (letterRegion.getHeight()/2)+16, letterRegion, PhoeniciaContext.vboManager);
         letterBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v2) {
@@ -154,28 +189,6 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         });
         this.registerTouchArea(letterBlock);
         this.attachChild(letterBlock);
-
-        ITextureRegion wordRegion = GameUI.getInstance().getWordLauncher();
-        this.wordBlock = new ButtonSprite(16+GameActivity.CAMERA_WIDTH-(wordRegion.getWidth()+16)*2, (wordRegion.getHeight()/2)+16, wordRegion, PhoeniciaContext.vboManager);
-        wordBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
-            @Override
-            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                game.hudManager.showWordPlacement();
-            }
-        });
-        this.registerTouchArea(wordBlock);
-        this.attachChild(wordBlock);
-
-        ITextureRegion gameRegion = GameUI.getInstance().getGameLauncher();
-        this.gameBlock = new ButtonSprite(16+GameActivity.CAMERA_WIDTH-(wordRegion.getWidth()+16)*1, (gameRegion.getHeight()/2)+16, gameRegion, PhoeniciaContext.vboManager);
-        gameBlock.setOnClickListener(new ButtonSprite.OnClickListener() {
-            @Override
-            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                game.hudManager.showGamePlacement();
-            }
-        });
-        this.registerTouchArea(gameBlock);
-        this.attachChild(gameBlock);
 
     }
 
@@ -223,6 +236,21 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
     public void onLevelChanged(Level next) {
         this.levelDisplay.setText(next.name);
         //this.levelDisplay.setPosition(64 + (this.levelDisplay.getWidth() / 2), this.levelDisplay.getY());
+        if (this.game.getCurrentLevel().decorations.size() > 0) {
+            if (!this.decorationBlock.hasParent()) this.attachChild(this.decorationBlock);
+        }
+        int position = 1;
+        if (this.game.getCurrentLevel().games.size() > 0) {
+            this.gameBlock.setX(16 + GameActivity.CAMERA_WIDTH - (this.gameBlock.getWidth() + 16) * position);
+            if (!this.gameBlock.hasParent()) this.attachChild(this.gameBlock);
+            position++;
+        }
+        if (this.game.getCurrentLevel().words.size() > 0) {
+            this.wordBlock.setX(16 + GameActivity.CAMERA_WIDTH - (this.wordBlock.getWidth() + 16) * position);
+            if (!this.wordBlock.hasParent()) this.attachChild(this.wordBlock);
+            position++;
+        }
+        this.letterBlock.setX(16 + GameActivity.CAMERA_WIDTH - (this.letterBlock.getWidth() + 16) * position);
     }
 
     /**

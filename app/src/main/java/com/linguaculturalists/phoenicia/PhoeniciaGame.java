@@ -60,6 +60,7 @@ import com.linguaculturalists.phoenicia.locale.Person;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.locale.tour.Message;
 import com.linguaculturalists.phoenicia.locale.tour.Stop;
+import com.linguaculturalists.phoenicia.locale.tour.TourFinishedListener;
 import com.linguaculturalists.phoenicia.models.Assets;
 import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.Builder;
@@ -1046,7 +1047,12 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         } else if (this.current_level != this.session.current_level.get()) {
             this.changeLevel(this.locale.level_map.get(this.session.current_level.get()));
         } else if (this.locale.levels.indexOf(this.locale.level_map.get(this.session.current_level.get())) == 0) {
-            this.hudManager.startTour(this.locale.tour.welcome);
+            this.hudManager.startTour(this.locale.tour.welcome, new TourFinishedListener() {
+                @Override
+                public void onTourFinished(Stop s) {
+                    hudManager.showNewLevel(locale.level_map.get(session.current_level.get()));
+                }
+            });
         }
     }
 
@@ -1179,8 +1185,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         for (int c = 0; c < tile.letter.columns; c++) {
             for (int r = 0; r < tile.letter.rows; r++) {
                 if (placedSprites[tmxTile.getTileColumn()-c][tmxTile.getTileRow()-r] != null && callback == null) {
-                    Debug.d("Can't place blocks over existing blocks");
-                    return;
+                    Debug.e("Placing letter block over existing blocks!");
+                    //return;
                 }
             }
         }
@@ -1272,8 +1278,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         for (int c = 0; c < tile.word.columns; c++) {
             for (int r = 0; r < tile.word.rows; r++) {
                 if (placedSprites[tmxTile.getTileColumn()-c][tmxTile.getTileRow()-r] != null && callback == null) {
-                    Debug.d("Can't place blocks over existing blocks");
-                    return;
+                    Debug.e("Placing word block over existing blocks!");
+                    //return;
                 }
             }
         }
@@ -1365,8 +1371,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         for (int c = 0; c < tile.game.columns; c++) {
             for (int r = 0; r < tile.game.rows; r++) {
                 if (placedSprites[tmxTile.getTileColumn()-c][tmxTile.getTileRow()-r] != null && callback == null) {
-                    Debug.d("Can't place blocks over existing blocks");
-                    return;
+                    Debug.e("Placing game block over existing blocks!");
+                    //return;
                 }
             }
         }
@@ -1458,8 +1464,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         for (int c = 0; c < tile.decoration.columns; c++) {
             for (int r = 0; r < tile.decoration.rows; r++) {
                 if (placedSprites[tmxTile.getTileColumn()-c][tmxTile.getTileRow()-r] != null && callback == null) {
-                    Debug.d("Can't place blocks over existing blocks");
-                    return;
+                    Debug.e("Placing decoration block over existing blocks!");
+                    //return;
                 }
             }
         }
@@ -1658,21 +1664,28 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
             return;
         }
 
+        final TourFinishedListener showNextLevel = new TourFinishedListener() {
+            @Override
+            public void onTourFinished(Stop s) {
+                hudManager.showNewLevel(s.tour.game.getCurrentLevel());
+            }
+        };
+
         // Show what's new only for levels without a tour stop
         if (this.locale.levels.indexOf(next) == 0) {
-            this.hudManager.startTour(this.locale.tour.welcome);
+            this.hudManager.startTour(this.locale.tour.welcome, showNextLevel);
 
         } else if (next.prev.words.size() < 1 && next.words.size() >= 1) {
-            this.hudManager.startTour(this.locale.tour.words);
+            this.hudManager.startTour(this.locale.tour.words, showNextLevel);
 
         } else if (next.name.equals(this.locale.inventoryBlock.level)) {
-            this.hudManager.startTour(this.locale.tour.inventory);
+            this.hudManager.startTour(this.locale.tour.inventory, showNextLevel);
 
         } else if (next.name.equals(this.locale.marketBlock.level)) {
-            this.hudManager.startTour(this.locale.tour.market);
+            this.hudManager.startTour(this.locale.tour.market, showNextLevel);
 
         } else if (next.name.equals(this.locale.workshopBlock.level)) {
-            this.hudManager.startTour(this.locale.tour.workshop);
+            this.hudManager.startTour(this.locale.tour.workshop, showNextLevel);
 
         } else {
             this.hudManager.showNewLevel(next);
@@ -1681,6 +1694,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     }
 
     public Level getCurrentLevel() {
+        if (this.current_level == null || this.current_level == "") {
+            return this.locale.levels.get(0);
+        }
         return this.locale.level_map.get(this.current_level);
     }
     public void addLevelListener(LevelChangeListener listener) {

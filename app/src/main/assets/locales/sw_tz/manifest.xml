@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <locale name="sw_tz" lang="sw_tz" display_name="Swahili">
-    <shell src="locales/common/textures/gameui.png" />
+    <shell src="locales/sw_tz/textures/gameui-tz.png" />
     <map src="locales/sw_tz/map.tmx" />
     <music src="locales/common/sounds/jungle_background.ogg" />
 
@@ -11,14 +11,14 @@
 
     <!-- People used in the marketplace and player's avatar -->
     <people>
-        <person name="Roxanne" texture="locales/common/textures/persons/f1.png" />
-        <person name="Michelle" texture="locales/common/textures/persons/f2.png" />
-        <person name="Laura" texture="locales/common/textures/persons/f3.png" />
-        <person name="Ashley" texture="locales/common/textures/persons/f4.png" />
-        <person name="Ben" texture="locales/common/textures/persons/m1.png" />
-        <person name="Michael" texture="locales/common/textures/persons/m2.png" />
-        <person name="Dave" texture="locales/common/textures/persons/m3.png" />
-        <person name="Henry" texture="locales/common/textures/persons/m4.png" />
+        <person name="Amanika" texture="locales/common/textures/persons/f1.png" />
+        <person name="Elewa" texture="locales/common/textures/persons/f2.png" />
+        <person name="Jama" texture="locales/common/textures/persons/f3.png" />
+        <person name="Rehema" texture="locales/common/textures/persons/f4.png" />
+        <person name="Baraka" texture="locales/common/textures/persons/m1.png" />
+        <person name="Hamadi" texture="locales/common/textures/persons/m2.png" />
+        <person name="Jamba" texture="locales/common/textures/persons/m3.png" />
+        <person name="Usian" texture="locales/common/textures/persons/m4.png" />
     </people>
 
     <!-- Mini-games -->
@@ -29,13 +29,13 @@
 
     <!-- Decorations -->
     <decorations>
-        <decoration level="5"  size="1x1" name="Lamp Post"  buy="200" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
-        <decoration level="10" size="1x1" name="Small Tree" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
-        <decoration level="20" size="2x2" name="Fountain"   buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
+        <decoration level="7"  size="1x1" name="Lamp Post"  buy="200" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
+        <decoration level="15" size="1x1" name="Small Tree" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
+        <decoration level="22" size="2x2" name="Fountain"   buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
     </decorations>
 
     <!-- Tour -->
-    <tour guide="Roxanne">
+    <tour guide="Amanika">
         <stop id="welcome">
             <message sound="locales/sw_tz/sounds/tour/welcome1.ogg">Karibu Phoenicia!</message>
             <message sound="locales/sw_tz/sounds/tour/welcome2.ogg">Tumia picha za herufi mwisho wa skrini yako kwa kuanza kuweka herufi 'A'</message>
@@ -105,38 +105,38 @@
         <word name="chura" size="1x1" buy="7390" sell="500" points="195" construct="102600" time="21000" sprite="locales/common/textures/words/sprites/frog.png" block="locales/common/textures/words/blocks/frog.png" sound="locales/sw_tz/sounds/chura.ogg">chura</word>
         <word name="farasi" size="1x1" buy="4370" sell="310" points="171" construct="43200" time="10200" sprite="locales/common/textures/words/sprites/horse.png" block="locales/common/textures/words/blocks/horse.png" sound="locales/sw_tz/sounds/farasi.ogg">farasi</word>
         <word name="gari" size="2x2x2" buy="2400" sell="180" points="144" construct="16200" time="4800" sprite="locales/common/textures/words/sprites/car.png" block="locales/common/textures/words/blocks/car.png" sound="locales/sw_tz/sounds/gari.ogg">gari</word>
-        <word name="hema" size="1x1" buy="3450" sell="250" points="160" construct="29700" time="7800" sprite="locales/common/textures/words/sprites/tent.png" block="locales/common/textures/words/blocks/tent.png" sound="locales/sw_tz/sounds/hema.ogg">hema</word>
-        <word name="kalamu" size="1x1" buy="2850" sell="210" points="152" construct="21600" time="6000" sprite="locales/common/textures/words/sprites/pen.png" block="locales/common/textures/words/blocks/pen.png" sound="locales/sw_tz/sounds/kalamu.ogg">kalamu</word>
-        <word name="kamba" size="1x1" buy="2550" sell="190" points="147" construct="18000" time="4800" sprite="locales/common/textures/words/sprites/string.png" block="locales/common/textures/words/blocks/string.png" sound="locales/sw_tz/sounds/kamba.ogg">kamba</word>
+        <word name="hema" size="2x2x2" buy="3450" sell="250" points="160" construct="29700" time="7800" sprite="locales/common/textures/words/sprites/tent.png" block="locales/common/textures/words/blocks/tent.png" sound="locales/sw_tz/sounds/hema.ogg">hema</word>
+        <word name="kalamu" size="2x2x2" buy="2850" sell="210" points="152" construct="21600" time="6000" sprite="locales/common/textures/words/sprites/pen.png" block="locales/common/textures/words/blocks/pen.png" sound="locales/sw_tz/sounds/kalamu.ogg">kalamu</word>
+        <word name="kamba" size="2x2x2" buy="2550" sell="190" points="147" construct="18000" time="4800" sprite="locales/common/textures/words/sprites/string.png" block="locales/common/textures/words/blocks/string.png" sound="locales/sw_tz/sounds/kamba.ogg">kamba</word>
         <word name="kamera" size="1x1" buy="4680" sell="330" points="174" construct="48600" time="11400" sprite="locales/common/textures/words/sprites/camera.png" block="locales/common/textures/words/blocks/camera.png" sound="locales/sw_tz/sounds/kamera.ogg">kamera</word>
         <word name="kibanda" size="1x1" buy="5310" sell="370" points="180" construct="59400" time="13800" sprite="locales/common/textures/words/sprites/hut.png" block="locales/common/textures/words/blocks/hut.png" sound="locales/sw_tz/sounds/kibanda.ogg">kibanda</word>
         <word name="kikombe" size="1x1" buy="8210" sell="550" points="200" construct="122400" time="24600" sprite="locales/common/textures/words/sprites/cup.png" block="locales/common/textures/words/blocks/cup.png" sound="locales/sw_tz/sounds/kikombe.ogg">kikombe</word>
         <word name="kitanda" size="1x1" buy="5940" sell="410" points="185" construct="72000" time="15600" sprite="locales/common/textures/words/sprites/bed.png" block="locales/common/textures/words/blocks/bed.png" sound="locales/sw_tz/sounds/kitanda.ogg">kitanda</word>
-        <word name="kiti" size="1x1" buy="720" sell="60" points="89" construct="2700" time="600" sprite="locales/sw_tz/textures/words/sprites/kiti.png" block="locales/sw_tz/textures/words/blocks/kiti.png" sound="locales/sw_tz/sounds/kiti.ogg">kiti</word>
+        <word name="kiti" size="2x2x2" buy="720" sell="60" points="89" construct="2700" time="600" sprite="locales/sw_tz/textures/words/sprites/kiti.png" block="locales/sw_tz/textures/words/blocks/kiti.png" sound="locales/sw_tz/sounds/kiti.ogg">kiti</word>
         <word name="kofia" size="2x2x2" buy="4990" sell="350" points="177" construct="54000" time="12600" sprite="locales/common/textures/words/sprites/hat.png" block="locales/common/textures/words/blocks/hat.png" sound="locales/sw_tz/sounds/kofia.ogg">kofia</word>
         <word name="konokono" size="1x1" buy="4220" sell="300" points="170" construct="41400" time="9600" sprite="locales/common/textures/words/sprites/snail.png" block="locales/common/textures/words/blocks/snail.png" sound="locales/sw_tz/sounds/konokono.ogg">konokono</word>
         <word name="kufuli" size="1x1" buy="6260" sell="430" points="188" construct="78300" time="16800" sprite="locales/common/textures/words/sprites/lock.png" block="locales/common/textures/words/blocks/lock.png" sound="locales/sw_tz/sounds/kufuli.ogg">kufuli</word>
         <word name="kuingia" size="1x1" buy="6100" sell="420" points="186" construct="75600" time="16200" sprite="locales/common/textures/words/sprites/log.png" block="locales/common/textures/words/blocks/log.png" sound="locales/sw_tz/sounds/kuingia.ogg">kuingia</word>
-        <word name="kuku" size="1x1" buy="590" sell="50" points="80" construct="1800" time="600" sprite="locales/common/textures/words/sprites/chicken.png" block="locales/common/textures/words/blocks/chicken.png" sound="locales/sw_tz/sounds/kuku.ogg">kuku</word>
+        <word name="kuku" size="2x2x2" buy="590" sell="50" points="80" construct="1800" time="600" sprite="locales/sw_tz/textures/words/sprites/kuku.png" block="locales/sw_tz/textures/words/blocks/kuku.png" sound="locales/sw_tz/sounds/kuku.ogg">kuku</word>
         <word name="lori" size="1x1" buy="5470" sell="380" points="181" construct="63000" time="13800" sprite="locales/common/textures/words/sprites/truck.png" block="locales/common/textures/words/blocks/truck.png" sound="locales/sw_tz/sounds/lori.ogg">lori</word>
-        <word name="maji" size="1x1" buy="2260" sell="170" points="141" construct="14400" time="4200" sprite="locales/common/textures/words/sprites/water.png" block="locales/common/textures/words/blocks/water.png" sound="locales/sw_tz/sounds/maji.ogg">maji</word>
+        <word name="maji" size="2x2x2" buy="2260" sell="170" points="141" construct="14400" time="4200" sprite="locales/common/textures/words/sprites/water.png" block="locales/common/textures/words/blocks/water.png" sound="locales/sw_tz/sounds/maji.ogg">maji</word>
         <word name="mashua" size="1x1" buy="4060" sell="290" points="168" construct="38700" time="9600" sprite="locales/common/textures/words/sprites/boat.png" block="locales/common/textures/words/blocks/boat.png" sound="locales/sw_tz/sounds/mashua.ogg">mashua</word>
         <word name="matope" size="1x1" buy="7720" sell="520" points="197" construct="110700" time="22200" sprite="locales/common/textures/words/sprites/mud.png" block="locales/common/textures/words/blocks/mud.png" sound="locales/sw_tz/sounds/matope.ogg">matope</word>
-        <word name="maua" size="1x1" buy="1970" sell="150" points="135" construct="11700" time="3600" sprite="locales/common/textures/words/sprites/flower.png" block="locales/common/textures/words/blocks/flower.png" sound="locales/sw_tz/sounds/maua.ogg">maua</word>
-        <word name="mavazi" size="1x1" buy="3910" sell="280" points="166" construct="36000" time="9000" sprite="locales/common/textures/words/sprites/dress.png" block="locales/common/textures/words/blocks/dress.png" sound="locales/sw_tz/sounds/mavazi.ogg">mavazi</word>
+        <word name="maua" size="2x2x2" buy="1970" sell="150" points="135" construct="11700" time="3600" sprite="locales/common/textures/words/sprites/flower.png" block="locales/common/textures/words/blocks/flower.png" sound="locales/sw_tz/sounds/maua.ogg">maua</word>
+        <word name="mavazi" size="2x2x2" buy="3910" sell="280" points="166" construct="36000" time="9000" sprite="locales/common/textures/words/sprites/dress.png" block="locales/common/textures/words/blocks/dress.png" sound="locales/sw_tz/sounds/mavazi.ogg">mavazi</word>
         <word name="maziwa" size="1x1" buy="3750" sell="270" points="164" construct="34200" time="8400" sprite="locales/common/textures/words/sprites/milk.png" block="locales/common/textures/words/blocks/milk.png" sound="locales/sw_tz/sounds/maziwa.ogg">maziwa</word>
-        <word name="mbegu" size="1x1" buy="3150" sell="230" points="156" construct="25200" time="6600" sprite="locales/common/textures/words/sprites/seed.png" block="locales/common/textures/words/blocks/seed.png" sound="locales/sw_tz/sounds/mbegu.ogg">mbegu</word>
-        <word name="mbuzi" size="1x1" buy="1260" sell="100" points="115" construct="5400" time="1800" sprite="locales/common/textures/words/sprites/goat.png" block="locales/common/textures/words/blocks/goat.png" sound="locales/sw_tz/sounds/mbuzi.ogg">mbuzi</word>
-        <word name="mbwa" size="1x1" buy="3000" sell="220" points="154" construct="23400" time="6000" sprite="locales/common/textures/words/sprites/dog.png" block="locales/common/textures/words/blocks/dog.png" sound="locales/sw_tz/sounds/mbwa.ogg">mbwa</word>
-        <word name="meli" size="1x1" buy="980" sell="80" points="104" construct="3600" time="1200" sprite="locales/common/textures/words/sprites/sail.png" block="locales/common/textures/words/blocks/sail.png" sound="locales/sw_tz/sounds/meli.ogg">meli</word>
-        <word name="meza" size="1x1" buy="1400" sell="110" points="119" construct="6300" time="2400" sprite="locales/common/textures/words/sprites/table.png" block="locales/common/textures/words/blocks/table.png" sound="locales/sw_tz/sounds/meza.ogg">meza</word>
+        <word name="mbegu" size="2x2x2" buy="3150" sell="230" points="156" construct="25200" time="6600" sprite="locales/common/textures/words/sprites/seed.png" block="locales/common/textures/words/blocks/seed.png" sound="locales/sw_tz/sounds/mbegu.ogg">mbegu</word>
+        <word name="mbuzi" size="2x2x2" buy="1260" sell="100" points="115" construct="5400" time="1800" sprite="locales/common/textures/words/sprites/goat.png" block="locales/common/textures/words/blocks/goat.png" sound="locales/sw_tz/sounds/mbuzi.ogg">mbuzi</word>
+        <word name="mbwa" size="2x2x2" buy="3000" sell="220" points="154" construct="23400" time="6000" sprite="locales/common/textures/words/sprites/dog.png" block="locales/common/textures/words/blocks/dog.png" sound="locales/sw_tz/sounds/mbwa.ogg">mbwa</word>
+        <word name="meli" size="2x2x4" buy="980" sell="80" points="104" construct="3600" time="1200" sprite="locales/common/textures/words/sprites/sail.png" block="locales/common/textures/words/blocks/sail.png" sound="locales/sw_tz/sounds/meli.ogg">meli</word>
+        <word name="meza" size="2x2x2" buy="1400" sell="110" points="119" construct="6300" time="2400" sprite="locales/common/textures/words/sprites/table.png" block="locales/common/textures/words/blocks/table.png" sound="locales/sw_tz/sounds/meza.ogg">meza</word>
         <word name="mkate" size="1x1" buy="5780" sell="400" points="184" construct="69300" time="15000" sprite="locales/common/textures/words/sprites/bread.png" block="locales/common/textures/words/blocks/bread.png" sound="locales/sw_tz/sounds/mkate.ogg">mkate</word>
-        <word name="mnara" size="1x1" buy="2110" sell="160" points="138" construct="13500" time="3600" sprite="locales/common/textures/words/sprites/tower.png" block="locales/common/textures/words/blocks/tower.png" sound="locales/sw_tz/sounds/mnara.ogg">mnara</word>
+        <word name="mnara" size="2x2x4" buy="2110" sell="160" points="138" construct="13500" time="3600" sprite="locales/common/textures/words/sprites/tower.png" block="locales/common/textures/words/blocks/tower.png" sound="locales/sw_tz/sounds/mnara.ogg">mnara</word>
         <word name="mshumaa" size="1x1" buy="4530" sell="320" points="173" construct="45900" time="10800" sprite="locales/common/textures/words/sprites/candle.png" block="locales/common/textures/words/blocks/candle.png" sound="locales/sw_tz/sounds/mshumaa.ogg">mshumaa</word>
         <word name="msumari" size="1x1" buy="5630" sell="390" points="183" construct="65700" time="14400" sprite="locales/common/textures/words/sprites/nail.png" block="locales/common/textures/words/blocks/nail.png" sound="locales/sw_tz/sounds/msumari.ogg">msumari</word>
-        <word name="mti" size="1x1" buy="850" sell="70" points="97" construct="2700" time="1200" sprite="locales/common/textures/words/sprites/tree.png" block="locales/common/textures/words/blocks/tree.png" sound="locales/sw_tz/sounds/mti.ogg">mti</word>
+        <word name="mti" size="2x2x2" buy="850" sell="70" points="97" construct="2700" time="1200" sprite="locales/common/textures/words/sprites/tree.png" block="locales/common/textures/words/blocks/tree.png" sound="locales/sw_tz/sounds/mti.ogg">mti</word>
         <word name="ndizi" size="1x1" buy="5150" sell="360" points="179" construct="56700" time="13200" sprite="locales/common/textures/words/sprites/banana.png" block="locales/common/textures/words/blocks/banana.png" sound="locales/sw_tz/sounds/ndizi.ogg">ndizi</word>
-        <word name="ndoo" size="1x1" buy="1820" sell="140" points="132" construct="10800" time="3000" sprite="locales/common/textures/words/sprites/bucket.png" block="locales/common/textures/words/blocks/bucket.png" sound="locales/sw_tz/sounds/ndoo.ogg">ndoo</word>
+        <word name="ndoo" size="2x2x2" buy="1820" sell="140" points="132" construct="10800" time="3000" sprite="locales/common/textures/words/sprites/bucket.png" block="locales/common/textures/words/blocks/bucket.png" sound="locales/sw_tz/sounds/ndoo.ogg">ndoo</word>
         <word name="ng'ombe" size="1x1" buy="8710" sell="580" points="203" construct="134100" time="26400" sprite="locales/common/textures/words/sprites/cow.png" block="locales/common/textures/words/blocks/cow.png" sound="locales/sw_tz/sounds/ngombe.ogg">ngombe</word>
         <word name="nguruwe" size="1x1" buy="8540" sell="570" points="202" construct="130500" time="25800" sprite="locales/common/textures/words/sprites/pig.png" block="locales/common/textures/words/blocks/pig.png" sound="locales/sw_tz/sounds/nguruwe.ogg">nguruwe</word>
         <word name="nyundo" size="1x1" buy="8050" sell="540" points="199" construct="117900" time="24000" sprite="locales/common/textures/words/sprites/hammer.png" block="locales/common/textures/words/blocks/hammer.png" sound="locales/sw_tz/sounds/nyundo.ogg">nyundo</word>
@@ -146,7 +146,7 @@
         <word name="popo" size="2x2x2" buy="1680" sell="130" points="128" construct="9000" time="3000" sprite="locales/common/textures/words/sprites/bat.png" block="locales/common/textures/words/blocks/bat.png" sound="locales/sw_tz/sounds/popo.ogg">popo</word>
         <word name="pundamilia" size="1x1" buy="7880" sell="530" points="198" construct="114300" time="23400" sprite="locales/common/textures/words/sprites/zebra.png" block="locales/common/textures/words/blocks/zebra.png" sound="locales/sw_tz/sounds/pundamilia.ogg">pundamilia</word>
         <word name="ramani" size="2x2x2" buy="3600" sell="260" points="162" construct="31500" time="7800" sprite="locales/common/textures/words/sprites/map.png" block="locales/common/textures/words/blocks/map.png" sound="locales/sw_tz/sounds/ramani.ogg">ramani</word>
-        <word name="samaki" size="1x1" buy="3300" sell="240" points="158" construct="27900" time="7200" sprite="locales/common/textures/words/sprites/fish.png" block="locales/common/textures/words/blocks/fish.png" sound="locales/sw_tz/sounds/samaki.ogg">samaki</word>
+        <word name="samaki" size="2x2x2" buy="3300" sell="240" points="158" construct="27900" time="7200" sprite="locales/common/textures/words/sprites/fish.png" block="locales/common/textures/words/blocks/fish.png" sound="locales/sw_tz/sounds/samaki.ogg">samaki</word>
         <word name="shabiki" size="2x2x2" buy="6910" sell="470" points="192" construct="91800" time="19200" sprite="locales/common/textures/words/sprites/fan.png" block="locales/common/textures/words/blocks/fan.png" sound="locales/sw_tz/sounds/shabiki.ogg">shabiki</word>
         <word name="sindano" size="1x1" buy="7070" sell="480" points="193" construct="95400" time="19800" sprite="locales/common/textures/words/sprites/needle.png" block="locales/common/textures/words/blocks/needle.png" sound="locales/sw_tz/sounds/sindano.ogg">sindano</word>
         <word name="sufuria" size="2x2x2" buy="7560" sell="510" points="196" construct="106200" time="21600" sprite="locales/common/textures/words/sprites/pan.png" block="locales/common/textures/words/blocks/pan.png" sound="locales/sw_tz/sounds/sufuria.ogg">sufuria</word>
@@ -156,8 +156,8 @@
         <word name="uchaguzi" size="1x1" buy="8380" sell="560" points="201" construct="126000" time="25200" sprite="locales/common/textures/words/sprites/trail.png" block="locales/common/textures/words/blocks/trail.png" sound="locales/sw_tz/sounds/uchaguzi.ogg">uchaguzi</word>
         <word name="ufagio" size="1x1" buy="6420" sell="440" points="189" construct="81900" time="17400" sprite="locales/common/textures/words/sprites/broom.png" block="locales/common/textures/words/blocks/broom.png" sound="locales/sw_tz/sounds/ufagio.ogg">ufagio</word>
         <word name="unaweza" size="2x2x2" buy="6580" sell="450" points="190" construct="85500" time="18000" sprite="locales/common/textures/words/sprites/can.png" block="locales/common/textures/words/blocks/can.png" sound="locales/sw_tz/sounds/unaweza.ogg">unaweza</word>
-        <word name="uzi" size="1x1" buy="1120" sell="90" points="109" construct="4500" time="1800" sprite="locales/common/textures/words/sprites/yarn.png" block="locales/common/textures/words/blocks/yarn.png" sound="locales/sw_tz/sounds/uzi.ogg">uzi</word>
-        <word name="yai" size="1x1" buy="1540" sell="120" points="124" construct="8100" time="2400" sprite="locales/common/textures/words/sprites/egg.png" block="locales/common/textures/words/blocks/egg.png" sound="locales/sw_tz/sounds/yai.ogg">yai</word>
+        <word name="uzi" size="2x2x2" buy="1120" sell="90" points="109" construct="4500" time="1800" sprite="locales/common/textures/words/sprites/yarn.png" block="locales/common/textures/words/blocks/yarn.png" sound="locales/sw_tz/sounds/uzi.ogg">uzi</word>
+        <word name="yai" size="2x2x2" buy="1540" sell="120" points="124" construct="8100" time="2400" sprite="locales/common/textures/words/sprites/egg.png" block="locales/common/textures/words/blocks/egg.png" sound="locales/sw_tz/sounds/yai.ogg">yai</word>
     </words>
 
     <!-- Levels -->
@@ -181,7 +181,7 @@
             <letters>t</letters>
             <words></words>
             <help>
-                <letters>t</letters>
+                <letters>a,t</letters>
                 <words></words>
             </help>
             <req>
@@ -194,7 +194,7 @@
             <letters>b</letters>
             <words>taa</words>
             <help>
-                <letters>b</letters>
+                <letters>a,t,b</letters>
                 <words>taa</words>
             </help>
             <req>
@@ -208,8 +208,8 @@
             <letters>p,k</letters>
             <words>bata</words>
             <help>
-                <letters>p,k</letters>
-                <words>bata</words>
+                <letters>t,b,p,k</letters>
+                <words>taa,bata</words>
             </help>
             <req>
                 <gather_letter count="1">p</gather_letter>
@@ -223,8 +223,8 @@
             <letters>e</letters>
             <words>paka</words>
             <help>
-                <letters>e</letters>
-                <words>paka</words>
+                <letters>p,k,e</letters>
+                <words>bata,paka</words>
             </help>
             <req>
                 <gather_letter count="1">e</gather_letter>
@@ -237,7 +237,7 @@
             <letters>u</letters>
             <words>pete</words>
             <help>
-                <letters>u</letters>
+                <letters>e,u</letters>
                 <words>pete</words>
             </help>
             <req>
@@ -251,7 +251,7 @@
             <letters>i</letters>
             <words>kuku</words>
             <help>
-                <letters>i</letters>
+                <letters>u,i</letters>
                 <words>kuku</words>
             </help>
             <req>
@@ -265,7 +265,7 @@
             <letters>m</letters>
             <words>kiti</words>
             <help>
-                <letters>m</letters>
+                <letters>i,m</letters>
                 <words>kiti</words>
             </help>
             <req>
@@ -279,7 +279,7 @@
             <letters>l</letters>
             <words>mti</words>
             <help>
-                <letters>l</letters>
+                <letters>m,l</letters>
                 <words>mti</words>
             </help>
             <req>
@@ -293,7 +293,7 @@
             <letters>z</letters>
             <words>meli</words>
             <help>
-                <letters>z</letters>
+                <letters>m,l,z</letters>
                 <words>meli</words>
             </help>
             <req>

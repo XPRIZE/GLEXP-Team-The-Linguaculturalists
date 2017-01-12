@@ -44,18 +44,22 @@ public class NewLevelHUD extends PhoeniciaHUD {
     private Text levelCoinsCount;
     private Level level;
     private ClickDetector clickDetector;
+    private boolean collectCoins;
 
-    public NewLevelHUD(final PhoeniciaGame game, final Level level) {
+    public NewLevelHUD(final PhoeniciaGame game, final Level level, final boolean collectCoins) {
         super(game);
         this.game = game;
         this.level = level;
+        this.collectCoins = collectCoins;
         this.setBackgroundEnabled(false);
 
         this.clickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {
             @Override
             public void onClick(ClickDetector clickDetector, int i, float v, float v1) {
                 Debug.d("Background clicked");
-                finish();
+                if (! collectCoins) {
+                    finish();
+                }
             }
         });
 
@@ -77,24 +81,23 @@ public class NewLevelHUD extends PhoeniciaHUD {
         this.attachChild(whiteRect);
         this.registerTouchArea(whiteRect);
 
-        ITextureRegion levelRegion = GameUI.getInstance().getLevelIcon();
-        this.levelStar = new Sprite(levelRegion.getWidth()/2, whiteRect.getHeight()-levelRegion.getHeight()/2, levelRegion, PhoeniciaContext.vboManager);
-        whiteRect.attachChild(levelStar);
-        Text levelNum = new Text(levelRegion.getWidth()/2, levelRegion.getHeight()/2, GameFonts.buttonText(), level.name, level.name.length(), new TextOptions(HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
-        levelNum.setScale(0.4f);
-        levelStar.attachChild(levelNum);
+        ITextureRegion bannerRegion = GameUI.getInstance().getGreenBanner();
+        Sprite banner = new Sprite(whiteRect.getX(), whiteRect.getY()+(whiteRect.getHeight()/2), bannerRegion, PhoeniciaContext.vboManager);
+        this.attachChild(banner);
 
-        ITextureRegion coinRegion = GameUI.getInstance().getCoinsIcon();
-        this.levelCoins = new Sprite(0, whiteRect.getHeight()-(coinRegion.getHeight()/2), coinRegion, PhoeniciaContext.vboManager);
-        this.levelCoinsCount = new Text(0, whiteRect.getHeight()-(coinRegion.getHeight()/2), GameFonts.inventoryCount(), String.valueOf(level.coinsEarned), String.valueOf(level.coinsEarned).length(), new TextOptions(HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
-        this.levelCoinsCount.setPosition(whiteRect.getWidth() - (this.levelCoinsCount.getWidth() / 2) - 16, this.levelCoinsCount.getY());
-        this.levelCoins.setPosition(whiteRect.getWidth() - this.levelCoinsCount.getWidth() - 32, this.levelCoins.getY());
-        whiteRect.attachChild(this.levelCoins);
-        whiteRect.attachChild(this.levelCoinsCount);
+        ITextureRegion levelRegion = GameUI.getInstance().getLevelIcon();
+        this.levelStar = new Sprite(banner.getWidth()/2 - 32, 120, levelRegion, PhoeniciaContext.vboManager);
+        levelStar.setScale(0.75f);
+        banner.attachChild(levelStar);
+
+        Text levelNum = new Text(banner.getWidth()/2 + 32, 120, GameFonts.defaultHUDDisplay(), level.name, level.name.length(), new TextOptions(HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+        levelNum.setScale(1.5f);
+        banner.attachChild(levelNum);
 
         this.itemsPanel = new Scrollable(GameActivity.CAMERA_WIDTH / 2, (GameActivity.CAMERA_HEIGHT / 2)-50, 400, 350, Scrollable.SCROLL_VERTICAL);
         itemsPanel.setPadding(50);
         //itemsPanel.setClip(false);
+
 
         final int columns = 3;
         int startX = (int) (itemsPanel.getWidth() / 2) - (columns * 32) - 16;
@@ -153,17 +156,34 @@ public class NewLevelHUD extends PhoeniciaHUD {
 
         this.attachChild(itemsPanel);
         this.registerTouchArea(itemsPanel);
+
+        if (this.collectCoins) {
+            final ITextureRegion coinRegion = GameUI.getInstance().getCoinsButton();
+            final ButtonSprite coinIcon = new ButtonSprite((whiteRect.getWidth() / 2), (coinRegion.getHeight() / 2), coinRegion, PhoeniciaContext.vboManager);
+            final Text purchaseCost = new Text(100, coinIcon.getHeight() / 2, GameFonts.defaultHUDDisplay(), String.valueOf(level.coinsEarned), String.valueOf(level.coinsEarned).length(), PhoeniciaContext.vboManager);
+            coinIcon.attachChild(purchaseCost);
+            coinIcon.setOnClickListener(new ButtonSprite.OnClickListener() {
+                @Override
+                public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                    GameSounds.play(GameSounds.COLLECT);
+                    finish();
+                }
+            });
+            whiteRect.attachChild(coinIcon);
+            this.registerTouchArea(coinIcon);
+        }
+
     }
 
     @Override
     public void show() {
-        this.levelStar.registerEntityModifier(new ScaleModifier(0.4f, 5.0f, 1.5f) {
+        this.levelStar.registerEntityModifier(new ScaleModifier(0.4f, 3.0f, 0.75f) {
             @Override
             protected void onModifierFinished(IEntity pItem) {
                 super.onModifierFinished(pItem);
             }
         });
-        GameSounds.play(GameSounds.COLLECT);
+        GameSounds.play(GameSounds.COMPLETE);
     }
 
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {

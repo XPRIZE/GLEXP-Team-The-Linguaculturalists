@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.Dialog;
+import com.linguaculturalists.phoenicia.components.Keyboard;
 import com.linguaculturalists.phoenicia.components.Scrollable;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
@@ -49,6 +50,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
 
     private Rectangle whiteRect;
     private Scrollable blockPanel;
+    private Keyboard letterPanel;
 
     private ClickDetector clickDetector;
 
@@ -74,7 +76,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
                 finish();
             }
         });
-        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH/2, 64, 600, 96, PhoeniciaContext.vboManager){
+        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH/2, 125, 800, 250, PhoeniciaContext.vboManager){
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
@@ -85,59 +87,25 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
         this.attachChild(whiteRect);
         this.registerTouchArea(whiteRect);
 
-        this.blockPanel = new Scrollable(GameActivity.CAMERA_WIDTH/2, 64, 600, 96, Scrollable.SCROLL_HORIZONTAL);
+        this.blockPanel = new Scrollable(GameActivity.CAMERA_WIDTH/2, 125, 800, 250, Scrollable.SCROLL_VERTICAL);
         this.blockPanel.setPadding(16);
 
         this.registerTouchArea(blockPanel);
         this.registerTouchArea(blockPanel.contents);
         this.attachChild(blockPanel);
 
-        final Font inventoryCountFont = FontFactory.create(PhoeniciaContext.fontManager, PhoeniciaContext.textureManager, 256, 256, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 16, Color.RED_ARGB_PACKED_INT);
-        inventoryCountFont.load();
-
-        Debug.d("Loading letters for level: "+level.name);
-        // We actually use the next level's letters to hint at things to come
-        int next_available_level = game.locale.levels.indexOf(level)+1;
-        if (game.locale.levels.size() <= next_available_level) next_available_level--;
-        final Level next = game.locale.levels.get(next_available_level);
-        final List<Letter> letters = next.letters;
-        final int tile_start = 130;
-        final int startX = (int)(blockPanel.getWidth()/2);
-        for (int i = 0; i < letters.size(); i++) {
-            final Letter currentLetter = letters.get(i);
-            Debug.d("Adding HUD letter: "+currentLetter.name+" (sprite: "+currentLetter.sprite+")");
-            final int tile_id = currentLetter.sprite;
-            ITiledTextureRegion blockRegion = new TiledTextureRegion(game.letterTextures.get(currentLetter),
-                    game.letterSprites.get(currentLetter).getTextureRegion(0),
-                    game.letterSprites.get(currentLetter).getTextureRegion(1),
-                    game.letterSprites.get(currentLetter).getTextureRegion(2));
-            final ButtonSprite block = new ButtonSprite((64 * ((i * 2)+1)), 48, blockRegion, PhoeniciaContext.vboManager);
-            block.setOnClickListener(new ButtonSprite.OnClickListener() {
-                @Override
-                public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                    float[] cameraCenter = getCamera().getSceneCoordinatesFromCameraSceneCoordinates(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2);
-                    TMXTile mapTile = game.getTileAt(cameraCenter[0], cameraCenter[1]);
-                    addLetterTile(currentLetter, mapTile);
-                }
-            });
-            if (!level.letters.contains(currentLetter)) {
-                block.setEnabled(false);
+        letterPanel = new Keyboard(blockPanel.getWidth()/2, blockPanel.getHeight()/2, 800, 250, this.game, Keyboard.SHOW_COST);
+        this.blockPanel.registerTouchArea(letterPanel);
+        this.blockPanel.attachChild(letterPanel);
+        letterPanel.setOnKeyClickListener(new Keyboard.KeyClickListener() {
+            @Override
+            public void onKeyClicked(Letter l) {
+                float[] cameraCenter = getCamera().getSceneCoordinatesFromCameraSceneCoordinates(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2);
+                TMXTile mapTile = game.getTileAt(cameraCenter[0], cameraCenter[1]);
+                addLetterTile(l, mapTile);
             }
-            blockPanel.registerTouchArea(block);
-            blockPanel.attachChild(block);
+        });
 
-            int cost = currentLetter.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getLetterTileCount(currentLetter));
-            final Text inventoryCount = new Text((64 * ((i * 2)+1))+24, 20, inventoryCountFont, String.valueOf(cost), String.valueOf(cost).length(), PhoeniciaContext.vboManager);
-            blockPanel.attachChild(inventoryCount);
-            this.inventoryCounts.put(currentLetter.name, inventoryCount);
-        }
-
-        Debug.d("Finished loading HUD letters");
-
-        Debug.d("Finished instantiating LetterPlacementHUD");
-
-        //this.clickDetector = new ClickDetector(this);
-        //this.setOnSceneTouchListener(this);
     }
 
     /**
@@ -146,8 +114,8 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
     @Override
     public void show() {
         if (placementDone) this.finish();
-        whiteRect.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
-        blockPanel.registerEntityModifier(new MoveYModifier(0.5f, -48, 64, EaseBackOut.getInstance()));
+        whiteRect.registerEntityModifier(new MoveYModifier(0.5f, -125, 125, EaseBackOut.getInstance()));
+        blockPanel.registerEntityModifier(new MoveYModifier(0.5f, -125, 125, EaseBackOut.getInstance()));
     }
 
     /**

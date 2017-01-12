@@ -115,6 +115,7 @@ public class WelcomeStop extends Stop {
             }
         };
         this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_NONE);
+        this.overlay.moveCamera(0, -5);
         this.overlay.setManagedHUD(hud);
         this.overlay.showMessage(this.getMessage(MSG_HUD), TourOverlay.MessageBox.Top);
     }
@@ -123,7 +124,6 @@ public class WelcomeStop extends Stop {
         Debug.d("Clearing managed hud and spotlight");
         this.overlay.clearManagedHUD();
         this.overlay.clearSpotlight();
-        this.overlay.moveCamera(0, -5);
         this.overlay.showMessage(this.getMessage(MSG_PLACEMENT), TourOverlay.MessageBox.Top);
     }
 
@@ -149,8 +149,6 @@ public class WelcomeStop extends Stop {
     }
 
     private void showLetterRegrowing() {
-        //this.overlay.focusOn(this.letterTile.sprite);
-        //this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_CENTER);
         this.overlay.clearFocus();
         this.overlay.showMessage(this.getMessage(MSG_REGROW), TourOverlay.MessageBox.Bottom);
         this.letterTile.onClick(null, 0, 0);

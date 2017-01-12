@@ -53,7 +53,7 @@ public class InventoryStop extends Stop {
 
             }
         });
-        this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_CENTER);
+        this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_NONE);
         this.overlay.showGuide();
         this.overlay.showMessage(this.getMessage(MSG_MAPBLOCK));
     }

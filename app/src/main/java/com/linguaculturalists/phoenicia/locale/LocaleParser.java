@@ -434,6 +434,9 @@ public class LocaleParser extends DefaultHandler {
         this.currentLevel.help_words = new ArrayList<Word>();
         this.currentLevel.intro = new ArrayList<IntroPage>();
         this.currentLevel.requirements = new ArrayList<Requirement>();
+        this.currentLevel.games = new ArrayList<Game>();
+        this.currentLevel.decorations = new ArrayList<Decoration>();
+
     }
 
     private void parseLevelIntroPage(Attributes attributes) throws SAXException {
@@ -469,6 +472,12 @@ public class LocaleParser extends DefaultHandler {
         } else if (nodePath.equals("/locale/levels/level")) {
             this.locale.levels.add(this.currentLevel);
             this.locale.level_map.put(this.currentLevel.name, this.currentLevel);
+            for (Game g : this.locale.games) {
+                if (this.locale.isLevelReached(g.level, this.currentLevel)) this.currentLevel.games.add(g);
+            }
+            for (Decoration d : this.locale.decorations) {
+                if (this.locale.isLevelReached(d.level, this.currentLevel)) this.currentLevel.decorations.add(d);
+            }
             this.inLevelDefinition = false;
         } else if (nodePath.equals("/locale/levels/level/intro/page")) {
             this.currentLevel.intro.add(this.currentPage);
