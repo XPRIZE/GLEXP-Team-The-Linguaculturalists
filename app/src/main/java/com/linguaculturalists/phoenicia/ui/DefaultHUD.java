@@ -65,7 +65,7 @@ public class DefaultHUD extends PhoeniciaHUD implements PhoeniciaGame.LevelChang
         levelIcon.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v1) {
-                game.hudManager.showNewLevel(game.getCurrentLevel(), false);
+                //game.hudManager.showNewLevel(game.getCurrentLevel(), false);
             }
         });
         levelDisplay = new Text(160, levelIcon.getHeight()/2, GameFonts.defaultHUDDisplay(), game.current_level, 20, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
