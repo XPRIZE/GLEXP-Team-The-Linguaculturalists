@@ -15,6 +15,7 @@ import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.GameSounds;
 import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
@@ -156,6 +157,7 @@ public class InventoryHUD extends PhoeniciaHUD {
             if (newCount < 1) {
                 block.setEnabled(false);
             }
+            GameSounds.play(GameSounds.COLLECT);
         } catch (Exception e) {
             Debug.d("Could not sell "+block.getLetter().name, e);
 
@@ -171,6 +173,7 @@ public class InventoryHUD extends PhoeniciaHUD {
             if (newCount < 1) {
                 block.setEnabled(false);
             }
+            GameSounds.play(GameSounds.COLLECT);
         } catch (Exception e) {
             Debug.d("Could not sell "+block.getWord().name, e);
 
