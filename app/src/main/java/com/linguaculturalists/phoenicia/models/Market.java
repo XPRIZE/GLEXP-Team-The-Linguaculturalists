@@ -145,6 +145,7 @@ public class Market {
         final List<InventoryItem> inventoryItems = InventoryItem.objects(PhoeniciaContext.context).filter(this.game.session.filter).filter(positiveQuantity).orderBy("#-quantity").limit(5).toList();
         int requestCoins = 0;
         int requestPoints = 0;
+
         List<String> usedList = new ArrayList<String>();
         for (int i = 0; i < num_items; ) {
 
@@ -161,7 +162,7 @@ public class Market {
                 usedList.add(item_name);
 
                 requestLetter.item_name.set(item_name);
-                requestLetter.quantity.set((int)Math.round(Math.random() * 9)+1);
+                requestLetter.quantity.set((int)Math.round(Math.random() * 7)+1);
                 requestLetter.save(PhoeniciaContext.context);
                 requestCoins += (this.game.locale.letter_map.get(item_name).sell * requestLetter.quantity.get());
                 requestPoints += (this.game.locale.letter_map.get(item_name).points * requestLetter.quantity.get());
@@ -264,7 +265,7 @@ public class Market {
                 int randomLetter = Math.round((float) Math.random() * (next_letters.size() - 1));
 
                 requestLetter.item_name.set(next_letters.get(randomLetter).name);
-                requestLetter.quantity.set(Math.round((float) Math.random() * 3)+1);
+                requestLetter.quantity.set(Math.round((float) Math.random() * 2)+1);
                 requestLetter.save(PhoeniciaContext.context);
 
                 next_letters.remove(requestLetter);
@@ -280,7 +281,7 @@ public class Market {
                 int randomWord = Math.round((float) Math.random() * (next_words.size() - 1));
 
                 requestWord.item_name.set(next_words.get(randomWord).name);
-                requestWord.quantity.set(Math.round((float) Math.random() * 2)+1);
+                requestWord.quantity.set(Math.round((float) Math.random() * 1)+1);
                 requestWord.save(PhoeniciaContext.context);
 
                 next_words.remove(requestWord);
