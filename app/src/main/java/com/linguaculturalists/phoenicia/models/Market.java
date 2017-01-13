@@ -136,6 +136,7 @@ public class Market {
     }
 
     private void populateInventoryReduction(final MarketRequest request) {
+        float multiplier = 1.2f;
         int num_items = Math.round((float) Math.random() * (this.game.locale.level_map.get(this.game.current_level).marketRequests - 1)) + 1;
 
         Filter positiveQuantity = new Filter();
@@ -182,11 +183,12 @@ public class Market {
             }
 
         }
-        request.coins.set(requestCoins);
+        request.coins.set((int)(requestCoins * multiplier));
         request.points.set(requestPoints);
     }
 
     private void populateCurrentLevelRandom(final MarketRequest request) {
+        float multiplier = 1.5f;
         int num_items = Math.round((float) Math.random() * (this.game.locale.level_map.get(this.game.current_level).marketRequests - 1)) + 1;
 
         final List<Letter> levelLetters = this.game.locale.level_map.get(this.game.current_level).letters;
@@ -232,11 +234,12 @@ public class Market {
             }
 
         }
-        request.coins.set(requestCoins);
+        request.coins.set((int)(requestCoins * multiplier));
         request.points.set(requestPoints);
     }
 
     private void populateNextLevelPusher(final MarketRequest request) {
+        float multiplier = 1.9f;
         Level prev_level = this.game.locale.level_map.get(this.game.current_level).prev;
         Level next_level = this.game.locale.level_map.get(this.game.current_level).next;
 
@@ -289,11 +292,12 @@ public class Market {
             if ( next_letters.size() < 1 &&  next_words.size() < 1) break;
 
         }
-        request.coins.set(requestCoins);
+        request.coins.set((int)(requestCoins * multiplier));
         request.points.set(requestPoints);
     }
 
     private void populateWordPractice(final MarketRequest request) {
+        float multiplier = 1.7f;
         int num_items = Math.round((float) Math.random() * (this.game.locale.level_map.get(this.game.current_level).marketRequests - 1)) + 1;
 
         final List<InventoryItem> inventoryItems = InventoryItem.objects(PhoeniciaContext.context).filter(this.game.session.filter).orderBy("#+history").limit(10).toList();
@@ -337,7 +341,7 @@ public class Market {
             }
 
         }
-        request.coins.set(requestCoins);
+        request.coins.set((int)(requestCoins * multiplier));
         request.points.set(requestPoints);
     }
 
