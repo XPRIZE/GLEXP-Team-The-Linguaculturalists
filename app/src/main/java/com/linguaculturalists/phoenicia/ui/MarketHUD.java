@@ -2,6 +2,7 @@ package com.linguaculturalists.phoenicia.ui;
 
 import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
+import com.linguaculturalists.phoenicia.components.BorderRectangle;
 import com.linguaculturalists.phoenicia.components.Button;
 import com.linguaculturalists.phoenicia.components.Dialog;
 import com.linguaculturalists.phoenicia.components.LetterSprite;
@@ -75,7 +76,7 @@ public class MarketHUD extends PhoeniciaHUD {
             }
         });
 
-        this.whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 768, 512, PhoeniciaContext.vboManager) {
+        this.whiteRect = new BorderRectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 768, 512, PhoeniciaContext.vboManager) {
 
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {

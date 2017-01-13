@@ -6,6 +6,7 @@ import android.media.MediaPlayer;
 
 import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
+import com.linguaculturalists.phoenicia.components.BorderRectangle;
 import com.linguaculturalists.phoenicia.components.Button;
 import com.linguaculturalists.phoenicia.components.Scrollable;
 import com.linguaculturalists.phoenicia.locale.IntroPage;
@@ -76,7 +77,7 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
 
         final float dialogWidth = GameActivity.CAMERA_WIDTH * 0.6f;
         final float dialogHeight = GameActivity.CAMERA_HEIGHT * 0.75f;
-        Rectangle whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, dialogWidth, dialogHeight, PhoeniciaContext.vboManager);
+        Rectangle whiteRect = new BorderRectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, dialogWidth, dialogHeight, PhoeniciaContext.vboManager);
         whiteRect.setColor(Color.WHITE);
         this.attachChild(whiteRect);
 

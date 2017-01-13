@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 
 import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
+import com.linguaculturalists.phoenicia.components.BorderRectangle;
 import com.linguaculturalists.phoenicia.components.Button;
 import com.linguaculturalists.phoenicia.components.Dialog;
 import com.linguaculturalists.phoenicia.locale.Level;
@@ -86,7 +87,7 @@ public class ImageMatchGameHUD extends PhoeniciaHUD {
 
         final float dialogWidth = 800;
         final float dialogHeight = 600;
-        Rectangle whiteRect = new Rectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, dialogWidth, dialogHeight, PhoeniciaContext.vboManager);
+        Rectangle whiteRect = new BorderRectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, dialogWidth, dialogHeight, PhoeniciaContext.vboManager);
         whiteRect.setColor(Color.WHITE);
         this.attachChild(whiteRect);
 
