@@ -134,7 +134,7 @@ public class WordBuilderHUD extends PhoeniciaHUD implements Inventory.InventoryU
         this.registerTouchArea(whiteRect);
 
         ITextureRegion bannerRegion = GameUI.getInstance().getBlueBanner();
-        Sprite banner = new Sprite(whiteRect.getWidth()/2, whiteRect.getHeight()+16, bannerRegion, PhoeniciaContext.vboManager);
+        Sprite banner = new Sprite(whiteRect.getWidth()/2, whiteRect.getHeight()+8, bannerRegion, PhoeniciaContext.vboManager);
         banner.setScaleX(whiteRect.getWidth() / (bannerRegion.getWidth() * 0.6f));
         whiteRect.attachChild(banner);
 
