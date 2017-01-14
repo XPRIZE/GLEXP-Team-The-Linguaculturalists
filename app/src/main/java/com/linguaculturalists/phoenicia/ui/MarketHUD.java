@@ -24,6 +24,9 @@ import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.Entity;
+import org.andengine.entity.modifier.MoveXModifier;
+import org.andengine.entity.modifier.MoveYModifier;
+import org.andengine.entity.modifier.ParallelEntityModifier;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
@@ -48,11 +51,15 @@ import java.util.Map;
  */
 public class MarketHUD extends PhoeniciaHUD {
     private Rectangle whiteRect;
+    private Scrollable requestsPane;
     private Rectangle requestItemsPane;
     private ClickDetector clickDetector;
 
+    private List<MarketRequest> requestQueue;
     private Map<MarketRequest, Sprite> requestPerson;
     private Map<MarketRequest, Text> requestName;
+
+    private static final int columns = 2;
 
     private List<Entity> touchAreas;
     /**
@@ -64,6 +71,7 @@ public class MarketHUD extends PhoeniciaHUD {
         this.setBackgroundEnabled(false);
         this.setOnAreaTouchTraversalFrontToBack();
         this.game = game;
+        this.requestQueue = new ArrayList<MarketRequest>();
         this.requestPerson = new HashMap<MarketRequest, Sprite>();
         this.requestName = new HashMap<MarketRequest, Text>();
         this.touchAreas = new ArrayList<Entity>();
@@ -89,9 +97,10 @@ public class MarketHUD extends PhoeniciaHUD {
         this.attachChild(whiteRect);
         this.registerTouchArea(whiteRect);
 
-        Scrollable requestsPane = new Scrollable((this.whiteRect.getX() - this.whiteRect.getWidth()/4), this.whiteRect.getY() - 32, (int)(this. whiteRect.getWidth()*0.5), (int)(this.whiteRect.getHeight()*0.9)-16, Scrollable.SCROLL_VERTICAL);
+        this.requestsPane = new Scrollable((this.whiteRect.getX() - this.whiteRect.getWidth()/4), this.whiteRect.getY() - 32, (int)(this. whiteRect.getWidth()*0.5), (int)(this.whiteRect.getHeight()*0.9)-16, Scrollable.SCROLL_VERTICAL);
         this.attachChild(requestsPane);
         this.registerTouchArea(requestsPane);
+        this.requestsPane.setPadding(32);
         //requestsPane.setClip(false);
 
         this.requestItemsPane = new Rectangle((this.whiteRect.getWidth()*0.75f)-2, (this.whiteRect.getHeight()*0.5f)+2, (this.whiteRect.getWidth()*0.5f)-4, (this.whiteRect.getHeight()*0.8f)-4, PhoeniciaContext.vboManager);
@@ -112,47 +121,46 @@ public class MarketHUD extends PhoeniciaHUD {
         banner.attachChild(name);
         whiteRect.attachChild(banner);
 
-
-        final int columns = 2;
-        int startX = (int) (requestsPane.getWidth()) - (columns * 192) + 96;
-        int startY = (int) requestsPane.getHeight() - 128;
-
-        int offsetX = 0;
-        int offsetY = startY;
-
-        List<MarketRequest> requests = this.getRequests();
-        for (int i = 0; i < requests.size(); i++) {
-            if (offsetX >= columns) {
-                offsetY -= 288;
-                offsetX = 0;
-            }
-            final MarketRequest request = requests.get(i);
-            final Person currentPerson = game.locale.person_map.get(request.person_name.get());
-            if (currentPerson == null) {
-                Debug.d("Market Request without person!");
-                continue;
-            }
-            Debug.d("Adding Market request: " + currentPerson.name);
-            final ITextureRegion personRegion = game.personTiles.get(currentPerson);
-
-            final ButtonSprite block = new ButtonSprite(startX + (192 * offsetX), offsetY, personRegion, PhoeniciaContext.vboManager);
-            block.setOnClickListener(new ButtonSprite.OnClickListener() {
-                @Override
-                public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                    Debug.d("Request from " + currentPerson.name + " clicked");
-                    populateRequestItems(request);
-                }
-            });
-            requestsPane.registerTouchArea(block);
-            requestsPane.attachChild(block);
-            this.requestPerson.put(request, block);
-
-            Text personName = new Text(startX + (192 * offsetX), offsetY-128-16, GameFonts.dialogText(), currentPerson.name, currentPerson.name.length(),  new TextOptions(AutoWrap.WORDS, 192, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
-            requestsPane.attachChild(personName);
-            this.requestName.put(request, personName);
-            offsetX++;
-
+        for (MarketRequest request : this.getRequests()) {
+            this.addRequestToQueue(request, false);
         }
+    }
+
+    private void addRequestToQueue(final MarketRequest request, final boolean animate) {
+        float startX = (this.requestsPane.getWidth()) - (this.columns * 192) + 96;
+        float startY = this.requestsPane.getHeight() - 128;
+
+        float column = this.requestPerson.size() % 2;
+        float row = (int)(this.requestPerson.size()/2);
+        final Person currentPerson = game.locale.person_map.get(request.person_name.get());
+        if (currentPerson == null) {
+            Debug.d("Market Request without person!");
+            return;
+        }
+        Debug.d("Adding Market request: " + currentPerson.name);
+        final ITextureRegion personRegion = game.personTiles.get(currentPerson);
+
+        final ButtonSprite block = new ButtonSprite(startX + (192 * column), startY - (288 * row), personRegion, PhoeniciaContext.vboManager);
+        block.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v2) {
+                Debug.d("Request from " + currentPerson.name + " clicked");
+                populateRequestItems(request);
+            }
+        });
+        requestsPane.registerTouchArea(block);
+        requestsPane.attachChild(block);
+        this.requestPerson.put(request, block);
+
+        Text personName = new Text(block.getWidth()/2, -16, GameFonts.dialogText(), currentPerson.name, currentPerson.name.length(),  new TextOptions(AutoWrap.WORDS, 192, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+        block.attachChild(personName);
+        this.requestName.put(request, personName);
+
+        this.requestQueue.add(request);
+        if (animate) {
+            block.registerEntityModifier(new MoveYModifier(0.5f, -(block.getHeight()/2), startY - (288 * row)));
+        }
+
     }
 
     protected  List<MarketRequest> getRequests() {
@@ -245,23 +253,12 @@ public class MarketHUD extends PhoeniciaHUD {
 
     protected void declineSale(MarketRequest request) {
         Market.getInstance().cancelRequest(request);
-        requestItemsPane.detachChildren();
-        Sprite personSprite = requestPerson.get(request);
-        if (personSprite != null) {
-            unregisterTouchArea(personSprite);
-            personSprite.detachSelf();
-            requestPerson.remove(request);
-        }
+        GameSounds.play(GameSounds.FAILED);
+        this.removeRequestFromQueue(request);
 
-        Text personName = requestName.get(request);
-        if (personName != null) {
-            personName.detachSelf();
-            requestName.remove(request);
-        }
-
-        Debug.d("Remaining requests: "+requestPerson.size());
-        if (requestPerson.size() < 1) {
-            finish();
+        for (int i = 0; i < Market.getInstance().neededToFill(); i++) {
+            MarketRequest newRequest = Market.getInstance().createRequest();
+            this.addRequestToQueue(newRequest, true);
         }
 
     }
@@ -290,10 +287,47 @@ public class MarketHUD extends PhoeniciaHUD {
     protected void completeSale(MarketRequest request) {
         GameSounds.play(GameSounds.COLLECT);
         Market.getInstance().fulfillRequest(request);
-        this.requestItemsPane.detachChildren();
-        this.finish();
+
+        this.removeRequestFromQueue(request);
+
+        for (int i = 0; i < Market.getInstance().neededToFill(); i++) {
+            MarketRequest newRequest = Market.getInstance().createRequest();
+            this.addRequestToQueue(newRequest, true);
+        }
     }
 
+    private void removeRequestFromQueue(MarketRequest request) {
+        requestItemsPane.detachChildren();
+        int requestIndex = this.requestQueue.indexOf(request);
+        if (requestIndex < 0) {
+            Debug.e("Request for "+request.person_name.get()+" is not in the queue!");
+        }
+        Sprite personSprite = requestPerson.get(request);
+        if (personSprite != null) {
+            unregisterTouchArea(personSprite);
+            personSprite.detachSelf();
+            requestPerson.remove(request);
+            this.requestsPane.unregisterTouchArea(personSprite);
+        } else {
+            Debug.e("No person sprite found for request "+request.person_name.get());
+        }
+
+        float startX = (this.requestsPane.getWidth()) - (this.columns * 192) + 96;
+        float startY = this.requestsPane.getHeight() - 128;
+
+        Debug.d("Moving requests to the right of "+requestIndex);
+        for (int i = requestIndex+1; i < this.requestQueue.size(); i++) {
+            float column = (i-1) % 2;
+            float row = (int)((i-1)/2);
+            MarketRequest nextRequest = this.requestQueue.get(i);
+            Sprite nextSprite = this.requestPerson.get(nextRequest);
+            nextSprite.registerEntityModifier(new ParallelEntityModifier(
+                new MoveXModifier(0.5f, nextSprite.getX(), startX + (192 * column)),
+                new MoveYModifier(0.5f, nextSprite.getY(), startY - (288 * row))
+            ));
+        }
+        this.requestQueue.remove(request);
+    }
     /**
      * Abort the sale with a message to the player indicating item who's lack of inventory caused it
      * @param item Item that the player does not have enough of to complete the sale

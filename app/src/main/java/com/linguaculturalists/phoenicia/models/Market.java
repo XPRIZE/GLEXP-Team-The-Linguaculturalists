@@ -61,15 +61,23 @@ public class Market {
         return items;
     }
 
+    public boolean isFull() {
+        return (this.neededToFill() <= 0);
+    }
+
+    public int neededToFill() {
+        int limit = this.game.locale.level_map.get(this.game.current_level).marketRequests;
+        Debug.d("Level " + this.game.current_level + " accepts up to " + limit + " requests");
+        int needed = limit - this.requests().size();
+        Debug.d("Need "+needed+" more requests");
+        return needed;
+    }
     /**
      * Make sure there are as many requests as the current game level allows, creating more if necessary
      */
     public void populate() {
         Debug.d("Populating marketplace");
-        int limit = this.game.locale.level_map.get(this.game.current_level).marketRequests;
-        Debug.d("Level " + this.game.current_level + " accepts up to " + limit + " requests");
-        int needed = limit - this.requests().size();
-        Debug.d("Need "+needed+" more requests");
+        int needed = this.neededToFill();
         if (needed > 0) {
             for (int i = 0; i < needed; i++) {
                 MarketRequest newRequest = this.createRequest();
