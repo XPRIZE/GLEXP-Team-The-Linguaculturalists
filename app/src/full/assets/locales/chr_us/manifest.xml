@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<locale name="chr_us" lang="chr_us" display_name="ᏣᎳᎩ (Cherokee)">
+    <shell src="locales/common/textures/gameui.png" />
+    <map src="locales/common/map.tmx" />
+    <music src="locales/common/sounds/forest_background.mp3" />
+
+    <!-- Default blocks -->
+    <inventory level="3" size="4x4x4" name="Storage" col="23" row="26" block="locales/common/textures/inventory.png" />
+    <market level="6" size="4x4x4" name="Market" col="23" row="18" block="locales/common/textures/market.png" />
+    <workshop level="9" size="3x3x3" name="Workshop" col="18" row="32" block="locales/common/textures/workshop.png" />
+
+    <!-- People used in the marketplace and player's avatar -->
+    <people>
+        <person name="Roxanne" texture="locales/common/textures/persons/f1.png" />
+        <person name="Michelle" texture="locales/common/textures/persons/f2.png" />
+        <person name="Laura" texture="locales/common/textures/persons/f3.png" />
+        <person name="Ashley" texture="locales/common/textures/persons/f4.png" />
+        <person name="Ben" texture="locales/common/textures/persons/m1.png" />
+        <person name="Michael" texture="locales/common/textures/persons/m2.png" />
+        <person name="Dave" texture="locales/common/textures/persons/m3.png" />
+        <person name="Henry" texture="locales/common/textures/persons/m4.png" />
+    </people>
+
+    <!-- Mini-games -->
+    <games>
+        <game level="6"  name="Word Match"  type="wordmatch"  buy="300" construct="120" time="300" reward="1.5" sprite="locales/en_us_rural/textures/games/sprites/minigame1.png" block="locales/en_us_rural/textures/games/blocks/minigame1.png" />
+        <game level="12" name="Image Match" type="imagematch" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
+    </games>
+
+    <!-- Decorations -->
+    <decorations>
+        <decoration level="5"  size="1x1" name="Lamp Post"  buy="200" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
+        <decoration level="10" size="1x1" name="Small Tree" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
+        <decoration level="20" size="2x2" name="Fountain"   buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
+    </decorations>
+
+    <!-- Tour -->
+    <tour guide="Michelle">
+        <stop id="welcome">
+            <message sound="locales/en_us_rural/sounds/intro1p1.ogg">Welcome to Phoenicia!</message>
+            <message sound="locales/en_us_rural/sounds/intro1p2.ogg">Use the Letter images at the bottom of your screen to start planting with the letter 'A'</message>
+            <message sound="">Tap a letter to start planting it</message>
+            <message sound="">Tap a place on the map to plant your new letter</message>
+            <message sound="">When your letter is fully grown, tap it again to collect it</message>
+            <message sound="">Your letters will start growing again for you to collect later</message>
+        </stop>
+        <stop id="inventory">
+            <message sound="">This is your storage building. Any words or letters you collect will be kept here for you to use.</message>
+            <message sound="">You can also sell an item you have at any time, just by tapping on it.</message>
+        </stop>
+        <stop id="words">
+            <message sound="locales/en_us_rural/sounds/intro3p2.ogg" texture="locales/en_us_rural/textures/levels/intro3p2.png">Use the Word images to build a 'ᏪᏌ' factory</message>
+            <message sound="">Tap a word image to create a building for it</message>
+            <message sound="">Tap a place on the map to place your building</message>
+            <message sound="">Once your building is ready, you can use it to start making words</message>
+            <message sound="">You create a word by spelling it, use the letters Ꮺ Ꮜ to spell ᏪᏌ</message>
+            <message sound="">It will take time for your word to finish, once it's ready you can collect it</message>
+            <message sound="">Tap the finished word at the top to add it to your inventory</message>
+        </stop>
+        <stop id="market">
+            <message sound="">Now that you have some words, you can start selling them at the market.</message>
+            <message sound="">Here you will find friends who would like to buy the letters and words you've gathered</message>
+            <message sound="">Once you have everything they need, you can sell them to earn the coins you need to keep building your town</message>
+        </stop>
+        <stop id="workshop">
+            <message sound="">If you want to make a word that you don't have a building for yet, you can make it in your workshop</message>
+            <message sound="">Here you can make any word in the game, all you need are the letters and how to spell it</message>
+            <message sound="">Try making the word ᏣᏔᎦ with the letters Ꮳ Ꮤ Ꭶ</message>
+            <message sound="">Great! But remember, you can only make one word at a time in the workshop, so keep making word buildings!</message>
+        </stop>
+    </tour>
+
+    <!-- Alphabet -->
+    <letters>
+        <letter name="Ꭰ" buy="110" sell="30"  points="15" time="1030" sprite="locales/chr_us/textures/letters/sprites/letter_0.png" block="locales/chr_us/textures/letters/blocks/letter_0.png" sound="locales/chr_us/sounds/letter_0-name.ogg" phoneme="locales/chr_us/sounds/letter_0-phoneme.ogg">Ꭰ</letter>
+        <letter name="Ꭱ" buy="120" sell="30"  points="15" time="1050" sprite="locales/chr_us/textures/letters/sprites/letter_1.png" block="locales/chr_us/textures/letters/blocks/letter_1.png" sound="locales/chr_us/sounds/letter_1-name.ogg" phoneme="locales/chr_us/sounds/letter_1-phoneme.ogg">Ꭱ</letter>
+        <letter name="Ꭲ" buy="130" sell="30"  points="16" time="1060" sprite="locales/chr_us/textures/letters/sprites/letter_2.png" block="locales/chr_us/textures/letters/blocks/letter_2.png" sound="locales/chr_us/sounds/letter_2-name.ogg" phoneme="locales/chr_us/sounds/letter_2-phoneme.ogg">Ꭲ</letter>
+        <letter name="Ꭳ" buy="1000" sell="180"  points="23" time="1520" sprite="locales/chr_us/textures/letters/sprites/letter_3.png" block="locales/chr_us/textures/letters/blocks/letter_3.png" sound="locales/chr_us/sounds/letter_3-name.ogg" phoneme="locales/chr_us/sounds/letter_3-phoneme.ogg">Ꭳ</letter>
+        <letter name="Ꭴ" buy="80" sell="20"  points="14" time="970" sprite="locales/chr_us/textures/letters/sprites/letter_4.png" block="locales/chr_us/textures/letters/blocks/letter_4.png" sound="locales/chr_us/sounds/letter_4-name.ogg" phoneme="locales/chr_us/sounds/letter_4-phoneme.ogg">Ꭴ</letter>
+        <letter name="Ꭵ" buy="90" sell="20"  points="15" time="990" sprite="locales/chr_us/textures/letters/sprites/letter_5.png" block="locales/chr_us/textures/letters/blocks/letter_5.png" sound="locales/chr_us/sounds/letter_5-name.ogg" phoneme="locales/chr_us/sounds/letter_5-phoneme.ogg">Ꭵ</letter>
+        <letter name="Ꭶ" buy="100" sell="20"  points="15" time="1000" sprite="locales/chr_us/textures/letters/sprites/letter_6.png" block="locales/chr_us/textures/letters/blocks/letter_6.png" sound="locales/chr_us/sounds/letter_6-name.ogg" phoneme="locales/chr_us/sounds/letter_6-phoneme.ogg">Ꭶ</letter>
+        <letter name="Ꭷ" buy="100" sell="20"  points="15" time="1020" sprite="locales/chr_us/textures/letters/sprites/letter_7.png" block="locales/chr_us/textures/letters/blocks/letter_7.png" sound="locales/chr_us/sounds/letter_7-name.ogg" phoneme="locales/chr_us/sounds/letter_7-phoneme.ogg">Ꭷ</letter>
+        <letter name="Ꭸ" buy="160" sell="40"  points="17" time="1120" sprite="locales/chr_us/textures/letters/sprites/letter_8.png" block="locales/chr_us/textures/letters/blocks/letter_8.png" sound="locales/chr_us/sounds/letter_8-name.ogg" phoneme="locales/chr_us/sounds/letter_8-phoneme.ogg">Ꭸ</letter>
+        <letter name="Ꭹ" buy="170" sell="40"  points="17" time="1130" sprite="locales/chr_us/textures/letters/sprites/letter_9.png" block="locales/chr_us/textures/letters/blocks/letter_9.png" sound="locales/chr_us/sounds/letter_9-name.ogg" phoneme="locales/chr_us/sounds/letter_9-phoneme.ogg">Ꭹ</letter>
+        <letter name="Ꭺ" buy="180" sell="40"  points="17" time="1140" sprite="locales/chr_us/textures/letters/sprites/letter_10.png" block="locales/chr_us/textures/letters/blocks/letter_10.png" sound="locales/chr_us/sounds/letter_10-name.ogg" phoneme="locales/chr_us/sounds/letter_10-phoneme.ogg">Ꭺ</letter>
+        <letter name="Ꭻ" buy="190" sell="40"  points="17" time="1150" sprite="locales/chr_us/textures/letters/sprites/letter_11.png" block="locales/chr_us/textures/letters/blocks/letter_11.png" sound="locales/chr_us/sounds/letter_11-name.ogg" phoneme="locales/chr_us/sounds/letter_11-phoneme.ogg">Ꭻ</letter>
+        <letter name="Ꭼ" buy="130" sell="30"  points="16" time="1070" sprite="locales/chr_us/textures/letters/sprites/letter_12.png" block="locales/chr_us/textures/letters/blocks/letter_12.png" sound="locales/chr_us/sounds/letter_12-name.ogg" phoneme="locales/chr_us/sounds/letter_12-phoneme.ogg">Ꭼ</letter>
+        <letter name="Ꭽ" buy="140" sell="30"  points="16" time="1080" sprite="locales/chr_us/textures/letters/sprites/letter_13.png" block="locales/chr_us/textures/letters/blocks/letter_13.png" sound="locales/chr_us/sounds/letter_13-name.ogg" phoneme="locales/chr_us/sounds/letter_13-phoneme.ogg">Ꭽ</letter>
+        <letter name="Ꭾ" buy="150" sell="30"  points="16" time="1100" sprite="locales/chr_us/textures/letters/sprites/letter_14.png" block="locales/chr_us/textures/letters/blocks/letter_14.png" sound="locales/chr_us/sounds/letter_14-name.ogg" phoneme="locales/chr_us/sounds/letter_14-phoneme.ogg">Ꭾ</letter>
+        <letter name="Ꭿ" buy="160" sell="40"  points="16" time="1110" sprite="locales/chr_us/textures/letters/sprites/letter_15.png" block="locales/chr_us/textures/letters/blocks/letter_15.png" sound="locales/chr_us/sounds/letter_15-name.ogg" phoneme="locales/chr_us/sounds/letter_15-phoneme.ogg">Ꭿ</letter>
+        <letter name="Ꮀ" buy="230" sell="50"  points="18" time="1200" sprite="locales/chr_us/textures/letters/sprites/letter_16.png" block="locales/chr_us/textures/letters/blocks/letter_16.png" sound="locales/chr_us/sounds/letter_16-name.ogg" phoneme="locales/chr_us/sounds/letter_16-phoneme.ogg">Ꮀ</letter>
+        <letter name="Ꮁ" buy="240" sell="50"  points="18" time="1210" sprite="locales/chr_us/textures/letters/sprites/letter_17.png" block="locales/chr_us/textures/letters/blocks/letter_17.png" sound="locales/chr_us/sounds/letter_17-name.ogg" phoneme="locales/chr_us/sounds/letter_17-phoneme.ogg">Ꮁ</letter>
+        <letter name="Ꮂ" buy="250" sell="50"  points="18" time="1210" sprite="locales/chr_us/textures/letters/sprites/letter_18.png" block="locales/chr_us/textures/letters/blocks/letter_18.png" sound="locales/chr_us/sounds/letter_18-name.ogg" phoneme="locales/chr_us/sounds/letter_18-phoneme.ogg">Ꮂ</letter>
+        <letter name="Ꮃ" buy="60" sell="20"  points="13" time="910" sprite="locales/chr_us/textures/letters/sprites/letter_19.png" block="locales/chr_us/textures/letters/blocks/letter_19.png" sound="locales/chr_us/sounds/letter_19-name.ogg" phoneme="locales/chr_us/sounds/letter_19-phoneme.ogg">Ꮃ</letter>
+        <letter name="Ꮄ" buy="200" sell="40"  points="17" time="1160" sprite="locales/chr_us/textures/letters/sprites/letter_20.png" block="locales/chr_us/textures/letters/blocks/letter_20.png" sound="locales/chr_us/sounds/letter_20-name.ogg" phoneme="locales/chr_us/sounds/letter_20-phoneme.ogg">Ꮄ</letter>
+        <letter name="Ꮅ" buy="210" sell="50"  points="17" time="1170" sprite="locales/chr_us/textures/letters/sprites/letter_21.png" block="locales/chr_us/textures/letters/blocks/letter_21.png" sound="locales/chr_us/sounds/letter_21-name.ogg" phoneme="locales/chr_us/sounds/letter_21-phoneme.ogg">Ꮅ</letter>
+        <letter name="Ꮆ" buy="220" sell="50"  points="17" time="1180" sprite="locales/chr_us/textures/letters/sprites/letter_22.png" block="locales/chr_us/textures/letters/blocks/letter_22.png" sound="locales/chr_us/sounds/letter_22-name.ogg" phoneme="locales/chr_us/sounds/letter_22-phoneme.ogg">Ꮆ</letter>
+        <letter name="Ꮇ" buy="230" sell="50"  points="18" time="1190" sprite="locales/chr_us/textures/letters/sprites/letter_23.png" block="locales/chr_us/textures/letters/blocks/letter_23.png" sound="locales/chr_us/sounds/letter_23-name.ogg" phoneme="locales/chr_us/sounds/letter_23-phoneme.ogg">Ꮇ</letter>
+        <letter name="Ꮈ" buy="300" sell="60"  points="19" time="1250" sprite="locales/chr_us/textures/letters/sprites/letter_24.png" block="locales/chr_us/textures/letters/blocks/letter_24.png" sound="locales/chr_us/sounds/letter_24-name.ogg" phoneme="locales/chr_us/sounds/letter_24-phoneme.ogg">Ꮈ</letter>
+        <letter name="Ꮉ" buy="310" sell="60"  points="19" time="1260" sprite="locales/chr_us/textures/letters/sprites/letter_25.png" block="locales/chr_us/textures/letters/blocks/letter_25.png" sound="locales/chr_us/sounds/letter_25-name.ogg" phoneme="locales/chr_us/sounds/letter_25-phoneme.ogg">Ꮉ</letter>
+        <letter name="Ꮊ" buy="320" sell="70"  points="19" time="1270" sprite="locales/chr_us/textures/letters/sprites/letter_26.png" block="locales/chr_us/textures/letters/blocks/letter_26.png" sound="locales/chr_us/sounds/letter_26-name.ogg" phoneme="locales/chr_us/sounds/letter_26-phoneme.ogg">Ꮊ</letter>
+        <letter name="Ꮋ" buy="330" sell="70"  points="19" time="1270" sprite="locales/chr_us/textures/letters/sprites/letter_27.png" block="locales/chr_us/textures/letters/blocks/letter_27.png" sound="locales/chr_us/sounds/letter_27-name.ogg" phoneme="locales/chr_us/sounds/letter_27-phoneme.ogg">Ꮋ</letter>
+        <letter name="Ꮌ" buy="260" sell="60"  points="18" time="1220" sprite="locales/chr_us/textures/letters/sprites/letter_28.png" block="locales/chr_us/textures/letters/blocks/letter_28.png" sound="locales/chr_us/sounds/letter_28-name.ogg" phoneme="locales/chr_us/sounds/letter_28-phoneme.ogg">Ꮌ</letter>
+        <letter name="Ꮍ" buy="270" sell="60"  points="18" time="1230" sprite="locales/chr_us/textures/letters/sprites/letter_29.png" block="locales/chr_us/textures/letters/blocks/letter_29.png" sound="locales/chr_us/sounds/letter_29-name.ogg" phoneme="locales/chr_us/sounds/letter_29-phoneme.ogg">Ꮍ</letter>
+        <letter name="Ꮎ" buy="280" sell="60"  points="18" time="1240" sprite="locales/chr_us/textures/letters/sprites/letter_30.png" block="locales/chr_us/textures/letters/blocks/letter_30.png" sound="locales/chr_us/sounds/letter_30-name.ogg" phoneme="locales/chr_us/sounds/letter_30-phoneme.ogg">Ꮎ</letter>
+        <letter name="Ꮏ" buy="290" sell="60"  points="18" time="1250" sprite="locales/chr_us/textures/letters/sprites/letter_31.png" block="locales/chr_us/textures/letters/blocks/letter_31.png" sound="locales/chr_us/sounds/letter_31-name.ogg" phoneme="locales/chr_us/sounds/letter_31-phoneme.ogg">Ꮏ</letter>
+        <letter name="Ꮐ" buy="420" sell="80"  points="20" time="1320" sprite="locales/chr_us/textures/letters/sprites/letter_32.png" block="locales/chr_us/textures/letters/blocks/letter_32.png" sound="locales/chr_us/sounds/letter_32-name.ogg" phoneme="locales/chr_us/sounds/letter_32-phoneme.ogg">Ꮐ</letter>
+        <letter name="Ꮑ" buy="410" sell="80"  points="20" time="1320" sprite="locales/chr_us/textures/letters/sprites/letter_33.png" block="locales/chr_us/textures/letters/blocks/letter_33.png" sound="locales/chr_us/sounds/letter_33-name.ogg" phoneme="locales/chr_us/sounds/letter_33-phoneme.ogg">Ꮑ</letter>
+        <letter name="Ꮒ" buy="400" sell="80"  points="19" time="1310" sprite="locales/chr_us/textures/letters/sprites/letter_34.png" block="locales/chr_us/textures/letters/blocks/letter_34.png" sound="locales/chr_us/sounds/letter_34-name.ogg" phoneme="locales/chr_us/sounds/letter_34-phoneme.ogg">Ꮒ</letter>
+        <letter name="Ꮓ" buy="390" sell="80"  points="19" time="1310" sprite="locales/chr_us/textures/letters/sprites/letter_35.png" block="locales/chr_us/textures/letters/blocks/letter_35.png" sound="locales/chr_us/sounds/letter_35-name.ogg" phoneme="locales/chr_us/sounds/letter_35-phoneme.ogg">Ꮓ</letter>
+        <letter name="Ꮔ" buy="370" sell="70"  points="19" time="1300" sprite="locales/chr_us/textures/letters/sprites/letter_36.png" block="locales/chr_us/textures/letters/blocks/letter_36.png" sound="locales/chr_us/sounds/letter_36-name.ogg" phoneme="locales/chr_us/sounds/letter_36-phoneme.ogg">Ꮔ</letter>
+        <letter name="Ꮕ" buy="360" sell="70"  points="19" time="1290" sprite="locales/chr_us/textures/letters/sprites/letter_37.png" block="locales/chr_us/textures/letters/blocks/letter_37.png" sound="locales/chr_us/sounds/letter_37-name.ogg" phoneme="locales/chr_us/sounds/letter_37-phoneme.ogg">Ꮕ</letter>
+        <letter name="Ꮖ" buy="350" sell="70"  points="19" time="1290" sprite="locales/chr_us/textures/letters/sprites/letter_38.png" block="locales/chr_us/textures/letters/blocks/letter_38.png" sound="locales/chr_us/sounds/letter_38-name.ogg" phoneme="locales/chr_us/sounds/letter_38-phoneme.ogg">Ꮖ</letter>
+        <letter name="Ꮗ" buy="340" sell="70"  points="19" time="1280" sprite="locales/chr_us/textures/letters/sprites/letter_39.png" block="locales/chr_us/textures/letters/blocks/letter_39.png" sound="locales/chr_us/sounds/letter_39-name.ogg" phoneme="locales/chr_us/sounds/letter_39-phoneme.ogg">Ꮗ</letter>
+        <letter name="Ꮘ" buy="510" sell="100"  points="20" time="1370" sprite="locales/chr_us/textures/letters/sprites/letter_40.png" block="locales/chr_us/textures/letters/blocks/letter_40.png" sound="locales/chr_us/sounds/letter_40-name.ogg" phoneme="locales/chr_us/sounds/letter_40-phoneme.ogg">Ꮘ</letter>
+        <letter name="Ꮙ" buy="500" sell="100"  points="20" time="1360" sprite="locales/chr_us/textures/letters/sprites/letter_41.png" block="locales/chr_us/textures/letters/blocks/letter_41.png" sound="locales/chr_us/sounds/letter_41-name.ogg" phoneme="locales/chr_us/sounds/letter_41-phoneme.ogg">Ꮙ</letter>
+        <letter name="Ꮚ" buy="490" sell="100"  points="20" time="1360" sprite="locales/chr_us/textures/letters/sprites/letter_42.png" block="locales/chr_us/textures/letters/blocks/letter_42.png" sound="locales/chr_us/sounds/letter_42-name.ogg" phoneme="locales/chr_us/sounds/letter_42-phoneme.ogg">Ꮚ</letter>
+        <letter name="Ꮛ" buy="480" sell="90"  points="20" time="1350" sprite="locales/chr_us/textures/letters/sprites/letter_43.png" block="locales/chr_us/textures/letters/blocks/letter_43.png" sound="locales/chr_us/sounds/letter_43-name.ogg" phoneme="locales/chr_us/sounds/letter_43-phoneme.ogg">Ꮛ</letter>
+        <letter name="Ꮜ" buy="460" sell="90"  points="20" time="1350" sprite="locales/chr_us/textures/letters/sprites/letter_44.png" block="locales/chr_us/textures/letters/blocks/letter_44.png" sound="locales/chr_us/sounds/letter_44-name.ogg" phoneme="locales/chr_us/sounds/letter_44-phoneme.ogg">Ꮜ</letter>
+        <letter name="Ꮝ" buy="450" sell="90"  points="20" time="1340" sprite="locales/chr_us/textures/letters/sprites/letter_45.png" block="locales/chr_us/textures/letters/blocks/letter_45.png" sound="locales/chr_us/sounds/letter_45-name.ogg" phoneme="locales/chr_us/sounds/letter_45-phoneme.ogg">Ꮝ</letter>
+        <letter name="Ꮞ" buy="440" sell="90"  points="20" time="1340" sprite="locales/chr_us/textures/letters/sprites/letter_46.png" block="locales/chr_us/textures/letters/blocks/letter_46.png" sound="locales/chr_us/sounds/letter_46-name.ogg" phoneme="locales/chr_us/sounds/letter_46-phoneme.ogg">Ꮞ</letter>
+        <letter name="Ꮟ" buy="430" sell="90"  points="20" time="1330" sprite="locales/chr_us/textures/letters/sprites/letter_47.png" block="locales/chr_us/textures/letters/blocks/letter_47.png" sound="locales/chr_us/sounds/letter_47-name.ogg" phoneme="locales/chr_us/sounds/letter_47-phoneme.ogg">Ꮟ</letter>
+        <letter name="Ꮠ" buy="610" sell="120"  points="21" time="1410" sprite="locales/chr_us/textures/letters/sprites/letter_48.png" block="locales/chr_us/textures/letters/blocks/letter_48.png" sound="locales/chr_us/sounds/letter_48-name.ogg" phoneme="locales/chr_us/sounds/letter_48-phoneme.ogg">Ꮠ</letter>
+        <letter name="Ꮡ" buy="600" sell="110"  points="21" time="1400" sprite="locales/chr_us/textures/letters/sprites/letter_49.png" block="locales/chr_us/textures/letters/blocks/letter_49.png" sound="locales/chr_us/sounds/letter_49-name.ogg" phoneme="locales/chr_us/sounds/letter_49-phoneme.ogg">Ꮡ</letter>
+        <letter name="Ꮢ" buy="590" sell="110"  points="21" time="1400" sprite="locales/chr_us/textures/letters/sprites/letter_50.png" block="locales/chr_us/textures/letters/blocks/letter_50.png" sound="locales/chr_us/sounds/letter_50-name.ogg" phoneme="locales/chr_us/sounds/letter_50-phoneme.ogg">Ꮢ</letter>
+        <letter name="Ꮣ" buy="570" sell="110"  points="21" time="1390" sprite="locales/chr_us/textures/letters/sprites/letter_51.png" block="locales/chr_us/textures/letters/blocks/letter_51.png" sound="locales/chr_us/sounds/letter_51-name.ogg" phoneme="locales/chr_us/sounds/letter_51-phoneme.ogg">Ꮣ</letter>
+        <letter name="Ꮤ" buy="560" sell="110"  points="21" time="1390" sprite="locales/chr_us/textures/letters/sprites/letter_52.png" block="locales/chr_us/textures/letters/blocks/letter_52.png" sound="locales/chr_us/sounds/letter_52-name.ogg" phoneme="locales/chr_us/sounds/letter_52-phoneme.ogg">Ꮤ</letter>
+        <letter name="Ꮥ" buy="550" sell="110"  points="21" time="1380" sprite="locales/chr_us/textures/letters/sprites/letter_53.png" block="locales/chr_us/textures/letters/blocks/letter_53.png" sound="locales/chr_us/sounds/letter_53-name.ogg" phoneme="locales/chr_us/sounds/letter_53-phoneme.ogg">Ꮥ</letter>
+        <letter name="Ꮦ" buy="540" sell="100"  points="20" time="1380" sprite="locales/chr_us/textures/letters/sprites/letter_54.png" block="locales/chr_us/textures/letters/blocks/letter_54.png" sound="locales/chr_us/sounds/letter_54-name.ogg" phoneme="locales/chr_us/sounds/letter_54-phoneme.ogg">Ꮦ</letter>
+        <letter name="Ꮧ" buy="520" sell="100"  points="20" time="1370" sprite="locales/chr_us/textures/letters/sprites/letter_55.png" block="locales/chr_us/textures/letters/blocks/letter_55.png" sound="locales/chr_us/sounds/letter_55-name.ogg" phoneme="locales/chr_us/sounds/letter_55-phoneme.ogg">Ꮧ</letter>
+        <letter name="Ꮨ" buy="720" sell="130"  points="21" time="1440" sprite="locales/chr_us/textures/letters/sprites/letter_56.png" block="locales/chr_us/textures/letters/blocks/letter_56.png" sound="locales/chr_us/sounds/letter_56-name.ogg" phoneme="locales/chr_us/sounds/letter_56-phoneme.ogg">Ꮨ</letter>
+        <letter name="Ꮩ" buy="700" sell="130"  points="21" time="1440" sprite="locales/chr_us/textures/letters/sprites/letter_57.png" block="locales/chr_us/textures/letters/blocks/letter_57.png" sound="locales/chr_us/sounds/letter_57-name.ogg" phoneme="locales/chr_us/sounds/letter_57-phoneme.ogg">Ꮩ</letter>
+        <letter name="Ꮪ" buy="690" sell="130"  points="21" time="1430" sprite="locales/chr_us/textures/letters/sprites/letter_58.png" block="locales/chr_us/textures/letters/blocks/letter_58.png" sound="locales/chr_us/sounds/letter_58-name.ogg" phoneme="locales/chr_us/sounds/letter_58-phoneme.ogg">Ꮪ</letter>
+        <letter name="Ꮫ" buy="680" sell="130"  points="21" time="1430" sprite="locales/chr_us/textures/letters/sprites/letter_59.png" block="locales/chr_us/textures/letters/blocks/letter_59.png" sound="locales/chr_us/sounds/letter_59-name.ogg" phoneme="locales/chr_us/sounds/letter_59-phoneme.ogg">Ꮫ</letter>
+        <letter name="Ꮬ" buy="660" sell="120"  points="21" time="1430" sprite="locales/chr_us/textures/letters/sprites/letter_60.png" block="locales/chr_us/textures/letters/blocks/letter_60.png" sound="locales/chr_us/sounds/letter_60-name.ogg" phoneme="locales/chr_us/sounds/letter_60-phoneme.ogg">Ꮬ</letter>
+        <letter name="Ꮭ" buy="650" sell="120"  points="21" time="1420" sprite="locales/chr_us/textures/letters/sprites/letter_61.png" block="locales/chr_us/textures/letters/blocks/letter_61.png" sound="locales/chr_us/sounds/letter_61-name.ogg" phoneme="locales/chr_us/sounds/letter_61-phoneme.ogg">Ꮭ</letter>
+        <letter name="Ꮮ" buy="640" sell="120"  points="21" time="1420" sprite="locales/chr_us/textures/letters/sprites/letter_62.png" block="locales/chr_us/textures/letters/blocks/letter_62.png" sound="locales/chr_us/sounds/letter_62-name.ogg" phoneme="locales/chr_us/sounds/letter_62-phoneme.ogg">Ꮮ</letter>
+        <letter name="Ꮯ" buy="620" sell="120"  points="21" time="1410" sprite="locales/chr_us/textures/letters/sprites/letter_63.png" block="locales/chr_us/textures/letters/blocks/letter_63.png" sound="locales/chr_us/sounds/letter_63-name.ogg" phoneme="locales/chr_us/sounds/letter_63-phoneme.ogg">Ꮯ</letter>
+        <letter name="Ꮰ" buy="810" sell="150"  points="22" time="1470" sprite="locales/chr_us/textures/letters/sprites/letter_64.png" block="locales/chr_us/textures/letters/blocks/letter_64.png" sound="locales/chr_us/sounds/letter_64-name.ogg" phoneme="locales/chr_us/sounds/letter_64-phoneme.ogg">Ꮰ</letter>
+        <letter name="Ꮱ" buy="800" sell="150"  points="22" time="1470" sprite="locales/chr_us/textures/letters/sprites/letter_65.png" block="locales/chr_us/textures/letters/blocks/letter_65.png" sound="locales/chr_us/sounds/letter_65-name.ogg" phoneme="locales/chr_us/sounds/letter_65-phoneme.ogg">Ꮱ</letter>
+        <letter name="Ꮲ" buy="780" sell="140"  points="22" time="1460" sprite="locales/chr_us/textures/letters/sprites/letter_66.png" block="locales/chr_us/textures/letters/blocks/letter_66.png" sound="locales/chr_us/sounds/letter_66-name.ogg" phoneme="locales/chr_us/sounds/letter_66-phoneme.ogg">Ꮲ</letter>
+        <letter name="Ꮳ" buy="770" sell="140"  points="22" time="1460" sprite="locales/chr_us/textures/letters/sprites/letter_67.png" block="locales/chr_us/textures/letters/blocks/letter_67.png" sound="locales/chr_us/sounds/letter_67-name.ogg" phoneme="locales/chr_us/sounds/letter_67-phoneme.ogg">Ꮳ</letter>
+        <letter name="Ꮴ" buy="760" sell="140"  points="22" time="1450" sprite="locales/chr_us/textures/letters/sprites/letter_68.png" block="locales/chr_us/textures/letters/blocks/letter_68.png" sound="locales/chr_us/sounds/letter_68-name.ogg" phoneme="locales/chr_us/sounds/letter_68-phoneme.ogg">Ꮴ</letter>
+        <letter name="Ꮵ" buy="70" sell="20"  points="14" time="930" sprite="locales/chr_us/textures/letters/sprites/letter_69.png" block="locales/chr_us/textures/letters/blocks/letter_69.png" sound="locales/chr_us/sounds/letter_69-name.ogg" phoneme="locales/chr_us/sounds/letter_69-phoneme.ogg">Ꮵ</letter>
+        <letter name="Ꮶ" buy="740" sell="140"  points="22" time="1450" sprite="locales/chr_us/textures/letters/sprites/letter_70.png" block="locales/chr_us/textures/letters/blocks/letter_70.png" sound="locales/chr_us/sounds/letter_70-name.ogg" phoneme="locales/chr_us/sounds/letter_70-phoneme.ogg">Ꮶ</letter>
+        <letter name="Ꮷ" buy="730" sell="140"  points="22" time="1450" sprite="locales/chr_us/textures/letters/sprites/letter_71.png" block="locales/chr_us/textures/letters/blocks/letter_71.png" sound="locales/chr_us/sounds/letter_71-name.ogg" phoneme="locales/chr_us/sounds/letter_71-phoneme.ogg">Ꮷ</letter>
+        <letter name="Ꮸ" buy="910" sell="160"  points="22" time="1500" sprite="locales/chr_us/textures/letters/sprites/letter_72.png" block="locales/chr_us/textures/letters/blocks/letter_72.png" sound="locales/chr_us/sounds/letter_72-name.ogg" phoneme="locales/chr_us/sounds/letter_72-phoneme.ogg">Ꮸ</letter>
+        <letter name="Ꮹ" buy="80" sell="20"  points="14" time="950" sprite="locales/chr_us/textures/letters/sprites/letter_73.png" block="locales/chr_us/textures/letters/blocks/letter_73.png" sound="locales/chr_us/sounds/letter_73-name.ogg" phoneme="locales/chr_us/sounds/letter_73-phoneme.ogg">Ꮹ</letter>
+        <letter name="Ꮺ" buy="900" sell="160"  points="22" time="1490" sprite="locales/chr_us/textures/letters/sprites/letter_74.png" block="locales/chr_us/textures/letters/blocks/letter_74.png" sound="locales/chr_us/sounds/letter_74-name.ogg" phoneme="locales/chr_us/sounds/letter_74-phoneme.ogg">Ꮺ</letter>
+        <letter name="Ꮻ" buy="880" sell="160"  points="22" time="1490" sprite="locales/chr_us/textures/letters/sprites/letter_75.png" block="locales/chr_us/textures/letters/blocks/letter_75.png" sound="locales/chr_us/sounds/letter_75-name.ogg" phoneme="locales/chr_us/sounds/letter_75-phoneme.ogg">Ꮻ</letter>
+        <letter name="Ꮼ" buy="870" sell="160"  points="22" time="1480" sprite="locales/chr_us/textures/letters/sprites/letter_76.png" block="locales/chr_us/textures/letters/blocks/letter_76.png" sound="locales/chr_us/sounds/letter_76-name.ogg" phoneme="locales/chr_us/sounds/letter_76-phoneme.ogg">Ꮼ</letter>
+        <letter name="Ꮽ" buy="850" sell="150"  points="22" time="1480" sprite="locales/chr_us/textures/letters/sprites/letter_77.png" block="locales/chr_us/textures/letters/blocks/letter_77.png" sound="locales/chr_us/sounds/letter_77-name.ogg" phoneme="locales/chr_us/sounds/letter_77-phoneme.ogg">Ꮽ</letter>
+        <letter name="Ꮾ" buy="840" sell="150"  points="22" time="1480" sprite="locales/chr_us/textures/letters/sprites/letter_78.png" block="locales/chr_us/textures/letters/blocks/letter_78.png" sound="locales/chr_us/sounds/letter_78-name.ogg" phoneme="locales/chr_us/sounds/letter_78-phoneme.ogg">Ꮾ</letter>
+        <letter name="Ꮿ" buy="830" sell="150"  points="22" time="1470" sprite="locales/chr_us/textures/letters/sprites/letter_79.png" block="locales/chr_us/textures/letters/blocks/letter_79.png" sound="locales/chr_us/sounds/letter_79-name.ogg" phoneme="locales/chr_us/sounds/letter_79-phoneme.ogg">Ꮿ</letter>
+        <letter name="Ᏸ" buy="990" sell="180"  points="23" time="1510" sprite="locales/chr_us/textures/letters/sprites/letter_80.png" block="locales/chr_us/textures/letters/blocks/letter_80.png" sound="locales/chr_us/sounds/letter_80-name.ogg" phoneme="locales/chr_us/sounds/letter_80-phoneme.ogg">Ᏸ</letter>
+        <letter name="Ᏹ" buy="970" sell="170"  points="22" time="1510" sprite="locales/chr_us/textures/letters/sprites/letter_81.png" block="locales/chr_us/textures/letters/blocks/letter_81.png" sound="locales/chr_us/sounds/letter_81-name.ogg" phoneme="locales/chr_us/sounds/letter_81-phoneme.ogg">Ᏹ</letter>
+        <letter name="Ᏺ" buy="960" sell="170"  points="22" time="1510" sprite="locales/chr_us/textures/letters/sprites/letter_82.png" block="locales/chr_us/textures/letters/blocks/letter_82.png" sound="locales/chr_us/sounds/letter_82-name.ogg" phoneme="locales/chr_us/sounds/letter_82-phoneme.ogg">Ᏺ</letter>
+        <letter name="Ᏻ" buy="940" sell="170"  points="22" time="1500" sprite="locales/chr_us/textures/letters/sprites/letter_83.png" block="locales/chr_us/textures/letters/blocks/letter_83.png" sound="locales/chr_us/sounds/letter_83-name.ogg" phoneme="locales/chr_us/sounds/letter_83-phoneme.ogg">Ᏻ</letter>
+        <letter name="Ᏼ" buy="930" sell="170"  points="22" time="1500" sprite="locales/chr_us/textures/letters/sprites/letter_84.png" block="locales/chr_us/textures/letters/blocks/letter_84.png" sound="locales/chr_us/sounds/letter_84-name.ogg" phoneme="locales/chr_us/sounds/letter_84-phoneme.ogg">Ᏼ</letter>
+    </letters>
+
+    <!-- Words -->
+    <words>
+        <word name="ᎠᏌᏃ" size="2x2x2" buy="590" sell="50" points="80" construct="1800" time="600" sprite="locales/common/textures/words/sprites/dress.png" block="locales/common/textures/words/blocks/dress.png" sound="locales/chr_us/sounds/word_0.ogg">ᎠᏌᏃ</word>
+        <word name="ᎠᏣᏗ" size="2x2x2" buy="720" sell="60" points="89" construct="2700" time="600" sprite="locales/common/textures/words/sprites/fish.png" block="locales/common/textures/words/blocks/fish.png" sound="locales/chr_us/sounds/word_1.ogg">ᎠᏣᏗ</word>
+        <word name="ᎤᏪᏥ" size="2x2x2" buy="460" sell="40" points="69" construct="900" time="600" sprite="locales/common/textures/words/sprites/egg.png" block="locales/common/textures/words/blocks/egg.png" sound="locales/chr_us/sounds/word_2.ogg">ᎤᏪᏥ</word>
+        <word name="ᎦᏯᎽᎶ" size="2x2x2" buy="980" sell="80" points="104" construct="3600" time="1200" sprite="locales/sw_tz/textures/words/sprites/kiti.png" block="locales/sw_tz/textures/words/blocks/kiti.png" sound="locales/chr_us/sounds/word_3.ogg">ᎦᏯᎽᎶ</word>
+        <word name="ᎽᎵ" size="2x2x2" buy="210" sell="20" points="34" construct="180" time="120" sprite="locales/common/textures/words/sprites/dog.png" block="locales/common/textures/words/blocks/dog.png" sound="locales/chr_us/sounds/word_4.ogg">ᎽᎵ</word>
+        <word name="ᏣᏔᎦ" size="2x2x2" buy="850" sell="70" points="97" construct="2700" time="1200" sprite="locales/sw_tz/textures/words/sprites/kuku.png" block="locales/sw_tz/textures/words/blocks/kuku.png" sound="locales/chr_us/sounds/word_5.ogg">ᏣᏔᎦ</word>
+        <word name="ᏩᎦ" size="2x2x2" buy="330" sell="30" points="54" construct="900" time="600" sprite="locales/common/textures/words/sprites/milk.png" block="locales/common/textures/words/blocks/milk.png" sound="locales/chr_us/sounds/word_6.ogg">ᏩᎦ</word>
+        <word name="ᏪᏌ" size="2x2x2" buy="100" sell="10" points="10" construct="180" time="120" sprite="locales/common/textures/words/sprites/cat.png" block="locales/common/textures/words/blocks/cat.png" sound="locales/chr_us/sounds/word_7.ogg">ᏪᏌ</word>
+    </words>
+
+    <!-- Levels -->
+    <levels>
+        <level name="1" coins="100" points="200" market="0">
+            <intro>
+            </intro>
+            <letters>Ꮺ</letters>
+            <words></words>
+            <help>
+                <letters>Ꮺ</letters>
+                <words></words>
+            </help>
+            <req>
+                <gather_letter count="1">Ꮺ</gather_letter>
+            </req>
+        </level>
+        <level name="2" coins="200" points="300" market="1">
+            <intro>
+            </intro>
+            <letters>Ꮜ</letters>
+            <words></words>
+            <help>
+                <letters>Ꮜ</letters>
+                <words></words>
+            </help>
+            <req>
+                <gather_letter count="1">Ꮜ</gather_letter>
+            </req>
+        </level>
+        <level name="3" coins="200" points="390" market="2">
+            <intro>
+            </intro>
+            <letters>Ꮍ,Ꮅ</letters>
+            <words>ᏪᏌ</words>
+            <help>
+                <letters>Ꮍ,Ꮅ</letters>
+                <words>ᏪᏌ</words>
+            </help>
+            <req>
+                <gather_letter count="1">Ꮍ</gather_letter>
+                <gather_letter count="1">Ꮅ</gather_letter>
+                <gather_word count="1">ᏪᏌ</gather_word>
+            </req>
+        </level>
+        <level name="4" coins="200" points="460" market="3">
+            <intro>
+            </intro>
+            <letters>Ꮹ,Ꭶ</letters>
+            <words>ᎽᎵ</words>
+            <help>
+                <letters>Ꮹ,Ꭶ</letters>
+                <words>ᎽᎵ</words>
+            </help>
+            <req>
+                <gather_letter count="1">Ꮹ</gather_letter>
+                <gather_letter count="1">Ꭶ</gather_letter>
+                <gather_word count="1">ᎽᎵ</gather_word>
+            </req>
+        </level>
+        <level name="5" coins="300" points="530" market="3">
+            <intro>
+            </intro>
+            <letters>Ꭴ,Ꮵ</letters>
+            <words>ᏩᎦ</words>
+            <help>
+                <letters>Ꭴ,Ꮵ</letters>
+                <words>ᏩᎦ</words>
+            </help>
+            <req>
+                <gather_letter count="1">Ꭴ</gather_letter>
+                <gather_letter count="1">Ꮵ</gather_letter>
+                <gather_word count="1">ᏩᎦ</gather_word>
+            </req>
+        </level>
+        <level name="6" coins="300" points="590" market="3">
+            <intro>
+            </intro>
+            <letters>Ꭰ,Ꮓ</letters>
+            <words>ᎤᏪᏥ</words>
+            <help>
+                <letters>Ꭰ,Ꮓ</letters>
+                <words>ᎤᏪᏥ</words>
+            </help>
+            <req>
+                <gather_letter count="1">Ꭰ</gather_letter>
+                <gather_letter count="1">Ꮓ</gather_letter>
+                <gather_word count="1">ᎤᏪᏥ</gather_word>
+            </req>
+        </level>
+        <level name="7" coins="300" points="640" market="4">
+            <intro>
+            </intro>
+            <letters>Ꮳ,Ꮧ</letters>
+            <words>ᎠᏌᏃ</words>
+            <help>
+                <letters>Ꮳ,Ꮧ</letters>
+                <words>ᎠᏌᏃ</words>
+            </help>
+            <req>
+                <gather_letter count="1">Ꮳ</gather_letter>
+                <gather_letter count="1">Ꮧ</gather_letter>
+                <gather_word count="1">ᎠᏌᏃ</gather_word>
+            </req>
+        </level>
+        <level name="8" coins="300" points="700" market="4">
+            <intro>
+            </intro>
+            <letters>Ꮤ</letters>
+            <words>ᎠᏣᏗ</words>
+            <help>
+                <letters>Ꮤ</letters>
+                <words>ᎠᏣᏗ</words>
+            </help>
+            <req>
+                <gather_letter count="1">Ꮤ</gather_letter>
+                <gather_word count="1">ᎠᏣᏗ</gather_word>
+            </req>
+        </level>
+        <level name="9" coins="400" points="750" market="4">
+            <intro>
+            </intro>
+            <letters>Ꮿ,Ꮆ</letters>
+            <words>ᏣᏔᎦ</words>
+            <help>
+                <letters>Ꮿ,Ꮆ</letters>
+                <words>ᏣᏔᎦ</words>
+            </help>
+            <req>
+                <gather_letter count="1">Ꮿ</gather_letter>
+                <gather_letter count="1">Ꮆ</gather_letter>
+                <gather_word count="1">ᏣᏔᎦ</gather_word>
+            </req>
+        </level>
+        <level name="10" coins="400" points="800" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>ᎦᏯᎽᎶ</words>
+            <help>
+                <letters></letters>
+                <words>ᎦᏯᎽᎶ</words>
+            </help>
+            <req>
+                <gather_word count="1">ᎦᏯᎽᎶ</gather_word>
+            </req>
+        </level>
+    </levels>
+</locale>

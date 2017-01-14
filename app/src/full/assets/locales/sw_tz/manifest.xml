@@ -1,0 +1,969 @@
+<?xml version="1.0" encoding="utf-8"?>
+<locale name="sw_tz" lang="sw_tz" display_name="Swahili">
+    <shell src="locales/sw_tz/textures/gameui-tz.png" />
+    <map src="locales/sw_tz/map.tmx" />
+    <music src="locales/common/sounds/jungle_background.ogg" />
+
+    <!-- Default blocks -->
+    <inventory level="4" size="4x4x4" name="Kuhifadhi" col="23" row="26" block="locales/common/textures/inventory.png" />
+    <market level="5" size="4x4x4" name="Sokoni" col="23" row="18" block="locales/common/textures/market.png" />
+    <workshop level="10" size="3x3x3" name="Karakana" col="18" row="32" block="locales/common/textures/workshop.png" />
+
+    <!-- People used in the marketplace and player's avatar -->
+    <people>
+        <person name="Amanika" texture="locales/common/textures/persons/f1.png" />
+        <person name="Elewa" texture="locales/common/textures/persons/f2.png" />
+        <person name="Jama" texture="locales/common/textures/persons/f3.png" />
+        <person name="Rehema" texture="locales/common/textures/persons/f4.png" />
+        <person name="Baraka" texture="locales/common/textures/persons/m1.png" />
+        <person name="Hamadi" texture="locales/common/textures/persons/m2.png" />
+        <person name="Jamba" texture="locales/common/textures/persons/m3.png" />
+        <person name="Usian" texture="locales/common/textures/persons/m4.png" />
+    </people>
+
+    <!-- Mini-games -->
+    <games>
+        <game level="6"  name="Word Match"  type="wordmatch"  buy="300" construct="120" time="300" reward="1.5" sprite="locales/en_us_rural/textures/games/sprites/minigame1.png" block="locales/en_us_rural/textures/games/blocks/minigame1.png" />
+        <game level="12" name="Image Match" type="imagematch" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
+    </games>
+
+    <!-- Decorations -->
+    <decorations>
+        <decoration level="7"  size="1x1" name="Lamp Post"  buy="200" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
+        <decoration level="15" size="1x1" name="Small Tree" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
+        <decoration level="22" size="2x2" name="Fountain"   buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
+    </decorations>
+
+    <!-- Tour -->
+    <tour guide="Amanika">
+        <stop id="welcome">
+            <message sound="locales/sw_tz/sounds/tour/welcome1.ogg">Karibu Phoenicia!</message>
+            <message sound="locales/sw_tz/sounds/tour/welcome2.ogg">Tumia picha za herufi mwisho wa skrini yako kwa kuanza kuweka herufi 'A'</message>
+            <message sound="locales/sw_tz/sounds/tour/welcome3.ogg">Gusa herufi kuanza kuweka</message>
+            <message sound="locales/sw_tz/sounds/tour/welcome4.ogg">Gusa mahali kwenye ramani kuweka herufi mpya</message>
+            <message sound="locales/sw_tz/sounds/tour/welcome5.ogg">Herufi yako ikikamililka, gusa tena kuikusanya</message>
+            <message sound="locales/sw_tz/sounds/tour/welcome6.ogg">Herufi zako zitaanza kukua tena kwa wewe kuzikusanya tena baadaye</message>
+        </stop>
+        <stop id="inventory">
+            <message sound="locales/sw_tz/sounds/tour/inventory1.ogg">Hili ni jumba lako la kuhifadhi. Neno au herufi zozote utakazo kusanya zitahifadhiwa hapa kwa matumizi yako</message>
+            <message sound="locales/sw_tz/sounds/tour/inventory2.ogg">Unaweza pia kuuza kifaa ulichonacho muda wowote, kwa kukigusa.</message>
+        </stop>
+        <stop id="words">
+            <message sound="locales/sw_tz/sounds/tour/words1.ogg">Tumia picha za maneno kujenga kiwanda cha 'TAA'</message>
+            <message sound="locales/sw_tz/sounds/tour/words2.ogg">Gusa picha za maneno kuunda neno lake</message>
+            <message sound="locales/sw_tz/sounds/tour/words3.ogg">Gusa mahali kwenye ramani kuweka neno ulilouunda</message>
+            <message sound="locales/sw_tz/sounds/tour/words4.ogg">Endapo neno lako likotayari, unaweza kulitumia kutengeza maneno</message>
+            <message sound="locales/sw_tz/sounds/tour/words5.ogg">Unaunda neno kwa kulitaja, tumia herufi T A A kutaja neno TAA</message>
+            <message sound="locales/sw_tz/sounds/tour/words6.ogg">Itachukua muda kwa neno lako kumalizika, na endapo likotayari, unaweza kulikusanya</message>
+            <message sound="locales/sw_tz/sounds/tour/words7.ogg">Gusa neno liliokamilika hapo juu kuliongeza kwenye orodha yako</message>
+        </stop>
+        <stop id="market">
+            <message sound="locales/sw_tz/sounds/tour/market1.ogg">Kwa vilie sasa una maneno, unaweza kuanza kuyauza sokoni.</message>
+            <message sound="locales/sw_tz/sounds/tour/market2.ogg">Hapa utapata marafiki ambao watapenda kununua herufi na maneno uliokusanya</message>
+            <message sound="locales/sw_tz/sounds/tour/market3.ogg">Endapo umepata kila kitu wanachohitaji, unaweza kuuza ili kupata sarafu unazohitaji kuendelea kuunda mji wako</message>
+        </stop>
+        <stop id="workshop">
+            <message sound="locales/sw_tz/sounds/tour/workshop1.ogg">Na ikiwa unataka kutengeza neno ambalo hujaliunda bado, unaweza kuliunda kwenye karakana</message>
+            <message sound="locales/sw_tz/sounds/tour/workshop2.ogg">Hapa unaweza kutengeza neno lolote kwenye mchezo, unachohitaji ni herufi na jinsi yakuzitaja</message>
+            <message sound="locales/sw_tz/sounds/tour/workshop3.ogg">Jaribu kutengeneza neno MELI kwa herufi M E L I</message>
+            <message sound="locales/sw_tz/sounds/tour/workshop4.ogg">Vyema! Ila kumbuka, unawezakuunda neno moja moja kwa wakati, kwa hivyo endelea kuunda maneno.</message>
+        </stop>
+    </tour>
+
+    <!-- Alphabet -->
+    <letters>
+        <letter name="a" buy="1" sell="1"  points="1" time="60" sprite="locales/common/textures/letters/sprites/a.png" block="locales/common/textures/letters/blocks/a.png" sound="locales/sw_tz/sounds/a-name.ogg" phoneme="locales/sw_tz/sounds/a-phoneme.ogg">a</letter>
+        <letter name="b" buy="30" sell="10"  points="11" time="105" sprite="locales/common/textures/letters/sprites/b.png" block="locales/common/textures/letters/blocks/b.png" sound="locales/sw_tz/sounds/b-name.ogg" phoneme="locales/sw_tz/sounds/b-phoneme.ogg">b</letter>
+        <letter name="c" buy="100" sell="20"  points="15" time="1020" sprite="locales/common/textures/letters/sprites/c.png" block="locales/common/textures/letters/blocks/c.png" sound="locales/sw_tz/sounds/c-name.ogg" phoneme="locales/sw_tz/sounds/c-phoneme.ogg">c</letter>
+        <letter name="d" buy="50" sell="10"  points="13" time="870" sprite="locales/common/textures/letters/sprites/d.png" block="locales/common/textures/letters/blocks/d.png" sound="locales/sw_tz/sounds/d-name.ogg" phoneme="locales/sw_tz/sounds/d-phoneme.ogg">d</letter>
+        <letter name="e" buy="20" sell="10"  points="10" time="240" sprite="locales/common/textures/letters/sprites/e.png" block="locales/common/textures/letters/blocks/e.png" sound="locales/sw_tz/sounds/e-name.ogg" phoneme="locales/sw_tz/sounds/e-phoneme.ogg">e</letter>
+        <letter name="f" buy="80" sell="20"  points="14" time="970" sprite="locales/common/textures/letters/sprites/f.png" block="locales/common/textures/letters/blocks/f.png" sound="locales/sw_tz/sounds/f-name.ogg" phoneme="locales/sw_tz/sounds/f-phoneme.ogg">f</letter>
+        <letter name="g" buy="60" sell="20"  points="13" time="890" sprite="locales/common/textures/letters/sprites/g.png" block="locales/common/textures/letters/blocks/g.png" sound="locales/sw_tz/sounds/g-name.ogg" phoneme="locales/sw_tz/sounds/g-phoneme.ogg">g</letter>
+        <letter name="h" buy="60" sell="20"  points="13" time="910" sprite="locales/common/textures/letters/sprites/h.png" block="locales/common/textures/letters/blocks/h.png" sound="locales/sw_tz/sounds/h-name.ogg" phoneme="locales/sw_tz/sounds/h-phoneme.ogg">h</letter>
+        <letter name="i" buy="3" sell="2"  points="3" time="230" sprite="locales/common/textures/letters/sprites/i.png" block="locales/common/textures/letters/blocks/i.png" sound="locales/sw_tz/sounds/i-name.ogg" phoneme="locales/sw_tz/sounds/i-phoneme.ogg">i</letter>
+        <letter name="j" buy="120" sell="30"  points="15" time="1050" sprite="locales/common/textures/letters/sprites/j.png" block="locales/common/textures/letters/blocks/j.png" sound="locales/sw_tz/sounds/j-name.ogg" phoneme="locales/sw_tz/sounds/j-phoneme.ogg">j</letter>
+        <letter name="k" buy="10" sell="4"  points="8" time="150" sprite="locales/common/textures/letters/sprites/k.png" block="locales/common/textures/letters/blocks/k.png" sound="locales/sw_tz/sounds/k-name.ogg" phoneme="locales/sw_tz/sounds/k-phoneme.ogg">k</letter>
+        <letter name="l" buy="70" sell="20"  points="14" time="930" sprite="locales/common/textures/letters/sprites/l.png" block="locales/common/textures/letters/blocks/l.png" sound="locales/sw_tz/sounds/l-name.ogg" phoneme="locales/sw_tz/sounds/l-phoneme.ogg">l</letter>
+        <letter name="m" buy="10" sell="4"  points="6" time="460" sprite="locales/common/textures/letters/sprites/m.png" block="locales/common/textures/letters/blocks/m.png" sound="locales/sw_tz/sounds/m-name.ogg" phoneme="locales/sw_tz/sounds/m-phoneme.ogg">m</letter>
+        <letter name="n" buy="10" sell="4"  points="9" time="590" sprite="locales/common/textures/letters/sprites/n.png" block="locales/common/textures/letters/blocks/n.png" sound="locales/sw_tz/sounds/n-name.ogg" phoneme="locales/sw_tz/sounds/n-phoneme.ogg">n</letter>
+        <letter name="o" buy="20" sell="10"  points="9" time="640" sprite="locales/common/textures/letters/sprites/o.png" block="locales/common/textures/letters/blocks/o.png" sound="locales/sw_tz/sounds/o-name.ogg" phoneme="locales/sw_tz/sounds/o-phoneme.ogg">o</letter>
+        <letter name="p" buy="80" sell="20"  points="14" time="120" sprite="locales/common/textures/letters/sprites/p.png" block="locales/common/textures/letters/blocks/p.png" sound="locales/sw_tz/sounds/p-name.ogg" phoneme="locales/sw_tz/sounds/p-phoneme.ogg">p</letter>
+        <letter name="r" buy="30" sell="10"  points="11" time="720" sprite="locales/common/textures/letters/sprites/r.png" block="locales/common/textures/letters/blocks/r.png" sound="locales/sw_tz/sounds/r-name.ogg" phoneme="locales/sw_tz/sounds/r-phoneme.ogg">r</letter>
+        <letter name="s" buy="40" sell="10"  points="12" time="790" sprite="locales/common/textures/letters/sprites/s.png" block="locales/common/textures/letters/blocks/s.png" sound="locales/sw_tz/sounds/s-name.ogg" phoneme="locales/sw_tz/sounds/s-phoneme.ogg">s</letter>
+        <letter name="t" buy="40" sell="10"  points="12" time="90" sprite="locales/common/textures/letters/sprites/t.png" block="locales/common/textures/letters/blocks/t.png" sound="locales/sw_tz/sounds/t-name.ogg" phoneme="locales/sw_tz/sounds/t-phoneme.ogg">t</letter>
+        <letter name="u" buy="10" sell="5"  points="5" time="360" sprite="locales/common/textures/letters/sprites/u.png" block="locales/common/textures/letters/blocks/u.png" sound="locales/sw_tz/sounds/u-name.ogg" phoneme="locales/sw_tz/sounds/u-phoneme.ogg">u</letter>
+        <letter name="v" buy="130" sell="30"  points="16" time="1060" sprite="locales/common/textures/letters/sprites/v.png" block="locales/common/textures/letters/blocks/v.png" sound="locales/sw_tz/sounds/v-name.ogg" phoneme="locales/sw_tz/sounds/v-phoneme.ogg">v</letter>
+        <letter name="w" buy="90" sell="20"  points="15" time="990" sprite="locales/common/textures/letters/sprites/w.png" block="locales/common/textures/letters/blocks/w.png" sound="locales/sw_tz/sounds/w-name.ogg" phoneme="locales/sw_tz/sounds/w-phoneme.ogg">w</letter>
+        <letter name="y" buy="100" sell="20"  points="15" time="1000" sprite="locales/common/textures/letters/sprites/y.png" block="locales/common/textures/letters/blocks/y.png" sound="locales/sw_tz/sounds/y-name.ogg" phoneme="locales/sw_tz/sounds/y-phoneme.ogg">y</letter>
+        <letter name="z" buy="50" sell="10"  points="12" time="840" sprite="locales/common/textures/letters/sprites/z.png" block="locales/common/textures/letters/blocks/z.png" sound="locales/sw_tz/sounds/z-name.ogg" phoneme="locales/sw_tz/sounds/z-phoneme.ogg">z</letter>
+    </letters>
+
+    <!-- Words -->
+    <words>
+        <word name="bakuli" size="1x1" buy="6750" sell="460" points="191" construct="88200" time="18600" sprite="locales/common/textures/words/sprites/bowl.png" block="locales/common/textures/words/blocks/bowl.png" sound="locales/sw_tz/sounds/bakuli.ogg">bakuli</word>
+        <word name="bata" size="2x2x2" buy="210" sell="20" points="34" construct="90" time="120" sprite="locales/common/textures/words/sprites/duck.png" block="locales/common/textures/words/blocks/duck.png" sound="locales/sw_tz/sounds/bata.ogg">bata</word>
+        <word name="chura" size="1x1" buy="7390" sell="500" points="195" construct="102600" time="21000" sprite="locales/common/textures/words/sprites/frog.png" block="locales/common/textures/words/blocks/frog.png" sound="locales/sw_tz/sounds/chura.ogg">chura</word>
+        <word name="farasi" size="1x1" buy="4370" sell="310" points="171" construct="43200" time="10200" sprite="locales/common/textures/words/sprites/horse.png" block="locales/common/textures/words/blocks/horse.png" sound="locales/sw_tz/sounds/farasi.ogg">farasi</word>
+        <word name="gari" size="2x2x2" buy="2400" sell="180" points="144" construct="16200" time="4800" sprite="locales/common/textures/words/sprites/car.png" block="locales/common/textures/words/blocks/car.png" sound="locales/sw_tz/sounds/gari.ogg">gari</word>
+        <word name="hema" size="2x2x2" buy="3450" sell="250" points="160" construct="29700" time="7800" sprite="locales/common/textures/words/sprites/tent.png" block="locales/common/textures/words/blocks/tent.png" sound="locales/sw_tz/sounds/hema.ogg">hema</word>
+        <word name="kalamu" size="2x2x2" buy="2850" sell="210" points="152" construct="21600" time="6000" sprite="locales/common/textures/words/sprites/pen.png" block="locales/common/textures/words/blocks/pen.png" sound="locales/sw_tz/sounds/kalamu.ogg">kalamu</word>
+        <word name="kamba" size="2x2x2" buy="2550" sell="190" points="147" construct="18000" time="4800" sprite="locales/common/textures/words/sprites/string.png" block="locales/common/textures/words/blocks/string.png" sound="locales/sw_tz/sounds/kamba.ogg">kamba</word>
+        <word name="kamera" size="1x1" buy="4680" sell="330" points="174" construct="48600" time="11400" sprite="locales/common/textures/words/sprites/camera.png" block="locales/common/textures/words/blocks/camera.png" sound="locales/sw_tz/sounds/kamera.ogg">kamera</word>
+        <word name="kibanda" size="1x1" buy="5310" sell="370" points="180" construct="59400" time="13800" sprite="locales/common/textures/words/sprites/hut.png" block="locales/common/textures/words/blocks/hut.png" sound="locales/sw_tz/sounds/kibanda.ogg">kibanda</word>
+        <word name="kikombe" size="1x1" buy="8210" sell="550" points="200" construct="122400" time="24600" sprite="locales/common/textures/words/sprites/cup.png" block="locales/common/textures/words/blocks/cup.png" sound="locales/sw_tz/sounds/kikombe.ogg">kikombe</word>
+        <word name="kitanda" size="1x1" buy="5940" sell="410" points="185" construct="72000" time="15600" sprite="locales/common/textures/words/sprites/bed.png" block="locales/common/textures/words/blocks/bed.png" sound="locales/sw_tz/sounds/kitanda.ogg">kitanda</word>
+        <word name="kiti" size="2x2x2" buy="720" sell="60" points="89" construct="2700" time="600" sprite="locales/sw_tz/textures/words/sprites/kiti.png" block="locales/sw_tz/textures/words/blocks/kiti.png" sound="locales/sw_tz/sounds/kiti.ogg">kiti</word>
+        <word name="kofia" size="2x2x2" buy="4990" sell="350" points="177" construct="54000" time="12600" sprite="locales/common/textures/words/sprites/hat.png" block="locales/common/textures/words/blocks/hat.png" sound="locales/sw_tz/sounds/kofia.ogg">kofia</word>
+        <word name="konokono" size="1x1" buy="4220" sell="300" points="170" construct="41400" time="9600" sprite="locales/common/textures/words/sprites/snail.png" block="locales/common/textures/words/blocks/snail.png" sound="locales/sw_tz/sounds/konokono.ogg">konokono</word>
+        <word name="kufuli" size="1x1" buy="6260" sell="430" points="188" construct="78300" time="16800" sprite="locales/common/textures/words/sprites/lock.png" block="locales/common/textures/words/blocks/lock.png" sound="locales/sw_tz/sounds/kufuli.ogg">kufuli</word>
+        <word name="kuingia" size="1x1" buy="6100" sell="420" points="186" construct="75600" time="16200" sprite="locales/common/textures/words/sprites/log.png" block="locales/common/textures/words/blocks/log.png" sound="locales/sw_tz/sounds/kuingia.ogg">kuingia</word>
+        <word name="kuku" size="2x2x2" buy="590" sell="50" points="80" construct="1800" time="600" sprite="locales/sw_tz/textures/words/sprites/kuku.png" block="locales/sw_tz/textures/words/blocks/kuku.png" sound="locales/sw_tz/sounds/kuku.ogg">kuku</word>
+        <word name="lori" size="1x1" buy="5470" sell="380" points="181" construct="63000" time="13800" sprite="locales/common/textures/words/sprites/truck.png" block="locales/common/textures/words/blocks/truck.png" sound="locales/sw_tz/sounds/lori.ogg">lori</word>
+        <word name="maji" size="2x2x2" buy="2260" sell="170" points="141" construct="14400" time="4200" sprite="locales/common/textures/words/sprites/water.png" block="locales/common/textures/words/blocks/water.png" sound="locales/sw_tz/sounds/maji.ogg">maji</word>
+        <word name="mashua" size="1x1" buy="4060" sell="290" points="168" construct="38700" time="9600" sprite="locales/common/textures/words/sprites/boat.png" block="locales/common/textures/words/blocks/boat.png" sound="locales/sw_tz/sounds/mashua.ogg">mashua</word>
+        <word name="matope" size="1x1" buy="7720" sell="520" points="197" construct="110700" time="22200" sprite="locales/common/textures/words/sprites/mud.png" block="locales/common/textures/words/blocks/mud.png" sound="locales/sw_tz/sounds/matope.ogg">matope</word>
+        <word name="maua" size="2x2x2" buy="1970" sell="150" points="135" construct="11700" time="3600" sprite="locales/common/textures/words/sprites/flower.png" block="locales/common/textures/words/blocks/flower.png" sound="locales/sw_tz/sounds/maua.ogg">maua</word>
+        <word name="mavazi" size="2x2x2" buy="3910" sell="280" points="166" construct="36000" time="9000" sprite="locales/common/textures/words/sprites/dress.png" block="locales/common/textures/words/blocks/dress.png" sound="locales/sw_tz/sounds/mavazi.ogg">mavazi</word>
+        <word name="maziwa" size="1x1" buy="3750" sell="270" points="164" construct="34200" time="8400" sprite="locales/common/textures/words/sprites/milk.png" block="locales/common/textures/words/blocks/milk.png" sound="locales/sw_tz/sounds/maziwa.ogg">maziwa</word>
+        <word name="mbegu" size="2x2x2" buy="3150" sell="230" points="156" construct="25200" time="6600" sprite="locales/common/textures/words/sprites/seed.png" block="locales/common/textures/words/blocks/seed.png" sound="locales/sw_tz/sounds/mbegu.ogg">mbegu</word>
+        <word name="mbuzi" size="2x2x2" buy="1260" sell="100" points="115" construct="5400" time="1800" sprite="locales/common/textures/words/sprites/goat.png" block="locales/common/textures/words/blocks/goat.png" sound="locales/sw_tz/sounds/mbuzi.ogg">mbuzi</word>
+        <word name="mbwa" size="2x2x2" buy="3000" sell="220" points="154" construct="23400" time="6000" sprite="locales/common/textures/words/sprites/dog.png" block="locales/common/textures/words/blocks/dog.png" sound="locales/sw_tz/sounds/mbwa.ogg">mbwa</word>
+        <word name="meli" size="2x2x4" buy="980" sell="80" points="104" construct="3600" time="1200" sprite="locales/common/textures/words/sprites/sail.png" block="locales/common/textures/words/blocks/sail.png" sound="locales/sw_tz/sounds/meli.ogg">meli</word>
+        <word name="meza" size="2x2x2" buy="1400" sell="110" points="119" construct="6300" time="2400" sprite="locales/common/textures/words/sprites/table.png" block="locales/common/textures/words/blocks/table.png" sound="locales/sw_tz/sounds/meza.ogg">meza</word>
+        <word name="mkate" size="1x1" buy="5780" sell="400" points="184" construct="69300" time="15000" sprite="locales/common/textures/words/sprites/bread.png" block="locales/common/textures/words/blocks/bread.png" sound="locales/sw_tz/sounds/mkate.ogg">mkate</word>
+        <word name="mnara" size="2x2x4" buy="2110" sell="160" points="138" construct="13500" time="3600" sprite="locales/common/textures/words/sprites/tower.png" block="locales/common/textures/words/blocks/tower.png" sound="locales/sw_tz/sounds/mnara.ogg">mnara</word>
+        <word name="mshumaa" size="1x1" buy="4530" sell="320" points="173" construct="45900" time="10800" sprite="locales/common/textures/words/sprites/candle.png" block="locales/common/textures/words/blocks/candle.png" sound="locales/sw_tz/sounds/mshumaa.ogg">mshumaa</word>
+        <word name="msumari" size="1x1" buy="5630" sell="390" points="183" construct="65700" time="14400" sprite="locales/common/textures/words/sprites/nail.png" block="locales/common/textures/words/blocks/nail.png" sound="locales/sw_tz/sounds/msumari.ogg">msumari</word>
+        <word name="mti" size="2x2x2" buy="850" sell="70" points="97" construct="2700" time="1200" sprite="locales/common/textures/words/sprites/tree.png" block="locales/common/textures/words/blocks/tree.png" sound="locales/sw_tz/sounds/mti.ogg">mti</word>
+        <word name="ndizi" size="1x1" buy="5150" sell="360" points="179" construct="56700" time="13200" sprite="locales/common/textures/words/sprites/banana.png" block="locales/common/textures/words/blocks/banana.png" sound="locales/sw_tz/sounds/ndizi.ogg">ndizi</word>
+        <word name="ndoo" size="2x2x2" buy="1820" sell="140" points="132" construct="10800" time="3000" sprite="locales/common/textures/words/sprites/bucket.png" block="locales/common/textures/words/blocks/bucket.png" sound="locales/sw_tz/sounds/ndoo.ogg">ndoo</word>
+        <word name="ng'ombe" size="1x1" buy="8710" sell="580" points="203" construct="134100" time="26400" sprite="locales/common/textures/words/sprites/cow.png" block="locales/common/textures/words/blocks/cow.png" sound="locales/sw_tz/sounds/ngombe.ogg">ngombe</word>
+        <word name="nguruwe" size="1x1" buy="8540" sell="570" points="202" construct="130500" time="25800" sprite="locales/common/textures/words/sprites/pig.png" block="locales/common/textures/words/blocks/pig.png" sound="locales/sw_tz/sounds/nguruwe.ogg">nguruwe</word>
+        <word name="nyundo" size="1x1" buy="8050" sell="540" points="199" construct="117900" time="24000" sprite="locales/common/textures/words/sprites/hammer.png" block="locales/common/textures/words/blocks/hammer.png" sound="locales/sw_tz/sounds/nyundo.ogg">nyundo</word>
+        <word name="paka" size="2x2x2" buy="330" sell="30" points="54" construct="300" time="600" sprite="locales/common/textures/words/sprites/cat.png" block="locales/common/textures/words/blocks/cat.png" sound="locales/sw_tz/sounds/paka.ogg">paka</word>
+        <word name="panya" size="2x2x2" buy="2700" sell="200" points="149" construct="19800" time="5400" sprite="locales/common/textures/words/sprites/rat.png" block="locales/common/textures/words/blocks/rat.png" sound="locales/sw_tz/sounds/panya.ogg">panya</word>
+        <word name="pete" size="2x2x2" buy="460" sell="40" points="69" construct="900" time="600" sprite="locales/common/textures/words/sprites/ring.png" block="locales/common/textures/words/blocks/ring.png" sound="locales/sw_tz/sounds/pete.ogg">pete</word>
+        <word name="popo" size="2x2x2" buy="1680" sell="130" points="128" construct="9000" time="3000" sprite="locales/common/textures/words/sprites/bat.png" block="locales/common/textures/words/blocks/bat.png" sound="locales/sw_tz/sounds/popo.ogg">popo</word>
+        <word name="pundamilia" size="1x1" buy="7880" sell="530" points="198" construct="114300" time="23400" sprite="locales/common/textures/words/sprites/zebra.png" block="locales/common/textures/words/blocks/zebra.png" sound="locales/sw_tz/sounds/pundamilia.ogg">pundamilia</word>
+        <word name="ramani" size="2x2x2" buy="3600" sell="260" points="162" construct="31500" time="7800" sprite="locales/common/textures/words/sprites/map.png" block="locales/common/textures/words/blocks/map.png" sound="locales/sw_tz/sounds/ramani.ogg">ramani</word>
+        <word name="samaki" size="2x2x2" buy="3300" sell="240" points="158" construct="27900" time="7200" sprite="locales/common/textures/words/sprites/fish.png" block="locales/common/textures/words/blocks/fish.png" sound="locales/sw_tz/sounds/samaki.ogg">samaki</word>
+        <word name="shabiki" size="2x2x2" buy="6910" sell="470" points="192" construct="91800" time="19200" sprite="locales/common/textures/words/sprites/fan.png" block="locales/common/textures/words/blocks/fan.png" sound="locales/sw_tz/sounds/shabiki.ogg">shabiki</word>
+        <word name="sindano" size="1x1" buy="7070" sell="480" points="193" construct="95400" time="19800" sprite="locales/common/textures/words/sprites/needle.png" block="locales/common/textures/words/blocks/needle.png" sound="locales/sw_tz/sounds/sindano.ogg">sindano</word>
+        <word name="sufuria" size="2x2x2" buy="7560" sell="510" points="196" construct="106200" time="21600" sprite="locales/common/textures/words/sprites/pan.png" block="locales/common/textures/words/blocks/pan.png" sound="locales/sw_tz/sounds/sufuria.ogg">sufuria</word>
+        <word name="suruali" size="1x1" buy="7230" sell="490" points="194" construct="99000" time="20400" sprite="locales/common/textures/words/sprites/pants.png" block="locales/common/textures/words/blocks/pants.png" sound="locales/sw_tz/sounds/suruali.ogg">suruali</word>
+        <word name="taa" size="2x2x2" buy="100" sell="10" points="10" construct="180" time="120" sprite="locales/common/textures/words/sprites/lamp.png" block="locales/common/textures/words/blocks/lamp.png" sound="locales/sw_tz/sounds/taa.ogg">taa</word>
+        <word name="tufaha" size="1x1" buy="4840" sell="340" points="176" construct="51300" time="12000" sprite="locales/common/textures/words/sprites/apple.png" block="locales/common/textures/words/blocks/apple.png" sound="locales/sw_tz/sounds/tufaha.ogg">tufaha</word>
+        <word name="uchaguzi" size="1x1" buy="8380" sell="560" points="201" construct="126000" time="25200" sprite="locales/common/textures/words/sprites/trail.png" block="locales/common/textures/words/blocks/trail.png" sound="locales/sw_tz/sounds/uchaguzi.ogg">uchaguzi</word>
+        <word name="ufagio" size="1x1" buy="6420" sell="440" points="189" construct="81900" time="17400" sprite="locales/common/textures/words/sprites/broom.png" block="locales/common/textures/words/blocks/broom.png" sound="locales/sw_tz/sounds/ufagio.ogg">ufagio</word>
+        <word name="unaweza" size="2x2x2" buy="6580" sell="450" points="190" construct="85500" time="18000" sprite="locales/common/textures/words/sprites/can.png" block="locales/common/textures/words/blocks/can.png" sound="locales/sw_tz/sounds/unaweza.ogg">unaweza</word>
+        <word name="uzi" size="2x2x2" buy="1120" sell="90" points="109" construct="4500" time="1800" sprite="locales/common/textures/words/sprites/yarn.png" block="locales/common/textures/words/blocks/yarn.png" sound="locales/sw_tz/sounds/uzi.ogg">uzi</word>
+        <word name="yai" size="2x2x2" buy="1540" sell="120" points="124" construct="8100" time="2400" sprite="locales/common/textures/words/sprites/egg.png" block="locales/common/textures/words/blocks/egg.png" sound="locales/sw_tz/sounds/yai.ogg">yai</word>
+    </words>
+
+    <!-- Levels -->
+    <levels>
+        <level name="1" coins="100" points="200" market="0">
+            <intro>
+            </intro>
+            <letters>a</letters>
+            <words></words>
+            <help>
+                <letters>a</letters>
+                <words></words>
+            </help>
+            <req>
+                <gather_letter count="1">a</gather_letter>
+            </req>
+        </level>
+        <level name="2" coins="200" points="300" market="1">
+            <intro>
+            </intro>
+            <letters>t</letters>
+            <words></words>
+            <help>
+                <letters>a,t</letters>
+                <words></words>
+            </help>
+            <req>
+                <gather_letter count="1">t</gather_letter>
+            </req>
+        </level>
+        <level name="3" coins="200" points="390" market="1">
+            <intro>
+            </intro>
+            <letters>b</letters>
+            <words>taa</words>
+            <help>
+                <letters>a,t,b</letters>
+                <words>taa</words>
+            </help>
+            <req>
+                <gather_letter count="1">b</gather_letter>
+                <gather_word count="1">taa</gather_word>
+            </req>
+        </level>
+        <level name="4" coins="200" points="460" market="1">
+            <intro>
+            </intro>
+            <letters>p,k</letters>
+            <words>bata</words>
+            <help>
+                <letters>t,b,p,k</letters>
+                <words>taa,bata</words>
+            </help>
+            <req>
+                <gather_letter count="1">p</gather_letter>
+                <gather_letter count="1">k</gather_letter>
+                <gather_word count="1">bata</gather_word>
+            </req>
+        </level>
+        <level name="5" coins="300" points="530" market="2">
+            <intro>
+            </intro>
+            <letters>e</letters>
+            <words>paka</words>
+            <help>
+                <letters>p,k,e</letters>
+                <words>bata,paka</words>
+            </help>
+            <req>
+                <gather_letter count="1">e</gather_letter>
+                <gather_word count="1">paka</gather_word>
+            </req>
+        </level>
+        <level name="6" coins="300" points="590" market="2">
+            <intro>
+            </intro>
+            <letters>u</letters>
+            <words>pete</words>
+            <help>
+                <letters>e,u</letters>
+                <words>pete</words>
+            </help>
+            <req>
+                <gather_letter count="1">u</gather_letter>
+                <gather_word count="1">pete</gather_word>
+            </req>
+        </level>
+        <level name="7" coins="300" points="640" market="2">
+            <intro>
+            </intro>
+            <letters>i</letters>
+            <words>kuku</words>
+            <help>
+                <letters>u,i</letters>
+                <words>kuku</words>
+            </help>
+            <req>
+                <gather_letter count="1">i</gather_letter>
+                <gather_word count="1">kuku</gather_word>
+            </req>
+        </level>
+        <level name="8" coins="300" points="700" market="2">
+            <intro>
+            </intro>
+            <letters>m</letters>
+            <words>kiti</words>
+            <help>
+                <letters>i,m</letters>
+                <words>kiti</words>
+            </help>
+            <req>
+                <gather_letter count="1">m</gather_letter>
+                <gather_word count="1">kiti</gather_word>
+            </req>
+        </level>
+        <level name="9" coins="400" points="750" market="2">
+            <intro>
+            </intro>
+            <letters>l</letters>
+            <words>mti</words>
+            <help>
+                <letters>m,l</letters>
+                <words>mti</words>
+            </help>
+            <req>
+                <gather_letter count="1">l</gather_letter>
+                <gather_word count="1">mti</gather_word>
+            </req>
+        </level>
+        <level name="10" coins="400" points="800" market="2">
+            <intro>
+            </intro>
+            <letters>z</letters>
+            <words>meli</words>
+            <help>
+                <letters>m,l,z</letters>
+                <words>meli</words>
+            </help>
+            <req>
+                <gather_letter count="1">z</gather_letter>
+                <gather_word count="1">meli</gather_word>
+            </req>
+        </level>
+        <level name="11" coins="400" points="840" market="2">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>uzi</words>
+            <help>
+                <letters></letters>
+                <words>uzi</words>
+            </help>
+            <req>
+                <gather_word count="1">uzi</gather_word>
+            </req>
+        </level>
+        <level name="12" coins="400" points="890" market="2">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>mbuzi</words>
+            <help>
+                <letters></letters>
+                <words>mbuzi</words>
+            </help>
+            <req>
+                <gather_word count="1">mbuzi</gather_word>
+            </req>
+        </level>
+        <level name="13" coins="500" points="930" market="3">
+            <intro>
+            </intro>
+            <letters>y</letters>
+            <words>meza</words>
+            <help>
+                <letters>y</letters>
+                <words>meza</words>
+            </help>
+            <req>
+                <gather_letter count="1">y</gather_letter>
+                <gather_word count="1">meza</gather_word>
+            </req>
+        </level>
+        <level name="14" coins="500" points="970" market="3">
+            <intro>
+            </intro>
+            <letters>o</letters>
+            <words>yai</words>
+            <help>
+                <letters>o</letters>
+                <words>yai</words>
+            </help>
+            <req>
+                <gather_letter count="1">o</gather_letter>
+                <gather_word count="1">yai</gather_word>
+            </req>
+        </level>
+        <level name="15" coins="500" points="1020" market="3">
+            <intro>
+            </intro>
+            <letters>n,d</letters>
+            <words>popo</words>
+            <help>
+                <letters>n,d</letters>
+                <words>popo</words>
+            </help>
+            <req>
+                <gather_letter count="1">n</gather_letter>
+                <gather_letter count="1">d</gather_letter>
+                <gather_word count="1">popo</gather_word>
+            </req>
+        </level>
+        <level name="16" coins="500" points="1060" market="3">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>ndoo</words>
+            <help>
+                <letters></letters>
+                <words>ndoo</words>
+            </help>
+            <req>
+                <gather_word count="1">ndoo</gather_word>
+            </req>
+        </level>
+        <level name="17" coins="500" points="1090" market="3">
+            <intro>
+            </intro>
+            <letters>r</letters>
+            <words>maua</words>
+            <help>
+                <letters>r</letters>
+                <words>maua</words>
+            </help>
+            <req>
+                <gather_letter count="1">r</gather_letter>
+                <gather_word count="1">maua</gather_word>
+            </req>
+        </level>
+        <level name="18" coins="600" points="1130" market="3">
+            <intro>
+            </intro>
+            <letters>j</letters>
+            <words>mnara</words>
+            <help>
+                <letters>j</letters>
+                <words>mnara</words>
+            </help>
+            <req>
+                <gather_letter count="1">j</gather_letter>
+                <gather_word count="1">mnara</gather_word>
+            </req>
+        </level>
+        <level name="19" coins="600" points="1170" market="3">
+            <intro>
+            </intro>
+            <letters>g</letters>
+            <words>maji</words>
+            <help>
+                <letters>g</letters>
+                <words>maji</words>
+            </help>
+            <req>
+                <gather_letter count="1">g</gather_letter>
+                <gather_word count="1">maji</gather_word>
+            </req>
+        </level>
+        <level name="20" coins="600" points="1210" market="3">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>gari</words>
+            <help>
+                <letters></letters>
+                <words>gari</words>
+            </help>
+            <req>
+                <gather_word count="1">gari</gather_word>
+            </req>
+        </level>
+        <level name="21" coins="600" points="1240" market="3">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>kamba</words>
+            <help>
+                <letters></letters>
+                <words>kamba</words>
+            </help>
+            <req>
+                <gather_word count="1">kamba</gather_word>
+            </req>
+        </level>
+        <level name="22" coins="600" points="1280" market="3">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>panya</words>
+            <help>
+                <letters></letters>
+                <words>panya</words>
+            </help>
+            <req>
+                <gather_word count="1">panya</gather_word>
+            </req>
+        </level>
+        <level name="23" coins="700" points="1310" market="3">
+            <intro>
+            </intro>
+            <letters>w</letters>
+            <words>kalamu</words>
+            <help>
+                <letters>w</letters>
+                <words>kalamu</words>
+            </help>
+            <req>
+                <gather_letter count="1">w</gather_letter>
+                <gather_word count="1">kalamu</gather_word>
+            </req>
+        </level>
+        <level name="24" coins="700" points="1350" market="3">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>mbwa</words>
+            <help>
+                <letters></letters>
+                <words>mbwa</words>
+            </help>
+            <req>
+                <gather_word count="1">mbwa</gather_word>
+            </req>
+        </level>
+        <level name="25" coins="700" points="1380" market="3">
+            <intro>
+            </intro>
+            <letters>s</letters>
+            <words>mbegu</words>
+            <help>
+                <letters>s</letters>
+                <words>mbegu</words>
+            </help>
+            <req>
+                <gather_letter count="1">s</gather_letter>
+                <gather_word count="1">mbegu</gather_word>
+            </req>
+        </level>
+        <level name="26" coins="700" points="1410" market="3">
+            <intro>
+            </intro>
+            <letters>h</letters>
+            <words>samaki</words>
+            <help>
+                <letters>h</letters>
+                <words>samaki</words>
+            </help>
+            <req>
+                <gather_letter count="1">h</gather_letter>
+                <gather_word count="1">samaki</gather_word>
+            </req>
+        </level>
+        <level name="27" coins="700" points="1440" market="3">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>hema</words>
+            <help>
+                <letters></letters>
+                <words>hema</words>
+            </help>
+            <req>
+                <gather_word count="1">hema</gather_word>
+            </req>
+        </level>
+        <level name="28" coins="700" points="1480" market="3">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>ramani</words>
+            <help>
+                <letters></letters>
+                <words>ramani</words>
+            </help>
+            <req>
+                <gather_word count="1">ramani</gather_word>
+            </req>
+        </level>
+        <level name="29" coins="800" points="1510" market="3">
+            <intro>
+            </intro>
+            <letters>v</letters>
+            <words>maziwa</words>
+            <help>
+                <letters>v</letters>
+                <words>maziwa</words>
+            </help>
+            <req>
+                <gather_letter count="1">v</gather_letter>
+                <gather_word count="1">maziwa</gather_word>
+            </req>
+        </level>
+        <level name="30" coins="800" points="1540" market="3">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>mavazi</words>
+            <help>
+                <letters></letters>
+                <words>mavazi</words>
+            </help>
+            <req>
+                <gather_word count="1">mavazi</gather_word>
+            </req>
+        </level>
+        <level name="31" coins="800" points="1570" market="3">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>mashua</words>
+            <help>
+                <letters></letters>
+                <words>mashua</words>
+            </help>
+            <req>
+                <gather_word count="1">mashua</gather_word>
+            </req>
+        </level>
+        <level name="32" coins="800" points="1600" market="3">
+            <intro>
+            </intro>
+            <letters>f</letters>
+            <words>konokono</words>
+            <help>
+                <letters>f</letters>
+                <words>konokono</words>
+            </help>
+            <req>
+                <gather_letter count="1">f</gather_letter>
+                <gather_word count="1">konokono</gather_word>
+            </req>
+        </level>
+        <level name="33" coins="800" points="1630" market="3">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>farasi</words>
+            <help>
+                <letters></letters>
+                <words>farasi</words>
+            </help>
+            <req>
+                <gather_word count="1">farasi</gather_word>
+            </req>
+        </level>
+        <level name="34" coins="800" points="1660" market="3">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>mshumaa</words>
+            <help>
+                <letters></letters>
+                <words>mshumaa</words>
+            </help>
+            <req>
+                <gather_word count="1">mshumaa</gather_word>
+            </req>
+        </level>
+        <level name="35" coins="800" points="1690" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>kamera</words>
+            <help>
+                <letters></letters>
+                <words>kamera</words>
+            </help>
+            <req>
+                <gather_word count="1">kamera</gather_word>
+            </req>
+        </level>
+        <level name="36" coins="900" points="1720" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>tufaha</words>
+            <help>
+                <letters></letters>
+                <words>tufaha</words>
+            </help>
+            <req>
+                <gather_word count="1">tufaha</gather_word>
+            </req>
+        </level>
+        <level name="37" coins="900" points="1750" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>kofia</words>
+            <help>
+                <letters></letters>
+                <words>kofia</words>
+            </help>
+            <req>
+                <gather_word count="1">kofia</gather_word>
+            </req>
+        </level>
+        <level name="38" coins="900" points="1770" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>ndizi</words>
+            <help>
+                <letters></letters>
+                <words>ndizi</words>
+            </help>
+            <req>
+                <gather_word count="1">ndizi</gather_word>
+            </req>
+        </level>
+        <level name="39" coins="900" points="1800" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>kibanda</words>
+            <help>
+                <letters></letters>
+                <words>kibanda</words>
+            </help>
+            <req>
+                <gather_word count="1">kibanda</gather_word>
+            </req>
+        </level>
+        <level name="40" coins="900" points="1830" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>lori</words>
+            <help>
+                <letters></letters>
+                <words>lori</words>
+            </help>
+            <req>
+                <gather_word count="1">lori</gather_word>
+            </req>
+        </level>
+        <level name="41" coins="900" points="1860" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>msumari</words>
+            <help>
+                <letters></letters>
+                <words>msumari</words>
+            </help>
+            <req>
+                <gather_word count="1">msumari</gather_word>
+            </req>
+        </level>
+        <level name="42" coins="900" points="1880" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>mkate</words>
+            <help>
+                <letters></letters>
+                <words>mkate</words>
+            </help>
+            <req>
+                <gather_word count="1">mkate</gather_word>
+            </req>
+        </level>
+        <level name="43" coins="1000" points="1910" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>kitanda</words>
+            <help>
+                <letters></letters>
+                <words>kitanda</words>
+            </help>
+            <req>
+                <gather_word count="1">kitanda</gather_word>
+            </req>
+        </level>
+        <level name="44" coins="1000" points="1940" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>kuingia</words>
+            <help>
+                <letters></letters>
+                <words>kuingia</words>
+            </help>
+            <req>
+                <gather_word count="1">kuingia</gather_word>
+            </req>
+        </level>
+        <level name="45" coins="1000" points="1960" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>kufuli</words>
+            <help>
+                <letters></letters>
+                <words>kufuli</words>
+            </help>
+            <req>
+                <gather_word count="1">kufuli</gather_word>
+            </req>
+        </level>
+        <level name="46" coins="1000" points="1990" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>ufagio</words>
+            <help>
+                <letters></letters>
+                <words>ufagio</words>
+            </help>
+            <req>
+                <gather_word count="1">ufagio</gather_word>
+            </req>
+        </level>
+        <level name="47" coins="1000" points="2020" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>unaweza</words>
+            <help>
+                <letters></letters>
+                <words>unaweza</words>
+            </help>
+            <req>
+                <gather_word count="1">unaweza</gather_word>
+            </req>
+        </level>
+        <level name="48" coins="1000" points="2040" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>bakuli</words>
+            <help>
+                <letters></letters>
+                <words>bakuli</words>
+            </help>
+            <req>
+                <gather_word count="1">bakuli</gather_word>
+            </req>
+        </level>
+        <level name="49" coins="1000" points="2070" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>shabiki</words>
+            <help>
+                <letters></letters>
+                <words>shabiki</words>
+            </help>
+            <req>
+                <gather_word count="1">shabiki</gather_word>
+            </req>
+        </level>
+        <level name="50" coins="1000" points="2090" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>sindano</words>
+            <help>
+                <letters></letters>
+                <words>sindano</words>
+            </help>
+            <req>
+                <gather_word count="1">sindano</gather_word>
+            </req>
+        </level>
+        <level name="51" coins="1100" points="2120" market="4">
+            <intro>
+            </intro>
+            <letters>c</letters>
+            <words>suruali</words>
+            <help>
+                <letters>c</letters>
+                <words>suruali</words>
+            </help>
+            <req>
+                <gather_letter count="1">c</gather_letter>
+                <gather_word count="1">suruali</gather_word>
+            </req>
+        </level>
+        <level name="52" coins="1100" points="2140" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>chura</words>
+            <help>
+                <letters></letters>
+                <words>chura</words>
+            </help>
+            <req>
+                <gather_word count="1">chura</gather_word>
+            </req>
+        </level>
+        <level name="53" coins="1100" points="2170" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>sufuria</words>
+            <help>
+                <letters></letters>
+                <words>sufuria</words>
+            </help>
+            <req>
+                <gather_word count="1">sufuria</gather_word>
+            </req>
+        </level>
+        <level name="54" coins="1100" points="2190" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>matope</words>
+            <help>
+                <letters></letters>
+                <words>matope</words>
+            </help>
+            <req>
+                <gather_word count="1">matope</gather_word>
+            </req>
+        </level>
+        <level name="55" coins="1100" points="2210" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>pundamilia</words>
+            <help>
+                <letters></letters>
+                <words>pundamilia</words>
+            </help>
+            <req>
+                <gather_word count="1">pundamilia</gather_word>
+            </req>
+        </level>
+        <level name="56" coins="1100" points="2240" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>nyundo</words>
+            <help>
+                <letters></letters>
+                <words>nyundo</words>
+            </help>
+            <req>
+                <gather_word count="1">nyundo</gather_word>
+            </req>
+        </level>
+        <level name="57" coins="1100" points="2260" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>kikombe</words>
+            <help>
+                <letters></letters>
+                <words>kikombe</words>
+            </help>
+            <req>
+                <gather_word count="1">kikombe</gather_word>
+            </req>
+        </level>
+        <level name="58" coins="1100" points="2290" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>uchaguzi</words>
+            <help>
+                <letters></letters>
+                <words>uchaguzi</words>
+            </help>
+            <req>
+                <gather_word count="1">uchaguzi</gather_word>
+            </req>
+        </level>
+        <level name="59" coins="1200" points="2310" market="4">
+            <intro>
+            </intro>
+            <letters>'</letters>
+            <words>nguruwe</words>
+            <help>
+                <letters>'</letters>
+                <words>nguruwe</words>
+            </help>
+            <req>
+                <gather_letter count="1">'</gather_letter>
+                <gather_word count="1">nguruwe</gather_word>
+            </req>
+        </level>
+        <level name="60" coins="1200" points="2330" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>ng'ombe</words>
+            <help>
+                <letters></letters>
+                <words>ng'ombe</words>
+            </help>
+            <req>
+                <gather_word count="1">ng'ombe</gather_word>
+            </req>
+        </level>
+    </levels>
+</locale>

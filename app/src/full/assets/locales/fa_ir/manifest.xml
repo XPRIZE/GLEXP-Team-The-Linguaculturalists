@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<locale name="fa_ir" lang="fa_ir" display_name="Farsi">
+    <shell src="locales/common/textures/gameui.png" />
+    <map src="locales/en_us_rural/map.tmx" />
+    <music src="locales/en_us_rural/sounds/background.mp3" />
+
+    <!-- Default blocks -->
+    <inventory level="1" size="1x2" name="Barn" col="37" row="43" block="locales/en_us_rural/textures/biginventory.png" />
+    <market level="4" size="4x4x4" name="Market" col="42" row="40" block="locales/en_us_rural/textures/market-4x4x4.png" />
+    <workshop level="6" name="Workshop" col="38" row="40" block="locales/en_us_rural/textures/workshop.png" />
+
+    <!-- People used in the marketplace and player's avatar -->
+    <people>
+        <person name="Dave" texture="locales/common/textures/persons/Dave.png" />
+        <person name="Roxanne" texture="locales/common/textures/persons/Roxanne.png" />
+        <person name="Ben" texture="locales/common/textures/persons/Ben.png" />
+        <person name="Laura" texture="locales/common/textures/persons/Laura.png" />
+    </people>
+
+    <!-- Mini-games -->
+    <games>
+        <game level="6"  name="Word Match"  type="wordmatch"  buy="300" construct="120" time="300" reward="1.5" sprite="locales/en_us_rural/textures/games/sprites/minigame1.png" block="locales/en_us_rural/textures/games/blocks/minigame1.png" />
+        <game level="12" name="Image Match" type="imagematch" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
+    </games>
+
+    <!-- Decorations -->
+    <decorations>
+        <decoration level="5"  size="1x1" name="Lamp Post"  buy="200" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
+        <decoration level="10" size="1x1" name="Small Tree" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
+        <decoration level="20" size="2x2" name="Fountain"   buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
+    </decorations>
+
+    <!-- Alphabet -->
+    <letters>
+        <letter name="ا" buy="90" sell="20"  points="15" time="990" sprite="locales/fa_ir/textures/letters/sprites/letter_0.png" block="locales/fa_ir/textures/letters/blocks/letter_0.png" sound="locales/fa_ir/sounds/letter_0-name.ogg" phoneme="locales/fa_ir/sounds/letter_0-phoneme.ogg">ا</letter>
+        <letter name="آ" buy="80" sell="20"  points="14" time="970" sprite="locales/fa_ir/textures/letters/sprites/letter_1.png" block="locales/fa_ir/textures/letters/blocks/letter_1.png" sound="locales/fa_ir/sounds/letter_1-name.ogg" phoneme="locales/fa_ir/sounds/letter_1-phoneme.ogg">آ</letter>
+        <letter name="ب" buy="60" sell="20"  points="13" time="890" sprite="locales/fa_ir/textures/letters/sprites/letter_2.png" block="locales/fa_ir/textures/letters/blocks/letter_2.png" sound="locales/fa_ir/sounds/letter_2-name.ogg" phoneme="locales/fa_ir/sounds/letter_2-phoneme.ogg">ب</letter>
+        <letter name="پ" buy="280" sell="60"  points="18" time="1240" sprite="locales/fa_ir/textures/letters/sprites/letter_3.png" block="locales/fa_ir/textures/letters/blocks/letter_3.png" sound="locales/fa_ir/sounds/letter_3-name.ogg" phoneme="locales/fa_ir/sounds/letter_3-phoneme.ogg">پ</letter>
+        <letter name="ت" buy="50" sell="10"  points="12" time="840" sprite="locales/fa_ir/textures/letters/sprites/letter_4.png" block="locales/fa_ir/textures/letters/blocks/letter_4.png" sound="locales/fa_ir/sounds/letter_4-name.ogg" phoneme="locales/fa_ir/sounds/letter_4-phoneme.ogg">ت</letter>
+        <letter name="ث" buy="50" sell="10"  points="13" time="870" sprite="locales/fa_ir/textures/letters/sprites/letter_5.png" block="locales/fa_ir/textures/letters/blocks/letter_5.png" sound="locales/fa_ir/sounds/letter_5-name.ogg" phoneme="locales/fa_ir/sounds/letter_5-phoneme.ogg">ث</letter>
+        <letter name="ج" buy="270" sell="60"  points="18" time="1230" sprite="locales/fa_ir/textures/letters/sprites/letter_6.png" block="locales/fa_ir/textures/letters/blocks/letter_6.png" sound="locales/fa_ir/sounds/letter_6-name.ogg" phoneme="locales/fa_ir/sounds/letter_6-phoneme.ogg">ج</letter>
+        <letter name="چ" buy="40" sell="10"  points="12" time="790" sprite="locales/fa_ir/textures/letters/sprites/letter_7.png" block="locales/fa_ir/textures/letters/blocks/letter_7.png" sound="locales/fa_ir/sounds/letter_7-name.ogg" phoneme="locales/fa_ir/sounds/letter_7-phoneme.ogg">چ</letter>
+        <letter name="ح" buy="80" sell="20"  points="14" time="950" sprite="locales/fa_ir/textures/letters/sprites/letter_8.png" block="locales/fa_ir/textures/letters/blocks/letter_8.png" sound="locales/fa_ir/sounds/letter_8-name.ogg" phoneme="locales/fa_ir/sounds/letter_8-phoneme.ogg">ح</letter>
+        <letter name="خ" buy="60" sell="20"  points="13" time="910" sprite="locales/fa_ir/textures/letters/sprites/letter_9.png" block="locales/fa_ir/textures/letters/blocks/letter_9.png" sound="locales/fa_ir/sounds/letter_9-name.ogg" phoneme="locales/fa_ir/sounds/letter_9-phoneme.ogg">خ</letter>
+        <letter name="د" buy="70" sell="20"  points="14" time="930" sprite="locales/fa_ir/textures/letters/sprites/letter_10.png" block="locales/fa_ir/textures/letters/blocks/letter_10.png" sound="locales/fa_ir/sounds/letter_10-name.ogg" phoneme="locales/fa_ir/sounds/letter_10-phoneme.ogg">د</letter>
+        <letter name="ذ" buy="130" sell="30"  points="16" time="1060" sprite="locales/fa_ir/textures/letters/sprites/letter_11.png" block="locales/fa_ir/textures/letters/blocks/letter_11.png" sound="locales/fa_ir/sounds/letter_11-name.ogg" phoneme="locales/fa_ir/sounds/letter_11-phoneme.ogg">ذ</letter>
+        <letter name="ر" buy="130" sell="30"  points="16" time="1070" sprite="locales/fa_ir/textures/letters/sprites/letter_12.png" block="locales/fa_ir/textures/letters/blocks/letter_12.png" sound="locales/fa_ir/sounds/letter_12-name.ogg" phoneme="locales/fa_ir/sounds/letter_12-phoneme.ogg">ر</letter>
+        <letter name="ز" buy="110" sell="30"  points="15" time="1030" sprite="locales/fa_ir/textures/letters/sprites/letter_13.png" block="locales/fa_ir/textures/letters/blocks/letter_13.png" sound="locales/fa_ir/sounds/letter_13-name.ogg" phoneme="locales/fa_ir/sounds/letter_13-phoneme.ogg">ز</letter>
+        <letter name="ژ" buy="40" sell="10"  points="12" time="820" sprite="locales/fa_ir/textures/letters/sprites/letter_14.png" block="locales/fa_ir/textures/letters/blocks/letter_14.png" sound="locales/fa_ir/sounds/letter_14-name.ogg" phoneme="locales/fa_ir/sounds/letter_14-phoneme.ogg">ژ</letter>
+        <letter name="س" buy="120" sell="30"  points="15" time="1050" sprite="locales/fa_ir/textures/letters/sprites/letter_15.png" block="locales/fa_ir/textures/letters/blocks/letter_15.png" sound="locales/fa_ir/sounds/letter_15-name.ogg" phoneme="locales/fa_ir/sounds/letter_15-phoneme.ogg">س</letter>
+        <letter name="ش" buy="160" sell="40"  points="16" time="1110" sprite="locales/fa_ir/textures/letters/sprites/letter_16.png" block="locales/fa_ir/textures/letters/blocks/letter_16.png" sound="locales/fa_ir/sounds/letter_16-name.ogg" phoneme="locales/fa_ir/sounds/letter_16-phoneme.ogg">ش</letter>
+        <letter name="ص" buy="160" sell="40"  points="17" time="1120" sprite="locales/fa_ir/textures/letters/sprites/letter_17.png" block="locales/fa_ir/textures/letters/blocks/letter_17.png" sound="locales/fa_ir/sounds/letter_17-name.ogg" phoneme="locales/fa_ir/sounds/letter_17-phoneme.ogg">ص</letter>
+        <letter name="ض" buy="140" sell="30"  points="16" time="1080" sprite="locales/fa_ir/textures/letters/sprites/letter_18.png" block="locales/fa_ir/textures/letters/blocks/letter_18.png" sound="locales/fa_ir/sounds/letter_18-name.ogg" phoneme="locales/fa_ir/sounds/letter_18-phoneme.ogg">ض</letter>
+        <letter name="ط" buy="150" sell="30"  points="16" time="1100" sprite="locales/fa_ir/textures/letters/sprites/letter_19.png" block="locales/fa_ir/textures/letters/blocks/letter_19.png" sound="locales/fa_ir/sounds/letter_19-name.ogg" phoneme="locales/fa_ir/sounds/letter_19-phoneme.ogg">ط</letter>
+        <letter name="ظ" buy="100" sell="20"  points="15" time="1000" sprite="locales/fa_ir/textures/letters/sprites/letter_20.png" block="locales/fa_ir/textures/letters/blocks/letter_20.png" sound="locales/fa_ir/sounds/letter_20-name.ogg" phoneme="locales/fa_ir/sounds/letter_20-phoneme.ogg">ظ</letter>
+        <letter name="ع" buy="100" sell="20"  points="15" time="1020" sprite="locales/fa_ir/textures/letters/sprites/letter_21.png" block="locales/fa_ir/textures/letters/blocks/letter_21.png" sound="locales/fa_ir/sounds/letter_21-name.ogg" phoneme="locales/fa_ir/sounds/letter_21-phoneme.ogg">ع</letter>
+        <letter name="غ" buy="230" sell="50"  points="18" time="1190" sprite="locales/fa_ir/textures/letters/sprites/letter_22.png" block="locales/fa_ir/textures/letters/blocks/letter_22.png" sound="locales/fa_ir/sounds/letter_22-name.ogg" phoneme="locales/fa_ir/sounds/letter_22-phoneme.ogg">غ</letter>
+        <letter name="ف" buy="180" sell="40"  points="17" time="1140" sprite="locales/fa_ir/textures/letters/sprites/letter_23.png" block="locales/fa_ir/textures/letters/blocks/letter_23.png" sound="locales/fa_ir/sounds/letter_23-name.ogg" phoneme="locales/fa_ir/sounds/letter_23-phoneme.ogg">ف</letter>
+        <letter name="ق" buy="190" sell="40"  points="17" time="1150" sprite="locales/fa_ir/textures/letters/sprites/letter_24.png" block="locales/fa_ir/textures/letters/blocks/letter_24.png" sound="locales/fa_ir/sounds/letter_24-name.ogg" phoneme="locales/fa_ir/sounds/letter_24-phoneme.ogg">ق</letter>
+        <letter name="ک" buy="260" sell="60"  points="18" time="1220" sprite="locales/fa_ir/textures/letters/sprites/letter_25.png" block="locales/fa_ir/textures/letters/blocks/letter_25.png" sound="locales/fa_ir/sounds/letter_25-name.ogg" phoneme="locales/fa_ir/sounds/letter_25-phoneme.ogg">ک</letter>
+        <letter name="گ" buy="240" sell="50"  points="18" time="1210" sprite="locales/fa_ir/textures/letters/sprites/letter_26.png" block="locales/fa_ir/textures/letters/blocks/letter_26.png" sound="locales/fa_ir/sounds/letter_26-name.ogg" phoneme="locales/fa_ir/sounds/letter_26-phoneme.ogg">گ</letter>
+        <letter name="ل" buy="220" sell="50"  points="17" time="1180" sprite="locales/fa_ir/textures/letters/sprites/letter_27.png" block="locales/fa_ir/textures/letters/blocks/letter_27.png" sound="locales/fa_ir/sounds/letter_27-name.ogg" phoneme="locales/fa_ir/sounds/letter_27-phoneme.ogg">ل</letter>
+        <letter name="م" buy="200" sell="40"  points="17" time="1160" sprite="locales/fa_ir/textures/letters/sprites/letter_28.png" block="locales/fa_ir/textures/letters/blocks/letter_28.png" sound="locales/fa_ir/sounds/letter_28-name.ogg" phoneme="locales/fa_ir/sounds/letter_28-phoneme.ogg">م</letter>
+        <letter name="ن" buy="250" sell="50"  points="18" time="1210" sprite="locales/fa_ir/textures/letters/sprites/letter_29.png" block="locales/fa_ir/textures/letters/blocks/letter_29.png" sound="locales/fa_ir/sounds/letter_29-name.ogg" phoneme="locales/fa_ir/sounds/letter_29-phoneme.ogg">ن</letter>
+        <letter name="و" buy="170" sell="40"  points="17" time="1130" sprite="locales/fa_ir/textures/letters/sprites/letter_30.png" block="locales/fa_ir/textures/letters/blocks/letter_30.png" sound="locales/fa_ir/sounds/letter_30-name.ogg" phoneme="locales/fa_ir/sounds/letter_30-phoneme.ogg">و</letter>
+        <letter name="ه" buy="210" sell="50"  points="17" time="1170" sprite="locales/fa_ir/textures/letters/sprites/letter_31.png" block="locales/fa_ir/textures/letters/blocks/letter_31.png" sound="locales/fa_ir/sounds/letter_31-name.ogg" phoneme="locales/fa_ir/sounds/letter_31-phoneme.ogg">ه</letter>
+        <letter name="ی" buy="230" sell="50"  points="18" time="1200" sprite="locales/fa_ir/textures/letters/sprites/letter_32.png" block="locales/fa_ir/textures/letters/blocks/letter_32.png" sound="locales/fa_ir/sounds/letter_32-name.ogg" phoneme="locales/fa_ir/sounds/letter_32-phoneme.ogg">ی</letter>
+    </letters>
+
+    <!-- Words -->
+    <words>
+        <word name="آب" size="1x1" buy="100" sell="10" points="10" construct="180" time="120" sprite="locales/fa_ir/textures/words/sprites/word_0.png" block="locales/fa_ir/textures/words/blocks/word_0.png" sound="locales/fa_ir/sounds/word_0.ogg">آب</word>
+        <word name="آبی" size="1x1" buy="210" sell="20" points="34" construct="180" time="120" sprite="locales/fa_ir/textures/words/sprites/word_1.png" block="locales/fa_ir/textures/words/blocks/word_1.png" sound="locales/fa_ir/sounds/word_1.ogg">آبی</word>
+        <word name="آلو" size="1x1" buy="850" sell="70" points="97" construct="2700" time="1200" sprite="locales/fa_ir/textures/words/sprites/word_2.png" block="locales/fa_ir/textures/words/blocks/word_2.png" sound="locales/fa_ir/sounds/word_2.ogg">آلو</word>
+        <word name="بابا" size="1x1" buy="590" sell="50" points="80" construct="1800" time="600" sprite="locales/fa_ir/textures/words/sprites/word_3.png" block="locales/fa_ir/textures/words/blocks/word_3.png" sound="locales/fa_ir/sounds/word_3.ogg">بابا</word>
+        <word name="باد" size="1x1" buy="330" sell="30" points="54" construct="900" time="600" sprite="locales/fa_ir/textures/words/sprites/word_4.png" block="locales/fa_ir/textures/words/blocks/word_4.png" sound="locales/fa_ir/sounds/word_4.ogg">باد</word>
+        <word name="باران" size="1x1" buy="460" sell="40" points="69" construct="900" time="600" sprite="locales/fa_ir/textures/words/sprites/word_5.png" block="locales/fa_ir/textures/words/blocks/word_5.png" sound="locales/fa_ir/sounds/word_5.ogg">باران</word>
+        <word name="توت" size="1x1" buy="720" sell="60" points="89" construct="2700" time="600" sprite="locales/fa_ir/textures/words/sprites/word_6.png" block="locales/fa_ir/textures/words/blocks/word_6.png" sound="locales/fa_ir/sounds/word_6.ogg">توت</word>
+        <word name="نان" size="1x1" buy="980" sell="80" points="104" construct="3600" time="1200" sprite="locales/fa_ir/textures/words/sprites/word_7.png" block="locales/fa_ir/textures/words/blocks/word_7.png" sound="locales/fa_ir/sounds/word_7.ogg">نان</word>
+    </words>
+
+    <!-- Levels -->
+    <levels>
+        <level name="1" coins="100" points="200" market="0">
+            <intro>
+            </intro>
+            <letters>آ</letters>
+            <words></words>
+            <help>
+                <letters>آ</letters>
+                <words></words>
+            </help>
+            <req>
+                <gather_letter count="1">آ</gather_letter>
+            </req>
+        </level>
+        <level name="2" coins="200" points="300" market="1">
+            <intro>
+            </intro>
+            <letters>ب</letters>
+            <words></words>
+            <help>
+                <letters>ب</letters>
+                <words></words>
+            </help>
+            <req>
+                <gather_letter count="1">ب</gather_letter>
+            </req>
+        </level>
+        <level name="3" coins="200" points="390" market="2">
+            <intro>
+            </intro>
+            <letters>ی</letters>
+            <words>آب</words>
+            <help>
+                <letters>ی</letters>
+                <words>آب</words>
+            </help>
+            <req>
+                <gather_letter count="1">ی</gather_letter>
+                <gather_word count="1">آب</gather_word>
+            </req>
+        </level>
+        <level name="4" coins="200" points="460" market="3">
+            <intro>
+            </intro>
+            <letters>ا,د</letters>
+            <words>آبی</words>
+            <help>
+                <letters>ا,د</letters>
+                <words>آبی</words>
+            </help>
+            <req>
+                <gather_letter count="1">ا</gather_letter>
+                <gather_letter count="1">د</gather_letter>
+                <gather_word count="1">آبی</gather_word>
+            </req>
+        </level>
+        <level name="5" coins="300" points="530" market="3">
+            <intro>
+            </intro>
+            <letters>ر,ن</letters>
+            <words>باد</words>
+            <help>
+                <letters>ر,ن</letters>
+                <words>باد</words>
+            </help>
+            <req>
+                <gather_letter count="1">ر</gather_letter>
+                <gather_letter count="1">ن</gather_letter>
+                <gather_word count="1">باد</gather_word>
+            </req>
+        </level>
+        <level name="6" coins="300" points="590" market="3">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>باران</words>
+            <help>
+                <letters></letters>
+                <words>باران</words>
+            </help>
+            <req>
+                <gather_word count="1">باران</gather_word>
+            </req>
+        </level>
+        <level name="7" coins="300" points="640" market="4">
+            <intro>
+            </intro>
+            <letters>ت,و</letters>
+            <words>بابا</words>
+            <help>
+                <letters>ت,و</letters>
+                <words>بابا</words>
+            </help>
+            <req>
+                <gather_letter count="1">ت</gather_letter>
+                <gather_letter count="1">و</gather_letter>
+                <gather_word count="1">بابا</gather_word>
+            </req>
+        </level>
+        <level name="8" coins="300" points="700" market="4">
+            <intro>
+            </intro>
+            <letters>ل</letters>
+            <words>توت</words>
+            <help>
+                <letters>ل</letters>
+                <words>توت</words>
+            </help>
+            <req>
+                <gather_letter count="1">ل</gather_letter>
+                <gather_word count="1">توت</gather_word>
+            </req>
+        </level>
+        <level name="9" coins="400" points="750" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>آلو</words>
+            <help>
+                <letters></letters>
+                <words>آلو</words>
+            </help>
+            <req>
+                <gather_word count="1">آلو</gather_word>
+            </req>
+        </level>
+        <level name="10" coins="400" points="800" market="4">
+            <intro>
+            </intro>
+            <letters></letters>
+            <words>نان</words>
+            <help>
+                <letters></letters>
+                <words>نان</words>
+            </help>
+            <req>
+                <gather_word count="1">نان</gather_word>
+            </req>
+        </level>
+    </levels>
+</locale>
