@@ -29,7 +29,12 @@ android {
         targetCompatibility JavaVersion.VERSION_1_6
     }
     productFlavors {
-        xprize {
+        xprizeEn {
+            applicationId "com.linguaculturalists.phoenicia.xprize.en"
+
+        }
+        xprizeSw {
+            applicationId "com.linguaculturalists.phoenicia.xprize.sw"
 
         }
         full {
