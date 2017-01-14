@@ -1,5 +1,7 @@
 package com.linguaculturalists.phoenicia;
 
+import android.view.View;
+
 import com.linguaculturalists.phoenicia.locale.LocaleManager;
 import com.linguaculturalists.phoenicia.models.DecorationTile;
 import com.linguaculturalists.phoenicia.models.DefaultTile;
@@ -50,6 +52,17 @@ public class GameActivity extends BaseGameActivity {
     public SmoothCamera main_camera = new SmoothCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT, 2000f, 2000f, 10f);
     private PhoeniciaGame game;
     private SplashScene splash;
+
+    @Override
+    protected void onSetContentView() {
+        super.onSetContentView();
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        decorView.setSystemUiVisibility(uiOptions);
+
+    }
 
     @Override
     public EngineOptions onCreateEngineOptions() {
