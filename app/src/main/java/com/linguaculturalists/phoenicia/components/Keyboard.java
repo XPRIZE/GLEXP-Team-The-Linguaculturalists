@@ -3,7 +3,9 @@ package com.linguaculturalists.phoenicia.components;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
+import com.linguaculturalists.phoenicia.models.Assets;
 import com.linguaculturalists.phoenicia.models.Inventory;
+import com.linguaculturalists.phoenicia.ui.LetterPlacementHUD;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
@@ -25,13 +27,12 @@ import java.util.Map;
 /**
  * Created by mhall on 1/11/17.
  */
-public class Keyboard extends Entity {
+public class Keyboard extends Scrollable {
     private PhoeniciaGame game;
     private int details;
     private KeyClickListener listener;
     private Map<String, Text> inventoryCounts;
     private Map<String, Integer> usedCounts;
-    private List<ITouchArea> touchAreas;
 
     public static final int SHOW_NONE = 0;
     public static final int SHOW_INVENTORY = 1;
@@ -48,7 +49,6 @@ public class Keyboard extends Entity {
 
         this.inventoryCounts = new HashMap<String, Text>();
         this.usedCounts = new HashMap<String, Integer>();
-        this.touchAreas = new ArrayList<ITouchArea>();
 
         /**
          * Start available letters area
@@ -90,7 +90,8 @@ public class Keyboard extends Entity {
                         this.inventoryCounts.put(currentLetter.name, inventoryCount);
                         this.usedCounts.put(currentLetter.name, 0);
                 } else if (this.details == this.SHOW_COST) {
-                    final Text letterCost = new Text(startX + (96 * offsetX) - 20, offsetY - 40, GameFonts.itemCost() , "" + currentLetter.buy, 4, PhoeniciaContext.vboManager);
+                    final int cost = currentLetter.buy * (int)Math.pow(LetterPlacementHUD.costMultiplier, Assets.getInsance().getLetterTileCount(currentLetter));
+                    final Text letterCost = new Text(startX + (96 * offsetX) - 20, offsetY - 40, GameFonts.itemCost() , "" + cost, 5, PhoeniciaContext.vboManager);
                     this.attachChild(letterCost);
                     this.inventoryCounts.put(currentLetter.name, letterCost);
                 }
@@ -101,31 +102,6 @@ public class Keyboard extends Entity {
             offsetX++;
         }
 
-    }
-
-    public void registerTouchArea(ITouchArea area) {
-        this.touchAreas.add(area);
-    }
-    public void unregisterTouchArea(ITouchArea area) {
-        if (this.touchAreas.contains(area)) this.touchAreas.remove(area);
-    }
-
-    @Override
-    public boolean onAreaTouched(final TouchEvent pTouchEvent, final float touchX, final float touchY) {
-        final float sceneTouchX = pTouchEvent.getX();
-        final float sceneTouchY = pTouchEvent.getY();
-        for (ITouchArea area: this.touchAreas) {
-            if (area.contains(sceneTouchX, sceneTouchY)) {
-                final float[] areaTouchCoordinates = area.convertSceneCoordinatesToLocalCoordinates(sceneTouchX, sceneTouchY);
-                final float areaTouchX = areaTouchCoordinates[Constants.VERTEX_INDEX_X];
-                final float areaTouchY = areaTouchCoordinates[Constants.VERTEX_INDEX_Y];
-                final Boolean ishandled = area.onAreaTouched(pTouchEvent, areaTouchX, areaTouchY);
-                if (ishandled != null && ishandled) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     public void setOnKeyClickListener(KeyClickListener listener) {

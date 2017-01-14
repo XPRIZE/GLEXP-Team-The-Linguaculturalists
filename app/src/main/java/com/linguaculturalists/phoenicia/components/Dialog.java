@@ -41,11 +41,8 @@ public class Dialog extends Entity {
     public Dialog(final float pWidth, final float pHeight, Buttons buttons, VertexBufferObjectManager vbo, final DialogListener listener) {
         super(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, pWidth, pHeight);
         this.listener = listener;
-        Rectangle border = new Rectangle(pWidth/2, pHeight/2, pWidth+2, pHeight+2, vbo);
-        border.setColor(new Color(0.3f, 0.3f, 0.3f));
-        this.attachChild(border);
 
-        Rectangle background = new Rectangle(pWidth/2, pHeight/2, pWidth, pHeight, vbo);
+        Rectangle background = new BorderRectangle(pWidth/2, pHeight/2, pWidth, pHeight, vbo);
         background.setColor(new Color(0.95f, 0.95f, 0.95f));
         this.attachChild(background);
 

@@ -17,12 +17,15 @@ import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.models.LetterTile;
 import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.GameSounds;
+import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.ButtonSprite;
+import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.AutoWrap;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
@@ -31,7 +34,9 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
+import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
+import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
@@ -47,16 +52,14 @@ import java.util.Map;
  */
 public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateListener {
     private Letter placeBlock = null;
-    private Map<String, Text> inventoryCounts;
 
     private Rectangle whiteRect;
-    private Scrollable blockPanel;
     private Keyboard letterPanel;
 
     private ClickDetector clickDetector;
 
     private boolean placementDone = false;
-    private static final int costMultiplier = 5;
+    public static final int costMultiplier = 5;
 
     /**
      * HUD for selecting \link Letter Letters \endlink to be placed as tiles onto the map.
@@ -67,7 +70,6 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
         super(game);
         this.setBackgroundEnabled(false);
         this.setOnAreaTouchTraversalFrontToBack();
-        this.inventoryCounts = new HashMap<String, Text>();
         Bank.getInstance().addUpdateListener(this);
         this.game = game;
 
@@ -88,16 +90,9 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
         this.attachChild(whiteRect);
         this.registerTouchArea(whiteRect);
 
-        this.blockPanel = new Scrollable(GameActivity.CAMERA_WIDTH/2, 125, 800, 250, Scrollable.SCROLL_VERTICAL);
-        this.blockPanel.setPadding(16);
-
-        this.registerTouchArea(blockPanel);
-        this.registerTouchArea(blockPanel.contents);
-        this.attachChild(blockPanel);
-
-        letterPanel = new Keyboard(blockPanel.getWidth()/2, blockPanel.getHeight()/2, 800, 250, this.game, Keyboard.SHOW_COST);
-        this.blockPanel.registerTouchArea(letterPanel);
-        this.blockPanel.attachChild(letterPanel);
+        letterPanel = new Keyboard(GameActivity.CAMERA_WIDTH/2, 125, 800, 250, this.game, Keyboard.SHOW_COST);
+        this.registerTouchArea(letterPanel);
+        this.attachChild(letterPanel);
         letterPanel.setOnKeyClickListener(new Keyboard.KeyClickListener() {
             @Override
             public void onKeyClicked(Letter l) {
@@ -116,7 +111,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
     public void show() {
         if (placementDone) this.finish();
         whiteRect.registerEntityModifier(new MoveYModifier(0.5f, -125, 125, EaseBackOut.getInstance()));
-        blockPanel.registerEntityModifier(new MoveYModifier(0.5f, -125, 125, EaseBackOut.getInstance()));
+        letterPanel.registerEntityModifier(new MoveYModifier(0.5f, -125, 125, EaseBackOut.getInstance()));
     }
 
     /**
@@ -159,11 +154,16 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
                 }
             });
             int difference = cost - game.session.account_balance.get();
-            Text confirmText = new Text(lowBalanceDialog.getWidth()/2, lowBalanceDialog.getHeight()-48, GameFonts.dialogText(), "You need "+difference+" more coins", 30,  new TextOptions(AutoWrap.WORDS, lowBalanceDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+            Text confirmText = new Text(lowBalanceDialog.getWidth()/2 + 48, lowBalanceDialog.getHeight()/2 + 32, GameFonts.dialogText(), " -"+difference, 6,  new TextOptions(AutoWrap.WORDS, lowBalanceDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
             lowBalanceDialog.attachChild(confirmText);
+
+            ITextureRegion coinRegion = GameUI.getInstance().getCoinsIcon();
+            Sprite coinIcon = new Sprite(lowBalanceDialog.getWidth()/2 - 48, lowBalanceDialog.getHeight()/2 + 32, coinRegion, PhoeniciaContext.vboManager);
+            lowBalanceDialog.attachChild(coinIcon);
 
             lowBalanceDialog.open(this);
             this.registerTouchArea(lowBalanceDialog);
+            GameSounds.play(GameSounds.FAILED);
             return;
         }
         Debug.d("Placing letter "+letter.name+" at "+onTile.getTileColumn()+"x"+onTile.getTileRow());

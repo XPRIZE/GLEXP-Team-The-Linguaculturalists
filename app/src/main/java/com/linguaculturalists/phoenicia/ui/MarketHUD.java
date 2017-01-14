@@ -247,13 +247,17 @@ public class MarketHUD extends PhoeniciaHUD {
         Market.getInstance().cancelRequest(request);
         requestItemsPane.detachChildren();
         Sprite personSprite = requestPerson.get(request);
-        unregisterTouchArea(personSprite);
-        personSprite.detachSelf();
-        requestPerson.remove(request);
+        if (personSprite != null) {
+            unregisterTouchArea(personSprite);
+            personSprite.detachSelf();
+            requestPerson.remove(request);
+        }
 
         Text personName = requestName.get(request);
-        personName.detachSelf();
-        requestName.remove(request);
+        if (personName != null) {
+            personName.detachSelf();
+            requestName.remove(request);
+        }
 
         Debug.d("Remaining requests: "+requestPerson.size());
         if (requestPerson.size() < 1) {

@@ -47,6 +47,14 @@ public class GameUI {
         return TextureRegionFactory.extractFromTexture(this.gameui, GU*2, GU*0, GU*1, GU*1);
     }
 
+    public ITextureRegion getPrevIcon() {
+        return TextureRegionFactory.extractFromTexture(this.gameui, GU*3, GU*0, GU*1, GU*1);
+    }
+
+    public ITextureRegion getNextIcon() {
+        return TextureRegionFactory.extractFromTexture(this.gameui, GU*4, GU*0, GU*1, GU*1);
+    }
+
     public ITextureRegion getLetterLauncher() {
         return TextureRegionFactory.extractFromTexture(this.gameui, GU*0, GU*1, GU*1, GU*1);
     }

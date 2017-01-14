@@ -1,66 +1,53 @@
 package com.linguaculturalists.phoenicia.ui;
 
-import android.content.Context;
-import android.graphics.Typeface;
 import android.media.MediaPlayer;
 
 import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.BorderRectangle;
 import com.linguaculturalists.phoenicia.components.Button;
-import com.linguaculturalists.phoenicia.components.Scrollable;
 import com.linguaculturalists.phoenicia.locale.IntroPage;
-import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Level;
-import com.linguaculturalists.phoenicia.locale.Word;
-import com.linguaculturalists.phoenicia.models.Inventory;
-import com.linguaculturalists.phoenicia.models.InventoryItem;
+import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
-import org.andengine.audio.sound.Sound;
-import org.andengine.audio.sound.SoundFactory;
-import org.andengine.audio.sound.SoundManager;
+import org.andengine.entity.modifier.MoveXModifier;
 import org.andengine.entity.primitive.Rectangle;
-import org.andengine.entity.scene.CameraScene;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.ButtonSprite;
+import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.AutoWrap;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.font.Font;
-import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.Texture;
-import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
+import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.opengl.texture.region.TextureRegionFactory;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
 
-import java.io.Closeable;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Display level transition text pages, images and sound.
  */
 public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener, ClickDetector.IClickDetectorListener, MediaPlayer.OnCompletionListener {
-    private Scrollable textPanel;
+    private Rectangle messageBox;
+    private Sprite guideSprite;
     private Level level;
     private int current_page;
-    private Font introPageFont;
-    private ITiledTextureRegion[] introPageImages;
 
     private ClickDetector clickDetector;
-    private Button nextButton;
+    private ButtonSprite nextButton;
 
     /**
      * Display level transition text pages, images and sound.
@@ -75,39 +62,36 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
         this.current_page = 0;
         this.setOnSceneTouchListener(this);
 
-        final float dialogWidth = GameActivity.CAMERA_WIDTH * 0.6f;
-        final float dialogHeight = GameActivity.CAMERA_HEIGHT * 0.75f;
-        Rectangle whiteRect = new BorderRectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, dialogWidth, dialogHeight, PhoeniciaContext.vboManager);
-        whiteRect.setColor(Color.WHITE);
-        this.attachChild(whiteRect);
+        Debug.d("New level guide: "+game.locale.tour.guide.name);
+        this.guideSprite = new Sprite(-112, 160, game.personTiles.get(game.locale.tour.guide), PhoeniciaContext.vboManager);
+        this.attachChild(guideSprite);
+        final float messageBoxWidth = this.getWidth()-this.guideSprite.getWidth()-32;
+        final float messageBoxHeight = 256;
 
-        textPanel = new Scrollable(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, dialogWidth, dialogHeight, Scrollable.SCROLL_VERTICAL);
-        this.attachChild(textPanel);
-
-        introPageFont = FontFactory.create(PhoeniciaContext.fontManager, PhoeniciaContext.textureManager, 256, 256, TextureOptions.BILINEAR, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 36, Color.BLUE_ARGB_PACKED_INT);
-        introPageFont.load();
-
-        this.registerTouchArea(textPanel);
-        this.registerTouchArea(textPanel.contents);
-        //this.attachChild(textPanel);
-
-        this.introPageImages = new ITiledTextureRegion[level.intro.size()];
-        for (int i = 0; i < level.intro.size(); i++) {
-            IntroPage page = level.intro.get(i);
-            if (page.texture_src != null && page.texture_src != "") {
-                try {
-                    final Texture imageTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, page.texture_src);
-                    imageTexture.load();
-                    this.introPageImages[i] = TextureRegionFactory.extractTiledFromTexture(imageTexture, 0, 0, 128 * 4, 128 * 1, 4, 1);
-                } catch (IOException e) {
-                    Debug.e("Failed to load IntroPage texture: "+page.texture_src, e);
-                }
-            }
+        String texture = "textures/tour/tour-focus-none.png";
+        try {
+            final AssetBitmapTexture spotlight_texture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, texture);
+            spotlight_texture.load();
+            TextureRegion spotlight_region = TextureRegionFactory.extractFromTexture(spotlight_texture);
+            Sprite backdrop = new Sprite(this.getWidth()/2, this.getHeight()/2, spotlight_region, PhoeniciaContext.vboManager);
+            backdrop.setZIndex(guideSprite.getZIndex()-1);
+            this.attachChild(backdrop);
+            this.sortChildren();
+        } catch (IOException e) {
+            Debug.e("Failed to load spotlight texture: "+texture);
         }
 
-        this.nextButton = new Button(whiteRect.getWidth() - 100, 50, 150, 60, "Next", PhoeniciaContext.vboManager, new Button.OnClickListener() {
+        Debug.d("New Level into guide sprite width: "+this.guideSprite.getWidth());
+        this.messageBox = new BorderRectangle((messageBoxWidth/2)+this.guideSprite.getWidth(), this.guideSprite.getY(), messageBoxWidth, messageBoxHeight, PhoeniciaContext.vboManager);
+        this.messageBox.setColor(Color.WHITE);
+        this.attachChild(messageBox);
+        this.registerTouchArea(messageBox);
+
+        ITextureRegion nextRegion = GameUI.getInstance().getNextIcon();
+        this.nextButton = new ButtonSprite(messageBox.getWidth() - 48, 50, nextRegion, PhoeniciaContext.vboManager);
+        this.nextButton.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
-            public void onClicked(Button button) {
+            public void onClick(ButtonSprite buttonSprite, float v, float v1) {
                 if (current_page+1 < level.intro.size()) {
                     nextButton.setVisible(false);
                     showPage(current_page + 1);
@@ -116,9 +100,9 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
                 }
             }
         });
-        nextButton.setVisible(false);
-        this.registerTouchArea(nextButton);
-        whiteRect.attachChild(nextButton);
+        this.nextButton.setVisible(false);
+        this.registerTouchArea(this.nextButton);
+        this.messageBox.attachChild(this.nextButton);
         Debug.d("Finished instantiating LevelIntroHUD");
 
         this.clickDetector = new ClickDetector(this);
@@ -130,6 +114,7 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
     @Override
     public void show() {
         this.showPage(this.current_page);
+        this.guideSprite.registerEntityModifier(new MoveXModifier(0.5f, -128, 128));
     }
 
     /**
@@ -140,24 +125,24 @@ public class LevelIntroHUD extends PhoeniciaHUD implements IOnSceneTouchListener
         Debug.d("Showing page: "+page_index);
         this.current_page = page_index;
         final String nextPage = level.intro.get(page_index).text;
-        final TextOptions introTextOptions = new TextOptions(AutoWrap.WORDS, textPanel.getWidth(), HorizontalAlign.CENTER);
-        final Text introPageText = new Text(textPanel.getWidth()/2, textPanel.getHeight()/2, introPageFont, nextPage, introTextOptions, PhoeniciaContext.vboManager);
-        introPageText.setPosition(textPanel.getWidth() / 2, textPanel.getHeight() - (introPageText.getHeight() / 2));
+        final TextOptions introTextOptions = new TextOptions(AutoWrap.WORDS, messageBox.getWidth()-64, HorizontalAlign.LEFT);
+        final Text introPageText = new Text(messageBox.getWidth()/2 - 32, messageBox.getHeight()/2, GameFonts.introText(), nextPage, introTextOptions, PhoeniciaContext.vboManager);
+        introPageText.setPosition(messageBox.getWidth() / 2, messageBox.getHeight() - (introPageText.getHeight() / 2));
 
-        textPanel.detachChildren();
-        textPanel.attachChild(introPageText);
+        this.messageBox.setHeight(introPageText.getHeight() + 64);
+        introPageText.setPosition(this.messageBox.getWidth() / 2 + 16, this.messageBox.getHeight() - (introPageText.getHeight() / 2));
 
-        if (this.introPageImages[page_index] != null) {
-            final AnimatedSprite introImage = new AnimatedSprite(textPanel.getWidth()/2, textPanel.getHeight() - introPageText.getHeight() - 64, this.introPageImages[page_index], PhoeniciaContext.vboManager);
-            textPanel.attachChild(introImage);
-            introImage.animate(500);
-        }
+        messageBox.detachChildren();
+        messageBox.attachChild(introPageText);
+        messageBox.attachChild(this.nextButton);
+
         game.playLevelSound(level.intro.get(page_index).sound, this);
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        nextButton.setVisible(true);
+        Debug.d("Showing next button now!");
+        this.nextButton.setVisible(true);
     }
 
     /**

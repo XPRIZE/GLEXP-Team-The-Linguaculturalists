@@ -14,6 +14,7 @@ import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.WordTileBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.GameSounds;
 import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
@@ -83,8 +84,9 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
         this.attachChild(whiteRect);
         this.registerTouchArea(whiteRect);
 
-        Rectangle background = new Rectangle(GameActivity.CAMERA_WIDTH/2, GameActivity.CAMERA_HEIGHT/2, 550, 300, PhoeniciaContext.vboManager);
+        BorderRectangle background = new BorderRectangle(GameActivity.CAMERA_WIDTH/2, GameActivity.CAMERA_HEIGHT/2, 550, 300, PhoeniciaContext.vboManager);
         background.setColor(new Color(0.9f, 0.9f, 0.9f));
+        background.setBorderColor(new Color(0.8f, 0.8f, 0.8f));
         this.attachChild(background);
         this.blockPanel = new Scrollable(GameActivity.CAMERA_WIDTH/2, GameActivity.CAMERA_HEIGHT/2, 550, 300, Scrollable.SCROLL_HORIZONTAL);
         this.blockPanel.setPadding(16);
@@ -117,24 +119,43 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
             block.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                    float[] cameraCenter = getCamera().getSceneCoordinatesFromCameraSceneCoordinates(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2);
-                    TMXTile mapTile = game.getTileAt(cameraCenter[0], cameraCenter[1]);
-                    addWordTile(currentWord, mapTile);
+                    game.playBlockSound(currentWord.sound);
                 }
             });
-            if (!level.words.contains(currentWord)) {
-                block.setEnabled(false);
-            }
             this.registerTouchArea(block);
             card.attachChild(block);
 
-            int cost = currentWord.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getWordTileCount(currentWord));
+            if (level.words.contains(currentWord)) {
+                int cost = currentWord.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getWordTileCount(currentWord));
 
-            final ITextureRegion coinRegion = GameUI.getInstance().getCoinsButton();
-            final Sprite coinIcon = new Sprite((card.getWidth()/2), (coinRegion.getHeight()/2), coinRegion, PhoeniciaContext.vboManager);
-            final Text purchaseCost = new Text(100, coinIcon.getHeight()/2, GameFonts.defaultHUDDisplay(), String.valueOf(cost), String.valueOf(cost).length(), PhoeniciaContext.vboManager);
-            coinIcon.attachChild(purchaseCost);
-            card.attachChild(coinIcon);
+                final ITextureRegion coinRegion = GameUI.getInstance().getCoinsButton();
+                final ButtonSprite coinIcon = new ButtonSprite((card.getWidth()/2), (coinRegion.getHeight()/2), coinRegion, PhoeniciaContext.vboManager);
+                coinIcon.setOnClickListener(new ButtonSprite.OnClickListener() {
+                    @Override
+                    public void onClick(ButtonSprite buttonSprite, float v, float v2) {
+                        float[] cameraCenter = getCamera().getSceneCoordinatesFromCameraSceneCoordinates(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2);
+                        TMXTile mapTile = game.getTileAt(cameraCenter[0], cameraCenter[1]);
+                        addWordTile(currentWord, mapTile);
+                    }
+                });
+                final Text purchaseCost = new Text(100, coinIcon.getHeight()/2, GameFonts.defaultHUDDisplay(), String.valueOf(cost), String.valueOf(cost).length(), PhoeniciaContext.vboManager);
+                coinIcon.attachChild(purchaseCost);
+                card.attachChild(coinIcon);
+                this.registerTouchArea(coinIcon);
+            } else {
+                ITextureRegion levelRegion = GameUI.getInstance().getLevelButton();
+                final ButtonSprite levelIcon = new ButtonSprite((card.getWidth()/2), levelRegion.getHeight()/2, levelRegion, PhoeniciaContext.vboManager);
+                levelIcon.setOnClickListener(new ButtonSprite.OnClickListener() {
+                    @Override
+                    public void onClick(ButtonSprite buttonSprite, float v, float v2) {
+                        game.hudManager.showNextLevelReq(level);
+                    }
+                });
+                final Text levelName = new Text(110, levelIcon.getHeight()/2, GameFonts.defaultHUDDisplay(), level.next.name, level.next.name.length(), PhoeniciaContext.vboManager);
+                levelIcon.attachChild(levelName);
+                card.attachChild(levelIcon);
+                this.registerTouchArea(levelIcon);
+            }
         }
         Debug.d("Finished loading HUD letters");
 
@@ -192,11 +213,16 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
                 }
             });
             int difference = cost - game.session.account_balance.get();
-            Text confirmText = new Text(lowBalanceDialog.getWidth()/2, lowBalanceDialog.getHeight()-48, GameFonts.dialogText(), "You need "+difference+" more coins", 30,  new TextOptions(AutoWrap.WORDS, lowBalanceDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+            Text confirmText = new Text(lowBalanceDialog.getWidth()/2 + 48, lowBalanceDialog.getHeight()/2 + 32, GameFonts.dialogText(), " -"+difference, 6,  new TextOptions(AutoWrap.WORDS, lowBalanceDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
             lowBalanceDialog.attachChild(confirmText);
+
+            ITextureRegion coinRegion = GameUI.getInstance().getCoinsIcon();
+            Sprite coinIcon = new Sprite(lowBalanceDialog.getWidth()/2 - 48, lowBalanceDialog.getHeight()/2 + 32, coinRegion, PhoeniciaContext.vboManager);
+            lowBalanceDialog.attachChild(coinIcon);
 
             lowBalanceDialog.open(this);
             this.registerTouchArea(lowBalanceDialog);
+            GameSounds.play(GameSounds.FAILED);
             return;
         }
         Debug.d("Placing word "+word.name+" at "+onTile.getTileColumn()+"x"+onTile.getTileRow());

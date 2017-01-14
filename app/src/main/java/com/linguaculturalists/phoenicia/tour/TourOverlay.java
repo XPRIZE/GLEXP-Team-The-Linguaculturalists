@@ -3,6 +3,7 @@ package com.linguaculturalists.phoenicia.tour;
 import android.media.MediaPlayer;
 
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
+import com.linguaculturalists.phoenicia.components.BorderRectangle;
 import com.linguaculturalists.phoenicia.components.MapBlockSprite;
 import com.linguaculturalists.phoenicia.locale.tour.Message;
 import com.linguaculturalists.phoenicia.locale.tour.Stop;
@@ -99,7 +100,7 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
         this.messagePlaying = false;
 
         Debug.d("Tour overlay guide sprite width: "+this.guideSprite.getWidth());
-        this.messageBox = new Rectangle((messageBoxWidth/2)+this.guideSprite.getWidth(), this.guideSprite.getY(), messageBoxWidth, messageBoxHeight, PhoeniciaContext.vboManager);
+        this.messageBox = new BorderRectangle((messageBoxWidth/2)+this.guideSprite.getWidth(), this.guideSprite.getY(), messageBoxWidth, messageBoxHeight, PhoeniciaContext.vboManager);
         this.messageBox.setColor(Color.WHITE);
         this.attachChild(messageBox);
 
