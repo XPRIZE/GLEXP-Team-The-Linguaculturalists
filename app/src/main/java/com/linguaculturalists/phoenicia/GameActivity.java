@@ -53,15 +53,18 @@ public class GameActivity extends BaseGameActivity {
     private PhoeniciaGame game;
     private SplashScene splash;
 
-    @Override
-    protected void onSetContentView() {
-        super.onSetContentView();
+    public void hideNavBar() {
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         decorView.setSystemUiVisibility(uiOptions);
+    }
 
+    @Override
+    protected void onSetContentView() {
+        super.onSetContentView();
+        this.hideNavBar();
     }
 
     @Override
@@ -94,6 +97,12 @@ public class GameActivity extends BaseGameActivity {
     public synchronized void onPauseGame() {
         super.onPauseGame();
         game.pause();
+    }
+
+    @Override
+    protected synchronized void onResume() {
+        super.onResume();
+        this.hideNavBar();
     }
 
     @Override
