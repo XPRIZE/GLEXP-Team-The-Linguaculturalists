@@ -2,9 +2,10 @@
 
 basedir=`dirname $0`
 
-TEXT_DIRECTION="left-to-right"
-DRAW_OPTS="kerning 0"
-FONT="Ubuntu-Bold"
+TEXT_DIRECTION:="left-to-right"
+DRAW_OPTS:="kerning 0"
+FONT:="Ubuntu-Bold"
+
 
 if [ "$1" = "-rtl" ] ; then
     shift
