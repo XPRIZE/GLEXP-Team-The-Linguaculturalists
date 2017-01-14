@@ -8,6 +8,7 @@ import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.GameTextures;
+import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.Model;
 import com.orm.androrm.QuerySet;
@@ -22,10 +23,12 @@ import org.andengine.entity.modifier.IEntityModifier;
 import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.modifier.ParallelEntityModifier;
 import org.andengine.entity.modifier.ScaleAtModifier;
+import org.andengine.entity.modifier.ScaleModifier;
 import org.andengine.entity.scene.IOnAreaTouchListener;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.extension.tmx.TMXTile;
+import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.util.debug.Debug;
 import org.andengine.util.modifier.IModifier;
@@ -116,16 +119,54 @@ public class DefaultTile extends Model implements MapBlockSprite.OnClickListener
      */
     public void onClick(MapBlockSprite buttonSprite, float v, float v2) {
         if (this.item_type.get().equals("inventory")) {
-            phoeniciaGame.hudManager.showInventory();
+            if (phoeniciaGame.locale.isLevelReached(phoeniciaGame.locale.inventoryBlock.level, phoeniciaGame.getCurrentLevel())) {
+                phoeniciaGame.hudManager.showInventory();
+            } else {
+                this.showLevelLock(phoeniciaGame.locale.inventoryBlock.level);
+            }
         } else if (this.item_type.get().equals("market")) {
-            phoeniciaGame.hudManager.showMarket();
+            if (phoeniciaGame.locale.isLevelReached(phoeniciaGame.locale.marketBlock.level, phoeniciaGame.getCurrentLevel())) {
+                phoeniciaGame.hudManager.showMarket();
+            } else {
+                this.showLevelLock(phoeniciaGame.locale.marketBlock.level);
+            }
         } else if (this.item_type.get().equals("workshop")) {
-            phoeniciaGame.hudManager.showWorkshop(this);
+            if (phoeniciaGame.locale.isLevelReached(phoeniciaGame.locale.workshopBlock.level, phoeniciaGame.getCurrentLevel())) {
+                phoeniciaGame.hudManager.showWorkshop(this);
+            } else {
+                this.showLevelLock(phoeniciaGame.locale.workshopBlock.level);
+            }
         } else {
             Debug.e("Unknown default block: "+this.item_type.get());
         }
     }
 
+    private void showLevelLock(String level_name) {
+        ITextureRegion levelRegion = GameUI.getInstance().getLevelButton();
+        final Sprite levelIcon = new Sprite((this.sprite.getWidth()/2), levelRegion.getHeight()/2, levelRegion, PhoeniciaContext.vboManager);
+        final Text levelName = new Text(110, levelIcon.getHeight()/2, GameFonts.defaultHUDDisplay(), level_name, level_name.length(), PhoeniciaContext.vboManager);
+        levelIcon.attachChild(levelName);
+        this.sprite.attachChild(levelIcon);
+        levelIcon.registerEntityModifier(new ParallelEntityModifier(
+                new ScaleModifier(0.4f, 0.2f, 0.5f, EaseLinear.getInstance()),
+                new FadeOutModifier(2.0f, new IEntityModifier.IEntityModifierListener() {
+                    @Override
+                    public void onModifierStarted(IModifier<IEntity> iModifier, IEntity iEntity) {
+                    }
+
+                    @Override
+                    public void onModifierFinished(IModifier<IEntity> iModifier, IEntity iEntity) {
+                        phoeniciaGame.activity.runOnUpdateThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                sprite.detachChild(levelIcon);
+                            }
+                        });
+
+                    }
+                }, EaseLinear.getInstance())
+        ));
+    }
     public void onHold(MapBlockSprite buttonSprite, float v, float v2) {
         final TMXTile tmxTile = phoeniciaGame.getTileAtIso(this.isoX.get(), this.isoY.get());
         if (tmxTile == null) {
