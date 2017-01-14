@@ -72,9 +72,9 @@
 
     <!-- Alphabet -->
     <letters>
-        <letter name="a" buy="1" sell="1"  points="1" time="60" sprite="locales/common/textures/letters/sprites/a.png" block="locales/common/textures/letters/blocks/a.png" sound="locales/en_us_rural/sounds/a-name.ogg" phoneme="locales/en_us_rural/sounds/a-phoneme.ogg">a</letter>
+        <letter name="a" buy="1" sell="1"  points="1" time="45" sprite="locales/common/textures/letters/sprites/a.png" block="locales/common/textures/letters/blocks/a.png" sound="locales/en_us_rural/sounds/a-name.ogg" phoneme="locales/en_us_rural/sounds/a-phoneme.ogg">a</letter>
         <letter name="b" buy="50" sell="10"  points="12" time="300" sprite="locales/common/textures/letters/sprites/b.png" block="locales/common/textures/letters/blocks/b.png" sound="locales/en_us_rural/sounds/b-name.ogg" phoneme="locales/en_us_rural/sounds/b-phoneme.ogg">b</letter>
-        <letter name="c" buy="20" sell="10"  points="10" time="180" sprite="locales/common/textures/letters/sprites/c.png" block="locales/common/textures/letters/blocks/c.png" sound="locales/en_us_rural/sounds/c-name.ogg" phoneme="locales/en_us_rural/sounds/c-phoneme.ogg">c</letter>
+        <letter name="c" buy="20" sell="10"  points="10" time="120" sprite="locales/common/textures/letters/sprites/c.png" block="locales/common/textures/letters/blocks/c.png" sound="locales/en_us_rural/sounds/c-name.ogg" phoneme="locales/en_us_rural/sounds/c-phoneme.ogg">c</letter>
         <letter name="d" buy="60" sell="20"  points="13" time="890" sprite="locales/common/textures/letters/sprites/d.png" block="locales/common/textures/letters/blocks/d.png" sound="locales/en_us_rural/sounds/d-name.ogg" phoneme="locales/en_us_rural/sounds/d-phoneme.ogg">d</letter>
         <letter name="e" buy="3" sell="2"  points="3" time="230" sprite="locales/common/textures/letters/sprites/e.png" block="locales/common/textures/letters/blocks/e.png" sound="locales/en_us_rural/sounds/e-name.ogg" phoneme="locales/en_us_rural/sounds/e-phoneme.ogg">e</letter>
         <letter name="f" buy="90" sell="20"  points="15" time="990" sprite="locales/common/textures/letters/sprites/f.png" block="locales/common/textures/letters/blocks/f.png" sound="locales/en_us_rural/sounds/f-name.ogg" phoneme="locales/en_us_rural/sounds/f-phoneme.ogg">f</letter>
@@ -91,7 +91,7 @@
         <letter name="q" buy="130" sell="30"  points="16" time="1060" sprite="locales/common/textures/letters/sprites/q.png" block="locales/common/textures/letters/blocks/q.png" sound="locales/en_us_rural/sounds/q-name.ogg" phoneme="locales/en_us_rural/sounds/q-phoneme.ogg">q</letter>
         <letter name="r" buy="10" sell="5"  points="5" time="360" sprite="locales/common/textures/letters/sprites/r.png" block="locales/common/textures/letters/blocks/r.png" sound="locales/en_us_rural/sounds/r-name.ogg" phoneme="locales/en_us_rural/sounds/r-phoneme.ogg">r</letter>
         <letter name="s" buy="40" sell="10"  points="12" time="790" sprite="locales/common/textures/letters/sprites/s.png" block="locales/common/textures/letters/blocks/s.png" sound="locales/en_us_rural/sounds/s-name.ogg" phoneme="locales/en_us_rural/sounds/s-phoneme.ogg">s</letter>
-        <letter name="t" buy="10" sell="4"  points="6" time="120" sprite="locales/common/textures/letters/sprites/t.png" block="locales/common/textures/letters/blocks/t.png" sound="locales/en_us_rural/sounds/t-name.ogg" phoneme="locales/en_us_rural/sounds/t-phoneme.ogg">t</letter>
+        <letter name="t" buy="10" sell="4"  points="6" time="60" sprite="locales/common/textures/letters/sprites/t.png" block="locales/common/textures/letters/blocks/t.png" sound="locales/en_us_rural/sounds/t-name.ogg" phoneme="locales/en_us_rural/sounds/t-phoneme.ogg">t</letter>
         <letter name="u" buy="70" sell="20"  points="14" time="930" sprite="locales/common/textures/letters/sprites/u.png" block="locales/common/textures/letters/blocks/u.png" sound="locales/en_us_rural/sounds/u-name.ogg" phoneme="locales/en_us_rural/sounds/u-phoneme.ogg">u</letter>
         <letter name="v" buy="100" sell="20"  points="15" time="1020" sprite="locales/common/textures/letters/sprites/v.png" block="locales/common/textures/letters/blocks/v.png" sound="locales/en_us_rural/sounds/v-name.ogg" phoneme="locales/en_us_rural/sounds/v-phoneme.ogg">v</letter>
         <letter name="w" buy="80" sell="20"  points="14" time="950" sprite="locales/common/textures/letters/sprites/w.png" block="locales/common/textures/letters/blocks/w.png" sound="locales/en_us_rural/sounds/w-name.ogg" phoneme="locales/en_us_rural/sounds/w-phoneme.ogg">w</letter>
@@ -223,7 +223,6 @@
         </level>
         <level name="4" coins="200" points="460" market="1">
             <intro>
-                <page sound="locales/en_us_rural/sounds/intro3p2.ogg" texture="locales/en_us_rural/textures/levels/intro3p2.png">Use the Word images to build a 'cat' factory</page>
                 <page sound="locales/en_us_rural/sounds/intro4p2.ogg">Here's a new letter: 'H', you can use it with your other letters to build the word 'hat'</page>
             </intro>
             <letters>h</letters>
