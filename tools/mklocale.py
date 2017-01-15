@@ -30,34 +30,90 @@ def print_header():
     manifest_file.write("""<?xml version="1.0" encoding="utf-8"?>
 <locale name="%(locale)s" lang="%(lang)s" display_name="%(display)s">
     <shell src="locales/common/textures/gameui.png" />
-    <map src="locales/common/map.tmx" />
+    <map src="locales/en_us_rural/map.tmx" />
     <music src="locales/common/sounds/forest_background.mp3" />
 
     <!-- Default blocks -->
-    <inventory level="1" size="1x2" name="Barn" col="37" row="43" block="locales/common/textures/inventory.png" />
-    <market level="4" size="4x4x4" name="Market" col="42" row="40" block="locales/common/textures/market.png" />
-    <workshop level="6" name="Workshop" col="38" row="40" block="locales/common/textures/workshop.png" />
+    <inventory level="3" size="4x4x4" name="Storage" col="23" row="26" block="locales/common/textures/inventory.png" />
+    <market level="6" size="4x4x4" name="Market" col="23" row="18" block="locales/common/textures/market.png" />
+    <workshop level="9" size="3x3x3" name="Workshop" col="18" row="32" block="locales/common/textures/workshop.png" />
 
     <!-- People used in the marketplace and player's avatar -->
     <people>
-        <person name="Dave" texture="locales/common/textures/persons/Dave.png" />
-        <person name="Roxanne" texture="locales/common/textures/persons/Roxanne.png" />
-        <person name="Ben" texture="locales/common/textures/persons/Ben.png" />
-        <person name="Laura" texture="locales/common/textures/persons/Laura.png" />
+        <person name="Roxanne" texture="locales/common/textures/persons/f1.png" />
+        <person name="Michelle" texture="locales/common/textures/persons/f2.png" />
+        <person name="Laura" texture="locales/common/textures/persons/f3.png" />
+        <person name="Ashley" texture="locales/common/textures/persons/f4.png" />
+        <person name="Ben" texture="locales/common/textures/persons/m1.png" />
+        <person name="Michael" texture="locales/common/textures/persons/m2.png" />
+        <person name="Dave" texture="locales/common/textures/persons/m3.png" />
+        <person name="Henry" texture="locales/common/textures/persons/m4.png" />
     </people>
 
     <!-- Mini-games -->
     <games>
-        <game name="Blue Tent"  type="wordmatch"  level="6" buy="300" construct="120" time="300" reward="1.5" sprite="locales/en_us_rural/textures/games/sprites/minigame1.png" block="locales/%(locale)s/textures/games/blocks/minigame1.png" />
-        <game name="Green Tent" type="imagematch" level="12" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/%(locale)s/textures/games/blocks/minigame2.png" />
+        <game level="6"  name="Word Match"  type="wordmatch"  buy="300" construct="120" time="300" reward="1.5" sprite="locales/en_us_rural/textures/games/sprites/minigame1.png" block="locales/en_us_rural/textures/games/blocks/minigame1.png" />
+        <game level="12" name="Image Match" type="imagematch" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
     </games>
 
     <!-- Decorations -->
     <decorations>
-        <decoration size="1x1" name="Lamp Post"  level="5" buy="200" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
-        <decoration size="1x1" name="Small Tree" level="10" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
-        <decoration size="2x2" name="Fountain"   level="20" buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
+        <decoration level="5"  size="1x1" name="Lamp Post"  buy="200" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
+        <decoration level="10" size="1x1" name="Small Tree" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
+        <decoration level="20" size="2x2" name="Fountain"   buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
     </decorations>
+
+    <!-- Tour -->
+    <tour guide="Michelle">
+        <stop id="welcome">
+            <message sound="locales/%(locale)s/sounds/tour/welcome1.ogg">Welcome to Phoenicia!</message>
+            <message sound="locales/%(locale)s/sounds/tour/welcome2.ogg">Use the Letter images at the bottom of your screen to start planting with the letter 'A'</message>
+            <message sound="locales/%(locale)s/sounds/tour/welcome3.ogg">Tap a letter to start planting it</message>
+            <message sound="locales/%(locale)s/sounds/tour/welcome4.ogg">Tap a place on the map to plant your new letter</message>
+            <message sound="locales/%(locale)s/sounds/tour/welcome5.ogg">When your letter is fully grown, tap it again to collect it</message>
+            <message sound="locales/%(locale)s/sounds/tour/welcome6.ogg">Your letters will start growing again for you to collect later</message>
+        </stop>
+        <stop id="inventory">
+            <message sound="locales/%(locale)s/sounds/tour/inventory1.ogg">This is your storage building. Any words or letters you collect will be kept here for you to use.</message>
+            <message sound="locales/%(locale)s/sounds/tour/inventory2.ogg">You can also sell an item you have at any time, just by tapping on it.</message>
+        </stop>
+        <stop id="words">
+            <message sound="locales/%(locale)s/sounds/tour/words1.ogg">Use the Word images to build a 'cat' factory</message>
+            <message sound="locales/%(locale)s/sounds/tour/words2.ogg">Tap a word image to create a building for it</message>
+            <message sound="locales/%(locale)s/sounds/tour/words3.ogg">Tap a place on the map to place your building</message>
+            <message sound="locales/%(locale)s/sounds/tour/words4.ogg">Once your building is ready, you can use it to start making words</message>
+            <message sound="locales/%(locale)s/sounds/tour/words5.ogg">You create a word by spelling it, use the letters C A T to spell cat</message>
+            <message sound="locales/%(locale)s/sounds/tour/words6.ogg">It will take time for your word to finish, once it's ready you can collect it</message>
+            <message sound="locales/%(locale)s/sounds/tour/words7.ogg">Tap the finished word at the top to add it to your inventory</message>
+        </stop>
+        <stop id="market">
+            <message sound="locales/%(locale)s/sounds/tour/market1.ogg">Now that you have some words, you can start selling them at the market.</message>
+            <message sound="locales/%(locale)s/sounds/tour/market2.ogg">Here you will find friends who would like to buy the letters and words you've gathered</message>
+            <message sound="locales/%(locale)s/sounds/tour/market3.ogg">Once you have everything they need, you can sell them to earn the coins you need to keep building your town</message>
+        </stop>
+        <stop id="workshop">
+            <message sound="locales/%(locale)s/sounds/tour/workshop1.ogg">If you want to make a word that you don't have a building for yet, you can make it in your workshop</message>
+            <message sound="locales/%(locale)s/sounds/tour/workshop2.ogg">Here you can make any word in the game, all you need are the letters and how to spell it</message>
+            <message sound="locales/%(locale)s/sounds/tour/workshop3.ogg">Try making the word map with the letters M A P</message>
+            <message sound="locales/%(locale)s/sounds/tour/workshop4.ogg">Great! But remember, you can only make one word at a time in the workshop, so keep making word buildings!</message>
+        </stop>
+    </tour>
+
+    <!-- Numbers -->
+    <numbers>
+        <number name="0" sprite="locales/common/textures/numbers/0.png" sound="locales/%(locale)s/sounds/0.ogg">0</number>
+        <number name="1" sprite="locales/common/textures/numbers/1.png" sound="locales/%(locale)s/sounds/1.ogg">1</number>
+        <number name="2" sprite="locales/common/textures/numbers/2.png" sound="locales/%(locale)s/sounds/2.ogg">2</number>
+        <number name="3" sprite="locales/common/textures/numbers/3.png" sound="locales/%(locale)s/sounds/3.ogg">3</number>
+        <number name="4" sprite="locales/common/textures/numbers/4.png" sound="locales/%(locale)s/sounds/4.ogg">4</number>
+        <number name="5" sprite="locales/common/textures/numbers/5.png" sound="locales/%(locale)s/sounds/5.ogg">5</number>
+        <number name="6" sprite="locales/common/textures/numbers/6.png" sound="locales/%(locale)s/sounds/6.ogg">6</number>
+        <number name="7" sprite="locales/common/textures/numbers/7.png" sound="locales/%(locale)s/sounds/7.ogg">7</number>
+        <number name="8" sprite="locales/common/textures/numbers/8.png" sound="locales/%(locale)s/sounds/8.ogg">8</number>
+        <number name="9" sprite="locales/common/textures/numbers/9.png" sound="locales/%(locale)s/sounds/9.ogg">9</number>
+        <number name="10" sprite="locales/common/textures/numbers/10.png" sound="locales/%(locale)s/sounds/10.ogg">10</number>
+    </numbers>
+
 """ % {'locale': locale_name, 'lang': lang, 'display': display})
 
 def print_footer():
@@ -76,7 +132,16 @@ def print_letters():
         buy = round(math.pow(letter_value+1, 1.5), -1) or round(math.pow(letter_value+1, 1.5)) or 1
         sell = round(buy / (math.log(letter_value+1)+1), -1) or round(buy / (math.log(letter_value+1)+1)) or 1
         points = round(math.log(letter_value+1)*5, 1) or 1
-        time = round(math.log(letter_value+1, 1.2)*60, -1) or 60
+        time = round(math.log(letter_value+1, 1.2)*30, -1) or 30
+        if letter in words[0]:
+            # reduce time to 1/3
+            time = round(time/3,-1)
+        elif letter in words[1]:
+            #reduce time to 1/2
+            time = round(time/2, -1)
+        elif letter in words[2]:
+            # reduce time to 2/3
+            time = round(2*time/3)
         filename = letterFileName(letter)
         context = {
             'letter': letter, 
@@ -88,12 +153,13 @@ def print_letters():
             'time': time,
             'locale': locale_name
         }
-        manifest_file.write('        <letter name="%(name)s" buy="%(buy)d" sell="%(sell)d"  points="%(points)d" time="%(time)d" sprite="locales/%(locale)s/textures/letters/sprites/%(filename)s.png" block="locales/%(locale)s/textures/letters/blocks/%(filename)s.png" sound="locales/%(locale)s/sounds/%(filename)s-name.ogg" phoneme="locales/%(locale)s/sounds/%(filename)s-phoneme.ogg">%(letter)s</letter>\n' % context)
+        manifest_file.write('        <letter name="%(name)s" buy="%(buy)d" sell="%(sell)d"  points="%(points)d" time="%(time)d" sprite="locales/common/textures/letters/sprites/%(filename)s.png" block="locales/common/textures/letters/blocks/%(filename)s.png" sound="locales/%(locale)s/sounds/%(filename)s-name.ogg" phoneme="locales/%(locale)s/sounds/%(filename)s-phoneme.ogg">%(letter)s</letter>\n' % context)
 
-        mkletterimage = ["./mkletterimage", "-d", locale_name, letter, filename]
-        if rtl:
-            mkletterimage.insert(1, "-rtl")
-        subprocess.call(mkletterimage)
+        if not manifest_only:
+            mkletterimage = ["./mkletterimage", "-d", locale_name, letter, filename]
+            if rtl:
+                mkletterimage.insert(1, "-rtl")
+            subprocess.call(mkletterimage)
 
     manifest_file.write("    </letters>\n")
 
@@ -120,11 +186,13 @@ def print_words():
             'construct': construct,
             'locale': locale_name
         }
-        manifest_file.write('        <word name="%(name)s" size="1x1" buy="%(buy)d" sell="%(sell)d" points="%(points)d" construct="%(construct)d" time="%(time)d" sprite="locales/%(locale)s/textures/words/sprites/%(filename)s.png" block="locales/%(locale)s/textures/words/blocks/%(filename)s.png" sound="locales/%(locale)s/sounds/%(filename)s.ogg">%(word)s</word>\n' % context)
-        mkwordimage = ["./mkwordimage", "-d", locale_name, word, filename]
-        if rtl:
-            mkwordimage.insert(1, "-rtl")
-        subprocess.call(mkwordimage)
+        manifest_file.write('        <word name="%(name)s" size="2x2x2" buy="%(buy)d" sell="%(sell)d" points="%(points)d" construct="%(construct)d" time="%(time)d" sprite="locales/%(locale)s/textures/words/sprites/%(filename)s.png" block="locales/%(locale)s/textures/words/blocks/%(filename)s.png" sound="locales/%(locale)s/sounds/%(filename)s.ogg">%(word)s</word>\n' % context)
+        
+        if not manifest_only:
+            mkwordimage = ["./mkwordimage", "-d", locale_name, word, filename]
+            if rtl:
+                mkwordimage.insert(1, "-rtl")
+            subprocess.call(mkwordimage)
     manifest_file.write("    </words>\n")
 
 def print_levels():
@@ -136,7 +204,7 @@ def print_levels():
     for level, words in enumerate(level_words):
         coins = round(math.pow(level_number, 0.6)*100, -2) or 100
         points = round(math.pow(level_number, 0.6)*200, -1) or 200
-        market = round(math.log(level_number, len(word_values))*4) or 0
+        market = round(math.log(level_number, len(word_values))*6) or 0
         letters = ','.join(level_letters[level])
         words = ','.join(level_words[level])
         context = {
@@ -180,10 +248,15 @@ def wordFileName(word):
         word_names[name] = word
         return name
 
-rtl=False
-if sys.argv[1] == "-rtl":
+manifest_only=False
+if sys.argv[1] == "--manifest-only":
+    manifest_only=True
     sys.argv = sys.argv[1:]
+    
+rtl=False
+if sys.argv[1] == "--rtl":
     rtl=True
+    sys.argv = sys.argv[1:]
     
 locale_name = sys.argv[1]
 characters_file = sys.argv[2]

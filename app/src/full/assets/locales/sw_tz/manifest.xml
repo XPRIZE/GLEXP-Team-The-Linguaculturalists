@@ -11,14 +11,14 @@
 
     <!-- People used in the marketplace and player's avatar -->
     <people>
-        <person name="Amanika" texture="locales/common/textures/persons/f1.png" />
-        <person name="Elewa" texture="locales/common/textures/persons/f2.png" />
-        <person name="Jama" texture="locales/common/textures/persons/f3.png" />
-        <person name="Rehema" texture="locales/common/textures/persons/f4.png" />
         <person name="Baraka" texture="locales/common/textures/persons/m1.png" />
+        <person name="Amanika" texture="locales/common/textures/persons/f1.png" />
         <person name="Hamadi" texture="locales/common/textures/persons/m2.png" />
+        <person name="Elewa" texture="locales/common/textures/persons/f2.png" />
         <person name="Jamba" texture="locales/common/textures/persons/m3.png" />
+        <person name="Jama" texture="locales/common/textures/persons/f3.png" />
         <person name="Usian" texture="locales/common/textures/persons/m4.png" />
+        <person name="Rehema" texture="locales/common/textures/persons/f4.png" />
     </people>
 
     <!-- Mini-games -->
