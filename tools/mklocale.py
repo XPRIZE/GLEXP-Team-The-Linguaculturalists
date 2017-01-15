@@ -172,8 +172,8 @@ def print_words():
         buy = round(math.pow(word_values[word]+1, 1.1)*100, -1) or 100
         sell = round(math.pow(word_values[word]+1, 1.001)*10, -1) or 10
         points = round(math.log(word_values[word]+1)*50, 1) or 10
-        time = round(math.pow(word_values[word]+1, 1.5), -1)*60 or 120
-        construct = round(math.pow(word_values[word]+1, 1.8), -1)*90 or 180
+        time = round(math.pow(word_values[word]+1, 1.5), 0)*60 or 120
+        construct = round(math.pow(word_values[word]+1, 1.6), 0)*90 or 180
         filename = wordFileName(word)
         context = {
             'word': word, 

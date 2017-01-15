@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<locale name="en_us_rural" lang="en_us" display_name="US English, Rural Setting">
+<locale name="en_us_rural" lang="en_us" display_name="US English">
     <shell src="locales/common/textures/gameui.png" />
     <map src="locales/en_us_rural/map.tmx" />
     <music src="locales/common/sounds/forest_background.mp3" />
@@ -11,14 +11,14 @@
 
     <!-- People used in the marketplace and player's avatar -->
     <people>
-        <person name="Roxanne" texture="locales/common/textures/persons/f1.png" />
-        <person name="Michelle" texture="locales/common/textures/persons/f2.png" />
-        <person name="Laura" texture="locales/common/textures/persons/f3.png" />
-        <person name="Ashley" texture="locales/common/textures/persons/f4.png" />
         <person name="Ben" texture="locales/common/textures/persons/m1.png" />
-        <person name="Michael" texture="locales/common/textures/persons/m2.png" />
+        <person name="Roxanne" texture="locales/common/textures/persons/f1.png" />
         <person name="Dave" texture="locales/common/textures/persons/m3.png" />
+        <person name="Michelle" texture="locales/common/textures/persons/f2.png" />
         <person name="Henry" texture="locales/common/textures/persons/m4.png" />
+        <person name="Laura" texture="locales/common/textures/persons/f3.png" />
+        <person name="Michael" texture="locales/common/textures/persons/m2.png" />
+        <person name="Ashley" texture="locales/common/textures/persons/f4.png" />
     </people>
 
     <!-- Mini-games -->
@@ -37,67 +37,67 @@
     <!-- Tour -->
     <tour guide="Michelle">
         <stop id="welcome">
-            <message sound="locales/en_us_rural/sounds/intro1p1.ogg">Welcome to Phoenicia!</message>
-            <message sound="locales/en_us_rural/sounds/intro1p2.ogg">Use the Letter images at the bottom of your screen to start planting with the letter 'A'</message>
-            <message sound="">Tap a letter to start planting it</message>
-            <message sound="">Tap a place on the map to plant your new letter</message>
-            <message sound="">When your letter is fully grown, tap it again to collect it</message>
-            <message sound="">Your letters will start growing again for you to collect later</message>
+            <message sound="locales/en_us_rural/sounds/tour/welcome1.ogg">Welcome to Phoenicia!</message>
+            <message sound="locales/en_us_rural/sounds/tour/welcome2.ogg">Use the Letter images at the bottom of your screen to start planting with the letter 'A'</message>
+            <message sound="locales/en_us_rural/sounds/tour/welcome3.ogg">Tap a letter to start planting it</message>
+            <message sound="locales/en_us_rural/sounds/tour/welcome4.ogg">Tap a place on the map to plant your new letter</message>
+            <message sound="locales/en_us_rural/sounds/tour/welcome5.ogg">When your letter is fully grown, tap it again to collect it</message>
+            <message sound="locales/en_us_rural/sounds/tour/welcome6.ogg">Your letters will start growing again for you to collect later</message>
         </stop>
         <stop id="inventory">
-            <message sound="">This is your storage building. Any words or letters you collect will be kept here for you to use.</message>
-            <message sound="">You can also sell an item you have at any time, just by tapping on it.</message>
+            <message sound="locales/en_us_rural/sounds/tour/inventory1.ogg">This is your storage building. Any words or letters you collect will be kept here for you to use.</message>
+            <message sound="locales/en_us_rural/sounds/tour/inventory2.ogg">You can also sell an item you have at any time, just by tapping on it.</message>
         </stop>
         <stop id="words">
-            <message sound="locales/en_us_rural/sounds/intro3p2.ogg" texture="locales/en_us_rural/textures/levels/intro3p2.png">Use the Word images to build a 'cat' factory</message>
-            <message sound="">Tap a word image to create a building for it</message>
-            <message sound="">Tap a place on the map to place your building</message>
-            <message sound="">Once your building is ready, you can use it to start making words</message>
-            <message sound="">You create a word by spelling it, use the letters C A T to spell cat</message>
-            <message sound="">It will take time for your word to finish, once it's ready you can collect it</message>
-            <message sound="">Tap the finished word at the top to add it to your inventory</message>
+            <message sound="locales/en_us_rural/sounds/tour/words1.ogg">Use the Word images to build a 'cat' factory</message>
+            <message sound="locales/en_us_rural/sounds/tour/words2.ogg">Tap a word image to create a building for it</message>
+            <message sound="locales/en_us_rural/sounds/tour/words3.ogg">Tap a place on the map to place your building</message>
+            <message sound="locales/en_us_rural/sounds/tour/words4.ogg">Once your building is ready, you can use it to start making words</message>
+            <message sound="locales/en_us_rural/sounds/tour/words5.ogg">You will create a word by spelling it, use the letters C A T to spell cat</message>
+            <message sound="locales/en_us_rural/sounds/tour/words6.ogg">It will take time for your word to finish, once it's ready you can collect it</message>
+            <message sound="locales/en_us_rural/sounds/tour/words7.ogg">Tap the finished word at the top to add it to your inventory</message>
         </stop>
         <stop id="market">
-            <message sound="">Now that you have some words, you can start selling them at the market.</message>
-            <message sound="">Here you will find friends who would like to buy the letters and words you've gathered</message>
-            <message sound="">Once you have everything they need, you can sell them to earn the coins you need to keep building your town</message>
+            <message sound="locales/en_us_rural/sounds/tour/market1.ogg">Now that you have some words, you can start selling them at the market.</message>
+            <message sound="locales/en_us_rural/sounds/tour/market2.ogg">Here you will find friends who would like to buy the letters and words you've gathered</message>
+            <message sound="locales/en_us_rural/sounds/tour/market3.ogg">Once you have everything they need, you can sell them to earn the coins you need to keep building your town</message>
         </stop>
         <stop id="workshop">
-            <message sound="">If you want to make a word that you don't have a building for yet, you can make it in your workshop</message>
-            <message sound="">Here you can make any word in the game, all you need are the letters and how to spell it</message>
-            <message sound="">Try making the word map with the letters M A P</message>
-            <message sound="">Great! But remember, you can only make one word at a time in the workshop, so keep making word buildings!</message>
+            <message sound="locales/en_us_rural/sounds/tour/workshop1.ogg">If you want to make a word that you don't have a building for yet, you can make it in your workshop</message>
+            <message sound="locales/en_us_rural/sounds/tour/workshop2.ogg">Here you can make any word in the game, all you need are the letters and how to spell it</message>
+            <message sound="locales/en_us_rural/sounds/tour/workshop3.ogg">Try making the word map with the letters M A P</message>
+            <message sound="locales/en_us_rural/sounds/tour/workshop4.ogg">Great! But remember, you can only make one word at a time in the workshop, so keep making word buildings!</message>
         </stop>
     </tour>
 
     <!-- Alphabet -->
     <letters>
-        <letter name="a" buy="1" sell="1"  points="1" time="45" sprite="locales/common/textures/letters/sprites/a.png" block="locales/common/textures/letters/blocks/a.png" sound="locales/en_us_rural/sounds/a-name.ogg" phoneme="locales/en_us_rural/sounds/a-phoneme.ogg">a</letter>
-        <letter name="b" buy="50" sell="10"  points="12" time="300" sprite="locales/common/textures/letters/sprites/b.png" block="locales/common/textures/letters/blocks/b.png" sound="locales/en_us_rural/sounds/b-name.ogg" phoneme="locales/en_us_rural/sounds/b-phoneme.ogg">b</letter>
-        <letter name="c" buy="20" sell="10"  points="10" time="120" sprite="locales/common/textures/letters/sprites/c.png" block="locales/common/textures/letters/blocks/c.png" sound="locales/en_us_rural/sounds/c-name.ogg" phoneme="locales/en_us_rural/sounds/c-phoneme.ogg">c</letter>
-        <letter name="d" buy="60" sell="20"  points="13" time="890" sprite="locales/common/textures/letters/sprites/d.png" block="locales/common/textures/letters/blocks/d.png" sound="locales/en_us_rural/sounds/d-name.ogg" phoneme="locales/en_us_rural/sounds/d-phoneme.ogg">d</letter>
-        <letter name="e" buy="3" sell="2"  points="3" time="230" sprite="locales/common/textures/letters/sprites/e.png" block="locales/common/textures/letters/blocks/e.png" sound="locales/en_us_rural/sounds/e-name.ogg" phoneme="locales/en_us_rural/sounds/e-phoneme.ogg">e</letter>
-        <letter name="f" buy="90" sell="20"  points="15" time="990" sprite="locales/common/textures/letters/sprites/f.png" block="locales/common/textures/letters/blocks/f.png" sound="locales/en_us_rural/sounds/f-name.ogg" phoneme="locales/en_us_rural/sounds/f-phoneme.ogg">f</letter>
-        <letter name="g" buy="50" sell="10"  points="13" time="870" sprite="locales/common/textures/letters/sprites/g.png" block="locales/common/textures/letters/blocks/g.png" sound="locales/en_us_rural/sounds/g-name.ogg" phoneme="locales/en_us_rural/sounds/g-phoneme.ogg">g</letter>
-        <letter name="h" buy="60" sell="20"  points="13" time="270" sprite="locales/common/textures/letters/sprites/h.png" block="locales/common/textures/letters/blocks/h.png" sound="locales/en_us_rural/sounds/h-name.ogg" phoneme="locales/en_us_rural/sounds/h-phoneme.ogg">h</letter>
-        <letter name="i" buy="30" sell="10"  points="11" time="720" sprite="locales/common/textures/letters/sprites/i.png" block="locales/common/textures/letters/blocks/i.png" sound="locales/en_us_rural/sounds/i-name.ogg" phoneme="locales/en_us_rural/sounds/i-phoneme.ogg">i</letter>
-        <letter name="j" buy="100" sell="20"  points="15" time="1000" sprite="locales/common/textures/letters/sprites/j.png" block="locales/common/textures/letters/blocks/j.png" sound="locales/en_us_rural/sounds/j-name.ogg" phoneme="locales/en_us_rural/sounds/j-phoneme.ogg">j</letter>
-        <letter name="k" buy="80" sell="20"  points="14" time="970" sprite="locales/common/textures/letters/sprites/k.png" block="locales/common/textures/letters/blocks/k.png" sound="locales/en_us_rural/sounds/k-name.ogg" phoneme="locales/en_us_rural/sounds/k-phoneme.ogg">k</letter>
-        <letter name="l" buy="10" sell="4"  points="8" time="530" sprite="locales/common/textures/letters/sprites/l.png" block="locales/common/textures/letters/blocks/l.png" sound="locales/en_us_rural/sounds/l-name.ogg" phoneme="locales/en_us_rural/sounds/l-phoneme.ogg">l</letter>
-        <letter name="m" buy="40" sell="10"  points="12" time="820" sprite="locales/common/textures/letters/sprites/m.png" block="locales/common/textures/letters/blocks/m.png" sound="locales/en_us_rural/sounds/m-name.ogg" phoneme="locales/en_us_rural/sounds/m-phoneme.ogg">m</letter>
-        <letter name="n" buy="10" sell="4"  points="9" time="590" sprite="locales/common/textures/letters/sprites/n.png" block="locales/common/textures/letters/blocks/n.png" sound="locales/en_us_rural/sounds/n-name.ogg" phoneme="locales/en_us_rural/sounds/n-phoneme.ogg">n</letter>
-        <letter name="o" buy="20" sell="10"  points="9" time="640" sprite="locales/common/textures/letters/sprites/o.png" block="locales/common/textures/letters/blocks/o.png" sound="locales/en_us_rural/sounds/o-name.ogg" phoneme="locales/en_us_rural/sounds/o-phoneme.ogg">o</letter>
-        <letter name="p" buy="30" sell="10"  points="11" time="760" sprite="locales/common/textures/letters/sprites/p.png" block="locales/common/textures/letters/blocks/p.png" sound="locales/en_us_rural/sounds/p-name.ogg" phoneme="locales/en_us_rural/sounds/p-phoneme.ogg">p</letter>
-        <letter name="q" buy="130" sell="30"  points="16" time="1060" sprite="locales/common/textures/letters/sprites/q.png" block="locales/common/textures/letters/blocks/q.png" sound="locales/en_us_rural/sounds/q-name.ogg" phoneme="locales/en_us_rural/sounds/q-phoneme.ogg">q</letter>
-        <letter name="r" buy="10" sell="5"  points="5" time="360" sprite="locales/common/textures/letters/sprites/r.png" block="locales/common/textures/letters/blocks/r.png" sound="locales/en_us_rural/sounds/r-name.ogg" phoneme="locales/en_us_rural/sounds/r-phoneme.ogg">r</letter>
-        <letter name="s" buy="40" sell="10"  points="12" time="790" sprite="locales/common/textures/letters/sprites/s.png" block="locales/common/textures/letters/blocks/s.png" sound="locales/en_us_rural/sounds/s-name.ogg" phoneme="locales/en_us_rural/sounds/s-phoneme.ogg">s</letter>
-        <letter name="t" buy="10" sell="4"  points="6" time="60" sprite="locales/common/textures/letters/sprites/t.png" block="locales/common/textures/letters/blocks/t.png" sound="locales/en_us_rural/sounds/t-name.ogg" phoneme="locales/en_us_rural/sounds/t-phoneme.ogg">t</letter>
-        <letter name="u" buy="70" sell="20"  points="14" time="930" sprite="locales/common/textures/letters/sprites/u.png" block="locales/common/textures/letters/blocks/u.png" sound="locales/en_us_rural/sounds/u-name.ogg" phoneme="locales/en_us_rural/sounds/u-phoneme.ogg">u</letter>
-        <letter name="v" buy="100" sell="20"  points="15" time="1020" sprite="locales/common/textures/letters/sprites/v.png" block="locales/common/textures/letters/blocks/v.png" sound="locales/en_us_rural/sounds/v-name.ogg" phoneme="locales/en_us_rural/sounds/v-phoneme.ogg">v</letter>
-        <letter name="w" buy="80" sell="20"  points="14" time="950" sprite="locales/common/textures/letters/sprites/w.png" block="locales/common/textures/letters/blocks/w.png" sound="locales/en_us_rural/sounds/w-name.ogg" phoneme="locales/en_us_rural/sounds/w-phoneme.ogg">w</letter>
-        <letter name="x" buy="130" sell="30"  points="16" time="1070" sprite="locales/common/textures/letters/sprites/x.png" block="locales/common/textures/letters/blocks/x.png" sound="locales/en_us_rural/sounds/x-name.ogg" phoneme="locales/en_us_rural/sounds/x-phoneme.ogg">x</letter>
-        <letter name="y" buy="110" sell="30"  points="15" time="1030" sprite="locales/common/textures/letters/sprites/y.png" block="locales/common/textures/letters/blocks/y.png" sound="locales/en_us_rural/sounds/y-name.ogg" phoneme="locales/en_us_rural/sounds/y-phoneme.ogg">y</letter>
-        <letter name="z" buy="120" sell="30"  points="15" time="1050" sprite="locales/common/textures/letters/sprites/z.png" block="locales/common/textures/letters/blocks/z.png" sound="locales/en_us_rural/sounds/z-name.ogg" phoneme="locales/en_us_rural/sounds/z-phoneme.ogg">z</letter>
+        <letter name="a" buy="1" sell="1"  points="1" time="30" sprite="locales/common/textures/letters/sprites/a.png" block="locales/common/textures/letters/blocks/a.png" sound="locales/en_us_rural/sounds/a-name.ogg" phoneme="locales/en_us_rural/sounds/a-phoneme.ogg">a</letter>
+        <letter name="b" buy="50" sell="10"  points="12" time="120" sprite="locales/common/textures/letters/sprites/b.png" block="locales/common/textures/letters/blocks/b.png" sound="locales/en_us_rural/sounds/b-name.ogg" phoneme="locales/en_us_rural/sounds/b-phoneme.ogg">b</letter>
+        <letter name="c" buy="20" sell="10"  points="10" time="60" sprite="locales/common/textures/letters/sprites/c.png" block="locales/common/textures/letters/blocks/c.png" sound="locales/en_us_rural/sounds/c-name.ogg" phoneme="locales/en_us_rural/sounds/c-phoneme.ogg">c</letter>
+        <letter name="d" buy="60" sell="20"  points="13" time="450" sprite="locales/common/textures/letters/sprites/d.png" block="locales/common/textures/letters/blocks/d.png" sound="locales/en_us_rural/sounds/d-name.ogg" phoneme="locales/en_us_rural/sounds/d-phoneme.ogg">d</letter>
+        <letter name="e" buy="3" sell="2"  points="3" time="110" sprite="locales/common/textures/letters/sprites/e.png" block="locales/common/textures/letters/blocks/e.png" sound="locales/en_us_rural/sounds/e-name.ogg" phoneme="locales/en_us_rural/sounds/e-phoneme.ogg">e</letter>
+        <letter name="f" buy="90" sell="20"  points="15" time="490" sprite="locales/common/textures/letters/sprites/f.png" block="locales/common/textures/letters/blocks/f.png" sound="locales/en_us_rural/sounds/f-name.ogg" phoneme="locales/en_us_rural/sounds/f-phoneme.ogg">f</letter>
+        <letter name="g" buy="50" sell="10"  points="13" time="430" sprite="locales/common/textures/letters/sprites/g.png" block="locales/common/textures/letters/blocks/g.png" sound="locales/en_us_rural/sounds/g-name.ogg" phoneme="locales/en_us_rural/sounds/g-phoneme.ogg">g</letter>
+        <letter name="h" buy="60" sell="20"  points="13" time="90" sprite="locales/common/textures/letters/sprites/h.png" block="locales/common/textures/letters/blocks/h.png" sound="locales/en_us_rural/sounds/h-name.ogg" phoneme="locales/en_us_rural/sounds/h-phoneme.ogg">h</letter>
+        <letter name="i" buy="30" sell="10"  points="11" time="360" sprite="locales/common/textures/letters/sprites/i.png" block="locales/common/textures/letters/blocks/i.png" sound="locales/en_us_rural/sounds/i-name.ogg" phoneme="locales/en_us_rural/sounds/i-phoneme.ogg">i</letter>
+        <letter name="j" buy="100" sell="20"  points="15" time="500" sprite="locales/common/textures/letters/sprites/j.png" block="locales/common/textures/letters/blocks/j.png" sound="locales/en_us_rural/sounds/j-name.ogg" phoneme="locales/en_us_rural/sounds/j-phoneme.ogg">j</letter>
+        <letter name="k" buy="80" sell="20"  points="14" time="480" sprite="locales/common/textures/letters/sprites/k.png" block="locales/common/textures/letters/blocks/k.png" sound="locales/en_us_rural/sounds/k-name.ogg" phoneme="locales/en_us_rural/sounds/k-phoneme.ogg">k</letter>
+        <letter name="l" buy="10" sell="4"  points="8" time="260" sprite="locales/common/textures/letters/sprites/l.png" block="locales/common/textures/letters/blocks/l.png" sound="locales/en_us_rural/sounds/l-name.ogg" phoneme="locales/en_us_rural/sounds/l-phoneme.ogg">l</letter>
+        <letter name="m" buy="40" sell="10"  points="12" time="410" sprite="locales/common/textures/letters/sprites/m.png" block="locales/common/textures/letters/blocks/m.png" sound="locales/en_us_rural/sounds/m-name.ogg" phoneme="locales/en_us_rural/sounds/m-phoneme.ogg">m</letter>
+        <letter name="n" buy="10" sell="4"  points="9" time="290" sprite="locales/common/textures/letters/sprites/n.png" block="locales/common/textures/letters/blocks/n.png" sound="locales/en_us_rural/sounds/n-name.ogg" phoneme="locales/en_us_rural/sounds/n-phoneme.ogg">n</letter>
+        <letter name="o" buy="20" sell="10"  points="9" time="320" sprite="locales/common/textures/letters/sprites/o.png" block="locales/common/textures/letters/blocks/o.png" sound="locales/en_us_rural/sounds/o-name.ogg" phoneme="locales/en_us_rural/sounds/o-phoneme.ogg">o</letter>
+        <letter name="p" buy="30" sell="10"  points="11" time="380" sprite="locales/common/textures/letters/sprites/p.png" block="locales/common/textures/letters/blocks/p.png" sound="locales/en_us_rural/sounds/p-name.ogg" phoneme="locales/en_us_rural/sounds/p-phoneme.ogg">p</letter>
+        <letter name="q" buy="130" sell="30"  points="16" time="530" sprite="locales/common/textures/letters/sprites/q.png" block="locales/common/textures/letters/blocks/q.png" sound="locales/en_us_rural/sounds/q-name.ogg" phoneme="locales/en_us_rural/sounds/q-phoneme.ogg">q</letter>
+        <letter name="r" buy="10" sell="5"  points="5" time="180" sprite="locales/common/textures/letters/sprites/r.png" block="locales/common/textures/letters/blocks/r.png" sound="locales/en_us_rural/sounds/r-name.ogg" phoneme="locales/en_us_rural/sounds/r-phoneme.ogg">r</letter>
+        <letter name="s" buy="40" sell="10"  points="12" time="390" sprite="locales/common/textures/letters/sprites/s.png" block="locales/common/textures/letters/blocks/s.png" sound="locales/en_us_rural/sounds/s-name.ogg" phoneme="locales/en_us_rural/sounds/s-phoneme.ogg">s</letter>
+        <letter name="t" buy="10" sell="4"  points="6" time="45" sprite="locales/common/textures/letters/sprites/t.png" block="locales/common/textures/letters/blocks/t.png" sound="locales/en_us_rural/sounds/t-name.ogg" phoneme="locales/en_us_rural/sounds/t-phoneme.ogg">t</letter>
+        <letter name="u" buy="70" sell="20"  points="14" time="470" sprite="locales/common/textures/letters/sprites/u.png" block="locales/common/textures/letters/blocks/u.png" sound="locales/en_us_rural/sounds/u-name.ogg" phoneme="locales/en_us_rural/sounds/u-phoneme.ogg">u</letter>
+        <letter name="v" buy="100" sell="20"  points="15" time="510" sprite="locales/common/textures/letters/sprites/v.png" block="locales/common/textures/letters/blocks/v.png" sound="locales/en_us_rural/sounds/v-name.ogg" phoneme="locales/en_us_rural/sounds/v-phoneme.ogg">v</letter>
+        <letter name="w" buy="80" sell="20"  points="14" time="480" sprite="locales/common/textures/letters/sprites/w.png" block="locales/common/textures/letters/blocks/w.png" sound="locales/en_us_rural/sounds/w-name.ogg" phoneme="locales/en_us_rural/sounds/w-phoneme.ogg">w</letter>
+        <letter name="x" buy="130" sell="30"  points="16" time="540" sprite="locales/common/textures/letters/sprites/x.png" block="locales/common/textures/letters/blocks/x.png" sound="locales/en_us_rural/sounds/x-name.ogg" phoneme="locales/en_us_rural/sounds/x-phoneme.ogg">x</letter>
+        <letter name="y" buy="110" sell="30"  points="15" time="520" sprite="locales/common/textures/letters/sprites/y.png" block="locales/common/textures/letters/blocks/y.png" sound="locales/en_us_rural/sounds/y-name.ogg" phoneme="locales/en_us_rural/sounds/y-phoneme.ogg">y</letter>
+        <letter name="z" buy="120" sell="30"  points="15" time="520" sprite="locales/common/textures/letters/sprites/z.png" block="locales/common/textures/letters/blocks/z.png" sound="locales/en_us_rural/sounds/z-name.ogg" phoneme="locales/en_us_rural/sounds/z-phoneme.ogg">z</letter>
     </letters>
 
     <!-- Words -->
@@ -180,8 +180,6 @@
     <levels>
         <level name="1" coins="100" points="200" market="0">
             <intro>
-                <page sound="locales/en_us_rural/sounds/intro1p1.ogg">Welcome to Phoenicia!</page>
-                <page sound="locales/en_us_rural/sounds/intro1p2.ogg" texture="locales/en_us_rural/textures/levels/intro1p2.png">Use the Letter images at the bottom of your screen to start planting with the letter 'A'</page>
             </intro>
             <letters>a</letters>
             <words></words>
