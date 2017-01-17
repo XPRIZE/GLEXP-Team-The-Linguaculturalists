@@ -348,7 +348,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         try {
             this.music = MusicFactory.createMusicFromAsset(PhoeniciaContext.musicManager, PhoeniciaContext.context, locale.music_src);
             this.music.setLooping(true);
-            this.music.setVolume(0.5f);
+            this.music.setVolume(0.3f);
         } catch (Exception e) {
             Debug.e("Failed to load background music asset: "+locale.music_src);
         }

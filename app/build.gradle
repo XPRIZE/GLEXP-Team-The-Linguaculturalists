@@ -13,8 +13,8 @@ android {
         applicationId "com.linguaculturalists.phoenicia"
         minSdkVersion 15
         targetSdkVersion 19
-        versionCode 9
-        versionName "1.0-rc3"
+        versionCode 10
+        versionName "1.0-rc4"
     }
     buildTypes {
         release {

@@ -192,7 +192,7 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
     public void focusOn(final MapBlockSprite target, final MapBlockSprite.OnClickListener clickListener) {
         this.targetSprite = target;
         ((SmoothCamera)this.game.camera).setZoomFactorDirect(2.0f);
-        this.game.camera.setCenterDirect(target.getX(), target.getY());
+        this.game.camera.setCenterDirect(target.getX(), target.getY()-64);
         float[] targetSceneCoordinates = this.game.camera.getCameraSceneCoordinatesFromSceneCoordinates(target.getSceneCenterCoordinates());
         Debug.d("Tour focus sprite coordinates are: " + targetSceneCoordinates[1] + "x" + targetSceneCoordinates[1]);
         final ClickDetector spriteClickDetector = new ClickDetector(new ClickDetector.IClickDetectorListener() {

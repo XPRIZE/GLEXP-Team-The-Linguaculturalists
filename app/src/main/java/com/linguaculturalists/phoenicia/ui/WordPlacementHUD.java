@@ -115,13 +115,7 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
             card.attachChild(blockName);
 
             ITiledTextureRegion blockRegion = game.wordSprites.get(currentWord);
-            ButtonSprite block = new ButtonSprite(card.getWidth()/2, card.getHeight()*2/3, blockRegion, PhoeniciaContext.vboManager);
-            block.setOnClickListener(new ButtonSprite.OnClickListener() {
-                @Override
-                public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                    game.playBlockSound(currentWord.sound);
-                }
-            });
+            Sprite block = new Sprite(card.getWidth()/2, card.getHeight()*2/3, blockRegion, PhoeniciaContext.vboManager);
             this.registerTouchArea(block);
             card.attachChild(block);
 
@@ -145,12 +139,6 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
             } else {
                 ITextureRegion levelRegion = GameUI.getInstance().getLevelButton();
                 final ButtonSprite levelIcon = new ButtonSprite((card.getWidth()/2), levelRegion.getHeight()/2, levelRegion, PhoeniciaContext.vboManager);
-                levelIcon.setOnClickListener(new ButtonSprite.OnClickListener() {
-                    @Override
-                    public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                        game.hudManager.showNextLevelReq(level);
-                    }
-                });
                 final Text levelName = new Text(110, levelIcon.getHeight()/2, GameFonts.defaultHUDDisplay(), level.next.name, level.next.name.length(), PhoeniciaContext.vboManager);
                 levelIcon.attachChild(levelName);
                 card.attachChild(levelIcon);

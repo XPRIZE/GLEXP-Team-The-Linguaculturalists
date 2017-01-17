@@ -5,30 +5,71 @@
     <music src="locales/en_us_rural/sounds/background.mp3" />
 
     <!-- Default blocks -->
-    <inventory level="1" size="1x2" name="Barn" col="37" row="43" block="locales/en_us_rural/textures/biginventory.png" />
-    <market level="4" size="4x4x4" name="Market" col="42" row="40" block="locales/en_us_rural/textures/market-4x4x4.png" />
-    <workshop level="6" name="Workshop" col="38" row="40" block="locales/en_us_rural/textures/workshop.png" />
+    <inventory level="3" size="4x4x4" name="Storage" col="23" row="26" block="locales/common/textures/inventory.png" />
+    <market level="6" size="4x4x4" name="بازار" col="23" row="18" block="locales/common/textures/market.png" />
+    <workshop level="9" size="3x3x3" name="Workshop" col="18" row="32" block="locales/common/textures/workshop.png" />
 
     <!-- People used in the marketplace and player's avatar -->
     <people>
-        <person name="Dave" texture="locales/common/textures/persons/Dave.png" />
-        <person name="Roxanne" texture="locales/common/textures/persons/Roxanne.png" />
-        <person name="Ben" texture="locales/common/textures/persons/Ben.png" />
-        <person name="Laura" texture="locales/common/textures/persons/Laura.png" />
+        <person name="DAvood" texture="locales/common/textures/persons/m1.png" />
+        <person name="Anusheh" texture="locales/common/textures/persons/f1.png" />
+        <person name="Farbod" texture="locales/common/textures/persons/m3.png" />
+        <person name="Farideh" texture="locales/common/textures/persons/f2.png" />
+        <person name="HAfez" texture="locales/common/textures/persons/m4.png" />
+        <person name="Golshan" texture="locales/common/textures/persons/f3.png" />
+        <person name="Mohammad" texture="locales/common/textures/persons/m2.png" />
+        <person name="MarjAn" texture="locales/common/textures/persons/f4.png" />
     </people>
 
     <!-- Mini-games -->
     <games>
-        <game level="6"  name="Word Match"  type="wordmatch"  buy="300" construct="120" time="300" reward="1.5" sprite="locales/en_us_rural/textures/games/sprites/minigame1.png" block="locales/en_us_rural/textures/games/blocks/minigame1.png" />
-        <game level="12" name="Image Match" type="imagematch" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
+        <game level="6"  name="Word Match"  type="wordmatch"  buy="300" construct="120" time="300" reward="1.5" sprite="locales/common/textures/games/sprites/minigame1.png" block="locales/common/textures/games/blocks/minigame1.png" />
+        <game level="7" name="Image Match" type="imagematch" buy="500" construct="300" time="600" reward="2.0" sprite="locales/common/textures/games/sprites/minigame2.png" block="locales/common/textures/games/blocks/minigame2.png" />
     </games>
 
     <!-- Decorations -->
     <decorations>
-        <decoration level="5"  size="1x1" name="Lamp Post"  buy="200" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
-        <decoration level="10" size="1x1" name="Small Tree" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
-        <decoration level="20" size="2x2" name="Fountain"   buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
+        <decoration level="5"  size="1x1x2" name="Lamp Post"  buy="250" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
+        <decoration level="10" size="1x1x3" name="Small Tree" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
+        <decoration level="15" size="3x3x3" name="Large Tree" buy="750" sprite="locales/common/textures/decorations/sprites/largetree.png" block="locales/common/textures/decorations/blocks/largetree.png" />
+        <decoration level="20" size="2x2x2" name="Fountain"   buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
     </decorations>
+
+    <!-- Tour -->
+    <tour guide="Michelle">
+        <stop id="welcome">
+            <message sound="locales/en_us_rural/sounds/tour/welcome1.ogg">Welcome to Phoenicia!</message>
+            <message sound="locales/en_us_rural/sounds/tour/welcome2.ogg">Use the Letter images at the bottom of your screen to start planting with the letter 'A'</message>
+            <message sound="locales/en_us_rural/sounds/tour/welcome3.ogg">Tap a letter to start planting it</message>
+            <message sound="locales/en_us_rural/sounds/tour/welcome4.ogg">Tap a place on the map to plant your new letter</message>
+            <message sound="locales/en_us_rural/sounds/tour/welcome5.ogg">When your letter is fully grown, tap it again to collect it</message>
+            <message sound="locales/en_us_rural/sounds/tour/welcome6.ogg">Your letters will start growing again for you to collect later</message>
+        </stop>
+        <stop id="inventory">
+            <message sound="locales/en_us_rural/sounds/tour/inventory1.ogg">This is your storage building. Any words or letters you collect will be kept here for you to use.</message>
+            <message sound="locales/en_us_rural/sounds/tour/inventory2.ogg">You can also sell an item you have at any time, just by tapping on it.</message>
+        </stop>
+        <stop id="words">
+            <message sound="locales/en_us_rural/sounds/tour/words1.ogg">Use the Word images to build a 'cat' factory</message>
+            <message sound="locales/en_us_rural/sounds/tour/words2.ogg">Tap a word image to create a building for it</message>
+            <message sound="locales/en_us_rural/sounds/tour/words3.ogg">Tap a place on the map to place your building</message>
+            <message sound="locales/en_us_rural/sounds/tour/words4.ogg">Once your building is ready, you can use it to start making words</message>
+            <message sound="locales/en_us_rural/sounds/tour/words5.ogg">You will create a word by spelling it, use the letters C A T to spell cat</message>
+            <message sound="locales/en_us_rural/sounds/tour/words6.ogg">It will take time for your word to finish, once it's ready you can collect it</message>
+            <message sound="locales/en_us_rural/sounds/tour/words7.ogg">Tap the finished word at the top to add it to your inventory</message>
+        </stop>
+        <stop id="market">
+            <message sound="locales/en_us_rural/sounds/tour/market1.ogg">Now that you have some words, you can start selling them at the market.</message>
+            <message sound="locales/en_us_rural/sounds/tour/market2.ogg">Here you will find friends who would like to buy the letters and words you've gathered</message>
+            <message sound="locales/en_us_rural/sounds/tour/market3.ogg">Once you have everything they need, you can sell them to earn the coins you need to keep building your town</message>
+        </stop>
+        <stop id="workshop">
+            <message sound="locales/en_us_rural/sounds/tour/workshop1.ogg">If you want to make a word that you don't have a building for yet, you can make it in your workshop</message>
+            <message sound="locales/en_us_rural/sounds/tour/workshop2.ogg">Here you can make any word in the game, all you need are the letters and how to spell it</message>
+            <message sound="locales/en_us_rural/sounds/tour/workshop3.ogg">Try making the word map with the letters M A P</message>
+            <message sound="locales/en_us_rural/sounds/tour/workshop4.ogg">Great! But remember, you can only make one word at a time in the workshop, so keep making word buildings!</message>
+        </stop>
+    </tour>
 
     <!-- Alphabet -->
     <letters>
@@ -121,7 +162,7 @@
                 <gather_word count="1">آب</gather_word>
             </req>
         </level>
-        <level name="4" coins="200" points="460" market="3">
+        <level name="4" coins="200" points="460" market="4">
             <intro>
             </intro>
             <letters>ا,د</letters>
@@ -136,7 +177,7 @@
                 <gather_word count="1">آبی</gather_word>
             </req>
         </level>
-        <level name="5" coins="300" points="530" market="3">
+        <level name="5" coins="300" points="530" market="4">
             <intro>
             </intro>
             <letters>ر,ن</letters>

@@ -107,28 +107,27 @@ public class DecorationPlacementHUD extends PhoeniciaHUD implements Bank.BankUpd
             card.attachChild(blockName);
 
             ITiledTextureRegion blockRegion = phoeniciaGame.decorationSprites.get(currentDecoration);
-            ButtonSprite block = new ButtonSprite(card.getWidth()/2, card.getHeight()*2/3, blockRegion, PhoeniciaContext.vboManager);
-            block.setOnClickListener(new ButtonSprite.OnClickListener() {
-                @Override
-                public void onClick(ButtonSprite buttonSprite, float v, float v2) {
-                    float[] cameraCenter = getCamera().getSceneCoordinatesFromCameraSceneCoordinates(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2);
-                    TMXTile mapTile = phoeniciaGame.getTileAt(cameraCenter[0], cameraCenter[1]);
-                    addDecorationTile(currentDecoration, mapTile);
-                }
-            });
-            this.registerTouchArea(block);
+            Sprite block = new Sprite(card.getWidth()/2, card.getHeight()*2/3, blockRegion, PhoeniciaContext.vboManager);
             card.attachChild(block);
             if (phoeniciaGame.locale.isLevelReached(currentDecoration.level, phoeniciaGame.current_level)) {
                 final int cost = currentDecoration.buy * (int)Math.pow(costMultiplier, Assets.getInsance().getDecorationTileCount(currentDecoration));
 
                 ITextureRegion coinRegion = GameUI.getInstance().getCoinsButton();
-                final Sprite coinIcon = new Sprite((card.getWidth()/2), coinRegion.getHeight()/2, coinRegion, PhoeniciaContext.vboManager);
+                final ButtonSprite coinIcon = new ButtonSprite((card.getWidth()/2), coinRegion.getHeight()/2, coinRegion, PhoeniciaContext.vboManager);
+                coinIcon.setOnClickListener(new ButtonSprite.OnClickListener() {
+                    @Override
+                    public void onClick(ButtonSprite buttonSprite, float v, float v2) {
+                        float[] cameraCenter = getCamera().getSceneCoordinatesFromCameraSceneCoordinates(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2);
+                        TMXTile mapTile = phoeniciaGame.getTileAt(cameraCenter[0], cameraCenter[1]);
+                        addDecorationTile(currentDecoration, mapTile);
+                    }
+                });
                 final Text purchaseCost = new Text(100, coinIcon.getHeight()/2, GameFonts.defaultHUDDisplay(), String.valueOf(cost), String.valueOf(cost).length(), PhoeniciaContext.vboManager);
                 card.attachChild(coinIcon);
                 card.attachChild(purchaseCost);
+                this.registerTouchArea(coinIcon);
 
             } else {
-                block.setEnabled(false);
 
                 ITextureRegion levelRegion = GameUI.getInstance().getLevelButton();
 

@@ -185,16 +185,16 @@ public class ImageMatchGameHUD extends PhoeniciaHUD {
         final int reward_coins = Math.round(reward_word.sell * this.tile.game.reward);
         final int reward_points = Math.round(reward_word.points * this.tile.game.reward);
 
-        Dialog reward_dialog = new Dialog(400, 300, Dialog.Buttons.OK, PhoeniciaContext.vboManager, new Dialog.DialogListener() {
+        final Dialog reward_dialog = new Dialog(400, 300, Dialog.Buttons.OK, PhoeniciaContext.vboManager, new Dialog.DialogListener() {
             @Override
             public void onDialogButtonClicked(Dialog dialog, Dialog.DialogButton dialogButton) {
+                finish();
                 Inventory.getInstance().add(reward_word.name, 1);
                 Bank.getInstance().credit(reward_coins);
                 game.session.addExperience(reward_points);
                 GameSounds.play(GameSounds.COLLECT);
                 dialog.close();
                 unregisterTouchArea(dialog);
-                finish();
             }
         });
 
@@ -204,6 +204,7 @@ public class ImageMatchGameHUD extends PhoeniciaHUD {
 
         ITextureRegion coinRegion = GameUI.getInstance().getCoinsButton();
         Sprite coinIcon = new Sprite(reward_dialog.getWidth()/2, 112, coinRegion, PhoeniciaContext.vboManager);
+        this.registerTouchArea(coinIcon);
         Text iconDisplay = new Text(100, coinIcon.getHeight()/2, GameFonts.defaultHUDDisplay(), String.valueOf(reward_coins), 10, new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
         coinIcon.attachChild(iconDisplay);
         reward_dialog.attachChild(coinIcon);

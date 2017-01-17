@@ -31,7 +31,7 @@ public class Dialog extends Entity {
         OK, CANCEL, YES, NO
     }
     public enum Buttons {
-        OK, OK_CANCEL, YES_NO
+        OK, OK_CANCEL, YES_NO, NONE
     }
 
     public Dialog(final float pWidth, final float pHeight, VertexBufferObjectManager vbo, final DialogListener listener) {

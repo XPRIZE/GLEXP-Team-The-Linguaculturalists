@@ -100,6 +100,7 @@ public class SessionSelectionScene extends Scene {
 
         }
 
+        //Button new_button = new Button(GameActivity.CAMERA_WIDTH/2, 100, 400, 100, "Mchezo Mpya", PhoeniciaContext.vboManager, new Button.OnClickListener() {
         Button new_button = new Button(GameActivity.CAMERA_WIDTH/2, 100, 400, 100, "New Game", PhoeniciaContext.vboManager, new Button.OnClickListener() {
             @Override
             public void onClicked(Button button) {
@@ -182,11 +183,12 @@ public class SessionSelectionScene extends Scene {
             Debug.d("Adding SessionSprite as "+px+","+py);
             this.session = session;
             if (session.session_name.get() == null) {
-                Debug.d("Session has no name, setting it to Player "+(sessionSprites.size()+1));
+                Debug.d("Session has no name, setting it to Player " + (sessionSprites.size() + 1));
                 session.session_name.set("Player "+(sessionSprites.size()+1));
+                //session.session_name.set("Mchezaji"+(sessionSprites.size()+1));
                 session.save(PhoeniciaContext.context);
             }
-            Debug.d("Adding Game session: " + session.session_name.get());
+            Debug.i("Adding Game session: " + session.session_name.get() + " in " + session.locale_pack.get());
             LocaleLoader localeLoader = new LocaleLoader();
             Locale session_locale;
             try {

@@ -23,15 +23,16 @@
 
     <!-- Mini-games -->
     <games>
-        <game level="6"  name="Word Match"  type="wordmatch"  buy="300" construct="120" time="300" reward="1.5" sprite="locales/en_us_rural/textures/games/sprites/minigame1.png" block="locales/en_us_rural/textures/games/blocks/minigame1.png" />
-        <game level="12" name="Image Match" type="imagematch" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
+        <game level="6"  name="Word Match"  type="wordmatch"  buy="300" construct="120" time="300" reward="1.5" sprite="locales/common/textures/games/sprites/minigame1.png" block="locales/common/textures/games/blocks/minigame1.png" />
+        <game level="7" name="Image Match" type="imagematch" buy="500" construct="300" time="600" reward="2.0" sprite="locales/common/textures/games/sprites/minigame2.png" block="locales/common/textures/games/blocks/minigame2.png" />
     </games>
 
     <!-- Decorations -->
     <decorations>
-        <decoration level="5"  size="1x1" name="Lamp Post"  buy="200" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
-        <decoration level="10" size="1x1" name="Small Tree" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
-        <decoration level="20" size="2x2" name="Fountain"   buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
+        <decoration level="5"  size="1x1x2" name="Lamp Post"  buy="250" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
+        <decoration level="10" size="1x1x3" name="Small Tree" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
+        <decoration level="15" size="3x3x3" name="Large Tree" buy="750" sprite="locales/common/textures/decorations/sprites/largetree.png" block="locales/common/textures/decorations/blocks/largetree.png" />
+        <decoration level="20" size="2x2x2" name="Fountain"   buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
     </decorations>
 
     <!-- Tour -->
@@ -104,7 +105,7 @@
     <words>
         <word name="apple" size="1x1" buy="6580" sell="450" points="190" construct="85500" time="18000" sprite="locales/common/textures/words/sprites/apple.png" block="locales/common/textures/words/blocks/apple.png" sound="locales/en_us_rural/sounds/apple.ogg">apple</word>
         <word name="banana" size="1x1" buy="4220" sell="300" points="170" construct="41400" time="9600" sprite="locales/common/textures/words/sprites/banana.png" block="locales/common/textures/words/blocks/banana.png" sound="locales/en_us_rural/sounds/banana.ogg">banana</word>
-        <word name="bat" size="2x2x2" buy="330" sell="30" points="54" construct="300" time="600" sprite="locales/common/textures/words/sprites/bat.png" block="locales/common/textures/words/blocks/bat.png" sound="locales/en_us_rural/sounds/bat.ogg">bat</word>
+        <word name="bat" size="2x2x2" buy="330" sell="30" points="54" construct="120" time="300" sprite="locales/common/textures/words/sprites/bat.png" block="locales/common/textures/words/blocks/bat.png" sound="locales/en_us_rural/sounds/bat.ogg">bat</word>
         <word name="bed" size="1x1" buy="3910" sell="280" points="166" construct="36000" time="9000" sprite="locales/common/textures/words/sprites/bed.png" block="locales/common/textures/words/blocks/bed.png" sound="locales/en_us_rural/sounds/bed.ogg">bed</word>
         <word name="boat" size="1x1" buy="5940" sell="410" points="185" construct="72000" time="15600" sprite="locales/common/textures/words/sprites/boat.png" block="locales/common/textures/words/blocks/boat.png" sound="locales/en_us_rural/sounds/boat.ogg">boat</word>
         <word name="bowl" size="1x1" buy="2850" sell="210" points="152" construct="21600" time="6000" sprite="locales/common/textures/words/sprites/bowl.png" block="locales/common/textures/words/blocks/bowl.png" sound="locales/en_us_rural/sounds/bowl.ogg">bowl</word>
@@ -116,7 +117,7 @@
         <word name="can" size="2x2x2" buy="850" sell="70" points="97" construct="2700" time="1200" sprite="locales/common/textures/words/sprites/can.png" block="locales/common/textures/words/blocks/can.png" sound="locales/en_us_rural/sounds/can.ogg">can</word>
         <word name="candle" size="1x1" buy="6260" sell="430" points="188" construct="78300" time="16800" sprite="locales/common/textures/words/sprites/candle.png" block="locales/common/textures/words/blocks/candle.png" sound="locales/en_us_rural/sounds/candle.ogg">candle</word>
         <word name="car" size="2x2x2" buy="1680" sell="130" points="128" construct="9000" time="3000" sprite="locales/common/textures/words/sprites/car.png" block="locales/common/textures/words/blocks/car.png" sound="locales/en_us_rural/sounds/car.ogg">car</word>
-        <word name="cat" size="2x2x2" buy="100" sell="10" points="10" construct="180" time="120" sprite="locales/common/textures/words/sprites/cat.png" block="locales/common/textures/words/blocks/cat.png" sound="locales/en_us_rural/sounds/cat.ogg">cat</word>
+        <word name="cat" size="2x2x2" buy="100" sell="10" points="10" construct="180" time="90" sprite="locales/common/textures/words/sprites/cat.png" block="locales/common/textures/words/blocks/cat.png" sound="locales/en_us_rural/sounds/cat.ogg">cat</word>
         <word name="cot" size="1x1" buy="2110" sell="160" points="138" construct="13500" time="3600" sprite="locales/common/textures/words/sprites/cot.png" block="locales/common/textures/words/blocks/cot.png" sound="locales/en_us_rural/sounds/cot.ogg">cot</word>
         <word name="cow" size="1x1" buy="2550" sell="190" points="147" construct="18000" time="4800" sprite="locales/common/textures/words/sprites/cow.png" block="locales/common/textures/words/blocks/cow.png" sound="locales/en_us_rural/sounds/cow.ogg">cow</word>
         <word name="cup" size="1x1" buy="3450" sell="250" points="160" construct="29700" time="7800" sprite="locales/common/textures/words/sprites/cup.png" block="locales/common/textures/words/blocks/cup.png" sound="locales/en_us_rural/sounds/cup.ogg">cup</word>
@@ -132,7 +133,7 @@
         <word name="goat" size="2x2x2" buy="5780" sell="400" points="184" construct="69300" time="15000" sprite="locales/common/textures/words/sprites/goat.png" block="locales/common/textures/words/blocks/goat.png" sound="locales/en_us_rural/sounds/goat.ogg">goat</word>
         <word name="ham" size="2x2x2" buy="1400" sell="110" points="119" construct="6300" time="2400" sprite="locales/common/textures/words/sprites/ham.png" block="locales/common/textures/words/blocks/ham.png" sound="locales/en_us_rural/sounds/ham.ogg">ham</word>
         <word name="hammer" size="1x1" buy="4680" sell="330" points="174" construct="48600" time="11400" sprite="locales/common/textures/words/sprites/hammer.png" block="locales/common/textures/words/blocks/hammer.png" sound="locales/en_us_rural/sounds/hammer.ogg">hammer</word>
-        <word name="hat" size="2x2x2" buy="210" sell="20" points="34" construct="180" time="120" sprite="locales/common/textures/words/sprites/hat.png" block="locales/common/textures/words/blocks/hat.png" sound="locales/en_us_rural/sounds/hat.ogg">hat</word>
+        <word name="hat" size="2x2x2" buy="210" sell="20" points="34" construct="90" time="120" sprite="locales/common/textures/words/sprites/hat.png" block="locales/common/textures/words/blocks/hat.png" sound="locales/en_us_rural/sounds/hat.ogg">hat</word>
         <word name="horse" size="1x1" buy="7070" sell="480" points="193" construct="95400" time="19800" sprite="locales/common/textures/words/sprites/horse.png" block="locales/common/textures/words/blocks/horse.png" sound="locales/en_us_rural/sounds/horse.ogg">horse</word>
         <word name="hut" size="1x1" buy="3150" sell="230" points="156" construct="25200" time="6600" sprite="locales/common/textures/words/sprites/hut.png" block="locales/common/textures/words/blocks/hut.png" sound="locales/en_us_rural/sounds/hut.ogg">hut</word>
         <word name="jam" size="2x2x2" buy="1540" sell="120" points="124" construct="8100" time="2400" sprite="locales/common/textures/words/sprites/jam.png" block="locales/common/textures/words/blocks/jam.png" sound="locales/en_us_rural/sounds/jam.ogg">jam</word>
@@ -236,7 +237,6 @@
         </level>
         <level name="5" coins="300" points="530" market="2">
             <intro>
-                <page sound="locales/en_us_rural/sounds/intro4p1.ogg">Yay! Building words from letters is what Phoenicia is all about!</page>
             </intro>
             <letters>b</letters>
             <words>hat</words>
@@ -251,8 +251,7 @@
         </level>
         <level name="6" coins="300" points="590" market="2">
             <intro>
-                <page sound="locales/en_us_rural/sounds/intro5p1.ogg">You're doing great! Now that you have the hang of it, here's some more letters and words that you can grown and build.</page>
-                <page sound="locales/en_us_rural/sounds/intro5p2.ogg">Keeping building words and you'll reach new levels, each new level will open up new letters and words for you to use.</page>
+                <page sound="locales/en_us_rural/sounds/intro4p1.ogg">Yay! Building words from letters is what Phoenicia is all about!</page>
             </intro>
             <letters>r</letters>
             <words>bat</words>
@@ -267,6 +266,8 @@
         </level>
         <level name="7" coins="300" points="640" market="2">
             <intro>
+                <page sound="locales/en_us_rural/sounds/intro5p1.ogg">You're doing great! Now that you have the hang of it, here's some more letters and words that you can grown and build.</page>
+                <page sound="locales/en_us_rural/sounds/intro5p2.ogg">Keeping building words and you'll reach new levels, each new level will open up new letters and words for you to use.</page>
             </intro>
             <letters>m</letters>
             <words>rat</words>

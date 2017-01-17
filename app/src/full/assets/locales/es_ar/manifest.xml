@@ -5,16 +5,18 @@
     <music src="locales/common/sounds/forest_background.mp3" />
 
     <!-- Default blocks -->
-    <inventory level="1" size="1x2" name="Barn" col="37" row="43" block="locales/common/textures/inventory.png" />
-    <market level="4" size="4x4x4" name="Market" col="42" row="40" block="locales/common/textures/market.png" />
-    <workshop level="6" name="Workshop" col="38" row="40" block="locales/common/textures/workshop.png" />
+    <inventory level="1" size="4x4x4" name="Almacén" col="37" row="43" block="locales/common/textures/inventory.png" />
+    <market level="4" size="4x4x4" name="Plaza del Mercado" col="42" row="40" block="locales/common/textures/market.png" />
+    <workshop level="6" size="3x3x3" name="Taller" col="38" row="40" block="locales/common/textures/workshop.png" />
 
     <!-- People used in the marketplace and player's avatar -->
     <people>
-        <person name="Dave" texture="locales/common/textures/persons/Dave.png" />
-        <person name="Roxanne" texture="locales/common/textures/persons/Roxanne.png" />
-        <person name="Ben" texture="locales/common/textures/persons/Ben.png" />
-        <person name="Laura" texture="locales/common/textures/persons/Laura.png" />
+        <person name="Diego" texture="locales/common/textures/persons/m1.png" />
+        <person name="Roxanne" texture="locales/common/textures/persons/f1.png" />
+        <person name="Ben" texture="locales/common/textures/persons/m2.png" />
+        <person name="Maria" texture="locales/common/textures/persons/f2.png" />
+        <person name="José" texture="locales/common/textures/persons/m3.png" />
+        <person name="Gloria" texture="locales/common/textures/persons/f4.png" />
     </people>
 
     <!-- Mini-games -->
@@ -25,9 +27,10 @@
 
     <!-- Decorations -->
     <decorations>
-        <decoration size="1x1" name="Lamp Post"  level="5" buy="200" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
-        <decoration size="1x1" name="Small Tree" level="10" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
-        <decoration size="2x2" name="Fountain"   level="20" buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
+        <decoration level="5"  size="1x1x2" name="Lamp Post"  buy="250" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
+        <decoration level="10" size="1x1x3" name="Small Tree" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
+        <decoration level="15" size="3x3x3" name="Large Tree" buy="750" sprite="locales/common/textures/decorations/sprites/largetree.png" block="locales/common/textures/decorations/blocks/largetree.png" />
+        <decoration level="20" size="2x2x2" name="Fountain"   buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
     </decorations>
 
     <!-- Tour -->
@@ -138,7 +141,7 @@
         <word name="lápiz" size="1x1" buy="10540" sell="690" points="211" construct="183600" time="34200" sprite="locales/common/textures/words/sprites/pencil.png" block="locales/common/textures/words/blocks/pencil.png" sound="locales/es_ar/sounds/lapiz.ogg">lápiz</word>
         <word name="maceta" size="1x1" buy="5150" sell="360" points="179" construct="56700" time="13200" sprite="locales/common/textures/words/sprites/pot.png" block="locales/common/textures/words/blocks/pot.png" sound="locales/es_ar/sounds/maceta.ogg">maceta</word>
         <word name="manzana" size="1x1" buy="4680" sell="330" points="174" construct="48600" time="11400" sprite="locales/common/textures/words/sprites/apple.png" block="locales/common/textures/words/blocks/apple.png" sound="locales/es_ar/sounds/manzana.ogg">manzana</word>
-        <word name="mapa" size="1x1" buy="210" sell="20" points="34" construct="180" time="120" sprite="locales/common/textures/words/sprites/map.png" block="locales/common/textures/words/blocks/map.png" sound="locales/es_ar/sounds/map.ogg">mapa</word>
+        <word name="mapa" size="2x2x2" buy="210" sell="20" points="34" construct="180" time="120" sprite="locales/common/textures/words/sprites/map.png" block="locales/common/textures/words/blocks/map.png" sound="locales/es_ar/sounds/map.ogg">mapa</word>
         <word name="martillo" size="1x1" buy="9870" sell="650" points="208" construct="164700" time="31200" sprite="locales/common/textures/words/sprites/hammer.png" block="locales/common/textures/words/blocks/hammer.png" sound="locales/es_ar/sounds/martillo.ogg">martillo</word>
         <word name="mesa" size="1x1" buy="3000" sell="220" points="154" construct="23400" time="6000" sprite="locales/common/textures/words/sprites/table.png" block="locales/common/textures/words/blocks/table.png" sound="locales/es_ar/sounds/mesa.ogg">mesa</word>
         <word name="murcielago" size="1x1" buy="10870" sell="710" points="213" construct="193500" time="36000" sprite="locales/common/textures/words/sprites/bat.png" block="locales/common/textures/words/blocks/bat.png" sound="locales/es_ar/sounds/murcielago.ogg">murcielago</word>

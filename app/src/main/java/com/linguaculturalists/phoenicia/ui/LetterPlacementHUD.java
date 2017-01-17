@@ -175,11 +175,7 @@ public class LetterPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateL
         game.createLetterSprite(letterTile, new PhoeniciaGame.CreateLetterSpriteCallback() {
             @Override
             public void onLetterSpriteCreated(LetterTile tile) {
-                int build_time = letter.time;
-                if (game.locale.level_map.get(game.getCurrentLevel()).help_letters.contains(letter)){
-                    build_time = letter.time / 2;
-                }
-                LetterBuilder builder = new LetterBuilder(game.session, letterTile, letterTile.item_name.get(), build_time);
+                LetterBuilder builder = new LetterBuilder(game.session, letterTile, letterTile.item_name.get(), letter.time);
                 builder.start();
                 builder.save(PhoeniciaContext.context);
                 game.addBuilder(builder);
