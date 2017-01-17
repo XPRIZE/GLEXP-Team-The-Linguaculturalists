@@ -4,9 +4,7 @@
 
 Phoenicia is an Android game designed to teach literacy and numeracy to children in an unguided way.
 
-<img src="screenshot.png" width="400"/>
-
-**Phoenicia is in very early development*, this screenshot will be updated as it progresses
+<img src="screenshot.png" width="480"/>
 
 ## Gameplay
 
