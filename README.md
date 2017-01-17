@@ -25,7 +25,7 @@ As the player progresses in the game, new letters will become available to them,
 
 #### Numeracy
 
-Progressios through the game is driven by a marketplace where the player can sell their words and letters, earning in-game currency. This currency can then be used to purchase additional letters (raising them takes time, and not all letters can be raised as crops). During these exchanges the player will be encouraged to calculate small sums and differences themselves to speed up gameplay, with a fallback to counting up or down one item at a time.
+Progression through the game is driven by a marketplace where the player can sell their words and letters, earning in-game currency. This currency can then be used to purchase additional letters (raising them takes time, and not all letters can be raised as crops). During these exchanges the player will be encouraged to calculate small sums and differences themselves to speed up gameplay, with a fallback to counting up or down one item at a time.
 
 #### Socializing
 
@@ -38,9 +38,9 @@ Phoenicia is powered by "Locale Packs" which provide unique artwork, sounds, let
 You can learn how to build your own Locale Pack by reading our [Localization](docs/Localization.md) guide.
 
 
-## Contributing
+## Building & Contributing
 
-You should be able to clone Phoenicia's Git repository and open it in Android Studio. It is being developed on Ubuntu 15.10 and Android Studio 
+You should be able to clone Phoenicia's Git repository and open it in Android Studio. It is being developed on Ubuntu 16.04 and Android Studio 
 1.1. [Dependencies](#dependencies) are included in the Git branch.
 
 For full contributing requirements, please read our [Contributing](docs/Contributing.md) docs.
