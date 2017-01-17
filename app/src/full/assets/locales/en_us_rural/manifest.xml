@@ -237,7 +237,6 @@
         </level>
         <level name="5" coins="300" points="530" market="2">
             <intro>
-                <page sound="locales/en_us_rural/sounds/intro4p1.ogg">Yay! Building words from letters is what Phoenicia is all about!</page>
             </intro>
             <letters>b</letters>
             <words>hat</words>
@@ -252,8 +251,7 @@
         </level>
         <level name="6" coins="300" points="590" market="2">
             <intro>
-                <page sound="locales/en_us_rural/sounds/intro5p1.ogg">You're doing great! Now that you have the hang of it, here's some more letters and words that you can grown and build.</page>
-                <page sound="locales/en_us_rural/sounds/intro5p2.ogg">Keeping building words and you'll reach new levels, each new level will open up new letters and words for you to use.</page>
+                <page sound="locales/en_us_rural/sounds/intro4p1.ogg">Yay! Building words from letters is what Phoenicia is all about!</page>
             </intro>
             <letters>r</letters>
             <words>bat</words>
@@ -268,6 +266,8 @@
         </level>
         <level name="7" coins="300" points="640" market="2">
             <intro>
+                <page sound="locales/en_us_rural/sounds/intro5p1.ogg">You're doing great! Now that you have the hang of it, here's some more letters and words that you can grown and build.</page>
+                <page sound="locales/en_us_rural/sounds/intro5p2.ogg">Keeping building words and you'll reach new levels, each new level will open up new letters and words for you to use.</page>
             </intro>
             <letters>m</letters>
             <words>rat</words>

@@ -11,27 +11,28 @@
 
     <!-- People used in the marketplace and player's avatar -->
     <people>
-        <person name="Baraka" texture="locales/common/textures/persons/m1.png" />
         <person name="Amanika" texture="locales/common/textures/persons/f1.png" />
-        <person name="Hamadi" texture="locales/common/textures/persons/m2.png" />
         <person name="Elewa" texture="locales/common/textures/persons/f2.png" />
-        <person name="Jamba" texture="locales/common/textures/persons/m3.png" />
         <person name="Jama" texture="locales/common/textures/persons/f3.png" />
-        <person name="Usian" texture="locales/common/textures/persons/m4.png" />
         <person name="Rehema" texture="locales/common/textures/persons/f4.png" />
+        <person name="Baraka" texture="locales/common/textures/persons/m1.png" />
+        <person name="Hamadi" texture="locales/common/textures/persons/m2.png" />
+        <person name="Jamba" texture="locales/common/textures/persons/m3.png" />
+        <person name="Usian" texture="locales/common/textures/persons/m4.png" />
     </people>
 
     <!-- Mini-games -->
     <games>
-        <game level="6"  name="Word Match"  type="wordmatch"  buy="300" construct="120" time="300" reward="1.5" sprite="locales/en_us_rural/textures/games/sprites/minigame1.png" block="locales/en_us_rural/textures/games/blocks/minigame1.png" />
-        <game level="12" name="Image Match" type="imagematch" buy="500" construct="300" time="600" reward="2.0" sprite="locales/en_us_rural/textures/games/sprites/minigame2.png" block="locales/en_us_rural/textures/games/blocks/minigame2.png" />
+        <game level="6"  name="Mechi Maneno"  type="wordmatch"  buy="300" construct="120" time="300" reward="1.5" sprite="locales/common/textures/games/sprites/minigame1.png" block="locales/common/textures/games/blocks/minigame1.png" />
+        <game level="12" name="Mechi Picha" type="imagematch" buy="500" construct="300" time="600" reward="2.0" sprite="locales/common/textures/games/sprites/minigame2.png" block="locales/common/textures/games/blocks/minigame2.png" />
     </games>
 
     <!-- Decorations -->
     <decorations>
-        <decoration level="7"  size="1x1" name="Lamp Post"  buy="200" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
-        <decoration level="15" size="1x1" name="Small Tree" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
-        <decoration level="22" size="2x2" name="Fountain"   buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
+        <decoration level="5"  size="1x1x2" name="Taa za Mitaani"  buy="250" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
+        <decoration level="10" size="1x1x3" name="Mti Mdogo" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
+        <decoration level="15" size="3x3x3" name="Mti Mkubwa" buy="750" sprite="locales/common/textures/decorations/sprites/largetree.png" block="locales/common/textures/decorations/blocks/largetree.png" />
+        <decoration level="20" size="2x2x2" name="Chemchemi"   buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
     </decorations>
 
     <!-- Tour -->
@@ -72,7 +73,7 @@
 
     <!-- Alphabet -->
     <letters>
-        <letter name="a" buy="1" sell="1"  points="1" time="60" sprite="locales/common/textures/letters/sprites/a.png" block="locales/common/textures/letters/blocks/a.png" sound="locales/sw_tz/sounds/a-name.ogg" phoneme="locales/sw_tz/sounds/a-phoneme.ogg">a</letter>
+        <letter name="a" buy="1" sell="1"  points="1" time="30" sprite="locales/common/textures/letters/sprites/a.png" block="locales/common/textures/letters/blocks/a.png" sound="locales/sw_tz/sounds/a-name.ogg" phoneme="locales/sw_tz/sounds/a-phoneme.ogg">a</letter>
         <letter name="b" buy="30" sell="10"  points="11" time="105" sprite="locales/common/textures/letters/sprites/b.png" block="locales/common/textures/letters/blocks/b.png" sound="locales/sw_tz/sounds/b-name.ogg" phoneme="locales/sw_tz/sounds/b-phoneme.ogg">b</letter>
         <letter name="c" buy="100" sell="20"  points="15" time="1020" sprite="locales/common/textures/letters/sprites/c.png" block="locales/common/textures/letters/blocks/c.png" sound="locales/sw_tz/sounds/c-name.ogg" phoneme="locales/sw_tz/sounds/c-phoneme.ogg">c</letter>
         <letter name="d" buy="50" sell="10"  points="13" time="870" sprite="locales/common/textures/letters/sprites/d.png" block="locales/common/textures/letters/blocks/d.png" sound="locales/sw_tz/sounds/d-name.ogg" phoneme="locales/sw_tz/sounds/d-phoneme.ogg">d</letter>
@@ -90,7 +91,7 @@
         <letter name="p" buy="80" sell="20"  points="14" time="120" sprite="locales/common/textures/letters/sprites/p.png" block="locales/common/textures/letters/blocks/p.png" sound="locales/sw_tz/sounds/p-name.ogg" phoneme="locales/sw_tz/sounds/p-phoneme.ogg">p</letter>
         <letter name="r" buy="30" sell="10"  points="11" time="720" sprite="locales/common/textures/letters/sprites/r.png" block="locales/common/textures/letters/blocks/r.png" sound="locales/sw_tz/sounds/r-name.ogg" phoneme="locales/sw_tz/sounds/r-phoneme.ogg">r</letter>
         <letter name="s" buy="40" sell="10"  points="12" time="790" sprite="locales/common/textures/letters/sprites/s.png" block="locales/common/textures/letters/blocks/s.png" sound="locales/sw_tz/sounds/s-name.ogg" phoneme="locales/sw_tz/sounds/s-phoneme.ogg">s</letter>
-        <letter name="t" buy="40" sell="10"  points="12" time="90" sprite="locales/common/textures/letters/sprites/t.png" block="locales/common/textures/letters/blocks/t.png" sound="locales/sw_tz/sounds/t-name.ogg" phoneme="locales/sw_tz/sounds/t-phoneme.ogg">t</letter>
+        <letter name="t" buy="40" sell="10"  points="12" time="45" sprite="locales/common/textures/letters/sprites/t.png" block="locales/common/textures/letters/blocks/t.png" sound="locales/sw_tz/sounds/t-name.ogg" phoneme="locales/sw_tz/sounds/t-phoneme.ogg">t</letter>
         <letter name="u" buy="10" sell="5"  points="5" time="360" sprite="locales/common/textures/letters/sprites/u.png" block="locales/common/textures/letters/blocks/u.png" sound="locales/sw_tz/sounds/u-name.ogg" phoneme="locales/sw_tz/sounds/u-phoneme.ogg">u</letter>
         <letter name="v" buy="130" sell="30"  points="16" time="1060" sprite="locales/common/textures/letters/sprites/v.png" block="locales/common/textures/letters/blocks/v.png" sound="locales/sw_tz/sounds/v-name.ogg" phoneme="locales/sw_tz/sounds/v-phoneme.ogg">v</letter>
         <letter name="w" buy="90" sell="20"  points="15" time="990" sprite="locales/common/textures/letters/sprites/w.png" block="locales/common/textures/letters/blocks/w.png" sound="locales/sw_tz/sounds/w-name.ogg" phoneme="locales/sw_tz/sounds/w-phoneme.ogg">w</letter>
