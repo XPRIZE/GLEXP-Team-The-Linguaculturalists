@@ -2,7 +2,10 @@ package com.linguaculturalists.phoenicia;
 
 import android.view.View;
 
+import com.linguaculturalists.phoenicia.locale.Locale;
+import com.linguaculturalists.phoenicia.locale.LocaleLoader;
 import com.linguaculturalists.phoenicia.locale.LocaleManager;
+import com.linguaculturalists.phoenicia.locale.LocaleParser;
 import com.linguaculturalists.phoenicia.models.DecorationTile;
 import com.linguaculturalists.phoenicia.models.DefaultTile;
 import com.linguaculturalists.phoenicia.models.GameSession;
@@ -135,15 +138,29 @@ public class GameActivity extends BaseGameActivity {
                 // Load phoeniciaGame session
                 List<GameSession> sessions = GameSession.objects(PhoeniciaContext.context).all().toList();
                 Debug.d("Number of Sessions: " + sessions.size());
-                // If no sessions exist, go start a new one first
                 splash.detachSelf();
                 if (sessions.size() < 1) {
+                    // If no sessions exist, go start a new one first
                     LocaleSelectionScene localeScene = new LocaleSelectionScene(game);
                     mEngine.setScene(localeScene);
                     if (localeScene.available_locales.size() == 1) {
                         localeScene.startGame(localeScene.available_locales.get(0));
                     }
+                } else if (sessions.size() == 1){
+                    // If only one session exists and it's still on the first level, autostart it
+                    SessionSelectionScene sessionSelectionScene = new SessionSelectionScene(game);
+                    mEngine.setScene(sessionSelectionScene);
+                    LocaleLoader lloader = new LocaleLoader();
+                    try {
+                        Locale locale = lloader.load(PhoeniciaContext.assetManager.open(sessions.get(0).locale_pack.get()));
+                        if (sessions.get(0).current_level.get().equals(locale.levels.get(0).name)) {
+                            sessionSelectionScene.startGame(sessions.get(0));
+                        }
+                    } catch (Exception e) {
+                        // Locale loading has failed, fall back to displaying sessions
+                    }
                 } else {
+                    // If multiple sessions exist, show selection
                     mEngine.setScene(new SessionSelectionScene(game));
                 }
             }

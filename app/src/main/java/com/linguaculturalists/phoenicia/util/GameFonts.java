@@ -33,7 +33,7 @@ public class GameFonts {
     public static Font dialogText() {
         if (dialogFont == null) {
             BitmapTextureAtlas texture = new BitmapTextureAtlas(PhoeniciaContext.textureManager, 1024, 1024, TextureOptions.BILINEAR);
-            dialogFont = FontFactory.create(PhoeniciaContext.fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 32, true, Color.BLACK_ARGB_PACKED_INT);
+            dialogFont = FontFactory.create(PhoeniciaContext.fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 32, true, new Color(0.5f, 0.5f, 0.5f).getABGRPackedInt());
             dialogFont.load();
         }
         return dialogFont;
@@ -92,8 +92,9 @@ public class GameFonts {
      */
     public static Font buttonText() {
         if (buttonFont == null) {
+            Color borderColor = new Color(20/255f, 91/255f, 164/255f);
             BitmapTextureAtlas texture = new BitmapTextureAtlas(PhoeniciaContext.textureManager, 1024, 1024, TextureOptions.BILINEAR);
-            buttonFont = FontFactory.createStroke(PhoeniciaContext.fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 32, true, Color.WHITE_ARGB_PACKED_INT, 1, Color.BLACK_ARGB_PACKED_INT);
+            buttonFont = FontFactory.createStroke(PhoeniciaContext.fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 32, true, Color.WHITE_ARGB_PACKED_INT, 0.75f, borderColor.getARGBPackedInt());
             buttonFont.load();
         }
         return buttonFont;
@@ -102,7 +103,7 @@ public class GameFonts {
     public static Font progressText() {
         if (progressFont == null) {
             BitmapTextureAtlas texture = new BitmapTextureAtlas(PhoeniciaContext.textureManager, 1024, 1024, TextureOptions.BILINEAR);
-            progressFont = FontFactory.createStroke(PhoeniciaContext.fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 24, true, Color.WHITE_ARGB_PACKED_INT, 1, Color.BLUE_ARGB_PACKED_INT);
+            progressFont = FontFactory.createStroke(PhoeniciaContext.fontManager, texture, Typeface.create(Typeface.MONOSPACE, Typeface.BOLD), 24, true, Color.WHITE_ARGB_PACKED_INT, 0.5f, Color.BLUE_ARGB_PACKED_INT);
             progressFont.load();
         }
         return progressFont;

@@ -9,6 +9,7 @@ import com.linguaculturalists.phoenicia.locale.LocaleManager;
 import com.linguaculturalists.phoenicia.locale.Person;
 import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.Filter;
 
@@ -27,6 +28,7 @@ import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.input.touch.detector.HoldDetector;
+import org.andengine.opengl.texture.Texture;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
 import org.andengine.opengl.texture.region.ITextureRegion;
@@ -123,7 +125,7 @@ public class SessionSelectionScene extends Scene {
         }
     }
 
-    private void startGame(final GameSession session) {
+    public void startGame(final GameSession session) {
         final LoadingScene loadingScene = new LoadingScene(game);
         session.save(PhoeniciaContext.context);
         this.detachSelf();
@@ -209,8 +211,21 @@ public class SessionSelectionScene extends Scene {
                 block = new ButtonSprite(this.getWidth()/2, py, personRegion, PhoeniciaContext.vboManager);
 
                 personName = new Text(block.getWidth()/2, -16, GameFonts.dialogText(), session.session_name.get(), session.session_name.get().length(),  new TextOptions(AutoWrap.WORDS, 256, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
-                block.attachChild(personName);
+                //block.attachChild(personName);
+
+                Texture newShell = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, session_locale.shell_src);
+                newShell.load();
+                final int GU = 96;
+                ITextureRegion levelRegion = TextureRegionFactory.extractFromTexture(newShell, GU*5, GU*0, GU*3, GU*1);
+                final ButtonSprite levelIcon = new ButtonSprite(block.getWidth()/2, (0 - levelRegion.getHeight()/2), levelRegion, PhoeniciaContext.vboManager);
+                String current_level = session.current_level.get();
+                if (current_level == null) current_level = "0";
+                final Text levelName = new Text(160, levelIcon.getHeight()/2, GameFonts.defaultHUDDisplay(), current_level, 4, PhoeniciaContext.vboManager);
+                levelIcon.attachChild(levelName);
+                block.attachChild(levelIcon);
+
                 this.attachChild(block);
+
             } catch (final IOException e) {
                 Debug.e("Failed to load game session person!", e);
             }

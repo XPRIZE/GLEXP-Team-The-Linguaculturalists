@@ -74,12 +74,16 @@ public class LetterSprite extends ButtonSprite {
         } else {
             this.count_text.setText(String.valueOf(count));
         }
-        this.count_text.setPosition((this.getWidth()/2), this.count_text.getY());
+        this.count_text.setPosition((this.getWidth() / 2), this.count_text.getY());
         if (count < needed) {
             this.count_text.setColor(Color.RED);
         } else {
             this.count_text.setColor(Color.WHITE);
         }
+    }
+
+    public void showCount(final boolean show) {
+        this.count_text.setVisible(show);
     }
 
     public Letter getLetter() {

@@ -16,6 +16,7 @@ import com.linguaculturalists.phoenicia.models.GameTileBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.models.WordTileBuilder;
 import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.GameSounds;
 import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
@@ -187,11 +188,17 @@ public class GamePlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
                 }
             });
             int difference = cost - game.session.account_balance.get();
-            Text confirmText = new Text(lowBalanceDialog.getWidth()/2, lowBalanceDialog.getHeight()-48, GameFonts.dialogText(), "You need "+difference+" more coins", 30,  new TextOptions(AutoWrap.WORDS, lowBalanceDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+            Text confirmText = new Text(lowBalanceDialog.getWidth()/2 + 48, lowBalanceDialog.getHeight()/2 + 32, GameFonts.dialogText(), " -"+difference, 6,  new TextOptions(AutoWrap.WORDS, lowBalanceDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+            confirmText.setColor(Color.RED);
             lowBalanceDialog.attachChild(confirmText);
+
+            ITextureRegion coinRegion = GameUI.getInstance().getCoinsIcon();
+            Sprite coinIcon = new Sprite(lowBalanceDialog.getWidth()/2 - 48, lowBalanceDialog.getHeight()/2 + 32, coinRegion, PhoeniciaContext.vboManager);
+            lowBalanceDialog.attachChild(coinIcon);
 
             lowBalanceDialog.open(this);
             this.registerTouchArea(lowBalanceDialog);
+            GameSounds.play(GameSounds.FAILED);
             return;
         }
         Debug.d("Placing game "+minigame.name+" at "+onTile.getTileColumn()+"x"+onTile.getTileRow());

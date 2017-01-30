@@ -373,6 +373,27 @@ public class WordTile extends Model implements Builder.BuildStatusUpdateHandler,
                         time_left = time_left / 60;
                         time_display = String.valueOf(time_left) + "m";
                     }
+                    final Text nameText = new Text(sprite.getWidth()/2, sprite.getHeight()*0.6f, GameFonts.progressText(), String.copyValueOf(word.chars), word.chars.length, PhoeniciaContext.vboManager);
+                    sprite.attachChild(nameText);
+                    nameText.registerEntityModifier(new ParallelEntityModifier(
+                            new ScaleModifier(0.4f, 0.3f, 0.8f, EaseLinear.getInstance()),
+                            new FadeOutModifier(3.0f, new IEntityModifier.IEntityModifierListener() {
+                                @Override
+                                public void onModifierStarted(IModifier<IEntity> iModifier, IEntity iEntity) {
+                                }
+
+                                @Override
+                                public void onModifierFinished(IModifier<IEntity> iModifier, IEntity iEntity) {
+                                    phoeniciaGame.activity.runOnUpdateThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            sprite.detachChild(nameText);
+                                        }
+                                    });
+                                }
+                            }, EaseLinear.getInstance())
+                    ));
+
                     final Text progressText = new Text(sprite.getWidth()/2, 16, GameFonts.progressText(), time_display, time_display.length(), PhoeniciaContext.vboManager);
                     sprite.attachChild(progressText);
                     progressText.registerEntityModifier(new ParallelEntityModifier(

@@ -26,9 +26,10 @@ public class Button extends Entity implements ClickDetector.IClickDetectorListen
     private OnClickListener clickListener;
     private Rectangle background;
     private Text buttonText;
+    private static final Color defaultColor = new Color(0/255f, 125/255f, 198/255f);
 
     public Button(float x, float y, float w, float h, String text, VertexBufferObjectManager pVertexBufferObjectManager, OnClickListener pOnClickListener) {
-        this(x, y, w, h, text, Color.BLUE, pVertexBufferObjectManager, pOnClickListener);
+        this(x, y, w, h, text, defaultColor, pVertexBufferObjectManager, pOnClickListener);
     }
     public Button(float x, float y, float w, float h, String text, Color color, VertexBufferObjectManager pVertexBufferObjectManager, OnClickListener pOnClickListener) {
         super(x, y, w, h);

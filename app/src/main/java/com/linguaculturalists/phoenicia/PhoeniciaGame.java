@@ -341,6 +341,11 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     }
 
     private void loadLocale(ProgressDisplay progress) throws IOException {
+        // Initialize game shell textures
+        Texture newShell = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.shell_src);
+        newShell.load();
+        GameUI.init(newShell);
+
         // For storing sound data
         blockSounds = new HashMap<String, Sound>();
 
@@ -429,9 +434,6 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
     private void loadLocaleDefaults() throws IOException {
         try {
-            Texture newShell = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.shell_src);
-            newShell.load();
-            GameUI.init(newShell);
 
             inventoryTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, this.locale.inventoryBlock.block_texture);
             inventoryTexture.load();

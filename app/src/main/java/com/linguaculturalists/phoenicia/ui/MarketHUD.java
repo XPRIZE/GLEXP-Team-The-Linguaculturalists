@@ -345,28 +345,32 @@ public class MarketHUD extends PhoeniciaHUD {
                 }
             }
         });
-        Text confirmText = new Text(confirmDialog.getWidth()/2, confirmDialog.getHeight()-48, GameFonts.dialogText(), "You need more of these:", 24,  new TextOptions(AutoWrap.WORDS, confirmDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+        Text confirmText = new Text(confirmDialog.getWidth()/2 + 48, confirmDialog.getHeight()/2 + 32, GameFonts.dialogText(), " -"+needed, 6,  new TextOptions(AutoWrap.WORDS, confirmDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+        confirmText.setColor(Color.RED);
         confirmDialog.attachChild(confirmText);
+
         final Letter isLetter = game.locale.letter_map.get(item.item_name.get());
         final Word isWord = game.locale.word_map.get(item.item_name.get());
         if (isLetter != null) {
-            LetterSprite sprite = new LetterSprite(confirmDialog.getWidth()/2, confirmDialog.getHeight()/2, isLetter, needed, game.letterSprites.get(isLetter), PhoeniciaContext.vboManager);
+            LetterSprite sprite = new LetterSprite(confirmDialog.getWidth()/2 - 48, confirmDialog.getHeight()/2 + 32, isLetter, needed, game.letterSprites.get(isLetter), PhoeniciaContext.vboManager);
             sprite.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v1) {
                     game.playBlockSound(isLetter.sound);
                 }
             });
+            sprite.showCount(false);
             confirmDialog.registerTouchArea(sprite);
             confirmDialog.attachChild(sprite);
         } else if (isWord != null) {
-            WordSprite sprite = new WordSprite(confirmDialog.getWidth()/2, confirmDialog.getHeight()/2, isWord, needed, game.wordSprites.get(isWord), PhoeniciaContext.vboManager);
+            WordSprite sprite = new WordSprite(confirmDialog.getWidth()/2 - 48, confirmDialog.getHeight()/2 + 32, isWord, needed, game.wordSprites.get(isWord), PhoeniciaContext.vboManager);
             sprite.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v1) {
                     game.playBlockSound(isWord.sound);
                 }
             });
+            sprite.showCount(false);
             confirmDialog.registerTouchArea(sprite);
             confirmDialog.attachChild(sprite);
         }

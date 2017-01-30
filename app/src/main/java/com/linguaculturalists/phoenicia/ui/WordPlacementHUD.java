@@ -202,6 +202,7 @@ public class WordPlacementHUD extends PhoeniciaHUD implements Bank.BankUpdateLis
             });
             int difference = cost - game.session.account_balance.get();
             Text confirmText = new Text(lowBalanceDialog.getWidth()/2 + 48, lowBalanceDialog.getHeight()/2 + 32, GameFonts.dialogText(), " -"+difference, 6,  new TextOptions(AutoWrap.WORDS, lowBalanceDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+            confirmText.setColor(Color.RED);
             lowBalanceDialog.attachChild(confirmText);
 
             ITextureRegion coinRegion = GameUI.getInstance().getCoinsIcon();

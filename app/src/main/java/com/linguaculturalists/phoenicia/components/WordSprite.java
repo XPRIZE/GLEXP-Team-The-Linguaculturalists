@@ -77,6 +77,10 @@ public class WordSprite extends ButtonSprite {
         }
     }
 
+    public void showCount(final boolean show) {
+        this.count_text.setVisible(show);
+    }
+
     public Word getWord() {
         return word;
     }
