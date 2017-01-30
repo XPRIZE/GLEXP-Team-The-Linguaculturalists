@@ -23,15 +23,15 @@
 
     <!-- Mini-games -->
     <games>
-        <game level="6"  name="Word Match"  type="wordmatch"  buy="300" construct="120" time="300" reward="1.5" sprite="locales/common/textures/games/sprites/minigame1.png" block="locales/common/textures/games/blocks/minigame1.png" />
-        <game level="7" name="Image Match" type="imagematch" buy="500" construct="300" time="600" reward="2.0" sprite="locales/common/textures/games/sprites/minigame2.png" block="locales/common/textures/games/blocks/minigame2.png" />
+        <game level="8"  name="Word Match"  type="wordmatch"  buy="300" construct="120" time="300" reward="1.5" sprite="locales/common/textures/games/sprites/minigame1.png" block="locales/common/textures/games/blocks/minigame1.png" />
+        <game level="13" name="Image Match" type="imagematch" buy="500" construct="300" time="600" reward="2.0" sprite="locales/common/textures/games/sprites/minigame2.png" block="locales/common/textures/games/blocks/minigame2.png" />
     </games>
 
     <!-- Decorations -->
     <decorations>
-        <decoration level="5"  size="1x1x2" name="Lamp Post"  buy="250" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
-        <decoration level="10" size="1x1x3" name="Small Tree" buy="500" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
-        <decoration level="15" size="3x3x3" name="Large Tree" buy="750" sprite="locales/common/textures/decorations/sprites/largetree.png" block="locales/common/textures/decorations/blocks/largetree.png" />
+        <decoration level="5"  size="1x1x2" name="Lamp Post"  buy="50" sprite="locales/common/textures/decorations/sprites/lamp.png" block="locales/common/textures/decorations/blocks/lamp.png" />
+        <decoration level="10" size="1x1x3" name="Small Tree" buy="100" sprite="locales/common/textures/decorations/sprites/smalltree.png" block="locales/common/textures/decorations/blocks/smalltree.png" />
+        <decoration level="15" size="3x3x3" name="Large Tree" buy="250" sprite="locales/common/textures/decorations/sprites/largetree.png" block="locales/common/textures/decorations/blocks/largetree.png" />
         <decoration level="20" size="2x2x2" name="Fountain"   buy="1000" sprite="locales/common/textures/decorations/sprites/fountain.png" block="locales/common/textures/decorations/blocks/fountain.png" />
     </decorations>
 
@@ -119,7 +119,7 @@
         <word name="car" size="2x2x2" buy="1680" sell="130" points="128" construct="9000" time="3000" sprite="locales/common/textures/words/sprites/car.png" block="locales/common/textures/words/blocks/car.png" sound="locales/en_us_rural/sounds/car.ogg">car</word>
         <word name="cat" size="2x2x2" buy="100" sell="10" points="10" construct="180" time="90" sprite="locales/common/textures/words/sprites/cat.png" block="locales/common/textures/words/blocks/cat.png" sound="locales/en_us_rural/sounds/cat.ogg">cat</word>
         <word name="cot" size="1x1" buy="2110" sell="160" points="138" construct="13500" time="3600" sprite="locales/common/textures/words/sprites/cot.png" block="locales/common/textures/words/blocks/cot.png" sound="locales/en_us_rural/sounds/cot.ogg">cot</word>
-        <word name="cow" size="1x1" buy="2550" sell="190" points="147" construct="18000" time="4800" sprite="locales/common/textures/words/sprites/cow.png" block="locales/common/textures/words/blocks/cow.png" sound="locales/en_us_rural/sounds/cow.ogg">cow</word>
+        <word name="cow" size="2x2x2" buy="2550" sell="190" points="147" construct="18000" time="4800" sprite="locales/common/textures/words/sprites/cow.png" block="locales/common/textures/words/blocks/cow.png" sound="locales/en_us_rural/sounds/cow.ogg">cow</word>
         <word name="cup" size="1x1" buy="3450" sell="250" points="160" construct="29700" time="7800" sprite="locales/common/textures/words/sprites/cup.png" block="locales/common/textures/words/blocks/cup.png" sound="locales/en_us_rural/sounds/cup.ogg">cup</word>
         <word name="dog" size="2x2x2" buy="2260" sell="170" points="141" construct="14400" time="4200" sprite="locales/common/textures/words/sprites/dog.png" block="locales/common/textures/words/blocks/dog.png" sound="locales/en_us_rural/sounds/dog.ogg">dog</word>
         <word name="doll" size="1x1" buy="5310" sell="370" points="180" construct="59400" time="13800" sprite="locales/common/textures/words/sprites/doll.png" block="locales/common/textures/words/blocks/doll.png" sound="locales/en_us_rural/sounds/doll.ogg">doll</word>
@@ -140,7 +140,7 @@
         <word name="jar" size="2x2x2" buy="1820" sell="140" points="132" construct="10800" time="3000" sprite="locales/common/textures/words/sprites/jar.png" block="locales/common/textures/words/blocks/jar.png" sound="locales/en_us_rural/sounds/jar.ogg">jar</word>
         <word name="lamp" size="2x2x2" buy="4530" sell="320" points="173" construct="45900" time="10800" sprite="locales/common/textures/words/sprites/lamp.png" block="locales/common/textures/words/blocks/lamp.png" sound="locales/en_us_rural/sounds/lamp.ogg">lamp</word>
         <word name="lock" size="1x1" buy="8050" sell="540" points="199" construct="117900" time="24000" sprite="locales/common/textures/words/sprites/lock.png" block="locales/common/textures/words/blocks/lock.png" sound="locales/en_us_rural/sounds/lock.ogg">lock</word>
-        <word name="log" size="1x1" buy="2400" sell="180" points="144" construct="16200" time="4800" sprite="locales/common/textures/words/sprites/log.png" block="locales/common/textures/words/blocks/log.png" sound="locales/en_us_rural/sounds/log.ogg">log</word>
+        <word name="log" size="2x2x2" buy="2400" sell="180" points="144" construct="16200" time="4800" sprite="locales/common/textures/words/sprites/log.png" block="locales/common/textures/words/blocks/log.png" sound="locales/en_us_rural/sounds/log.ogg">log</word>
         <word name="mail" size="1x1" buy="10370" sell="680" points="211" construct="179100" time="33600" sprite="locales/common/textures/words/sprites/mail.png" block="locales/common/textures/words/blocks/mail.png" sound="locales/en_us_rural/sounds/mail.ogg">mail</word>
         <word name="map" size="2x2x2" buy="720" sell="60" points="89" construct="2700" time="600" sprite="locales/common/textures/words/sprites/map.png" block="locales/common/textures/words/blocks/map.png" sound="locales/en_us_rural/sounds/map.ogg">map</word>
         <word name="mat" size="2x2x2" buy="590" sell="50" points="80" construct="1800" time="600" sprite="locales/common/textures/words/sprites/mat.png" block="locales/common/textures/words/blocks/mat.png" sound="locales/en_us_rural/sounds/mat.ogg">mat</word>
@@ -433,15 +433,14 @@
             <intro>
             </intro>
             <letters>d,g</letters>
-            <words>cot</words>
+            <words></words>
             <help>
                 <letters>d,g</letters>
-                <words>cot</words>
+                <words></words>
             </help>
             <req>
                 <gather_letter count="1">d</gather_letter>
                 <gather_letter count="1">g</gather_letter>
-                <gather_word count="1">cot</gather_word>
             </req>
         </level>
         <level name="20" coins="600" points="1210" market="3">
