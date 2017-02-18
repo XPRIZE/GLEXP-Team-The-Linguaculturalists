@@ -244,6 +244,7 @@ public class LocaleParser extends DefaultHandler {
         newGame.type = attributes.getValue("type");
         newGame.sprite_texture = attributes.getValue("sprite");
         newGame.block_texture = attributes.getValue("block");
+        newGame.background_texture = attributes.getValue("background");
         newGame.buy = Integer.parseInt(attributes.getValue("buy"));
         newGame.construct = Integer.parseInt(attributes.getValue("construct"));
         newGame.time = Integer.parseInt(attributes.getValue("time"));

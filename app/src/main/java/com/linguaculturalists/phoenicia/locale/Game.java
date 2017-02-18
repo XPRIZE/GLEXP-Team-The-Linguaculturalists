@@ -13,6 +13,7 @@ public class Game {
     public String restriction; /**< tile class this block can be placed on */
     public String sprite_texture;/**< path to texture file for this game's sprite */
     public String block_texture;/**< path to texture file for this game's block */
+    public String background_texture;/**< path to texture file for this game's background */
 
     public int construct;/**< time (in seconds) it takes to build this block */
     public int time;/**< time (in seconds) before you can replay this game */

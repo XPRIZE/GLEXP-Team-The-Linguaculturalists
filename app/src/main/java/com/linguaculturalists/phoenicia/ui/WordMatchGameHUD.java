@@ -48,7 +48,7 @@ import java.util.List;
 /**
  * Created by mhall on 7/26/16.
  */
-public class WordMatchGameHUD extends PhoeniciaHUD {
+public class WordMatchGameHUD extends MiniGameHUD {
     private Level level;
     private int current_round;
     private GameTile tile;
@@ -64,8 +64,8 @@ public class WordMatchGameHUD extends PhoeniciaHUD {
     private List<Entity> touchAreas;
 
     public WordMatchGameHUD(final PhoeniciaGame phoeniciaGame, final Level level, final GameTile tile) {
-        super(phoeniciaGame);
-        this.setBackgroundEnabled(false);
+        super(phoeniciaGame, level, tile);
+
         this.level = level;
         this.tile = tile;
         this.current_round = 0;
