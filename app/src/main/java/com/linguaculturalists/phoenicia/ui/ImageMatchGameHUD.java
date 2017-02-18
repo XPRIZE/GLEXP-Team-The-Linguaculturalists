@@ -206,7 +206,7 @@ public class ImageMatchGameHUD extends PhoeniciaHUD {
             @Override
             public void onDialogButtonClicked(Dialog dialog, Dialog.DialogButton dialogButton) {
                 finish();
-                Inventory.getInstance().add(reward_word.name, 1);
+                Inventory.getInstance().add(reward_word.name, 1, false);
                 Bank.getInstance().credit(reward_coins);
                 game.session.addExperience(reward_points);
                 GameSounds.play(GameSounds.COLLECT);
