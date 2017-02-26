@@ -24,8 +24,8 @@
     <!-- Mini-games -->
     <games>
         <game level="8"  name="Word Match"  type="wordmatch"  host="Roxanne" buy="300" construct="120" time="300" reward="1.5" sprite="locales/common/textures/games/sprites/minigame1.png" block="locales/common/textures/games/blocks/minigame1.png" background="locales/common/textures/games/backgrounds/minigame1_background.png" />
-        <game level="9" name="Image Match" type="imagematch" host="Henry" buy="500" construct="300" time="600" reward="2.0" sprite="locales/common/textures/games/sprites/minigame2.png" block="locales/common/textures/games/blocks/minigame2.png" background="locales/common/textures/games/backgrounds/minigame2_background.png" />
-        <game level="9" name="Number Match" type="numbermatch" host="Laura" buy="500" construct="300" time="600" reward="2.0" sprite="locales/common/textures/games/sprites/minigame3.png" block="locales/common/textures/games/blocks/minigame3.png" background="locales/common/textures/games/backgrounds/minigame3_background.png" />
+        <game level="10" name="Image Match" type="imagematch" host="Henry" buy="500" construct="300" time="600" reward="2.0" sprite="locales/common/textures/games/sprites/minigame2.png" block="locales/common/textures/games/blocks/minigame2.png" background="locales/common/textures/games/backgrounds/minigame2_background.png" />
+        <game level="14" name="Number Match" type="numbermatch" host="Laura" buy="2000" construct="600" time="1200" reward="2.0" sprite="locales/common/textures/games/sprites/minigame3.png" block="locales/common/textures/games/blocks/minigame3.png" background="locales/common/textures/games/backgrounds/minigame3_background.png" />
     </games>
 
     <!-- Decorations -->
