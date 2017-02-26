@@ -50,14 +50,8 @@ import java.util.Set;
 import com.linguaculturalists.phoenicia.components.MapBlockSprite;
 import com.linguaculturalists.phoenicia.components.PlacedBlockSprite;
 import com.linguaculturalists.phoenicia.components.ProgressDisplay;
-import com.linguaculturalists.phoenicia.locale.Decoration;
-import com.linguaculturalists.phoenicia.locale.Game;
-import com.linguaculturalists.phoenicia.locale.IntroPage;
-import com.linguaculturalists.phoenicia.locale.Letter;
-import com.linguaculturalists.phoenicia.locale.Level;
-import com.linguaculturalists.phoenicia.locale.Locale;
-import com.linguaculturalists.phoenicia.locale.Person;
-import com.linguaculturalists.phoenicia.locale.Word;
+import com.linguaculturalists.phoenicia.locale.*;
+import com.linguaculturalists.phoenicia.locale.Number;
 import com.linguaculturalists.phoenicia.locale.tour.Message;
 import com.linguaculturalists.phoenicia.locale.tour.Stop;
 import com.linguaculturalists.phoenicia.locale.tour.TourFinishedListener;
@@ -82,7 +76,6 @@ import com.linguaculturalists.phoenicia.models.WorkshopBuilder;
 import com.linguaculturalists.phoenicia.tour.TourOverlay;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
 import com.linguaculturalists.phoenicia.ui.SpriteMoveHUD;
-import com.linguaculturalists.phoenicia.locale.LocaleLoader;
 import com.linguaculturalists.phoenicia.util.GameSounds;
 import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.GameUI;
@@ -148,6 +141,10 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
     public AssetBitmapTexture workshopTexture;
     public ITiledTextureRegion workshopTiles; /**< Tile regions for the workshop block */
+
+    public Map<Number, AssetBitmapTexture> numberTextures;
+    public Map<Number, ITiledTextureRegion> numberSprites; /**< Tile regions depicting letter sprites */
+    public Map<Number, ITiledTextureRegion> numberBlocks; /**< Tile regions depicting letter blocks */
 
     public Map<Letter, AssetBitmapTexture> letterTextures;
     public Map<Letter, ITiledTextureRegion> letterSprites; /**< Tile regions depicting letter sprites */
@@ -480,6 +477,38 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
                 if (msg != null && !msg.sound.isEmpty()) {
                     levelSounds.put(msg.sound, MusicFactory.createMusicFromAsset(PhoeniciaContext.musicManager, PhoeniciaContext.context, msg.sound));
                 }
+            }
+        }
+    }
+
+    private void loadLocaleNumbers() throws IOException {
+        List<Number> blockNumbers = locale.numbers;
+        try {
+            // Load number assets
+            for (int i = 0; i < blockNumbers.size(); i++) {
+                Number number= blockNumbers.get(i);
+                Debug.d("Loading number sprite texture from " + number.sprite_texture);
+                final AssetBitmapTexture numberSpriteTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, number.sprite_texture);
+                numberSpriteTexture.load();
+                this.numberTextures.put(number, numberSpriteTexture);
+                this.numberSprites.put(number, TextureRegionFactory.extractTiledFromTexture(numberSpriteTexture, 0, 0, LETTER_SPRITE_WIDTH * LETTER_SPRITE_COLS, LETTER_SPRITE_HEIGHT * LETTER_SPRITE_ROWS, LETTER_SPRITE_COLS, LETTER_SPRITE_ROWS));
+            }
+
+        } catch (final IOException e)
+        {
+            e.printStackTrace();
+            throw e;
+        }
+
+        Debug.d("Loading number sounds");
+        for (int i = 0; i < blockNumbers.size(); i++) {
+            Number number = blockNumbers.get(i);
+            Debug.d("Loading sound file "+i+": "+number.sound);
+            try {
+                blockSounds.put(number.sound, SoundFactory.createSoundFromAsset(PhoeniciaContext.soundManager, PhoeniciaContext.context, number.sound));
+            } catch (IOException e) {
+                Debug.e("Failed to load number sound file: "+number.sound);
+                e.printStackTrace();
             }
         }
     }

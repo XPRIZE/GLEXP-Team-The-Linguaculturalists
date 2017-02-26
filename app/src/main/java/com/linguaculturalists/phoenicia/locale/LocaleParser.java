@@ -21,6 +21,7 @@ import java.util.Stack;
 public class LocaleParser extends DefaultHandler {
 
     private boolean inLevelDefinition = false;
+    private Number currentNumber;
     private Letter currentLetter;
     private Word currentWord;
     private Level currentLevel;
@@ -76,6 +77,8 @@ public class LocaleParser extends DefaultHandler {
             this.parseTourStop(attributes);
         } else if (nodePath.equals("/locale/tour/stop/message")) {
             this.parseTourStopMessage(attributes);
+        } else if (nodePath.equals("/locale/numbers/number")) {
+            this.parseNumberDefinition(attributes);
         } else if (nodePath.equals("/locale/letters/letter")) {
             this.parseLetterDefinition(attributes);
         } else if (nodePath.equals("/locale/words/word")) {
@@ -289,7 +292,7 @@ public class LocaleParser extends DefaultHandler {
 
     private void parseTourGuide(Attributes attributes) throws SAXException {
         String guideName = attributes.getValue("guide");
-        Debug.v("Setting tour guide to: "+guideName);
+        Debug.v("Setting tour guide to: " + guideName);
         if (locale.person_map.containsKey(guideName)) {
             locale.tour.guide = locale.person_map.get(guideName);
         }
@@ -320,6 +323,15 @@ public class LocaleParser extends DefaultHandler {
         newMessage.text = "";
         this.currentTourStop.addMessage(newMessage);
         this.currentTourStopMessage = newMessage;
+    }
+
+    private void parseNumberDefinition(Attributes attributes) throws SAXException {
+        Debug.v("Parsing locale number");
+        this.currentNumber = new Number();
+        this.currentNumber.name = attributes.getValue("name");
+        Debug.v("Parsing locale number: "+this.currentNumber.name);
+        this.currentLetter.sound = attributes.getValue("sound");
+        this.currentLetter.sprite_texture = attributes.getValue("sprite");
     }
 
     private void parseLetterDefinition(Attributes attributes) throws SAXException {
@@ -507,6 +519,9 @@ public class LocaleParser extends DefaultHandler {
         String text = new String(ch, start, length);
         if (nodePath.equals("/locale/tour/stop/message")) {
             this.currentTourStopMessage.text = text;
+        } else if (nodePath.equals("/locale/numbers/number")) {
+            Debug.v("Adding Number chars: "+text);
+            this.currentNumber.chars = text.toCharArray();
         } else if (nodePath.equals("/locale/letters/letter")) {
             Debug.v("Adding Letter chars: "+text);
             this.currentLetter.chars = text.toCharArray();

@@ -39,6 +39,9 @@ public class Locale {
     public List<Decoration> decorations;
     public Map<String, Decoration> decoration_map;
 
+    public List<Number> numbers;
+    public Map<String, Number> number_map;
+
     public String letters_texture;
     public List<Letter> letters;
     public Map<String, Letter> letter_map;
