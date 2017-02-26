@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
 basedir=`dirname $0`
 
-TEXT_DIRECTION:="left-to-right"
-DRAW_OPTS:="kerning 0"
-FONT:="Ubuntu-Bold"
+TEXT_DIRECTION=${TEXT_DIRECTION:="left-to-right"}
+DRAW_OPTS=${DRAW_OPTS:="kerning 0"}
+FONT=${FONT:="Ubuntu"}
 
 
 if [ "$1" = "-rtl" ] ; then
@@ -84,6 +84,6 @@ convert ${block} ${CONVERT_OPTS} -pointsize 32 -fill yellow -draw "${DRAW_OPTS} 
 
 echo "Creating ${sprite}"
 convert -size 256x64 xc:transparent ${sprite}
-convert ${sprite} ${CONVERT_OPTS} -pointsize 48 -fill yellow -draw "${DRAW_OPTS} text ${x1},52 '${upper}'" ${sprite}
+convert ${sprite} ${CONVERT_OPTS} -pointsize 48 -fill yellow -stroke grey -draw "${DRAW_OPTS} text ${x1},52 '${upper}'" ${sprite}
 convert ${sprite} ${CONVERT_OPTS} -pointsize 48 -fill yellow -stroke red -draw "${DRAW_OPTS} text ${x2},52 '${upper}'" ${sprite}
 convert ${sprite} ${CONVERT_OPTS} -pointsize 48 -fill grey -draw "${DRAW_OPTS} text ${x3},52 '${upper}'" ${sprite}

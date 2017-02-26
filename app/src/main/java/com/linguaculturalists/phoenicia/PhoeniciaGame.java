@@ -143,8 +143,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
     public ITiledTextureRegion workshopTiles; /**< Tile regions for the workshop block */
 
     public Map<Number, AssetBitmapTexture> numberTextures;
-    public Map<Number, ITiledTextureRegion> numberSprites; /**< Tile regions depicting letter sprites */
-    public Map<Number, ITiledTextureRegion> numberBlocks; /**< Tile regions depicting letter blocks */
+    public Map<Number, ITiledTextureRegion> numberSprites; /**< Tile regions depicting number sprites */
 
     public Map<Letter, AssetBitmapTexture> letterTextures;
     public Map<Letter, ITiledTextureRegion> letterSprites; /**< Tile regions depicting letter sprites */
@@ -208,6 +207,9 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         this.personTextures = new HashMap<Person, AssetBitmapTexture>();
         this.personTiles = new HashMap<Person, TextureRegion>();
+
+        this.numberTextures = new HashMap<Number, AssetBitmapTexture>();
+        this.numberSprites = new HashMap<Number, ITiledTextureRegion>();
 
         this.letterTextures = new HashMap<Letter, AssetBitmapTexture>();
         this.letterSprites = new HashMap<Letter, ITiledTextureRegion>();
@@ -363,6 +365,8 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         progress.setProgress(0.5f);
         this.loadLocaleTour();
         progress.setProgress(0.6f);
+        this.loadLocaleNumbers();
+        progress.setProgress(0.65f);
         this.loadLocaleLetters();
         progress.setProgress(0.7f);
         this.loadLocaleWords();
@@ -486,7 +490,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
         try {
             // Load number assets
             for (int i = 0; i < blockNumbers.size(); i++) {
-                Number number= blockNumbers.get(i);
+                Number number = blockNumbers.get(i);
                 Debug.d("Loading number sprite texture from " + number.sprite_texture);
                 final AssetBitmapTexture numberSpriteTexture = new AssetBitmapTexture(PhoeniciaContext.textureManager, PhoeniciaContext.assetManager, number.sprite_texture);
                 numberSpriteTexture.load();

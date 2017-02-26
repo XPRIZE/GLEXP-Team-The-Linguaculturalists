@@ -330,8 +330,8 @@ public class LocaleParser extends DefaultHandler {
         this.currentNumber = new Number();
         this.currentNumber.name = attributes.getValue("name");
         Debug.v("Parsing locale number: "+this.currentNumber.name);
-        this.currentLetter.sound = attributes.getValue("sound");
-        this.currentLetter.sprite_texture = attributes.getValue("sprite");
+        this.currentNumber.sound = attributes.getValue("sound");
+        this.currentNumber.sprite_texture = attributes.getValue("sprite");
     }
 
     private void parseLetterDefinition(Attributes attributes) throws SAXException {
@@ -475,10 +475,14 @@ public class LocaleParser extends DefaultHandler {
         String nodePath = StringUtils.join(this.nodeStack, '/');
         Debug.v("Parser end: "+nodePath);
 
-        if (nodePath.equals("/locale/letters/letter")) {
-            this.locale.letters.add(this.currentLetter);
-            this.locale.letter_map.put(this.currentLetter.name, this.currentLetter);
-            this.currentLetter = null;
+        if (nodePath.equals("/locale/numbers/number")) {
+            this.locale.numbers.add(this.currentNumber);
+            this.locale.number_map.put(this.currentNumber.intval, this.currentNumber);
+            this.currentNumber = null;
+        } else if (nodePath.equals("/locale/letters/letter")) {
+                this.locale.letters.add(this.currentLetter);
+                this.locale.letter_map.put(this.currentLetter.name, this.currentLetter);
+                this.currentLetter = null;
         } else if (nodePath.equals("/locale/words/word")) {
             this.locale.words.add(this.currentWord);
             this.locale.word_map.put(this.currentWord.name, this.currentWord);
@@ -522,6 +526,7 @@ public class LocaleParser extends DefaultHandler {
         } else if (nodePath.equals("/locale/numbers/number")) {
             Debug.v("Adding Number chars: "+text);
             this.currentNumber.chars = text.toCharArray();
+            this.currentNumber.intval = Integer.parseInt(text);
         } else if (nodePath.equals("/locale/letters/letter")) {
             Debug.v("Adding Letter chars: "+text);
             this.currentLetter.chars = text.toCharArray();
