@@ -85,26 +85,17 @@ public class WordMatchGameHUD extends MiniGameHUD {
         choiceWordFont = FontFactory.create(PhoeniciaContext.fontManager, PhoeniciaContext.textureManager, 256, 256, TextureOptions.BILINEAR, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 36, Color.BLUE_ARGB_PACKED_INT);
         choiceWordFont.load();
 
-        final float dialogWidth = 800;
-        final float dialogHeight = 600;
-        Rectangle whiteRect = new BorderRectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, dialogWidth, dialogHeight, PhoeniciaContext.vboManager);
-        whiteRect.setColor(Color.WHITE);
-        this.attachChild(whiteRect);
+//        final float dialogWidth = 800;
+//        final float dialogHeight = 600;
+//        Rectangle whiteRect = new BorderRectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, dialogWidth, dialogHeight, PhoeniciaContext.vboManager);
+//        whiteRect.setColor(Color.WHITE);
+//        this.attachChild(whiteRect);
 
-        ITextureRegion bannerRegion = GameUI.getInstance().getBlueBanner();
-        Sprite banner = new Sprite(whiteRect.getWidth()/2, whiteRect.getHeight(), bannerRegion, PhoeniciaContext.vboManager);
-        Text name = new Text(banner.getWidth()/2, 120, GameFonts.defaultHUDDisplay(), tile.game.name, tile.game.name.length(), new TextOptions(HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
-        float bannerScale = whiteRect.getWidth() / (bannerRegion.getWidth() * 0.6f);
-        name.setScaleX(1 / bannerScale);
-        banner.setScaleX(bannerScale);
-        banner.attachChild(name);
-        whiteRect.attachChild(banner);
+        this.cardPane = new Entity(WINDOW_WIDTH/2, 400, WINDOW_WIDTH, 400);
+        this.content.attachChild(cardPane);
 
-        this.cardPane = new Entity(whiteRect.getWidth()/2, 400, whiteRect.getWidth(), 400);
-        whiteRect.attachChild(cardPane);
-
-        this.resultsPane = new Entity(whiteRect.getWidth()/2, 100, whiteRect.getWidth(), 200);
-        whiteRect.attachChild(this.resultsPane);
+        this.resultsPane = new Entity(WINDOW_WIDTH/2, 100, WINDOW_WIDTH, 200);
+        this.content.attachChild(this.resultsPane);
         this.winnings = new ArrayList<Word>();
         this.result_number = 0;
     }
@@ -121,6 +112,7 @@ public class WordMatchGameHUD extends MiniGameHUD {
         this.winnings.add(word);
         ITiledTextureRegion sprite_region = this.game.wordSprites.get(word);
         Sprite winning_sprite = new Sprite(this.cardPane.getWidth()/2, this.cardPane.getHeight() - 300, sprite_region.getTextureRegion(1), PhoeniciaContext.vboManager);
+        winning_sprite.setZIndex(foreground_sprite.getZIndex()+1);
         this.resultsPane.attachChild(winning_sprite);
         winning_sprite.registerEntityModifier(new ParallelEntityModifier(
                 new ScaleModifier(0.5f, 2.0f, 1.0f),

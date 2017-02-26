@@ -245,6 +245,7 @@ public class LocaleParser extends DefaultHandler {
         newGame.sprite_texture = attributes.getValue("sprite");
         newGame.block_texture = attributes.getValue("block");
         newGame.background_texture = attributes.getValue("background");
+        newGame.host = this.locale.person_map.get(attributes.getValue("host"));
         newGame.buy = Integer.parseInt(attributes.getValue("buy"));
         newGame.construct = Integer.parseInt(attributes.getValue("construct"));
         newGame.time = Integer.parseInt(attributes.getValue("time"));
