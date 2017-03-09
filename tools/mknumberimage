@@ -53,6 +53,6 @@ CONVERT_OPTS="-font ${FONT}"
 
 echo "Creating ${sprite}"
 convert -size 256x64 xc:transparent ${sprite}
-convert ${sprite} ${CONVERT_OPTS} -pointsize 48 -fill yellow -draw "${DRAW_OPTS} text ${x1},52 '${upper}'" ${sprite}
+convert ${sprite} ${CONVERT_OPTS} -pointsize 48 -fill yellow -stroke grey -draw "${DRAW_OPTS} text ${x1},52 '${upper}'" ${sprite}
 convert ${sprite} ${CONVERT_OPTS} -pointsize 48 -fill yellow -stroke red -draw "${DRAW_OPTS} text ${x2},52 '${upper}'" ${sprite}
 convert ${sprite} ${CONVERT_OPTS} -pointsize 48 -fill grey -draw "${DRAW_OPTS} text ${x3},52 '${upper}'" ${sprite}

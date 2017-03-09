@@ -190,7 +190,9 @@ public class HUDManager extends HUD {
         if (tile.game.type.equals("wordmatch")) {
             this.push(new WordMatchGameHUD(this.game, level, tile));
         } else if (tile.game.type.equals("imagematch")) {
-                this.push(new ImageMatchGameHUD(this.game, level, tile));
+            this.push(new ImageMatchGameHUD(this.game, level, tile));
+        } else if (tile.game.type.equals("numbermatch")) {
+            this.push(new NumberMatchGameHUD(this.game, level, tile));
         } else {
             Debug.w("Unknown game type: " + tile.game.type);
         }

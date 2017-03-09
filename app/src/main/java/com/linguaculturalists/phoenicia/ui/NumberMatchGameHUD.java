@@ -2,30 +2,24 @@ package com.linguaculturalists.phoenicia.ui;
 
 import android.graphics.Typeface;
 
-import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
-import com.linguaculturalists.phoenicia.components.BorderRectangle;
-import com.linguaculturalists.phoenicia.components.Button;
 import com.linguaculturalists.phoenicia.components.Dialog;
-import com.linguaculturalists.phoenicia.locale.Level;
-import com.linguaculturalists.phoenicia.locale.Word;
+import com.linguaculturalists.phoenicia.components.SpriteGroup;
+import com.linguaculturalists.phoenicia.locale.*;
+import com.linguaculturalists.phoenicia.locale.Number;
 import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.GameTile;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.GameSounds;
-import com.linguaculturalists.phoenicia.util.GameTextures;
 import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
-import org.andengine.engine.camera.Camera;
 import org.andengine.entity.Entity;
 import org.andengine.entity.modifier.MoveXModifier;
 import org.andengine.entity.modifier.MoveYModifier;
 import org.andengine.entity.modifier.ParallelEntityModifier;
 import org.andengine.entity.modifier.ScaleModifier;
-import org.andengine.entity.primitive.Rectangle;
-import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.AutoWrap;
@@ -46,50 +40,52 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by mhall on 7/26/16.
+ * Created by mhall on 2/26/17.
  */
-public class WordMatchGameHUD extends MiniGameHUD {
+public class NumberMatchGameHUD extends MiniGameHUD {
     private Level level;
     private int current_round;
     private GameTile tile;
     private List<Word> random_word_list;
-    private static int max_rounds = 10;
-    private static int max_choices = 3;
+    private List<Number> random_number_list;
+    private int max_rounds = 10;
+    private int max_choices = 3;
+    private int max_number = 9;
 
-    private Font choiceWordFont;
     private Entity cardPane;
     private Entity resultsPane;
     private int result_number;
     private List<Word> winnings;
     private List<Entity> touchAreas;
 
-    public WordMatchGameHUD(final PhoeniciaGame phoeniciaGame, final Level level, final GameTile tile) {
+    public NumberMatchGameHUD(final PhoeniciaGame phoeniciaGame, final Level level, final GameTile tile) {
         super(phoeniciaGame, level, tile);
-
+        this.setBackgroundEnabled(false);
         this.level = level;
         this.tile = tile;
         this.current_round = 0;
+        this.max_number = phoeniciaGame.locale.levels.indexOf(level)/2;
+        if (this.max_number > this.game.locale.numbers.size()) {
+            this.max_number = this.game.locale.numbers.size(); // Maximum we have number images for
+        } else if (this.max_number < 3) {
+            this.max_number = 3; // Minimum needed to display 3 choices
+        }
+        this.random_number_list = this.game.locale.numbers.subList(0, this.max_number);
+        Collections.shuffle(this.random_number_list);
+
         this.random_word_list = new ArrayList<Word>(level.words);
         Collections.shuffle(this.random_word_list);
 
-        if (this.random_word_list.size() < this.max_rounds) {
-            this.max_rounds = this.random_word_list.size();
-        }
-        Debug.d("WordMatchGame rounds: "+this.max_rounds);
+        Debug.d("NumberMatchGame level: " + level.name);
+        Debug.d("NumberMatchGame words: " + level.words.size());
 
-        if (this.random_word_list.size() < this.max_choices) {
-            this.max_choices = this.random_word_list.size();
+        if (this.max_number < this.max_rounds) {
+            this.max_rounds = this.max_number;
         }
+        Debug.d("NumberMatchGame  rounds: "+this.max_rounds);
+
 
         this.touchAreas = new ArrayList<Entity>();
-        choiceWordFont = FontFactory.create(PhoeniciaContext.fontManager, PhoeniciaContext.textureManager, 256, 256, TextureOptions.BILINEAR, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 36, Color.BLUE_ARGB_PACKED_INT);
-        choiceWordFont.load();
-
-//        final float dialogWidth = 800;
-//        final float dialogHeight = 600;
-//        Rectangle whiteRect = new BorderRectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, dialogWidth, dialogHeight, PhoeniciaContext.vboManager);
-//        whiteRect.setColor(Color.WHITE);
-//        this.attachChild(whiteRect);
 
         this.cardPane = new Entity(WINDOW_WIDTH/2, 400, WINDOW_WIDTH, 400);
         this.content.attachChild(cardPane);
@@ -105,35 +101,38 @@ public class WordMatchGameHUD extends MiniGameHUD {
         this.show_round(this.current_round);
     }
 
-    private void pass(Word word) {
-        //TODO: count success
-        Debug.d("wordmatch: pass!");
+    private void pass(Word word, final float wordX) {
+        Debug.d("NumberMatchGame : pass!");
         GameSounds.play(GameSounds.COMPLETE);
         this.winnings.add(word);
+        float available_width = (this.cardPane.getWidth()/this.max_choices);
+        float wordY = this.resultsPane.getHeight() + this.cardPane.getHeight() - 150;
+
         ITiledTextureRegion sprite_region = this.game.wordSprites.get(word);
-        Sprite winning_sprite = new Sprite(this.cardPane.getWidth()/2, this.cardPane.getHeight() - 300, sprite_region.getTextureRegion(1), PhoeniciaContext.vboManager);
-        winning_sprite.setZIndex(foreground_sprite.getZIndex()+1);
+        Sprite winning_sprite = new Sprite(wordX+(available_width/2), wordY, sprite_region.getTextureRegion(1), PhoeniciaContext.vboManager);
         this.resultsPane.attachChild(winning_sprite);
         winning_sprite.registerEntityModifier(new ParallelEntityModifier(
                 new ScaleModifier(0.5f, 2.0f, 1.0f),
-                new MoveYModifier(0.5f, 300, 80),
-                new MoveXModifier(0.5f, this.resultsPane.getWidth()/2, 40+(this.result_number*80))
-                ));
+                new MoveYModifier(0.5f, wordY, 80),
+                new MoveXModifier(0.5f, wordX+(available_width/2), 40+(this.result_number*80))
+        ));
         this.result_number++;
     }
 
-    private void fail(Word word) {
-        //TODO: count failure
-        Debug.d("wordmatch: fail!");
+    private void fail(Word word, final float wordX) {
+        Debug.d("NumberMatchGame : fail!");
         GameSounds.play(GameSounds.FAILED);
+        float available_width = (this.cardPane.getWidth()/this.max_choices);
+        float wordY = this.resultsPane.getHeight() + this.cardPane.getHeight() - 150;
+
         ITiledTextureRegion sprite_region = this.game.wordSprites.get(word);
-        Sprite missed_sprite = new Sprite(this.cardPane.getWidth()/2, this.cardPane.getHeight() - 300, sprite_region.getTextureRegion(2), PhoeniciaContext.vboManager);
+        Sprite missed_sprite = new Sprite(wordX+(available_width/2), wordY, sprite_region.getTextureRegion(2), PhoeniciaContext.vboManager);
         this.resultsPane.attachChild(missed_sprite);
         missed_sprite.registerEntityModifier(new ParallelEntityModifier(
                 new ScaleModifier(0.5f, 2.0f, 1.0f),
-                new MoveYModifier(0.5f, 300, 80),
-                new MoveXModifier(0.5f, this.resultsPane.getWidth()/2, 48+(this.result_number*80))
-                ));
+                new MoveYModifier(0.5f, wordY, 80),
+                new MoveXModifier(0.5f, wordX + (available_width / 2), 48 + (this.result_number * 80))
+        ));
         this.result_number++;
     }
 
@@ -148,20 +147,18 @@ public class WordMatchGameHUD extends MiniGameHUD {
         if (this.current_round < this.max_rounds) {
             this.show_round(this.current_round);
         } else {
-            // TODO: Show winnings
             this.end_game();
         }
     }
 
     private void end_game() {
-        if (this.winnings.size() > 0 && (this.max_rounds - this.winnings.size()) < 3) {
+        if ((this.max_rounds - this.winnings.size()) < 3) {
             this.show_reward();
         } else {
             this.show_sorry();
         }
         this.tile.reset(PhoeniciaContext.context);
     }
-
     private void show_sorry() {
         Dialog sorry_dialog = new Dialog(400, 150, Dialog.Buttons.OK, PhoeniciaContext.vboManager, new Dialog.DialogListener() {
             @Override
@@ -227,49 +224,66 @@ public class WordMatchGameHUD extends MiniGameHUD {
         int word_index = round % this.max_rounds;
         final Word challenge_word = this.random_word_list.get(word_index);
 
-        // Take the challenge word out of the list and shuffle it
-        List<Word> draw_words = new ArrayList<Word>(this.random_word_list);
-        draw_words.remove(challenge_word);
-        Collections.shuffle(draw_words);
+        final int number_int = (int)Math.round(Math.random() * this.max_number)+1;
+        final Number challenge_number = this.game.locale.number_map.get(number_int);
+
+        Debug.d("NumberMatchGame challenge number: "+number_int);
+
+        // Take the challenge number out of the list and shuffle it
+        List<Number> draw_numbers = new ArrayList<Number>(this.random_number_list);
+        draw_numbers.remove(challenge_number);
+        Collections.shuffle(draw_numbers);
 
         // Draw max_choices-1 from the list, add the challenge word to it and shuffle again
-        List<Word> choice_words = draw_words.subList(0, this.max_choices-1);
-        choice_words.add(challenge_word);
-        Collections.shuffle(choice_words);
+        List<Number> choice_numbers = draw_numbers.subList(0, this.max_choices-1);
+        choice_numbers.add(challenge_number);
+        Collections.shuffle(choice_numbers);
 
-        for (int i = 0; i < choice_words.size(); i++) {
-            final Word word = choice_words.get(i);
-            float available_width = (this.cardPane.getWidth()/choice_words.size());
-            float wordX = i*(this.cardPane.getWidth()/choice_words.size());
-            float wordY = this.cardPane.getHeight() - 150;
-            Button wordText = new Button(wordX+(available_width/2), wordY, 200, 100, String.valueOf(word.chars), PhoeniciaContext.vboManager, new Button.OnClickListener() {
-                @Override
-                public void onClicked(Button button) {
-                    if (word == challenge_word) {
-                        pass(challenge_word);
-                    } else {
-                        fail(challenge_word);
-                    }
-                    next_round();
-                }
-            });
-            this.registerTouchArea(wordText);
-            this.touchAreas.add(wordText);
-            this.cardPane.attachChild(wordText);
-        }
+        ITextureRegion number_region = this.game.numberSprites.get(challenge_number);
+        ButtonSprite numberSprite = new ButtonSprite(this.cardPane.getWidth()/2 - (number_region.getWidth()/2), this.cardPane.getHeight() - 300, number_region, PhoeniciaContext.vboManager, new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                game.playBlockSound(challenge_number.sound);
+            }
+        });
+        this.cardPane.attachChild(numberSprite);
+        this.touchAreas.add(numberSprite);
+        this.registerTouchArea(numberSprite);
 
-        ITiledTextureRegion sprite_region = this.game.wordSprites.get(challenge_word);
-        ButtonSprite challenge_sprite = new ButtonSprite(this.cardPane.getWidth()/2, this.cardPane.getHeight() - 300, sprite_region, PhoeniciaContext.vboManager);
-        challenge_sprite.setOnClickListener(new ButtonSprite.OnClickListener() {
+        ITextureRegion sprite_region = this.game.wordSprites.get(challenge_word);
+        final ButtonSprite wordSprite = new ButtonSprite(this.cardPane.getWidth()/2 + (sprite_region.getWidth()/2), this.cardPane.getHeight() - 300, sprite_region, PhoeniciaContext.vboManager, new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v1) {
                 game.playBlockSound(challenge_word.sound);
             }
         });
-        challenge_sprite.setScale(2.0f);
-        this.cardPane.attachChild(challenge_sprite);
-        this.registerTouchArea(challenge_sprite);
-        this.touchAreas.add(challenge_sprite);
+        this.cardPane.attachChild(wordSprite);
+        this.touchAreas.add(wordSprite);
+        this.registerTouchArea(wordSprite);
+
+        for (int i = 0; i < this.max_choices; i++) {
+            final Number number = choice_numbers.get(i);
+            float available_width = (this.cardPane.getWidth()/this.max_choices);
+            final float wordX = i*(this.cardPane.getWidth()/this.max_choices);
+            final float wordY = this.cardPane.getHeight() - 150;
+            SpriteGroup wordsSprite = new SpriteGroup(wordX + (available_width / 2), wordY, sprite_region.getWidth(), sprite_region.getHeight(), wordSprite, number.intval, PhoeniciaContext.vboManager, new ButtonSprite.OnClickListener() {
+                @Override
+                public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                    if (number == challenge_number) {
+                        pass(challenge_word, wordSprite.getX());
+                    } else {
+                        fail(challenge_word, wordSprite.getX());
+                    }
+                    next_round();
+                }
+            });
+            wordsSprite.setScale(2.0f);
+
+            this.registerTouchArea(wordsSprite);
+            this.touchAreas.add(wordsSprite);
+            this.cardPane.attachChild(wordsSprite);
+        }
+
     }
 
     /**
@@ -281,11 +295,4 @@ public class WordMatchGameHUD extends MiniGameHUD {
         final boolean handled = super.onSceneTouchEvent(pSceneTouchEvent);
         return true;
     }
-
-    @Override
-    public void finish() {
-        game.hudManager.pop();
-    }
-
-
 }

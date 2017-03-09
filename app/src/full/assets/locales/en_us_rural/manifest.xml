@@ -70,6 +70,20 @@
             <message sound="locales/en_us_rural/sounds/tour/workshop4.ogg">Great! But remember, you can only make one word at a time in the workshop, so keep making word buildings!</message>
         </stop>
     </tour>
+    
+    <!-- Numbers -->
+    <numbers>
+        <number name="0" sprite="locales/common/textures/numbers/0.png" sound="locales/en_us_rural/sounds/0.ogg">0</number>
+        <number name="1" sprite="locales/common/textures/numbers/1.png" sound="locales/en_us_rural/sounds/1.ogg">1</number>
+        <number name="2" sprite="locales/common/textures/numbers/2.png" sound="locales/en_us_rural/sounds/2.ogg">2</number>
+        <number name="3" sprite="locales/common/textures/numbers/3.png" sound="locales/en_us_rural/sounds/3.ogg">3</number>
+        <number name="4" sprite="locales/common/textures/numbers/4.png" sound="locales/en_us_rural/sounds/4.ogg">4</number>
+        <number name="5" sprite="locales/common/textures/numbers/5.png" sound="locales/en_us_rural/sounds/5.ogg">5</number>
+        <number name="6" sprite="locales/common/textures/numbers/6.png" sound="locales/en_us_rural/sounds/6.ogg">6</number>
+        <number name="7" sprite="locales/common/textures/numbers/7.png" sound="locales/en_us_rural/sounds/7.ogg">7</number>
+        <number name="8" sprite="locales/common/textures/numbers/8.png" sound="locales/en_us_rural/sounds/8.ogg">8</number>
+        <number name="9" sprite="locales/common/textures/numbers/9.png" sound="locales/en_us_rural/sounds/9.ogg">9</number>
+    </numbers>
 
     <!-- Alphabet -->
     <letters>

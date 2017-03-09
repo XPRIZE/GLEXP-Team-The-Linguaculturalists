@@ -104,15 +104,20 @@ public class Inventory {
     }
 
     public int add(final String inventory_id) {
-        return this.add(inventory_id, 1);
+        return this.add(inventory_id, 1, true);
+    }
+    public int add(final String inventory_id, final int quantity) {
+        return this.add(inventory_id, quantity, true);
     }
     /**
      * Increment the quantity of an InventoryItem (creating a new one of necessary).
      *
      * @param inventory_id name of the InventoryItem
+     * @param quantity number of this item to add to the inventory
+     * @param earned whether the addition was earned or rewarded, only increment history if earned
      * @return the new quantity of this item
      */
-    public int add(final String inventory_id, final int quantity) {
+    public int add(final String inventory_id, final int quantity, boolean earned) {
         Debug.d("Adding item: " + inventory_id);
         final Filter filter = new Filter();
         filter.is("item_name", inventory_id);
@@ -122,14 +127,20 @@ public class Inventory {
             if (item != null) {
                 Debug.d("Found record for " + inventory_id + ", updating to " + (item.quantity.get() + 1));
                 item.quantity.set(item.quantity.get() + quantity);
-                item.history.set(item.history.get() + quantity);
+                if (earned) {
+                    item.history.set(item.history.get() + quantity);
+                }
             }
         } catch (IndexOutOfBoundsException e) {
             Debug.d("No record for " + inventory_id + ", creating a new one");
             item = new InventoryItem();
             item.game.set(this.session);
             item.item_name.set(inventory_id);
-            item.quantity.set(1);
+            if (earned) {
+                item.quantity.set(1);
+            } else {
+                item.quantity.set(0);
+            }
             item.history.set(1);
         }
         item.save(PhoeniciaContext.context);
