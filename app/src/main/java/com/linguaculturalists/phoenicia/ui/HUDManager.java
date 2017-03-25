@@ -7,6 +7,7 @@ import com.linguaculturalists.phoenicia.locale.tour.Stop;
 import com.linguaculturalists.phoenicia.locale.tour.TourFinishedListener;
 import com.linguaculturalists.phoenicia.models.DefaultTile;
 import com.linguaculturalists.phoenicia.models.GameTile;
+import com.linguaculturalists.phoenicia.models.GiftRequest;
 import com.linguaculturalists.phoenicia.models.WordTile;
 import com.linguaculturalists.phoenicia.tour.TourOverlay;
 
@@ -196,6 +197,10 @@ public class HUDManager extends HUD {
         } else {
             Debug.w("Unknown game type: " + tile.game.type);
         }
+    }
+
+    public void showRequestGift(PhoeniciaGame game, GiftRequest request) {
+        this.push(new RequestGiftHUD(game, request));
     }
 
     public void showDebugMode() {

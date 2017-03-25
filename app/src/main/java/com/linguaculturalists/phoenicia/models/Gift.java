@@ -41,10 +41,21 @@ public class Gift extends Model {
         GiftRequest request = GiftRequest.fromRequestCode(requestCode);
         newGift.requestType.set(request.itemType.get());
         newGift.requestItem.set(request.itemIndex.get());
+
+        int requestKey = request.checkKey.get();
+        int responseKey = (int)Math.round(Math.random() * 99);
+
+        int code = requestCode % 10000;// **0000 - **9999
+        code = GiftRequest.encode(responseKey, code);
+        code += responseKey * 10000;// 00**** - 99****
+        newGift.requestCode.set(code);
+
         Date now = new Date();
         newGift.sent.set((double) now.getTime());
         return newGift;
     }
+
+
     public static final QuerySet<Gift> objects(Context context) {
         return objects(context, Gift.class);
     }

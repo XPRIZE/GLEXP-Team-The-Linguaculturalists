@@ -110,7 +110,7 @@ public class GameUI {
         return TextureRegionFactory.extractTiledFromTexture(this.gameui, GU * 6, GU * 5, GU * 2, GU * 1, 2, 1);
     }
 
-    public ITiledTextureRegion getSoundIcon() {
-        return TextureRegionFactory.extractTiledFromTexture(this.gameui, GU*6, GU*5, GU*2, GU*1, 2, 1);
+    public ITextureRegion getGiftIcon() {
+        return TextureRegionFactory.extractFromTexture(this.gameui, GU * 6, GU * 6, GU * 1, GU * 1);
     }
 }

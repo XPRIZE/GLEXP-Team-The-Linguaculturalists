@@ -28,6 +28,7 @@ public class GiftRequest extends Model {
     public IntegerField checkKey; /**< random number used to verify the request response */
     public IntegerField requestCode; /**< code to share to get help with this request */
     public DoubleField requested; /**< time when the request was created */
+    public DoubleField received; /**< time when the git was received */
     public ForeignKeyField<MarketRequest> marketRequest; /**< Market Request that started this Gift Request */
 
     public GiftRequest() {
@@ -38,6 +39,8 @@ public class GiftRequest extends Model {
         this.checkKey = new IntegerField();
         this.requestCode = new IntegerField();
         this.marketRequest = new ForeignKeyField<MarketRequest>(MarketRequest.class);
+        this.requested = new DoubleField();
+        this.received = new DoubleField();
     }
 
     public static GiftRequest fromRequestCode(int requestCode) {
@@ -88,6 +91,23 @@ public class GiftRequest extends Model {
         Date now = new Date();
         request.requested.set((double) now.getTime());
         return request;
+    }
+
+    public boolean verify(int responseCode) {
+        int responseKey = (responseCode)/ 10000;
+        int encData = (responseCode % 10000);
+        int respData = decode(responseKey, encData);
+        int data = decode(this.checkKey.get(), respData);
+
+        int itemIndex = (data % 1000);
+        data -= itemIndex;
+        int itemType = (data % 10000) / 1000;
+
+        if (this.itemType.get() == itemType && this.itemIndex.get() == itemIndex) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static int encode(final int checkKey, final int rawData) {

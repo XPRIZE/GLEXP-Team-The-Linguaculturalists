@@ -12,6 +12,7 @@ import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Person;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.Bank;
+import com.linguaculturalists.phoenicia.models.GiftRequest;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.models.Market;
@@ -271,7 +272,7 @@ public class MarketHUD extends PhoeniciaHUD {
         for (RequestItem item : request.getItems(PhoeniciaContext.context)) {
             int available = Inventory.getInstance().getCount(item.item_name.get());
             if (available < item.quantity.get()) {
-                abortSale(item, (item.quantity.get() - available));
+                abortSale(item, (item.quantity.get() - available), request);
                 return;
             }
         }
@@ -333,7 +334,7 @@ public class MarketHUD extends PhoeniciaHUD {
      * @param item Item that the player does not have enough of to complete the sale
      * @param needed How many more of this item is needed
      */
-    protected void abortSale(RequestItem item, int needed) {
+    protected void abortSale(RequestItem item, int needed, final MarketRequest request) {
         Debug.d("Aborting sale due to not enough " + item.item_name.get());
         Dialog confirmDialog = new Dialog(500, 300, Dialog.Buttons.OK, PhoeniciaContext.vboManager, new Dialog.DialogListener() {
             @Override
@@ -345,14 +346,14 @@ public class MarketHUD extends PhoeniciaHUD {
                 }
             }
         });
-        Text confirmText = new Text(confirmDialog.getWidth()/2 + 48, confirmDialog.getHeight()/2 + 32, GameFonts.dialogText(), " -"+needed, 6,  new TextOptions(AutoWrap.WORDS, confirmDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+        Text confirmText = new Text(confirmDialog.getWidth()/2 + 48, confirmDialog.getHeight() - 96, GameFonts.dialogText(), " -"+needed, 6,  new TextOptions(AutoWrap.WORDS, confirmDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
         confirmText.setColor(Color.RED);
         confirmDialog.attachChild(confirmText);
 
         final Letter isLetter = game.locale.letter_map.get(item.item_name.get());
         final Word isWord = game.locale.word_map.get(item.item_name.get());
         if (isLetter != null) {
-            LetterSprite sprite = new LetterSprite(confirmDialog.getWidth()/2 - 48, confirmDialog.getHeight()/2 + 32, isLetter, needed, game.letterSprites.get(isLetter), PhoeniciaContext.vboManager);
+            LetterSprite sprite = new LetterSprite(confirmDialog.getWidth()/2 - 48, confirmDialog.getHeight() - 96, isLetter, needed, game.letterSprites.get(isLetter), PhoeniciaContext.vboManager);
             sprite.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v1) {
@@ -363,7 +364,7 @@ public class MarketHUD extends PhoeniciaHUD {
             confirmDialog.registerTouchArea(sprite);
             confirmDialog.attachChild(sprite);
         } else if (isWord != null) {
-            WordSprite sprite = new WordSprite(confirmDialog.getWidth()/2 - 48, confirmDialog.getHeight()/2 + 32, isWord, needed, game.wordSprites.get(isWord), PhoeniciaContext.vboManager);
+            WordSprite sprite = new WordSprite(confirmDialog.getWidth()/2 - 48, confirmDialog.getHeight() - 96, isWord, needed, game.wordSprites.get(isWord), PhoeniciaContext.vboManager);
             sprite.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v1) {
@@ -374,6 +375,23 @@ public class MarketHUD extends PhoeniciaHUD {
             confirmDialog.registerTouchArea(sprite);
             confirmDialog.attachChild(sprite);
         }
+
+        ButtonSprite giftButton = new ButtonSprite(confirmDialog.getWidth()/2, 128, GameUI.getInstance().getGiftIcon(), PhoeniciaContext.vboManager);
+        giftButton.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                GiftRequest giftReq;
+                if (isLetter != null) {
+                    giftReq = GiftRequest.newRequest(game, isLetter, request);
+                } else {
+                    giftReq = GiftRequest.newRequest(game, isWord, request);
+                }
+                game.hudManager.showRequestGift(game, giftReq);
+            }
+        });
+        confirmDialog.attachChild(giftButton);
+        confirmDialog.registerTouchArea(giftButton);
+
         this.registerTouchArea(confirmDialog);
         confirmDialog.open(this);
         GameSounds.play(GameSounds.FAILED);

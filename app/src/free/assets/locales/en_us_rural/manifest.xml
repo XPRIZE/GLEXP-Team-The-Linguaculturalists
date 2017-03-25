@@ -83,6 +83,7 @@
         <number name="7" sprite="locales/common/textures/numbers/7.png" sound="locales/en_us_rural/sounds/7.ogg">7</number>
         <number name="8" sprite="locales/common/textures/numbers/8.png" sound="locales/en_us_rural/sounds/8.ogg">8</number>
         <number name="9" sprite="locales/common/textures/numbers/9.png" sound="locales/en_us_rural/sounds/9.ogg">9</number>
+        <number name="0" sprite="locales/common/textures/numbers/0.png" sound="locales/en_us_rural/sounds/0.ogg">0</number>
     </numbers>
 
     <!-- Alphabet -->
