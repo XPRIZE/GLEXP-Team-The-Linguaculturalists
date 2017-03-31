@@ -4,9 +4,12 @@ import com.linguaculturalists.phoenicia.GameActivity;
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.components.BorderRectangle;
 import com.linguaculturalists.phoenicia.components.Numberpad;
+import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Number;
+import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.GiftRequest;
 import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.GameSounds;
 import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
@@ -29,6 +32,10 @@ public class RequestGiftHUD extends PhoeniciaHUD {
     private Rectangle whiteRect;
     private PhoeniciaGame game;
     private ClickDetector clickDetector;
+    private int inputCursor = 0;
+    private Rectangle[] inputLocations;
+    private int responseCode = 0;
+    private GiftRequest request;
 
     private static final int CODE_LENGTH = 6;
 
@@ -43,6 +50,8 @@ public class RequestGiftHUD extends PhoeniciaHUD {
                 finish();
             }
         });
+
+        this.request = request;
 
         this.whiteRect = new BorderRectangle(GameActivity.CAMERA_WIDTH / 2, (GameActivity.CAMERA_HEIGHT / 2)+96, 600, 400, PhoeniciaContext.vboManager) {
             @Override
@@ -89,13 +98,13 @@ public class RequestGiftHUD extends PhoeniciaHUD {
         whiteRect.attachChild(giftIcon);
 
         startX += 16;
-        Rectangle[] responseCodeBox = new Rectangle[6];
+        inputLocations = new Rectangle[CODE_LENGTH];
         for (int i = 0; i < CODE_LENGTH; i++) {
             BorderRectangle digitBox = new BorderRectangle(startX+(64*i), 64, 48, 64, PhoeniciaContext.vboManager);
             digitBox.setColor(Color.WHITE);
             digitBox.setBorderColor(Color.RED);
             whiteRect.attachChild(digitBox);
-            responseCodeBox[i] = digitBox;
+            inputLocations[i] = digitBox;
         }
 
         Rectangle inputPanel = new Rectangle(this.getWidth()/2, 96, whiteRect.getWidth(), 192, PhoeniciaContext.vboManager);
@@ -104,6 +113,53 @@ public class RequestGiftHUD extends PhoeniciaHUD {
         Numberpad numPad = new Numberpad(this.getWidth()/2, 96, 96*5, 192, game);
         this.attachChild(numPad);
         this.registerTouchArea(numPad);
+        numPad.setOnKeyClickListener(new Numberpad.KeyClickListener() {
+            @Override
+            public void onKeyClicked(Number n) {
+                inputNumber(n);
+                game.playBlockSound(n.sound);
+                if (inputCursor == 6) {
+                    if (verifyGift()) {
+                        acceptGift();
+                    } else {
+                        giftFailed();
+                    }
+                }
+            }
+        });
+    }
+
+    private void acceptGift() {
+        GameSounds.play(GameSounds.COLLECT);
+        if (request.itemType.get() == GiftRequest.LETTER_REQUEST) {
+            Letter addLetter = game.locale.letters.get(request.itemIndex.get());
+            game.inventory.add(addLetter.name, 1, false);
+        } else if (request.itemType.get() == GiftRequest.WORD_REQUEST) {
+            Word addWord = game.locale.words.get(request.itemIndex.get());
+            game.inventory.add(addWord.name, 1, false);
+        }
+        this.finish();
+    }
+
+    private void giftFailed() {
+        GameSounds.play(GameSounds.FAILED);
+        responseCode = 0;
+        inputCursor = 0;
+        for(Rectangle inputBox : inputLocations) {
+            inputBox.detachChildren();
+        }
+    }
+
+    protected void inputNumber(Number n) {
+        responseCode += n.intval * (Math.pow(10, CODE_LENGTH-inputCursor-1));
+        Rectangle inputBox = inputLocations[inputCursor];
+        Sprite inputChar = new Sprite(inputBox.getWidth()/2, inputBox.getHeight()/2, game.numberSprites.get(n), PhoeniciaContext.vboManager);
+        inputBox.attachChild(inputChar);
+        inputCursor++;
+
+    }
+    protected boolean verifyGift() {
+        return this.request.verify(this.responseCode);
     }
 
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {

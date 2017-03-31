@@ -61,7 +61,7 @@ public class InventoryHUD extends PhoeniciaHUD {
             }
         });
 
-        this.whiteRect = new BorderRectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 400, PhoeniciaContext.vboManager) {
+        this.whiteRect = new BorderRectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 500, PhoeniciaContext.vboManager) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
@@ -146,6 +146,17 @@ public class InventoryHUD extends PhoeniciaHUD {
             offsetX++;
 
         }
+
+        ITextureRegion giftIcon = GameUI.getInstance().getGiftIcon();
+        ButtonSprite sendGiftButton = new ButtonSprite(whiteRect.getWidth()-(giftIcon.getWidth()/2), (giftIcon.getHeight()/2), giftIcon, PhoeniciaContext.vboManager);
+        whiteRect.attachChild(sendGiftButton);
+        this.registerTouchArea(sendGiftButton);
+        sendGiftButton.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                game.hudManager.showSendGift(game);
+            }
+        });
     }
 
     protected void sellLetter(LetterSprite block) {

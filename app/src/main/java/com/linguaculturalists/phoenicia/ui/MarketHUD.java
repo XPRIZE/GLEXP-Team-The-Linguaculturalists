@@ -59,6 +59,7 @@ public class MarketHUD extends PhoeniciaHUD {
     private List<MarketRequest> requestQueue;
     private Map<MarketRequest, Sprite> requestPerson;
     private Map<MarketRequest, Text> requestName;
+    private MarketRequest currentRequest;
 
     private static final int columns = 2;
 
@@ -180,6 +181,7 @@ public class MarketHUD extends PhoeniciaHUD {
         for (Entity touchArea : this.touchAreas) {
             this.unregisterTouchArea(touchArea);
         }
+        this.currentRequest = request;
 
         final int columns = 3;
         float startX = this.requestItemsPane.getWidth() / 2 - (columns * 32) - 16;
@@ -336,7 +338,7 @@ public class MarketHUD extends PhoeniciaHUD {
      */
     protected void abortSale(RequestItem item, int needed, final MarketRequest request) {
         Debug.d("Aborting sale due to not enough " + item.item_name.get());
-        Dialog confirmDialog = new Dialog(500, 300, Dialog.Buttons.OK, PhoeniciaContext.vboManager, new Dialog.DialogListener() {
+        final Dialog confirmDialog = new Dialog(500, 300, Dialog.Buttons.OK, PhoeniciaContext.vboManager, new Dialog.DialogListener() {
             @Override
             public void onDialogButtonClicked(Dialog dialog, Dialog.DialogButton dialogButton) {
                 if (dialogButton == dialogButton.OK) {
@@ -387,6 +389,7 @@ public class MarketHUD extends PhoeniciaHUD {
                     giftReq = GiftRequest.newRequest(game, isWord, request);
                 }
                 game.hudManager.showRequestGift(game, giftReq);
+                confirmDialog.close();
             }
         });
         confirmDialog.attachChild(giftButton);
@@ -395,6 +398,13 @@ public class MarketHUD extends PhoeniciaHUD {
         this.registerTouchArea(confirmDialog);
         confirmDialog.open(this);
         GameSounds.play(GameSounds.FAILED);
+    }
+
+    @Override
+    public void show() {
+        if (this.currentRequest != null) {
+            this.populateRequestItems(this.currentRequest);
+        }
     }
 
     /**

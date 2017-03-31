@@ -114,12 +114,16 @@ public class GiftRequest extends Model {
         int encData = rawData;
         //TODO: Encode item data with the check key
         // Doing nothing right now to make debugging the rest easier
+        int encKey = checkKey * checkKey;
+        encData = rawData ^ encKey;
         return encData;
     }
-    public static int decode(final int checkKey, final int encdata) {
-        int rawData = encdata;
+    public static int decode(final int checkKey, final int encData) {
+        int rawData = encData;
         //TODO: Decode item data with the check key
         // Doing nothing right now to make debugging the rest easier
+        int encKey = checkKey * checkKey;
+        rawData = encData ^ encKey;
         return rawData;
     }
 

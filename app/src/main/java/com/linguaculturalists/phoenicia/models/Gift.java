@@ -9,6 +9,8 @@ import com.orm.androrm.field.ForeignKeyField;
 import com.orm.androrm.field.IntegerField;
 import com.orm.androrm.migration.Migrator;
 
+import org.andengine.util.debug.Debug;
+
 import java.util.Date;
 
 /**
@@ -35,6 +37,7 @@ public class Gift extends Model {
     }
 
     public static Gift newForRequest(final GameSession game, final int requestCode) {
+        Debug.d("Generating Gift from request code: " + requestCode);
         Gift newGift = new Gift();
         newGift.game.set(game);
         newGift.requestCode.set(requestCode);
@@ -44,11 +47,13 @@ public class Gift extends Model {
 
         int requestKey = request.checkKey.get();
         int responseKey = (int)Math.round(Math.random() * 99);
+        Debug.d("Generating Gift with response key: "+responseKey);
 
         int code = requestCode % 10000;// **0000 - **9999
         code = GiftRequest.encode(responseKey, code);
         code += responseKey * 10000;// 00**** - 99****
-        newGift.requestCode.set(code);
+        newGift.responseCode.set(code);
+        Debug.d("Generating Gift with response code: "+code);
 
         Date now = new Date();
         newGift.sent.set((double) now.getTime());

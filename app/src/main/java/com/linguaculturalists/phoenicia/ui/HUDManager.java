@@ -203,6 +203,10 @@ public class HUDManager extends HUD {
         this.push(new RequestGiftHUD(game, request));
     }
 
+    public void showSendGift(PhoeniciaGame game) {
+        this.push(new SendGiftHUD(game));
+    }
+
     public void showDebugMode() {
         DebugHUD hud = new DebugHUD(this.game);
         this.push(hud);
