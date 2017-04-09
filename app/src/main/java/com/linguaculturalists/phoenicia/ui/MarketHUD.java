@@ -338,24 +338,15 @@ public class MarketHUD extends PhoeniciaHUD {
      */
     protected void abortSale(RequestItem item, int needed, final MarketRequest request) {
         Debug.d("Aborting sale due to not enough " + item.item_name.get());
-        final Dialog confirmDialog = new Dialog(500, 300, Dialog.Buttons.OK, PhoeniciaContext.vboManager, new Dialog.DialogListener() {
-            @Override
-            public void onDialogButtonClicked(Dialog dialog, Dialog.DialogButton dialogButton) {
-                if (dialogButton == dialogButton.OK) {
-                    Debug.d("Dialog Ok pressed");
-                    dialog.close();
-                    unregisterTouchArea(dialog);
-                }
-            }
-        });
-        Text confirmText = new Text(confirmDialog.getWidth()/2 + 48, confirmDialog.getHeight() - 96, GameFonts.dialogText(), " -"+needed, 6,  new TextOptions(AutoWrap.WORDS, confirmDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+        final Dialog confirmDialog = new Dialog(450, 250, Dialog.Buttons.NONE, PhoeniciaContext.vboManager, null);
+        Text confirmText = new Text(confirmDialog.getWidth()/2 + 48, confirmDialog.getHeight() - 64, GameFonts.dialogText(), " - "+needed, 6,  new TextOptions(AutoWrap.WORDS, confirmDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
         confirmText.setColor(Color.RED);
         confirmDialog.attachChild(confirmText);
 
         final Letter isLetter = game.locale.letter_map.get(item.item_name.get());
         final Word isWord = game.locale.word_map.get(item.item_name.get());
         if (isLetter != null) {
-            LetterSprite sprite = new LetterSprite(confirmDialog.getWidth()/2 - 48, confirmDialog.getHeight() - 96, isLetter, needed, game.letterSprites.get(isLetter), PhoeniciaContext.vboManager);
+            LetterSprite sprite = new LetterSprite(confirmDialog.getWidth()/2 - 48, confirmDialog.getHeight() - 64, isLetter, needed, game.letterSprites.get(isLetter), PhoeniciaContext.vboManager);
             sprite.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v1) {
@@ -366,7 +357,7 @@ public class MarketHUD extends PhoeniciaHUD {
             confirmDialog.registerTouchArea(sprite);
             confirmDialog.attachChild(sprite);
         } else if (isWord != null) {
-            WordSprite sprite = new WordSprite(confirmDialog.getWidth()/2 - 48, confirmDialog.getHeight() - 96, isWord, needed, game.wordSprites.get(isWord), PhoeniciaContext.vboManager);
+            WordSprite sprite = new WordSprite(confirmDialog.getWidth()/2 - 48, confirmDialog.getHeight() - 64, isWord, needed, game.wordSprites.get(isWord), PhoeniciaContext.vboManager);
             sprite.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v1) {
@@ -378,7 +369,7 @@ public class MarketHUD extends PhoeniciaHUD {
             confirmDialog.attachChild(sprite);
         }
 
-        ButtonSprite giftButton = new ButtonSprite(confirmDialog.getWidth()/2, 128, GameUI.getInstance().getGiftIcon(), PhoeniciaContext.vboManager);
+        ButtonSprite giftButton = new ButtonSprite(confirmDialog.getWidth()/3, 64, GameUI.getInstance().getGiftIcon(), PhoeniciaContext.vboManager);
         giftButton.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v1) {
@@ -389,11 +380,23 @@ public class MarketHUD extends PhoeniciaHUD {
                     giftReq = GiftRequest.newRequest(game, isWord, request);
                 }
                 game.hudManager.showRequestGift(game, giftReq);
+                unregisterTouchArea(confirmDialog);
                 confirmDialog.close();
             }
         });
         confirmDialog.attachChild(giftButton);
         confirmDialog.registerTouchArea(giftButton);
+
+        ButtonSprite returnButton = new ButtonSprite(confirmDialog.getWidth()*2/3, 64, GameUI.getInstance().getRetryIcon(), PhoeniciaContext.vboManager);
+        returnButton.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                unregisterTouchArea(confirmDialog);
+                confirmDialog.close();
+            }
+        });
+        confirmDialog.attachChild(returnButton);
+        confirmDialog.registerTouchArea(returnButton);
 
         this.registerTouchArea(confirmDialog);
         confirmDialog.open(this);

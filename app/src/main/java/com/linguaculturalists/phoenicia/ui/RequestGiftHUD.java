@@ -21,6 +21,7 @@ import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
@@ -76,6 +77,10 @@ public class RequestGiftHUD extends PhoeniciaHUD {
         int requestCode = request.requestCode.get();
         Debug.d("Showing request code: " + requestCode);
         int startX = (int)(whiteRect.getWidth()/2 - (64 * CODE_LENGTH)/2) + 16;
+
+        Sprite giftIcon = new Sprite(startX-64, whiteRect.getHeight()-96, GameUI.getInstance().getGiftIcon(), PhoeniciaContext.vboManager);
+        whiteRect.attachChild(giftIcon);
+
         for (int i = 0; i < CODE_LENGTH; i++) {
             int power = (int)(Math.pow(10, CODE_LENGTH-i-1));
             Debug.d("Showing request code position: " + power);
@@ -94,8 +99,25 @@ public class RequestGiftHUD extends PhoeniciaHUD {
             requestCode -= digit * power;
         }
 
-        Sprite giftIcon = new Sprite(whiteRect.getWidth()/2, whiteRect.getHeight()/2, GameUI.getInstance().getGiftIcon(), PhoeniciaContext.vboManager);
-        whiteRect.attachChild(giftIcon);
+        ITiledTextureRegion itemRegion;
+        if (request.itemType.get()==GiftRequest.LETTER_REQUEST) {
+            itemRegion = game.letterSprites.get(game.locale.letters.get(request.itemIndex.get()));
+        } else {
+            itemRegion = game.wordSprites.get(game.locale.words.get(request.itemIndex.get()));
+        }
+        ButtonSprite giftItem = new ButtonSprite(whiteRect.getWidth()/2, whiteRect.getHeight()/2, itemRegion, PhoeniciaContext.vboManager);
+        giftItem.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                if (request.itemType.get()==GiftRequest.LETTER_REQUEST) {
+                    game.playBlockSound(game.locale.letters.get(request.itemIndex.get()).sound);
+                } else {
+                    game.playBlockSound(game.locale.words.get(request.itemIndex.get()).sound);
+                }
+            }
+        });
+        whiteRect.attachChild(giftItem);
+        registerTouchArea(giftItem);
 
         startX += 16;
         inputLocations = new Rectangle[CODE_LENGTH];
@@ -107,7 +129,13 @@ public class RequestGiftHUD extends PhoeniciaHUD {
             inputLocations[i] = digitBox;
         }
 
-        Rectangle inputPanel = new Rectangle(this.getWidth()/2, 96, whiteRect.getWidth(), 192, PhoeniciaContext.vboManager);
+        Rectangle inputPanel = new Rectangle(this.getWidth()/2, 96, whiteRect.getWidth(), 192, PhoeniciaContext.vboManager) {
+            @Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+                return true;
+            }
+        };
         inputPanel.setColor(Color.WHITE);
         this.attachChild(inputPanel);
         Numberpad numPad = new Numberpad(this.getWidth()/2, 96, 96*5, 192, game);

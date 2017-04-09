@@ -10,9 +10,11 @@ import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.Gift;
 import com.linguaculturalists.phoenicia.models.GiftRequest;
 import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.GameSounds;
 import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
+import org.andengine.entity.Entity;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
@@ -21,6 +23,7 @@ import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
@@ -30,6 +33,7 @@ import org.andengine.util.debug.Debug;
  */
 public class SendGiftHUD extends PhoeniciaHUD {
     private Rectangle whiteRect;
+    private Entity itemPane;
     private PhoeniciaGame game;
     private ClickDetector clickDetector;
     private int inputCursor = 0;
@@ -71,6 +75,8 @@ public class SendGiftHUD extends PhoeniciaHUD {
         whiteRect.attachChild(banner);
 
         int startX = (int)(whiteRect.getWidth()/2 - (64 * CODE_LENGTH)/2) + 32;
+        Sprite giftIcon = new Sprite(startX-64, whiteRect.getHeight()-96, GameUI.getInstance().getGiftIcon(), PhoeniciaContext.vboManager);
+        whiteRect.attachChild(giftIcon);
         inputLocations = new Rectangle[6];
         for (int i = 0; i < CODE_LENGTH; i++) {
             BorderRectangle digitBox = new BorderRectangle(startX+(64*i), whiteRect.getHeight()-96, 48, 64, PhoeniciaContext.vboManager);
@@ -80,12 +86,16 @@ public class SendGiftHUD extends PhoeniciaHUD {
             inputLocations[i] = digitBox;
         }
 
+        itemPane = new Entity(whiteRect.getWidth()/2, whiteRect.getHeight()/2, whiteRect.getWidth(), 64);
+        whiteRect.attachChild(itemPane);
 
-        Sprite giftIcon = new Sprite(whiteRect.getWidth()/2, whiteRect.getHeight()/2, GameUI.getInstance().getGiftIcon(), PhoeniciaContext.vboManager);
-        whiteRect.attachChild(giftIcon);
-
-
-        Rectangle inputPanel = new Rectangle(this.getWidth()/2, 96, whiteRect.getWidth(), 192, PhoeniciaContext.vboManager);
+        Rectangle inputPanel = new Rectangle(this.getWidth()/2, 96, whiteRect.getWidth(), 192, PhoeniciaContext.vboManager) {
+            @Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
+                return true;
+            }
+        };
         inputPanel.setColor(Color.WHITE);
         this.attachChild(inputPanel);
         Numberpad numPad = new Numberpad(this.getWidth()/2, 96, 96*5, 192, game);
@@ -97,14 +107,49 @@ public class SendGiftHUD extends PhoeniciaHUD {
                 inputNumber(n);
                 game.playBlockSound(n.sound);
                 if (inputCursor == 6) {
-                    showResponseCode();
+                    showRequestItem();
                 }
             }
         });
     }
 
-    protected void showResponseCode() {
-        Gift gift = Gift.newForRequest(game.session, requestCode);
+    protected void showRequestItem() {
+        final Gift gift = Gift.newForRequest(game.session, requestCode);
+        ITiledTextureRegion itemRegion;
+        if (gift.requestType.get()==GiftRequest.LETTER_REQUEST) {
+            itemRegion = game.letterSprites.get(game.locale.letters.get(gift.requestItem.get()));
+        } else {
+            itemRegion = game.wordSprites.get(game.locale.words.get(gift.requestItem.get()));
+        }
+
+        ButtonSprite giftItem = new ButtonSprite(itemPane.getWidth()/2 - 64, itemPane.getHeight()/2, itemRegion, PhoeniciaContext.vboManager);
+        giftItem.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                if (gift.requestType.get()==GiftRequest.LETTER_REQUEST) {
+                    game.playBlockSound(game.locale.letters.get(gift.requestItem.get()).sound);
+                } else {
+                    game.playBlockSound(game.locale.words.get(gift.requestItem.get()).sound);
+                }
+            }
+        });
+        itemPane.attachChild(giftItem);
+        registerTouchArea(giftItem);
+
+        final ButtonSprite confirmButton = new ButtonSprite(itemPane.getWidth()/2 + 64, itemPane.getHeight()/2, GameUI.getInstance().getOkIcon(), PhoeniciaContext.vboManager);
+        confirmButton.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                confirmButton.setEnabled(false);
+                showResponseCode(gift);
+            }
+        });
+        itemPane.attachChild(confirmButton);
+        registerTouchArea(confirmButton);
+
+    }
+
+    protected void showResponseCode(final Gift gift) {
         int responseCode = gift.responseCode.get();
 
         try {
@@ -118,6 +163,8 @@ public class SendGiftHUD extends PhoeniciaHUD {
 
         } catch (Exception e) {
             //TODO: Show error dialog
+            Debug.d("Could not subtract item, not enough in inventory");
+            GameSounds.play(GameSounds.FAILED);
             return;
         }
         int startX = (int)(whiteRect.getWidth()/2 - (64 * CODE_LENGTH)/2) + 16;

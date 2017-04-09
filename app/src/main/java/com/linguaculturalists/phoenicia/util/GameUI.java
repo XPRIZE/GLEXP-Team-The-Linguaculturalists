@@ -113,4 +113,8 @@ public class GameUI {
     public ITextureRegion getGiftIcon() {
         return TextureRegionFactory.extractFromTexture(this.gameui, GU * 6, GU * 6, GU * 1, GU * 1);
     }
+
+    public ITextureRegion getRetryIcon() {
+        return TextureRegionFactory.extractFromTexture(this.gameui, GU * 7, GU * 6, GU * 1, GU * 1);
+    }
 }
