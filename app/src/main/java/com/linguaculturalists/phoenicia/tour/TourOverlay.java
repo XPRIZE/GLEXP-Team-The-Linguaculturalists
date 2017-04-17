@@ -51,7 +51,7 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
     private ClickDetector clickDetector;
     private List<Message> messages;
     private int currentMessage;
-    private boolean messagePlaying;
+    public boolean messagePlaying;
     private Rectangle messageBox;
     public enum MessageBox {
         Top, Bottom;

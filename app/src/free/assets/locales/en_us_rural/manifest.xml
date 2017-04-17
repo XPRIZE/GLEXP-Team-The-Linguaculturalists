@@ -70,6 +70,14 @@
             <message sound="locales/en_us_rural/sounds/tour/workshop3.ogg">Try making the word map with the letters M A P</message>
             <message sound="locales/en_us_rural/sounds/tour/workshop4.ogg">Great! But remember, you can only make one word at a time in the workshop, so keep making word buildings!</message>
         </stop>
+        <stop id="gifts">
+            <message sound="">If you need help at the marketplace, you can ask a friend to send you a word or letter as a gift.</message>
+            <message sound="">Gifts are given using special numbers. To get a gift, you first have to give a friend this gift number.</message>
+            <message sound="">Your friend will go to their inventory to see if they have the word you need</message>
+            <message sound="">When they enter your number, it will show the word you have asked for</message>
+            <message sound="">Then your friend will see a new gift number, which they will give back to you</message>
+            <message sound="">Put your friends' gift number into your game, and you will recieve their gift</message>
+        </stop>
     </tour>
 
     <!-- Numbers -->
