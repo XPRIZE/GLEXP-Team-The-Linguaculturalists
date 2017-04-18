@@ -113,7 +113,7 @@ public class SendGiftHUD extends PhoeniciaHUD {
         });
     }
 
-    protected void showRequestItem() {
+    public void showRequestItem() {
         final Gift gift = Gift.newForRequest(game.session, requestCode);
         ITiledTextureRegion itemRegion;
         if (gift.requestType.get()==GiftRequest.LETTER_REQUEST) {
@@ -149,7 +149,7 @@ public class SendGiftHUD extends PhoeniciaHUD {
 
     }
 
-    protected void showResponseCode(final Gift gift) {
+    public void showResponseCode(final Gift gift) {
         int responseCode = gift.responseCode.get();
 
         try {
@@ -188,7 +188,7 @@ public class SendGiftHUD extends PhoeniciaHUD {
 
     }
 
-    protected void inputNumber(Number n) {
+    public void inputNumber(Number n) {
         requestCode += n.intval * (Math.pow(10, CODE_LENGTH-inputCursor-1));
         Rectangle inputBox = inputLocations[inputCursor];
         Sprite inputChar = new Sprite(inputBox.getWidth()/2, inputBox.getHeight()/2, game.numberSprites.get(n), PhoeniciaContext.vboManager);

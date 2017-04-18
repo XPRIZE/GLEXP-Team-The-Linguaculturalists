@@ -157,7 +157,7 @@ public class RequestGiftHUD extends PhoeniciaHUD {
         });
     }
 
-    private void acceptGift() {
+    public void acceptGift() {
         GameSounds.play(GameSounds.COLLECT);
         if (request.itemType.get() == GiftRequest.LETTER_REQUEST) {
             Letter addLetter = game.locale.letters.get(request.itemIndex.get());
@@ -178,7 +178,7 @@ public class RequestGiftHUD extends PhoeniciaHUD {
         }
     }
 
-    protected void inputNumber(Number n) {
+    public void inputNumber(Number n) {
         responseCode += n.intval * (Math.pow(10, CODE_LENGTH-inputCursor-1));
         Rectangle inputBox = inputLocations[inputCursor];
         Sprite inputChar = new Sprite(inputBox.getWidth()/2, inputBox.getHeight()/2, game.numberSprites.get(n), PhoeniciaContext.vboManager);
