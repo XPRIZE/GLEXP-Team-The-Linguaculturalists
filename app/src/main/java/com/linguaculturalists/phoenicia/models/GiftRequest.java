@@ -77,7 +77,7 @@ public class GiftRequest extends Model {
         request.itemIndex.set(itemIndex);
         request.marketRequest.set(marketRequest);
 
-        int randomKey = (int)Math.round(Math.random() * 99);
+        int randomKey = (int)Math.round(Math.random() * 89)+10;
         request.checkKey.set(randomKey);
 
         // TODO: encode type and index with the random key

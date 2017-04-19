@@ -57,8 +57,32 @@ public class Market {
         Filter openRequests = new Filter();
         openRequests.is("status", MarketRequest.REQUESTED);
         List<MarketRequest> items = MarketRequest.objects(PhoeniciaContext.context).filter(this.session.filter).filter(openRequests).toList();
-        Debug.d("Found "+items.size()+" requests");
+        Debug.d("Found "+items.size()+" open requests");
         return items;
+    }
+
+    /**
+     * Retrieve a list of all fulfilled requests in the market
+     * @return a list of fullfilled \link MarketRequest MarketRequests \endlink
+     */
+    public List<MarketRequest> fulfilled() {
+        Filter filledRequests = new Filter();
+        filledRequests.is("status", MarketRequest.FULFILLED);
+        List<MarketRequest> items = MarketRequest.objects(PhoeniciaContext.context).filter(this.session.filter).filter(filledRequests).toList();
+        Debug.d("Found "+items.size()+" filled requests");
+        return items;
+    }
+
+    /**
+     * Retrieve a list of all fulfilled requests in the market
+     * @return a list of fullfilled \link MarketRequest MarketRequests \endlink
+     */
+    public int filledCount() {
+        Filter filledRequests = new Filter();
+        filledRequests.is("status", MarketRequest.FULFILLED);
+        int filled = MarketRequest.objects(PhoeniciaContext.context).filter(this.session.filter).filter(filledRequests).count();
+        Debug.d("Found "+filled+" filled requests");
+        return filled;
     }
 
     public boolean isFull() {

@@ -37,6 +37,8 @@ public class RequestGiftHUD extends PhoeniciaHUD {
     private Rectangle[] inputLocations;
     private int responseCode = 0;
     private GiftRequest request;
+    private Rectangle inputPanel;
+    private Numberpad numPad;
 
     private static final int CODE_LENGTH = 6;
 
@@ -109,7 +111,7 @@ public class RequestGiftHUD extends PhoeniciaHUD {
         giftItem.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v1) {
-                if (request.itemType.get()==GiftRequest.LETTER_REQUEST) {
+                if (request.itemType.get() == GiftRequest.LETTER_REQUEST) {
                     game.playBlockSound(game.locale.letters.get(request.itemIndex.get()).sound);
                 } else {
                     game.playBlockSound(game.locale.words.get(request.itemIndex.get()).sound);
@@ -129,7 +131,7 @@ public class RequestGiftHUD extends PhoeniciaHUD {
             inputLocations[i] = digitBox;
         }
 
-        Rectangle inputPanel = new Rectangle(this.getWidth()/2, 96, whiteRect.getWidth(), 192, PhoeniciaContext.vboManager) {
+        this.inputPanel = new Rectangle(this.getWidth()/2, 96, whiteRect.getWidth(), 192, PhoeniciaContext.vboManager) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
@@ -138,7 +140,7 @@ public class RequestGiftHUD extends PhoeniciaHUD {
         };
         inputPanel.setColor(Color.WHITE);
         this.attachChild(inputPanel);
-        Numberpad numPad = new Numberpad(this.getWidth()/2, 96, 96*5, 192, game);
+        this.numPad = new Numberpad(this.getWidth()/2, 96, 96*5, 192, game);
         this.attachChild(numPad);
         this.registerTouchArea(numPad);
         numPad.setOnKeyClickListener(new Numberpad.KeyClickListener() {
@@ -155,6 +157,16 @@ public class RequestGiftHUD extends PhoeniciaHUD {
                 }
             }
         });
+    }
+
+    public void setNumberpadVisible(boolean visible) {
+        this.inputPanel.setVisible(visible);
+        this.numPad.setVisible(visible);
+        if (visible) {
+            this.registerTouchArea(this.numPad);
+        } else {
+            this.unregisterTouchArea(this.numPad);
+        }
     }
 
     public void acceptGift() {
@@ -179,6 +191,7 @@ public class RequestGiftHUD extends PhoeniciaHUD {
     }
 
     public void inputNumber(Number n) {
+        if (inputCursor >= CODE_LENGTH) return;
         responseCode += n.intval * (Math.pow(10, CODE_LENGTH-inputCursor-1));
         Rectangle inputBox = inputLocations[inputCursor];
         Sprite inputChar = new Sprite(inputBox.getWidth()/2, inputBox.getHeight()/2, game.numberSprites.get(n), PhoeniciaContext.vboManager);

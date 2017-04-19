@@ -68,7 +68,7 @@ public class WelcomeStop extends Stop {
         overlay.setBackgroundHUD(new DefaultHUD(this.tour.game));
         this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_NONE);
         overlay.showGuide();
-        overlay.showMessage(this.getMessage(MSG_WELCOME), TourOverlay.MessageBox.Bottom);
+        overlay.showMessage(this.getMessage(MSG_WELCOME), TourOverlay.MessageBox.Bottom, true);
     }
 
     private void showLetterPlacementLauncher() {

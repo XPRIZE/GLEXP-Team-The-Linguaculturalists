@@ -84,7 +84,7 @@ public class InventoryStop extends Stop {
         };
         this.overlay.setSpotlight(TourOverlay.SPOTLIGHT_NONE);
         this.overlay.setManagedHUD(hud);
-        this.overlay.showMessage(this.getMessage(MSG_HUD));
+        this.overlay.showMessage(this.getMessage(MSG_HUD), TourOverlay.MessageBox.Bottom);
     }
 
     @Override

@@ -104,12 +104,12 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
         this.messagePlaying = false;
 
         Debug.d("Tour overlay guide sprite width: "+this.guideSprite.getWidth());
-        this.messageBox = new BorderRectangle((messageBoxWidth/2)+this.guideSprite.getWidth(), this.guideSprite.getY(), messageBoxWidth, messageBoxHeight, PhoeniciaContext.vboManager);
+        this.messageBox = new BorderRectangle((messageBoxWidth/2)+this.guideSprite.getWidth()-32, this.guideSprite.getY(), messageBoxWidth, messageBoxHeight, PhoeniciaContext.vboManager);
         this.messageBox.setColor(Color.WHITE);
         this.attachChild(messageBox);
 
         ITextureRegion nextRegion = GameUI.getInstance().getNextIcon();
-        this.nextButton = new ButtonSprite(messageBox.getWidth() - 48, 50, nextRegion, PhoeniciaContext.vboManager);
+        this.nextButton = new ButtonSprite(messageBox.getWidth() - 48, 32, nextRegion, PhoeniciaContext.vboManager);
         this.nextButton.setOnClickListener(new ButtonSprite.OnClickListener() {
             @Override
             public void onClick(ButtonSprite buttonSprite, float v, float v1) {
@@ -123,17 +123,23 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
     }
 
     public void showMessage(Message message) {
-        this.showMessage(message, MessageBox.Top, null);
+        this.showMessage(message, MessageBox.Top, false, null);
     }
     public void showMessage(Message message, MessageBox position) {
-        this.showMessage(message, position, null);
+        this.showMessage(message, position, false, null);
+    }
+    public void showMessage(Message message, MessageBox position, boolean showNextButton) {
+        this.showMessage(message, position, showNextButton, null);
     }
     public void showMessage(Message message, MessageBox position, final MediaPlayer.OnCompletionListener listener) {
+        this.showMessage(message, position, false, listener);
+    }
+    public void showMessage(Message message, MessageBox position, final boolean showNextButton, final MediaPlayer.OnCompletionListener listener) {
         String messageText = message.text;
         String messageSound = message.sound;
 
         this.messageBox.detachChildren();
-        this.nextButton.setEnabled(false);
+        this.nextButton.setVisible(false);
         this.messageBox.attachChild(this.nextButton);
 
         this.positionMessageBox(position);
@@ -155,7 +161,9 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
                     if (listener != null) {
                         listener.onCompletion(mp);
                     }
-                    nextButton.setEnabled(true);
+                    if (showNextButton) {
+                        nextButton.setVisible(true);
+                    }
                 }
             });
         }

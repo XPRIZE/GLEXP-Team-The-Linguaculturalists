@@ -20,12 +20,14 @@ import com.linguaculturalists.phoenicia.ui.InventoryHUD;
 import com.linguaculturalists.phoenicia.ui.MarketHUD;
 import com.linguaculturalists.phoenicia.ui.RequestGiftHUD;
 import com.linguaculturalists.phoenicia.ui.SendGiftHUD;
+import com.linguaculturalists.phoenicia.util.GameSounds;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 import com.orm.androrm.Filter;
 
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.util.debug.Debug;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,7 @@ public class GiftStop extends Stop {
     private static final int MSG_RESPONSECONFIRM = 4;
     private static final int MSG_RESPONSECODE = 5;
     private static final int MSG_REQUESTFINISH = 6;
+    private static final int MSG_MARKETFINISH = 7;
 
     private MapBlockSprite marketBlock;
     private MapBlockSprite inventoryBlock;
@@ -56,7 +59,7 @@ public class GiftStop extends Stop {
     private RequestGiftHUD requestHUD;
     private SendGiftHUD responseHUD;
 
-    GiftStop(Tour tour) {
+    public GiftStop(Tour tour) {
         super(tour);
     }
 
@@ -69,6 +72,7 @@ public class GiftStop extends Stop {
     public void start(TourOverlay overlay) {
         this.overlay = overlay;
         this.currentMessageIndex = -1;
+        tour.game.hudManager.clear();
     }
 
     @Override
@@ -95,6 +99,9 @@ public class GiftStop extends Stop {
             case MSG_REQUESTFINISH:
                 this.showGiftRequestAccept();
                 break;
+            case MSG_MARKETFINISH:
+                this.showMarketSale();
+                break;
             default:
                 this.close();
         }
@@ -103,13 +110,15 @@ public class GiftStop extends Stop {
 
     private void showMarketRequest() {
         this.overlay.focusOn(this.marketBlock);
+        this.overlay.clearFocus();
         final GiftStop stop = this;
         this.tourRequest = createMarketRequestForGift();
 
         this.marketHUD = new MarketHUD(this.tour.game) {
+
             @Override
             protected void abortSale(RequestItem item, int needed, MarketRequest request) {
-                MarketHUD.MissingItemsDialog dialog = new MissingItemsDialog(450, 300, item, needed, request, PhoeniciaContext.vboManager) {
+                final MarketHUD.MissingItemsDialog dialog = new MissingItemsDialog(450, 300, item, needed, request, PhoeniciaContext.vboManager) {
                     @Override
                     protected void onGiftClicked() {
                         stop.next();
@@ -118,9 +127,23 @@ public class GiftStop extends Stop {
                     @Override
                     protected void onReturnClicked() {
                         // Can't go back to the Market HUD
+                        GameSounds.play(GameSounds.FAILED);
                     }
                 };
+                this.registerTouchArea(dialog);
                 dialog.open(this);
+                this.activeDialog = dialog;
+            }
+
+            @Override
+            public void attemptSale(MarketRequest request) {
+                // Can't attempt a sale, wait for the tour to initiate it
+                if (stop.currentMessageIndex == MSG_REQUESTINTRO) {
+                    return;
+                } else {
+                    super.attemptSale(request);
+                    //stop.next();
+                }
             }
 
             @Override
@@ -147,26 +170,23 @@ public class GiftStop extends Stop {
             @Override
             public boolean onSceneTouchEvent(Scene scene, TouchEvent touchEvent) {
                 // Swallow touch events during the intro message, but allow them in the start message
-                return currentMessageIndex == MSG_REQUESTINTRO;
+                Debug.d("Current message: "+stop.currentMessageIndex);
+                return stop.currentMessageIndex == MSG_REQUESTINTRO;
             }
         });
         this.marketHUD.populateRequestItems(tourRequest);
-        this.overlay.showMessage(this.getMessage(MSG_REQUESTINTRO), TourOverlay.MessageBox.Bottom);
+        this.overlay.showMessage(this.getMessage(MSG_REQUESTINTRO), TourOverlay.MessageBox.Bottom, true);
     }
 
     private void showGiftRequestButton() {
-        this.marketHUD.completeSale(tourRequest);
+        this.marketHUD.attemptSale(tourRequest);
         this.overlay.showMessage(this.getMessage(MSG_REQUESTSTART), TourOverlay.MessageBox.Top);
     }
 
     public void showGiftRequestCode() {
-        final Stop stop = this;
+        final GiftStop stop = this;
         this.giftRequest = GiftRequest.newRequest(this.tour.game, this.requestWord, this.tourRequest);
         this.requestHUD = new RequestGiftHUD(this.tour.game, this.giftRequest) {
-            @Override
-            public void inputNumber(com.linguaculturalists.phoenicia.locale.Number n) {
-                // don't input anythign yet
-            }
 
             @Override
             protected boolean verifyGift() {
@@ -174,6 +194,7 @@ public class GiftStop extends Stop {
                 return false;
             }
         };
+        this.requestHUD.setNumberpadVisible(false);
         this.overlay.setManagedHUD(this.requestHUD, new IOnSceneTouchListener() {
             @Override
             public boolean onSceneTouchEvent(Scene scene, TouchEvent touchEvent) {
@@ -182,11 +203,13 @@ public class GiftStop extends Stop {
                 return false;
             }
         });
-        this.overlay.showMessage(this.getMessage(MSG_REQUESTCODE), TourOverlay.MessageBox.Bottom);
+        this.overlay.showMessage(this.getMessage(MSG_REQUESTCODE), TourOverlay.MessageBox.Bottom, true);
     }
 
     public void showGiftResponseButton() {
+        final GiftStop stop = this;
         this.overlay.focusOn(this.inventoryBlock);
+        this.overlay.clearFocus();
         this.inventoryHUD = new InventoryHUD(this.tour.game) {
             @Override
             protected void sellLetter(LetterSprite block) {
@@ -197,21 +220,32 @@ public class GiftStop extends Stop {
             protected void sellWord(WordSprite block) {
                 return;//Can't do that during the tour
             }
-        };
-        this.overlay.setManagedHUD(this.inventoryHUD, new IOnSceneTouchListener() {
+
             @Override
-            public boolean onSceneTouchEvent(Scene scene, TouchEvent touchEvent) {
-                return true;
+            protected void sendGift() {
+                stop.next();
             }
-        });
-        this.overlay.showMessage(this.getMessage(MSG_RESPONSESTART), TourOverlay.MessageBox.Bottom);
+        };
+        this.overlay.setManagedHUD(this.inventoryHUD);
+        this.overlay.showMessage(this.getMessage(MSG_RESPONSESTART), TourOverlay.MessageBox.Top);
     }
 
     public void showGiftResponseCheck() {
+        final GiftStop stop = this;
         this.responseHUD = new SendGiftHUD(this.tour.game) {
+            @Override
+            public void showResponseCode(Gift gift) {
+                if (stop.currentMessageIndex == MSG_RESPONSECONFIRM) {
+                    stop.next();
+                } else {
+
+                    super.showResponseCode(gift);
+                }
+            }
 
         };
-        this.overlay.setManagedHUD(this.requestHUD);
+        this.responseHUD.setNumberpadVisible(false);
+        this.overlay.setManagedHUD(this.responseHUD);
         this.overlay.showMessage(this.getMessage(MSG_RESPONSECONFIRM), TourOverlay.MessageBox.Bottom, new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
@@ -219,7 +253,9 @@ public class GiftStop extends Stop {
                     Number n = tour.game.locale.number_map.get(number);
                     responseHUD.inputNumber(n);
                     tour.game.playBlockSound(n.sound);
+                    try{ Thread.sleep(500); } catch (Exception e) {}
                 }
+                Inventory.getInstance().add(requestWord.name); // add the one showResponseCode will remove
                 responseHUD.showRequestItem();
             }
         });
@@ -227,28 +263,46 @@ public class GiftStop extends Stop {
 
     public void showGiftResponseCode() {
         this.gift = Gift.newForRequest(tour.game.session, giftRequest.requestCode.get());
-        this.overlay.showMessage(this.getMessage(MSG_RESPONSECODE), TourOverlay.MessageBox.Top, new MediaPlayer.OnCompletionListener() {
+        this.overlay.showMessage(this.getMessage(MSG_RESPONSECODE), TourOverlay.MessageBox.Top, true, new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                Inventory.getInstance().add(requestWord.name); // add the one showResponseCode will remove
                 responseHUD.showResponseCode(gift);
             }
         });
     }
 
     public void showGiftRequestAccept() {
+        this.overlay.focusOn(this.marketBlock);
+        this.overlay.clearFocus();
         this.overlay.setManagedHUD(this.requestHUD);
-        this.overlay.showMessage(this.getMessage(MSG_REQUESTFINISH), TourOverlay.MessageBox.Top, new MediaPlayer.OnCompletionListener() {
+        this.overlay.showMessage(this.getMessage(MSG_REQUESTFINISH), TourOverlay.MessageBox.Top, true, new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 for (int number : GiftCode.toArray(gift.responseCode.get())) {
                     Number n = tour.game.locale.number_map.get(number);
                     requestHUD.inputNumber(n);
                     tour.game.playBlockSound(n.sound);
+                    try{ Thread.sleep(500); } catch (Exception e) {}
                 }
                 requestHUD.acceptGift();
+                try{ Thread.sleep(500); } catch (Exception e) {}
+                //next();
             }
         });
+    }
+
+    public void showMarketSale() {
+        this.overlay.setManagedHUD(this.marketHUD);
+        this.marketHUD.closeActiveDialog();
+        this.marketHUD.populateRequestItems(tourRequest);
+        this.overlay.showMessage(this.getMessage(MSG_MARKETFINISH), TourOverlay.MessageBox.Bottom, true);
+
+    }
+
+    @Override
+    public void close() {
+        this.marketHUD.completeSale(tourRequest);
+        super.close();
     }
 
     @Override
@@ -276,17 +330,24 @@ public class GiftStop extends Stop {
         newItem.request.set(newRequest);
 
         // Make a request item asking for one more instance of a word than the player has
-        final List<InventoryItem> inventoryItems = InventoryItem.objects(PhoeniciaContext.context).orderBy("#quantity").limit(1).toList();
+        final List<InventoryItem> inventoryItems = InventoryItem.objects(PhoeniciaContext.context).filter(this.tour.game.session.filter).orderBy("quantity").toList();
+        Debug.d("Found " + inventoryItems.size() + " inventory items that could be used for the gift tour");
         for (InventoryItem item : inventoryItems) {
+            Debug.d("Checking item "+item.item_name+" to see if it can be used for the gift tour");
             // Make sure it's a word for the tutorial text to match
             if (this.tour.game.locale.word_map.containsKey(item.item_name.get())) {
-                requestWord = this.tour.game.locale.word_map.get(item.item_name.get());
-                newItem.item_name.set(inventoryItems.get(0).item_name.get());
-                newItem.quantity.set(inventoryItems.get(0).quantity.get() + 1);
+                this.requestWord = this.tour.game.locale.word_map.get(item.item_name.get());
+                Debug.d("Adding Word " + requestWord.name + " to MarketHUD for gift tour");
+                newItem.item_name.set(item.item_name.get());
+                if (item.quantity.get() < 0) {item.quantity.set(0); item.save(PhoeniciaContext.context); }
+                newItem.quantity.set(item.quantity.get() + 1);
                 break;
             }
         }
         newItem.save(PhoeniciaContext.context);
+        newRequest.coins.set(newItem.quantity.get() * requestWord.sell);
+        newRequest.points.set(newItem.quantity.get() * requestWord.points);
+        newRequest.save(PhoeniciaContext.context);
 
         return newRequest;
     }

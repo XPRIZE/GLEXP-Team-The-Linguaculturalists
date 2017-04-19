@@ -69,6 +69,7 @@ import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.models.LetterTile;
 import com.linguaculturalists.phoenicia.models.Market;
+import com.linguaculturalists.phoenicia.models.MarketRequest;
 import com.linguaculturalists.phoenicia.models.WordBuilder;
 import com.linguaculturalists.phoenicia.models.WordTileBuilder;
 import com.linguaculturalists.phoenicia.models.WordTile;
@@ -86,7 +87,7 @@ import com.orm.androrm.Filter;
 /**
  * The main class for managing a game.
  */
-public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateListener, Bank.BankUpdateListener, GameSession.ExperienceChangeListener, Assets.AssetsUpdateListener {
+public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateListener, Bank.BankUpdateListener, GameSession.ExperienceChangeListener, Assets.AssetsUpdateListener, Market.MarketUpdateListener {
     public static final int PERSON_TILE_WIDTH = 256;
     public static final int PERSON_TILE_HEIGHT = 256;
     public static final int LETTER_SPRITE_WIDTH = 64;
@@ -321,6 +322,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         // Start the Market for this session
         Market.init(this);
+        Market.getInstance().addUpdateListener(this);
 
         // Start the Bank for this session
         Bank.init(this.session);
@@ -968,6 +970,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         inventoryDefaultTile.setSprite(inventorySprite);
         this.locale.tour.inventory.setFocus(inventorySprite);
+        this.locale.tour.gifts.setInventoryFocus(inventorySprite);
     }
 
     private void createMarketTile() {
@@ -1009,6 +1012,7 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
         marketDefaultTile.setSprite(marketSprite);
         this.locale.tour.market.setFocus(marketSprite);
+        this.locale.tour.gifts.setMarketFocus(marketSprite);
         scene.sortChildren();
     }
 
@@ -1676,6 +1680,28 @@ public class PhoeniciaGame implements IUpdateHandler, Inventory.InventoryUpdateL
 
     @Override
     public void onAssetsUpdated() { this.checkLevelRequirements(); }
+
+    @Override
+    public void onMarketRequestAdded(MarketRequest request) {
+
+    }
+
+    @Override
+    public void onMarketRequestFulfilled(MarketRequest request) {
+        if (this.hudManager.tourActive()) {
+            // Don't interrupt the tour
+            return;
+        }
+        if (Market.getInstance().filledCount() == locale.marketBlock.gifts_after) {
+            this.hudManager.clear();
+            this.hudManager.startTour(this.locale.tour.gifts, null);
+        }
+    }
+
+    @Override
+    public void onMarketRequestCanceled(MarketRequest request) {
+        this.onMarketRequestFulfilled(request);
+    }
 
     /**
      * Called whenever the player advances to the next level.
