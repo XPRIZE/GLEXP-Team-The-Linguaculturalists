@@ -11,6 +11,7 @@ import com.linguaculturalists.phoenicia.ui.DefaultHUD;
 import com.linguaculturalists.phoenicia.ui.HUDManager;
 import com.linguaculturalists.phoenicia.ui.PhoeniciaHUD;
 import com.linguaculturalists.phoenicia.util.GameFonts;
+import com.linguaculturalists.phoenicia.util.GameUI;
 import com.linguaculturalists.phoenicia.util.PhoeniciaContext;
 
 import org.andengine.engine.camera.SmoothCamera;
@@ -25,6 +26,7 @@ import org.andengine.entity.scene.CameraScene;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.EntityBackground;
+import org.andengine.entity.sprite.ButtonSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.AutoWrap;
 import org.andengine.entity.text.Text;
@@ -32,6 +34,7 @@ import org.andengine.entity.text.TextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.texture.bitmap.AssetBitmapTexture;
+import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.TextureRegion;
 import org.andengine.opengl.texture.region.TextureRegionFactory;
 import org.andengine.util.adt.align.HorizontalAlign;
@@ -51,8 +54,9 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
     private ClickDetector clickDetector;
     private List<Message> messages;
     private int currentMessage;
-    private boolean messagePlaying;
+    public boolean messagePlaying;
     private Rectangle messageBox;
+    private ButtonSprite nextButton;
     public enum MessageBox {
         Top, Bottom;
     }
@@ -100,20 +104,44 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
         this.messagePlaying = false;
 
         Debug.d("Tour overlay guide sprite width: "+this.guideSprite.getWidth());
-        this.messageBox = new BorderRectangle((messageBoxWidth/2)+this.guideSprite.getWidth(), this.guideSprite.getY(), messageBoxWidth, messageBoxHeight, PhoeniciaContext.vboManager);
+        this.messageBox = new BorderRectangle((messageBoxWidth/2)+this.guideSprite.getWidth()-32, this.guideSprite.getY(), messageBoxWidth, messageBoxHeight, PhoeniciaContext.vboManager);
         this.messageBox.setColor(Color.WHITE);
         this.attachChild(messageBox);
+
+        ITextureRegion nextRegion = GameUI.getInstance().getNextIcon();
+        this.nextButton = new ButtonSprite(messageBox.getWidth() - 48, 32, nextRegion, PhoeniciaContext.vboManager);
+        this.nextButton.setOnClickListener(new ButtonSprite.OnClickListener() {
+            @Override
+            public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                stop.next();
+            }
+        });
+        this.nextButton.setVisible(false);
+        this.registerTouchArea(this.nextButton);
 
         Debug.d("TourOverlay ready");
     }
 
     public void showMessage(Message message) {
-        this.showMessage(message, MessageBox.Top);
+        this.showMessage(message, MessageBox.Top, false, null);
     }
     public void showMessage(Message message, MessageBox position) {
+        this.showMessage(message, position, false, null);
+    }
+    public void showMessage(Message message, MessageBox position, boolean showNextButton) {
+        this.showMessage(message, position, showNextButton, null);
+    }
+    public void showMessage(Message message, MessageBox position, final MediaPlayer.OnCompletionListener listener) {
+        this.showMessage(message, position, false, listener);
+    }
+    public void showMessage(Message message, MessageBox position, final boolean showNextButton, final MediaPlayer.OnCompletionListener listener) {
         String messageText = message.text;
         String messageSound = message.sound;
+
         this.messageBox.detachChildren();
+        this.nextButton.setVisible(false);
+        this.messageBox.attachChild(this.nextButton);
+
         this.positionMessageBox(position);
         this.displayText = new Text(this.messageBox.getWidth()/2+16, this.messageBox.getHeight()/2, GameFonts.introText(), messageText, messageText.length(), new TextOptions(HorizontalAlign.LEFT), PhoeniciaContext.vboManager);
         this.displayText.setAutoWrapWidth(this.messageBox.getWidth() - 32);
@@ -126,8 +154,21 @@ public class TourOverlay extends CameraScene implements MediaPlayer.OnCompletion
         if (messageSound != null && messageSound.length() > 0) {
             Debug.d("Playing tour message sound: '" + messageSound + "'");
             this.messagePlaying = true;
-            this.game.playLevelSound(messageSound, this);
+            this.game.playLevelSound(messageSound, new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    messagePlaying = false;
+                    if (listener != null) {
+                        listener.onCompletion(mp);
+                    }
+                    if (showNextButton) {
+                        nextButton.setVisible(true);
+                    }
+                }
+            });
         }
+
+
     }
     private void positionMessageBox(MessageBox pos) {
         switch (pos) {

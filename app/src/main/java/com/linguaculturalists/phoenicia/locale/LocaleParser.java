@@ -154,6 +154,7 @@ public class LocaleParser extends DefaultHandler {
         this.locale.marketBlock = new MarketBlock();
         this.locale.marketBlock.name = attributes.getValue("name");
         this.locale.marketBlock.level = attributes.getValue("level");
+        this.locale.marketBlock.gifts_after = Integer.parseInt(attributes.getValue("gifts_after"));
         String size = attributes.getValue("size");
         if (size == null || size == "" || size == "1x1" || size == "1x1x1") {
             this.locale.marketBlock.columns = 1;
@@ -311,6 +312,8 @@ public class LocaleParser extends DefaultHandler {
             this.currentTourStop = locale.tour.market;
         } else if (stopId.equals("workshop")) {
             this.currentTourStop = locale.tour.workshop;
+        } else if (stopId.equals("gifts")) {
+            this.currentTourStop = locale.tour.gifts;
         }
 
     }
@@ -522,7 +525,11 @@ public class LocaleParser extends DefaultHandler {
 
         String text = new String(ch, start, length);
         if (nodePath.equals("/locale/tour/stop/message")) {
-            this.currentTourStopMessage.text = text;
+            if (this.currentTourStopMessage.text == null) {
+                this.currentTourStopMessage.text = text;
+            } else {
+                this.currentTourStopMessage.text += text;
+            }
         } else if (nodePath.equals("/locale/numbers/number")) {
             Debug.v("Adding Number chars: "+text);
             this.currentNumber.chars = text.toCharArray();

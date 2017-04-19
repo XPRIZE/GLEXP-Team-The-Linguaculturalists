@@ -6,7 +6,7 @@
 
     <!-- Default blocks -->
     <inventory level="3" size="4x4x4" name="Storage" col="23" row="26" block="locales/common/textures/inventory.png" />
-    <market level="6" size="4x4x4" name="Market" col="23" row="18" block="locales/common/textures/market.png" />
+    <market level="6" gifts_after="12" size="4x4x4" name="Market" col="23" row="18" block="locales/common/textures/market.png" />
     <workshop level="9" size="3x3x3" name="Workshop" col="18" row="32" block="locales/common/textures/workshop.png" />
 
     <!-- People used in the marketplace and player's avatar -->
@@ -70,6 +70,16 @@
             <message sound="locales/en_us_rural/sounds/tour/workshop3.ogg">Try making the word map with the letters M A P</message>
             <message sound="locales/en_us_rural/sounds/tour/workshop4.ogg">Great! But remember, you can only make one word at a time in the workshop, so keep making word buildings!</message>
         </stop>
+        <stop id="gifts">
+            <message sound="locales/en_us_rural/sounds/tour/gifts1.ogg">If you need help at the marketplace, you can ask a friend for a gift to help you.</message>
+            <message sound="locales/en_us_rural/sounds/tour/gifts2.ogg">When you are missing something to complete a sale, you can now press the gift image to ask for one from a friend</message>
+            <message sound="locales/en_us_rural/sounds/tour/gifts3.ogg">Gifts are given using special numbers. To get a gift, you first have to give your friend this gift number.</message>
+            <message sound="locales/en_us_rural/sounds/tour/gifts4.ogg">Your friend will go to their inventory and touch the gift image there to send you something</message>
+            <message sound="locales/en_us_rural/sounds/tour/gifts5.ogg">When they enter your number, it will show the word you have asked for</message>
+            <message sound="locales/en_us_rural/sounds/tour/gifts6.ogg">Then your friend will see a new gift number, which they will give back to you</message>
+            <message sound="locales/en_us_rural/sounds/tour/gifts7.ogg">Put your friend's gift number into your game, and you will recieve their gift</message>
+            <message sound="locales/en_us_rural/sounds/tour/gifts8.ogg">You can use gifts to sell in the marketplace, but you will need to make your own to get to new levels</message>
+        </stop>
     </tour>
 
     <!-- Numbers -->
@@ -83,6 +93,7 @@
         <number name="7" sprite="locales/common/textures/numbers/7.png" sound="locales/en_us_rural/sounds/7.ogg">7</number>
         <number name="8" sprite="locales/common/textures/numbers/8.png" sound="locales/en_us_rural/sounds/8.ogg">8</number>
         <number name="9" sprite="locales/common/textures/numbers/9.png" sound="locales/en_us_rural/sounds/9.ogg">9</number>
+        <number name="0" sprite="locales/common/textures/numbers/0.png" sound="locales/en_us_rural/sounds/0.ogg">0</number>
     </numbers>
 
     <!-- Alphabet -->

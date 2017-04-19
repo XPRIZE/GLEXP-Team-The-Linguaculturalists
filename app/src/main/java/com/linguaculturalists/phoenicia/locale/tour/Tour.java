@@ -2,6 +2,7 @@ package com.linguaculturalists.phoenicia.locale.tour;
 
 import com.linguaculturalists.phoenicia.PhoeniciaGame;
 import com.linguaculturalists.phoenicia.locale.Person;
+import com.linguaculturalists.phoenicia.tour.GiftStop;
 import com.linguaculturalists.phoenicia.tour.InventoryStop;
 import com.linguaculturalists.phoenicia.tour.MarketStop;
 import com.linguaculturalists.phoenicia.tour.WelcomeStop;
@@ -23,6 +24,7 @@ public class Tour {
     public MarketStop market;
     public WorkshopStop workshop;
     public WordsStop words;
+    public GiftStop gifts;
 
     public Tour() {
         this.welcome = new WelcomeStop(this);
@@ -30,6 +32,7 @@ public class Tour {
         this.words = new WordsStop(this);
         this.market = new MarketStop(this);
         this.workshop = new WorkshopStop(this);
+        this.gifts = new GiftStop(this);
     }
 
     public List<Stop> getStops() {
@@ -39,6 +42,7 @@ public class Tour {
         list.add(this.words);
         list.add(this.market);
         list.add(this.workshop);
+        list.add(this.gifts);
         return list;
     }
 

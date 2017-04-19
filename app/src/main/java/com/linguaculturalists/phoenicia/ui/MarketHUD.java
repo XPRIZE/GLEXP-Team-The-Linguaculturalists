@@ -12,6 +12,7 @@ import com.linguaculturalists.phoenicia.locale.Letter;
 import com.linguaculturalists.phoenicia.locale.Person;
 import com.linguaculturalists.phoenicia.locale.Word;
 import com.linguaculturalists.phoenicia.models.Bank;
+import com.linguaculturalists.phoenicia.models.GiftRequest;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
 import com.linguaculturalists.phoenicia.models.Market;
@@ -37,6 +38,7 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.input.touch.detector.ClickDetector;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.TiledTextureRegion;
+import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.adt.align.HorizontalAlign;
 import org.andengine.util.adt.color.Color;
 import org.andengine.util.debug.Debug;
@@ -54,10 +56,12 @@ public class MarketHUD extends PhoeniciaHUD {
     private Scrollable requestsPane;
     private Rectangle requestItemsPane;
     private ClickDetector clickDetector;
+    protected Dialog activeDialog;
 
     private List<MarketRequest> requestQueue;
     private Map<MarketRequest, Sprite> requestPerson;
     private Map<MarketRequest, Text> requestName;
+    private MarketRequest currentRequest;
 
     private static final int columns = 2;
 
@@ -126,6 +130,13 @@ public class MarketHUD extends PhoeniciaHUD {
         }
     }
 
+    public void closeActiveDialog() {
+        if (this.activeDialog != null) {
+            this.unregisterTouchArea(this.activeDialog);
+            this.activeDialog.close();
+            this.activeDialog = null;
+        }
+    }
     private void addRequestToQueue(final MarketRequest request, final boolean animate) {
         float startX = (this.requestsPane.getWidth()) - (this.columns * 192) + 96;
         float startY = this.requestsPane.getHeight() - 128;
@@ -174,11 +185,12 @@ public class MarketHUD extends PhoeniciaHUD {
      * experience points, and a button to attempt the sale
      * @param request The activated MarketRequest to display items for
      */
-    protected void populateRequestItems(final MarketRequest request) {
+    public void populateRequestItems(final MarketRequest request) {
         this.requestItemsPane.detachChildren();
         for (Entity touchArea : this.touchAreas) {
             this.unregisterTouchArea(touchArea);
         }
+        this.currentRequest = request;
 
         final int columns = 3;
         float startX = this.requestItemsPane.getWidth() / 2 - (columns * 32) - 16;
@@ -266,12 +278,12 @@ public class MarketHUD extends PhoeniciaHUD {
      * Check if the player has enough inventory to complete the sale, otherwise abort the sale
      * @param request
      */
-    protected void attemptSale(MarketRequest request) {
+    public void attemptSale(MarketRequest request) {
         Debug.d("Attempting sale to " + request.person_name.get());
         for (RequestItem item : request.getItems(PhoeniciaContext.context)) {
             int available = Inventory.getInstance().getCount(item.item_name.get());
             if (available < item.quantity.get()) {
-                abortSale(item, (item.quantity.get() - available));
+                abortSale(item, (item.quantity.get() - available), request);
                 return;
             }
         }
@@ -284,7 +296,7 @@ public class MarketHUD extends PhoeniciaHUD {
      * crediting the player coins and experience points
      * @param request
      */
-    protected void completeSale(MarketRequest request) {
+    public void completeSale(MarketRequest request) {
         GameSounds.play(GameSounds.COLLECT);
         Market.getInstance().fulfillRequest(request);
 
@@ -315,15 +327,15 @@ public class MarketHUD extends PhoeniciaHUD {
         float startX = (this.requestsPane.getWidth()) - (this.columns * 192) + 96;
         float startY = this.requestsPane.getHeight() - 128;
 
-        Debug.d("Moving requests to the right of "+requestIndex);
+        Debug.d("Moving requests to the right of " + requestIndex);
         for (int i = requestIndex+1; i < this.requestQueue.size(); i++) {
             float column = (i-1) % 2;
             float row = (int)((i-1)/2);
             MarketRequest nextRequest = this.requestQueue.get(i);
             Sprite nextSprite = this.requestPerson.get(nextRequest);
             nextSprite.registerEntityModifier(new ParallelEntityModifier(
-                new MoveXModifier(0.5f, nextSprite.getX(), startX + (192 * column)),
-                new MoveYModifier(0.5f, nextSprite.getY(), startY - (288 * row))
+                    new MoveXModifier(0.5f, nextSprite.getX(), startX + (192 * column)),
+                    new MoveYModifier(0.5f, nextSprite.getY(), startY - (288 * row))
             ));
         }
         this.requestQueue.remove(request);
@@ -333,26 +345,17 @@ public class MarketHUD extends PhoeniciaHUD {
      * @param item Item that the player does not have enough of to complete the sale
      * @param needed How many more of this item is needed
      */
-    protected void abortSale(RequestItem item, int needed) {
+    protected void abortSale(RequestItem item, int needed, final MarketRequest request) {
         Debug.d("Aborting sale due to not enough " + item.item_name.get());
-        Dialog confirmDialog = new Dialog(500, 300, Dialog.Buttons.OK, PhoeniciaContext.vboManager, new Dialog.DialogListener() {
-            @Override
-            public void onDialogButtonClicked(Dialog dialog, Dialog.DialogButton dialogButton) {
-                if (dialogButton == dialogButton.OK) {
-                    Debug.d("Dialog Ok pressed");
-                    dialog.close();
-                    unregisterTouchArea(dialog);
-                }
-            }
-        });
-        Text confirmText = new Text(confirmDialog.getWidth()/2 + 48, confirmDialog.getHeight()/2 + 32, GameFonts.dialogText(), " -"+needed, 6,  new TextOptions(AutoWrap.WORDS, confirmDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+        final Dialog confirmDialog = new Dialog(450, 250, Dialog.Buttons.NONE, PhoeniciaContext.vboManager, null);
+        Text confirmText = new Text(confirmDialog.getWidth()/2 + 48, confirmDialog.getHeight() - 64, GameFonts.dialogText(), " - "+needed, 6,  new TextOptions(AutoWrap.WORDS, confirmDialog.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
         confirmText.setColor(Color.RED);
         confirmDialog.attachChild(confirmText);
 
         final Letter isLetter = game.locale.letter_map.get(item.item_name.get());
         final Word isWord = game.locale.word_map.get(item.item_name.get());
         if (isLetter != null) {
-            LetterSprite sprite = new LetterSprite(confirmDialog.getWidth()/2 - 48, confirmDialog.getHeight()/2 + 32, isLetter, needed, game.letterSprites.get(isLetter), PhoeniciaContext.vboManager);
+            LetterSprite sprite = new LetterSprite(confirmDialog.getWidth()/2 - 48, confirmDialog.getHeight() - 64, isLetter, needed, game.letterSprites.get(isLetter), PhoeniciaContext.vboManager);
             sprite.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v1) {
@@ -363,7 +366,7 @@ public class MarketHUD extends PhoeniciaHUD {
             confirmDialog.registerTouchArea(sprite);
             confirmDialog.attachChild(sprite);
         } else if (isWord != null) {
-            WordSprite sprite = new WordSprite(confirmDialog.getWidth()/2 - 48, confirmDialog.getHeight()/2 + 32, isWord, needed, game.wordSprites.get(isWord), PhoeniciaContext.vboManager);
+            WordSprite sprite = new WordSprite(confirmDialog.getWidth()/2 - 48, confirmDialog.getHeight() - 64, isWord, needed, game.wordSprites.get(isWord), PhoeniciaContext.vboManager);
             sprite.setOnClickListener(new ButtonSprite.OnClickListener() {
                 @Override
                 public void onClick(ButtonSprite buttonSprite, float v, float v1) {
@@ -374,9 +377,59 @@ public class MarketHUD extends PhoeniciaHUD {
             confirmDialog.registerTouchArea(sprite);
             confirmDialog.attachChild(sprite);
         }
+
+        if (Market.getInstance().filledCount() >= game.locale.marketBlock.gifts_after) {
+            ButtonSprite giftButton = new ButtonSprite(confirmDialog.getWidth() / 3, 64, GameUI.getInstance().getGiftIcon(), PhoeniciaContext.vboManager);
+            giftButton.setOnClickListener(new ButtonSprite.OnClickListener() {
+                @Override
+                public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                    GiftRequest giftReq;
+                    if (isLetter != null) {
+                        giftReq = GiftRequest.newRequest(game, isLetter, request);
+                    } else {
+                        giftReq = GiftRequest.newRequest(game, isWord, request);
+                    }
+                    game.hudManager.showRequestGift(game, giftReq);
+                    unregisterTouchArea(confirmDialog);
+                    confirmDialog.close();
+                }
+            });
+            confirmDialog.attachChild(giftButton);
+            confirmDialog.registerTouchArea(giftButton);
+
+            ButtonSprite returnButton = new ButtonSprite(confirmDialog.getWidth() * 2 / 3, 64, GameUI.getInstance().getRetryIcon(), PhoeniciaContext.vboManager);
+            returnButton.setOnClickListener(new ButtonSprite.OnClickListener() {
+                @Override
+                public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                    unregisterTouchArea(confirmDialog);
+                    confirmDialog.close();
+                }
+            });
+            confirmDialog.attachChild(returnButton);
+            confirmDialog.registerTouchArea(returnButton);
+        } else {
+            ButtonSprite returnButton = new ButtonSprite(confirmDialog.getWidth() / 2, 64, GameUI.getInstance().getRetryIcon(), PhoeniciaContext.vboManager);
+            returnButton.setOnClickListener(new ButtonSprite.OnClickListener() {
+                @Override
+                public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                    unregisterTouchArea(confirmDialog);
+                    confirmDialog.close();
+                }
+            });
+            confirmDialog.attachChild(returnButton);
+            confirmDialog.registerTouchArea(returnButton);
+        }
         this.registerTouchArea(confirmDialog);
         confirmDialog.open(this);
+        this.activeDialog = confirmDialog;
         GameSounds.play(GameSounds.FAILED);
+    }
+
+    @Override
+    public void show() {
+        if (this.currentRequest != null) {
+            this.populateRequestItems(this.currentRequest);
+        }
     }
 
     /**
@@ -398,4 +451,80 @@ public class MarketHUD extends PhoeniciaHUD {
     }
 
 
+    public class MissingItemsDialog extends Dialog {
+        private MarketRequest request;
+        private Letter isLetter;
+        private Word isWord;
+        public MissingItemsDialog(final int width, final int height, RequestItem item, int needed, final MarketRequest request, VertexBufferObjectManager vertexBufferObjectManager) {
+            super(width, height, Buttons.NONE, vertexBufferObjectManager, null);
+            Text confirmText = new Text(this.getWidth()/2 + 48, this.getHeight() - 64, GameFonts.dialogText(), " - "+needed, 6,  new TextOptions(AutoWrap.WORDS, this.getWidth()*0.8f, HorizontalAlign.CENTER), PhoeniciaContext.vboManager);
+            confirmText.setColor(Color.RED);
+            this.attachChild(confirmText);
+
+            this.request = request;
+            this.isLetter = game.locale.letter_map.get(item.item_name.get());
+            this.isWord = game.locale.word_map.get(item.item_name.get());
+
+            if (isLetter != null) {
+                LetterSprite sprite = new LetterSprite(this.getWidth()/2 - 48, this.getHeight() - 64, isLetter, needed, game.letterSprites.get(isLetter), PhoeniciaContext.vboManager);
+                sprite.setOnClickListener(new ButtonSprite.OnClickListener() {
+                    @Override
+                    public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                        game.playBlockSound(isLetter.sound);
+                    }
+                });
+                sprite.showCount(false);
+                this.registerTouchArea(sprite);
+                this.attachChild(sprite);
+            } else if (isWord != null) {
+                WordSprite sprite = new WordSprite(this.getWidth()/2 - 48, this.getHeight() - 64, isWord, needed, game.wordSprites.get(isWord), PhoeniciaContext.vboManager);
+                sprite.setOnClickListener(new ButtonSprite.OnClickListener() {
+                    @Override
+                    public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                        game.playBlockSound(isWord.sound);
+                    }
+                });
+                sprite.showCount(false);
+                this.registerTouchArea(sprite);
+                this.attachChild(sprite);
+            }
+
+            ButtonSprite giftButton = new ButtonSprite(this.getWidth()/3, 64, GameUI.getInstance().getGiftIcon(), PhoeniciaContext.vboManager);
+            giftButton.setOnClickListener(new ButtonSprite.OnClickListener() {
+                @Override
+                public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                    onGiftClicked();
+                }
+            });
+            this.attachChild(giftButton);
+            this.registerTouchArea(giftButton);
+
+            ButtonSprite returnButton = new ButtonSprite(this.getWidth()*2/3, 64, GameUI.getInstance().getRetryIcon(), PhoeniciaContext.vboManager);
+            returnButton.setOnClickListener(new ButtonSprite.OnClickListener() {
+                @Override
+                public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                    onReturnClicked();
+                }
+            });
+            this.attachChild(returnButton);
+            this.registerTouchArea(returnButton);
+        }
+
+        protected void onGiftClicked() {
+            GiftRequest giftReq;
+            if (isLetter != null) {
+                giftReq = GiftRequest.newRequest(game, isLetter, request);
+            } else {
+                giftReq = GiftRequest.newRequest(game, isWord, request);
+            }
+            game.hudManager.showRequestGift(game, giftReq);
+            unregisterTouchArea(this);
+            this.close();
+        }
+
+        protected void onReturnClicked() {
+            unregisterTouchArea(this);
+            this.close();
+        }
+    }
 }

@@ -33,8 +33,10 @@ public abstract class Stop {
     public abstract void onClicked();
 
     public void next() {
-        this.currentMessageIndex++;
-        this.show(this.currentMessageIndex);
+        if (!overlay.messagePlaying) {
+            this.currentMessageIndex++;
+            this.show(this.currentMessageIndex);
+        }
     }
     public void goTo(int messageIndex) {
         this.currentMessageIndex = messageIndex;

@@ -78,7 +78,7 @@ public class MarketStop extends Stop {
             }
 
             @Override
-            protected void completeSale(MarketRequest request) {
+            public void completeSale(MarketRequest request) {
                 super.completeSale(request);
                 stop.next();
             }
@@ -95,7 +95,7 @@ public class MarketStop extends Stop {
             }
 
             @Override
-            protected void populateRequestItems(MarketRequest request) {
+            public void populateRequestItems(MarketRequest request) {
                 super.populateRequestItems(request);
                 stop.next();
             }

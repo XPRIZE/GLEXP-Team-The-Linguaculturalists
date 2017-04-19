@@ -14,6 +14,7 @@ import com.linguaculturalists.phoenicia.models.Bank;
 import com.linguaculturalists.phoenicia.models.GameSession;
 import com.linguaculturalists.phoenicia.models.Inventory;
 import com.linguaculturalists.phoenicia.models.InventoryItem;
+import com.linguaculturalists.phoenicia.models.Market;
 import com.linguaculturalists.phoenicia.util.GameFonts;
 import com.linguaculturalists.phoenicia.util.GameSounds;
 import com.linguaculturalists.phoenicia.util.GameUI;
@@ -61,7 +62,7 @@ public class InventoryHUD extends PhoeniciaHUD {
             }
         });
 
-        this.whiteRect = new BorderRectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 400, PhoeniciaContext.vboManager) {
+        this.whiteRect = new BorderRectangle(GameActivity.CAMERA_WIDTH / 2, GameActivity.CAMERA_HEIGHT / 2, 400, 500, PhoeniciaContext.vboManager) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 super.onAreaTouched(pSceneTouchEvent, pTouchAreaLocalX, pTouchAreaLocalY);
@@ -72,7 +73,11 @@ public class InventoryHUD extends PhoeniciaHUD {
         this.attachChild(whiteRect);
         this.registerTouchArea(whiteRect);
 
-        Scrollable itemsPane = new Scrollable(GameActivity.CAMERA_WIDTH / 2, (GameActivity.CAMERA_HEIGHT / 2) - 10, 400, 380, Scrollable.SCROLL_VERTICAL);
+        int giftIconHeight = 0;
+        if (Market.getInstance().filledCount() >= game.locale.marketBlock.gifts_after) {
+            giftIconHeight = 120;
+        }
+        Scrollable itemsPane = new Scrollable(GameActivity.CAMERA_WIDTH / 2, (GameActivity.CAMERA_HEIGHT / 2) - 10 + (giftIconHeight/2), 400, 500-giftIconHeight, Scrollable.SCROLL_VERTICAL);
         itemsPane.setPadding(32);
         this.attachChild(itemsPane);
         this.registerTouchArea(itemsPane);
@@ -146,8 +151,24 @@ public class InventoryHUD extends PhoeniciaHUD {
             offsetX++;
 
         }
+
+        if (Market.getInstance().filledCount() >= game.locale.marketBlock.gifts_after) {
+            ITextureRegion giftIcon = GameUI.getInstance().getGiftIcon();
+            ButtonSprite sendGiftButton = new ButtonSprite(whiteRect.getWidth() - (giftIcon.getWidth() / 2), (giftIcon.getHeight() / 2), giftIcon, PhoeniciaContext.vboManager);
+            whiteRect.attachChild(sendGiftButton);
+            this.registerTouchArea(sendGiftButton);
+            sendGiftButton.setOnClickListener(new ButtonSprite.OnClickListener() {
+                @Override
+                public void onClick(ButtonSprite buttonSprite, float v, float v1) {
+                    sendGift();
+                }
+            });
+        }
     }
 
+    protected void sendGift() {
+        game.hudManager.showSendGift(game);
+    }
     protected void sellLetter(LetterSprite block) {
         try {
             Inventory.getInstance().subtract(block.getLetter().name);
